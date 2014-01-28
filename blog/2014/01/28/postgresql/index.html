@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>My Octopress Blog</title>
+  <title>PostgreSQLメモ - My Octopress Blog</title>
   <meta name="author" content="shigepon">
 
   
@@ -19,7 +19,7 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://shigepon.github.io">
+  <link rel="canonical" href="http://shigepon.github.io/blog/2014/01/28/postgresql">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
@@ -62,15 +62,12 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 </nav> -->
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/01/28/postgresql/">PostgreSQLメモ</a></h1>
+      <h1 class="entry-title">PostgreSQLメモ</h1>
     
     
       <p class="meta">
@@ -93,7 +90,7 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
   </header>
 
 
-  <div class="entry-content"><p>rhaco2をPostgreSQL8.3で使えるように色々調べていくうちに学んだメモ。</p>
+<div class="entry-content"><p>rhaco2をPostgreSQL8.3で使えるように色々調べていくうちに学んだメモ。</p>
 
 <h3>insert時に「デフォルト値を入れる」だけの処理をしたい場合</h3>
 
@@ -117,58 +114,16 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 ただし、create table時にserialで指定してもinformation_schema.columnsから取得できるカラム情報はinteger(int4)のみ。
 なのでserialと判定するにはカラムがintegerであり、かつデフォルト値としてnextvalが指定されていることなど、複合的にチェックする必要がある。</p>
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/28/test-post2/">Test Post2</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
   
 
+<span class="byline author vcard">Posted by <span class="fn">shigepon</span></span>
 
-<time datetime="2014-01-28T14:43:59+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>テスト投稿（2時間ぶり2度目）</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/28/test-post/">Test Post</a></h1>
-    
-    
-      <p class="meta">
-        
 
 
 
@@ -180,28 +135,38 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
   
 
 
-<time datetime="2014-01-28T12:59:29+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
-        
-      </p>
+<time datetime="2014-01-28T21:24:42+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/postgresql/'>postgresql</a>
+  
+</span>
+
+
+    </p>
     
-  </header>
-
-
-  <div class="entry-content"><p>本文を投稿するテスト
-こんな感じ？</p>
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://shigepon.github.io/blog/2014/01/28/postgresql/" data-via="" data-counturl="http://shigepon.github.io/blog/2014/01/28/postgresql/" >Tweet</a>
+  
+  
+  
 </div>
-  
-  
 
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/01/28/test-post2/" title="Previous Post: test post2">&laquo; test post2</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
 </div>
+
 <aside class="sidebar">
   
     <section>
@@ -229,6 +194,7 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 
   
 </aside>
+
 
     </div>
   </div>
