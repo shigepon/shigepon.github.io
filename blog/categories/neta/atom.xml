@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: ネタ | My Octopress Blog]]></title>
+  <link href="http://shigepon.github.io/blog/categories/neta/atom.xml" rel="self"/>
+  <link href="http://shigepon.github.io/"/>
+  <updated>2014-01-28T22:55:21+09:00</updated>
+  <id>http://shigepon.github.io/</id>
+  <author>
+    <name><![CDATA[shigepon]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[なでしこでLuaエディタ？を作る（ネタ）]]></title>
+    <link href="http://shigepon.github.io/blog/2014/01/28/nadesiko-lua/"/>
+    <updated>2014-01-28T21:37:03+09:00</updated>
+    <id>http://shigepon.github.io/blog/2014/01/28/nadesiko-lua</id>
+    <content type="html"><![CDATA[<p>なでしこではLuaを使えるので、なでしこのGUIと組み合わせたら簡単にLuaエディタ作れるんじゃね？ということで作ってみました。（ただのネタです）</p>
+
+<p>```
+母艦は「メインフォーム」
+そのクライアントW=640#数値
+そのクライアントH=400#数値
+そのタイトル=「なでしこ」#文字列
+※ &mdash;&ndash;
+LuaエディタとはTエディタ##生成
+そのX=8#数値
+そのY=8#数値
+そのW=616#数値
+そのH=344#数値
+そのテキスト=「」#文字列
+そのスクロールバー=「」#文字列
+※ &mdash;&ndash;
+Luaボタンとはボタン##生成
+そのX=280#数値
+そのY=360#数値
+そのW=64#数値
+そのH=32#数値
+そのテキスト=「luaする」#文字列
+そのクリックした時は～Luaボタン<strong>クリックした時#イベント
+※※※積み木デザイナ:ここまで※
+●Luaボタン</strong>クリックした時　　# ここにイベントを書きます。</p>
+
+<h1>字下げした部分がイベント範囲です。</h1>
+
+<pre><code>エラー監視
+    ソース=Luaエディタのテキスト
+    A=50
+    結果とは変数
+    LUA(&amp;quot;---
+    {ソース}
+    ---&amp;quot;)
+エラーならば
+    「エラー」と言う。
+</code></pre>
+
+<p>```</p>
+
+<p>セーブやロードなどは全て省いてますが実装は簡単です。</p>
+
+<p>あとLUA(&quot;<del>&hellip;</del>&quot;)の箇所を変更すれば、返り値を得ることも簡単にできます。例えばこんな感じ</p>
+
+<p><code>
+LUA(&amp;quot;---ret=0{ソース}nako_set(&amp;#039;結果&amp;#039;&amp;cedil;ret)---&amp;quot;)結果を言う。
+</code></p>
+
+<p>Luaをちょっといじってみたいなと思う時に使えるんじゃないかと思います。</p>
+
+<p>※なぜか「LUAする」命令だとieとかexcelを立ち上げた時にvisible=trueに出来ませんでした。何かやり方が悪かったのかな。（なでしこのバージョンはデラックス版1.5322です）</p>
+
+<p>※LuaComではUTF-8を扱うので、日本語をまぜる場合はソースをUTF-8に変換しておく必要があります</p>
+
+<p><code>
+LUA(UTF8N変換(&amp;quot;...&amp;quot;))
+</code></p>
+
+<p>結果もnako_setでセットした値もUTF8で返ってきますのでSJIS変換命令で変換する必要があります。</p>
+]]></content>
+  </entry>
+  
+</feed>
