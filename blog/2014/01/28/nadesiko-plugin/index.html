@@ -101,8 +101,12 @@
 <li>Win32プロジェクトを作成</li>
 <li>plugins_sdk_cからソースを追加</li>
 <li>dnako_import.defを作成</li>
+<li>すべての構成でプロジェクトのプロパティを修正　全般→文字セットを「マルチ バイト文字セットを使用する」に変更　リンカ→入力→モジュール定義ファイルに「dnako_import.def」と入力</li>
+<li>ビルド</li>
 </ol>
 
+
+<p>dnako_import.defは以下</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -118,12 +122,6 @@
 </span><span class='line'>PluginRequire
 </span><span class='line'>PluginInit
 </span><span class='line'>PluginFin</span></code></pre></td></tr></table></div></figure>
-
-
-<ol>
-<li>すべての構成でプロジェクトのプロパティを修正　全般→文字セットを「マルチ バイト文字セットを使用する」に変更　リンカ→入力→モジュール定義ファイルに「dnako_import.def」と入力</li>
-<li>ビルド</li>
-</ol>
 
 
 <p>実際こちらで試した場合は他にも4の箇所で</p>

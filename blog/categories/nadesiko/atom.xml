@@ -4,7 +4,7 @@
   <title><![CDATA[Category: なでしこ | My Octopress Blog]]></title>
   <link href="http://shigepon.github.io/blog/categories/nadesiko/atom.xml" rel="self"/>
   <link href="http://shigepon.github.io/"/>
-  <updated>2014-01-28T23:06:21+09:00</updated>
+  <updated>2014-01-28T23:07:39+09:00</updated>
   <id>http://shigepon.github.io/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -130,8 +130,12 @@ namespace ClassLibrary1{</p>
 <li>Win32プロジェクトを作成</li>
 <li>plugins_sdk_cからソースを追加</li>
 <li>dnako_import.defを作成</li>
+<li>すべての構成でプロジェクトのプロパティを修正　全般→文字セットを「マルチ バイト文字セットを使用する」に変更　リンカ→入力→モジュール定義ファイルに「dnako_import.def」と入力</li>
+<li>ビルド</li>
 </ol>
 
+
+<p>dnako_import.defは以下</p>
 
 <p><code>
 EXPORTS
@@ -142,12 +146,6 @@ PluginRequire
 PluginInit
 PluginFin
 </code></p>
-
-<ol>
-<li>すべての構成でプロジェクトのプロパティを修正　全般→文字セットを「マルチ バイト文字セットを使用する」に変更　リンカ→入力→モジュール定義ファイルに「dnako_import.def」と入力</li>
-<li>ビルド</li>
-</ol>
-
 
 <p>実際こちらで試した場合は他にも4の箇所で</p>
 
