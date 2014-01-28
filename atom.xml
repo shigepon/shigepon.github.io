@@ -4,7 +4,7 @@
   <title><![CDATA[My Octopress Blog]]></title>
   <link href="http://shigepon.github.io/atom.xml" rel="self"/>
   <link href="http://shigepon.github.io/"/>
-  <updated>2014-01-28T17:08:06+09:00</updated>
+  <updated>2014-01-28T17:46:11+09:00</updated>
   <id>http://shigepon.github.io/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Test Post2]]></title>
+    <title type="html"><![CDATA[test post2]]></title>
     <link href="http://shigepon.github.io/blog/2014/01/28/test-post2/"/>
     <updated>2014-01-28T14:43:59+09:00</updated>
     <id>http://shigepon.github.io/blog/2014/01/28/test-post2</id>
@@ -23,7 +23,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Test Post]]></title>
+    <title type="html"><![CDATA[test post]]></title>
     <link href="http://shigepon.github.io/blog/2014/01/28/test-post/"/>
     <updated>2014-01-28T12:59:29+09:00</updated>
     <id>http://shigepon.github.io/blog/2014/01/28/test-post</id>
