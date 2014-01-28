@@ -1,0 +1,260 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>C++/CLIでなでしこのプラグインを作る方法(Visual C++ Express Edition) - My Octopress Blog</title>
+  <meta name="author" content="shigepon">
+
+  
+  <meta name="description" content="なでしこでプラグインを作る時にC#を使いたかったので、その前段階としてC++/CLIでプラグインを作る方法を探ってみました。 C++/CLIが使えると、.Netを使えるようになり、C#で作ったdllもVC++の参照設定から読み込んで使えるようになります。 なでしこにはC++ &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+</hgroup>
+
+</header>
+  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:shigepon.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav> -->
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">C++/CLIでなでしこのプラグインを作る方法(Visual C++ Express Edition)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-28T21:45:15+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>なでしこでプラグインを作る時にC#を使いたかったので、その前段階としてC++/CLIでプラグインを作る方法を探ってみました。</p>
+
+<p>C++/CLIが使えると、.Netを使えるようになり、C#で作ったdllもVC++の参照設定から読み込んで使えるようになります。</p>
+
+<p>なでしこにはC++でプラグイン開発するためのsdkがあります。</p>
+
+<p>ただし、VC++で使用するには<a href="http://www.himanavi.net/cgi/nade-bbs2/cbbs.cgi?mode=one&amp;number=7462&amp;type=7446&amp;space=60&amp;no=0">なでしこ質問掲示板</a>にあるような設定をしなければいけません。（以下引用）</p>
+
+<blockquote><p>1.Win32プロジェクトを作成
+2.plugins_sdk_cからソースを追加
+3.dnako_import.defを作成</p></blockquote>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>EXPORTS
+</span><span class='line'>ImportNakoFunction
+</span><span class='line'>PluginInfo
+</span><span class='line'>PluginVersion
+</span><span class='line'>PluginRequire
+</span><span class='line'>PluginInit
+</span><span class='line'>PluginFin</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>4.すべての構成でプロジェクトのプロパティを修正　全般→文字セットを「マルチ バイト文字セットを使用する」に変更　リンカ→入力→モジュール定義ファイルに「dnako_import.def」と入力
+5.ビルド</p></blockquote>
+
+<p>実際こちらで試した場合は他にも4の箇所で</p>
+
+<p>全般→共通言語ランタイムサポートを「共通言語ランタイムサポートを使用しない」に
+C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘッダーの作成/使用を「プリコンパイル済みヘッダーを使用しない」に</p>
+
+<p>変更が必要でした。</p>
+
+<p>ただし、この方法だとC++/CLIを使えないので、.Netを使うことは出来ません。そこで、次のように変更しました。</p>
+
+<p>+sdkに含まれる.cファイルを全て.cppに変更
++dnako_import\let.h内にある各GetProcAddressの第一引数hDllをstatic_castでHMODULE型にキャスト</p>
+
+<p>すると問題なくビルドが通り、.Netを使用することが出来ました。と言ってもMessageBoxを試した程度ですが。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">shigepon</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-28T21:45:15+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/c-number/'>C#</a>, <a class='category' href='/blog/categories/c-plus-plus/'>C++</a>, <a class='category' href='/blog/categories/nadesiko/'>なでしこ</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin/" data-via="" data-counturl="http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/01/28/nadesiko-lua/" title="Previous Post: なでしこでLuaエディタ？を作る（ネタ）">&laquo; なでしこでLuaエディタ？を作る（ネタ）</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/01/28/nadesiko-plugin-cs/" title="Next Post: C#で作ったdllをC++/CLIで使う">C#で作ったdllをC++/CLIで使う &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/01/28/nadesiko-plugin-cs2/">C#で作ったdllをなでしこで使う</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/28/nadesiko-plugin-cs/">C#で作ったdllをC++/CLIで使う</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/28/nadesiko-plugin/">C++/CLIでなでしこのプラグインを作る方法(Visual C++ Express Edition)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/28/nadesiko-lua/">なでしこでLuaエディタ？を作る（ネタ）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/28/postgresql/">PostgreSQLメモ</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - shigepon -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

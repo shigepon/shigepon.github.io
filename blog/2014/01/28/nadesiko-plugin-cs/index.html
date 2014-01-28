@@ -1,0 +1,286 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>C#で作ったdllをC++/CLIで使う - My Octopress Blog</title>
+  <meta name="author" content="shigepon">
+
+  
+  <meta name="description" content="画像やファイルが無くなっていますがご了承下さい なでしこでプラグインを作る時にC#を使いたかったので、本格的にdllを作る前に、C++/CLIからMessageBoxを表示する程度のC#のdllを呼び出してみました。 C#のdllコード 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin-cs">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+</hgroup>
+
+</header>
+  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:shigepon.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav> -->
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">C#で作ったdllをC++/CLIで使う</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-28T22:27:58+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><strong>画像やファイルが無くなっていますがご了承下さい</strong></p>
+
+<p>なでしこでプラグインを作る時にC#を使いたかったので、本格的にdllを作る前に、C++/CLIからMessageBoxを表示する程度のC#のdllを呼び出してみました。</p>
+
+<p>C#のdllコード</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>using System;
+</span><span class='line'>using System.Collections.Generic;
+</span><span class='line'>using System.Windows.Forms;
+</span><span class='line'>using System.Text;
+</span><span class='line'>namespace ClassLibrary1{
+</span><span class='line'>    public class Class1
+</span><span class='line'>    {
+</span><span class='line'>        public static void Method1()
+</span><span class='line'>        {
+</span><span class='line'>            MessageBox.Show(&quot;method1&quot;);
+</span><span class='line'>        }
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>C++フォームアプリケーション</p>
+
+<p>C#で作ったdllの参照とかフォームの構成とか画像が消えちゃったので適当に想像してください。
+用はC++のアプリケーションでC#のdllを参照します。</p>
+
+<p>ボタンクリック時のコード</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>private: System::Void button1_Click(System::Object^  sender&cedil; System::EventArgs^  e) {
+</span><span class='line'>   try{
+</span><span class='line'>      ClassLibrary1::Class1::Method1();
+</span><span class='line'>   }catch(Exception^ e){
+</span><span class='line'>      System::Windows::Forms::MessageBox::Show(e-&gt;Message);
+</span><span class='line'>   }
+</span><span class='line'> }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で動かしてみるときちんと動かせました。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">shigepon</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-28T22:27:58+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/c-number/'>C#</a>, <a class='category' href='/blog/categories/c-plus-plus/'>C++</a>, <a class='category' href='/blog/categories/nadesiko/'>なでしこ</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin-cs/" data-via="" data-counturl="http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin-cs/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/01/28/nadesiko-plugin/" title="Previous Post: C++/CLIでなでしこのプラグインを作る方法(Visual C++ Express Edition)">&laquo; C++/CLIでなでしこのプラグインを作る方法(Visual C++ Express Edition)</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/01/28/nadesiko-plugin-cs2/" title="Next Post: C#で作ったdllをなでしこで使う">C#で作ったdllをなでしこで使う &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/01/28/nadesiko-plugin-cs2/">C#で作ったdllをなでしこで使う</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/28/nadesiko-plugin-cs/">C#で作ったdllをC++/CLIで使う</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/28/nadesiko-plugin/">C++/CLIでなでしこのプラグインを作る方法(Visual C++ Express Edition)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/28/nadesiko-lua/">なでしこでLuaエディタ？を作る（ネタ）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/28/postgresql/">PostgreSQLメモ</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - shigepon -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: C++ | My Octopress Blog]]></title>
   <link href="http://shigepon.github.io/blog/categories/c-plus-plus/atom.xml" rel="self"/>
   <link href="http://shigepon.github.io/"/>
-  <updated>2014-01-28T22:55:21+09:00</updated>
+  <updated>2014-01-28T22:58:16+09:00</updated>
   <id>http://shigepon.github.io/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -20,7 +20,7 @@
     <id>http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin-cs2</id>
     <content type="html"><![CDATA[<p>C#のdllを呼び出せるように、C#のdllを参照した後、Plugin.cppの一部を以下のように書き換えました</p>
 
-<p>```Plugin.cpp
+<p>```
 PHiValue __stdcall sample01(DWORD param) {</p>
 
 <pre><code>PHiValue result;
@@ -42,7 +42,7 @@ nako_addFunction(&amp;quot;sample01&amp;quot;&amp;cedil;&amp;quot;&amp;quot;&amp
 
 <p>なでしこ側のソースは以下のようにして呼び出してみました</p>
 
-<p><code>テスト.nako
+<p><code>
 結果=sample01
 結果を言う
 </code></p>
@@ -128,9 +128,9 @@ namespace ClassLibrary1{</p>
 
 <blockquote><p>1.Win32プロジェクトを作成
 2.plugins_sdk_cからソースを追加
-3.以下のファイルを作成</p></blockquote>
+3.dnako_import.defを作成</p></blockquote>
 
-<p><code>dnako_import.def
+<p><code>
 EXPORTS
 ImportNakoFunction
 PluginInfo
