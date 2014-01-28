@@ -4,7 +4,7 @@
   <title><![CDATA[Category: C++ | My Octopress Blog]]></title>
   <link href="http://shigepon.github.io/blog/categories/c-plus-plus/atom.xml" rel="self"/>
   <link href="http://shigepon.github.io/"/>
-  <updated>2014-01-28T23:03:58+09:00</updated>
+  <updated>2014-01-28T23:05:24+09:00</updated>
   <id>http://shigepon.github.io/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -126,9 +126,12 @@ namespace ClassLibrary1{</p>
 
 <p>ただし、VC++で使用するには<a href="http://www.himanavi.net/cgi/nade-bbs2/cbbs.cgi?mode=one&amp;number=7462&amp;type=7446&amp;space=60&amp;no=0">なでしこ質問掲示板</a>にあるような設定をしなければいけません。（以下引用）</p>
 
-<p>1.Win32プロジェクトを作成
-1.plugins_sdk_cからソースを追加
-1.dnako_import.defを作成</p>
+<ol>
+<li>Win32プロジェクトを作成</li>
+<li>plugins_sdk_cからソースを追加</li>
+<li>dnako_import.defを作成</li>
+</ol>
+
 
 <p><code>
 EXPORTS
@@ -140,8 +143,11 @@ PluginInit
 PluginFin
 </code></p>
 
-<p>1.すべての構成でプロジェクトのプロパティを修正　全般→文字セットを「マルチ バイト文字セットを使用する」に変更　リンカ→入力→モジュール定義ファイルに「dnako_import.def」と入力
-1.ビルド</p>
+<ol>
+<li>すべての構成でプロジェクトのプロパティを修正　全般→文字セットを「マルチ バイト文字セットを使用する」に変更　リンカ→入力→モジュール定義ファイルに「dnako_import.def」と入力</li>
+<li>ビルド</li>
+</ol>
+
 
 <p>実際こちらで試した場合は他にも4の箇所で</p>
 

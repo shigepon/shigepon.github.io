@@ -282,9 +282,12 @@ PHiValue __stdcall sample01(DWORD param) { PHiValue result; &hellip;">
 
 <p>ただし、VC++で使用するには<a href="http://www.himanavi.net/cgi/nade-bbs2/cbbs.cgi?mode=one&amp;number=7462&amp;type=7446&amp;space=60&amp;no=0">なでしこ質問掲示板</a>にあるような設定をしなければいけません。（以下引用）</p>
 
-<p>1.Win32プロジェクトを作成
-1.plugins_sdk_cからソースを追加
-1.dnako_import.defを作成</p>
+<ol>
+<li>Win32プロジェクトを作成</li>
+<li>plugins_sdk_cからソースを追加</li>
+<li>dnako_import.defを作成</li>
+</ol>
+
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -302,8 +305,11 @@ PHiValue __stdcall sample01(DWORD param) { PHiValue result; &hellip;">
 </span><span class='line'>PluginFin</span></code></pre></td></tr></table></div></figure>
 
 
-<p>1.すべての構成でプロジェクトのプロパティを修正　全般→文字セットを「マルチ バイト文字セットを使用する」に変更　リンカ→入力→モジュール定義ファイルに「dnako_import.def」と入力
-1.ビルド</p>
+<ol>
+<li>すべての構成でプロジェクトのプロパティを修正　全般→文字セットを「マルチ バイト文字セットを使用する」に変更　リンカ→入力→モジュール定義ファイルに「dnako_import.def」と入力</li>
+<li>ビルド</li>
+</ol>
+
 
 <p>実際こちらで試した場合は他にも4の箇所で</p>
 
