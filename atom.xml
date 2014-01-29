@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://shigepon.github.io/atom.xml" rel="self"/>
   <link href="http://shigepon.github.io/"/>
-  <updated>2014-01-29T11:30:33+09:00</updated>
+  <updated>2014-01-30T08:58:07+09:00</updated>
   <id>http://shigepon.github.io/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -427,6 +427,16 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
 <p>Mysqlで使えるshow columnは無いが、information_schemaの情報をselectすることで同じようなことが出来る。
 ただし、create table時にserialで指定してもinformation_schema.columnsから取得できるカラム情報はinteger(int4)のみ。
 なのでserialと判定するにはカラムがintegerであり、かつデフォルト値としてnextvalが指定されていることなど、複合的にチェックする必要がある。</p>
+
+<h2>cronでsqlを実行</h2>
+
+<p>毎日0時0分に実行する場合</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>0 0 * * * /path/to/psql -U username -c "sql" database &gt; /dev/null</span></code></pre></td></tr></table></div></figure>
+
+
+
 ]]></content>
   </entry>
   
