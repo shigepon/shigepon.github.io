@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://shigepon.github.io/atom.xml" rel="self"/>
   <link href="http://shigepon.github.io/"/>
-  <updated>2014-01-30T08:58:07+09:00</updated>
+  <updated>2014-01-30T21:38:25+09:00</updated>
   <id>http://shigepon.github.io/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,22 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[なでしこで実行ファイルを作る時のメモ]]></title>
+    <link href="http://shigepon.github.io/blog/2014/01/30/nadesiko-make-exe/"/>
+    <updated>2014-01-30T09:22:46+09:00</updated>
+    <id>http://shigepon.github.io/blog/2014/01/30/nadesiko-make-exe</id>
+    <content type="html"><![CDATA[<p>+パックファイル作る時はメインになるファイルだけnadesiko.nakoというパック名にして、その他はファイル名自身をパック名とする
++データを埋め込む場合は、そのデータを呼び出す時にフルパスにしない。データが無いと言われる。</p>
+
+<p>何となくマニュアル見ても分かりにくかったのでメモ</p>
+
+<p>ついでにリンク</p>
+
+<p><a href="http://nadesi.com">なでしこ</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[なでしこ2のプラグインを作る方法]]></title>
@@ -428,7 +444,7 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
 ただし、create table時にserialで指定してもinformation_schema.columnsから取得できるカラム情報はinteger(int4)のみ。
 なのでserialと判定するにはカラムがintegerであり、かつデフォルト値としてnextvalが指定されていることなど、複合的にチェックする必要がある。</p>
 
-<h2>cronでsqlを実行</h2>
+<h3>cronでsqlを実行</h3>
 
 <p>毎日0時0分に実行する場合</p>
 
@@ -436,7 +452,27 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
 </pre></td><td class='code'><pre><code class=''><span class='line'>0 0 * * * /path/to/psql -U username -c "sql" database &gt; /dev/null</span></code></pre></td></tr></table></div></figure>
 
 
+<h3>select結果でinsert, update</h3>
 
+<p>insertの場合はinsert文の後でselect文を書く。以下は一例</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>insert into table select a,b from table2 where a like 'hoge%';</span></code></pre></td></tr></table></div></figure>
+
+
+<p>別テーブルへの一部データのバックアップ代わりにも使える</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>insert into backup_table (select * from table where id=1);</span></code></pre></td></tr></table></div></figure>
+
+
+<p>updateは次のように行う</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>update table set a = t.a from (select * from table2) t where table.b = t.b;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>どの範囲のデータが更新されるかに注意してwhere句を使う。上の場合、tの中でwhere句を使う場合とで異なる結果になる場合がある。</p>
 ]]></content>
   </entry>
   

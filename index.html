@@ -9,7 +9,8 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="なでしこ2でプラグインを作りたい人向けというニッチすぎるネタです。現在なでしこの時期バージョンなでしこ2が開発中です(えらい長いこと開発中です)が、構文の実装がある程度終わっているので、プラグインを開発することが出来ます。try catchの実装どうするかなーとか考えて進んでないですが、それはそれ &hellip;">
+  <meta name="description" content="+パックファイル作る時はメインになるファイルだけnadesiko.nakoというパック名にして、その他はファイル名自身をパック名とする
++データを埋め込む場合は、そのデータを呼び出す時にフルパスにしない。データが無いと言われる。 何となくマニュアル見ても分かりにくかったのでメモ ついでにリンク &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +76,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/30/nadesiko-make-exe/">なでしこで実行ファイルを作る時のメモ</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-30T09:22:46+09:00" pubdate data-updated="true">Jan 30<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>+パックファイル作る時はメインになるファイルだけnadesiko.nakoというパック名にして、その他はファイル名自身をパック名とする
++データを埋め込む場合は、そのデータを呼び出す時にフルパスにしない。データが無いと言われる。</p>
+
+<p>何となくマニュアル見ても分かりにくかったのでメモ</p>
+
+<p>ついでにリンク</p>
+
+<p><a href="http://nadesi.com">なでしこ</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -649,7 +693,7 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
 ただし、create table時にserialで指定してもinformation_schema.columnsから取得できるカラム情報はinteger(int4)のみ。
 なのでserialと判定するにはカラムがintegerであり、かつデフォルト値としてnextvalが指定されていることなど、複合的にチェックする必要がある。</p>
 
-<h2>cronでsqlを実行</h2>
+<h3>cronでsqlを実行</h3>
 
 <p>毎日0時0分に実行する場合</p>
 
@@ -657,7 +701,27 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
 </pre></td><td class='code'><pre><code class=''><span class='line'>0 0 * * * /path/to/psql -U username -c "sql" database &gt; /dev/null</span></code></pre></td></tr></table></div></figure>
 
 
+<h3>select結果でinsert, update</h3>
 
+<p>insertの場合はinsert文の後でselect文を書く。以下は一例</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>insert into table select a,b from table2 where a like 'hoge%';</span></code></pre></td></tr></table></div></figure>
+
+
+<p>別テーブルへの一部データのバックアップ代わりにも使える</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>insert into backup_table (select * from table where id=1);</span></code></pre></td></tr></table></div></figure>
+
+
+<p>updateは次のように行う</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>update table set a = t.a from (select * from table2) t where table.b = t.b;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>どの範囲のデータが更新されるかに注意してwhere句を使う。上の場合、tの中でwhere句を使う場合とで異なる結果になる場合がある。</p>
 </div>
   
   
@@ -761,6 +825,10 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/01/30/nadesiko-make-exe/">なでしこで実行ファイルを作る時のメモ</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/01/29/nadesiko2-make-plugin/">なでしこ2のプラグインを作る方法</a>
       </li>
     
@@ -774,10 +842,6 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
     
       <li class="post">
         <a href="/blog/2014/01/28/nadesiko-plugin/">C++/CLIでなでしこのプラグインを作る方法(Visual C++ Express Edition)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/01/28/nadesiko-lua/">なでしこでLuaエディタ？を作る（ネタ）</a>
       </li>
     
   </ul>
