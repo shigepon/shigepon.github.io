@@ -104,7 +104,7 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 
 <div class="entry-content"><p>rhaco2をPostgreSQL8.3で使えるように色々調べていくうちに学んだメモ。</p>
 
-<h3>insert時に「デフォルト値を入れる」だけの処理をしたい場合</h3>
+<h2>insert時に「デフォルト値を入れる」だけの処理をしたい場合</h2>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>insert into テーブル名 default value;</span></code></pre></td></tr></table></div></figure>
@@ -112,7 +112,7 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 
 <p>でOK</p>
 
-<h3>integerのカラムとかにlikeを適用したい場合</h3>
+<h2>integerのカラムとかにlikeを適用したい場合</h2>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>select * from テーブル名 where id::text like &#039;%abc%&#039;;</span></code></pre></td></tr></table></div></figure>
@@ -120,13 +120,13 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 
 <p>のようにカラムをテキストにキャストする。MySQLのvarcharをselectする時はデフォルトignore case。ついでにtrimも勝手にかける？らしい</p>
 
-<h3>show column</h3>
+<h2>show column</h2>
 
 <p>Mysqlで使えるshow columnは無いが、information_schemaの情報をselectすることで同じようなことが出来る。
 ただし、create table時にserialで指定してもinformation_schema.columnsから取得できるカラム情報はinteger(int4)のみ。
 なのでserialと判定するにはカラムがintegerであり、かつデフォルト値としてnextvalが指定されていることなど、複合的にチェックする必要がある。</p>
 
-<h3>cronでsqlを実行</h3>
+<h2>cronでsqlを実行</h2>
 
 <p>毎日0時0分に実行する場合</p>
 
@@ -134,7 +134,7 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 </pre></td><td class='code'><pre><code class=''><span class='line'>0 0 * * * /path/to/psql -U username -c "sql" database &gt; /dev/null</span></code></pre></td></tr></table></div></figure>
 
 
-<h3>select結果でinsert, update</h3>
+<h2>select結果でinsert, update</h2>
 
 <p>insertの場合はinsert文の後でselect文を書く。以下は一例</p>
 
