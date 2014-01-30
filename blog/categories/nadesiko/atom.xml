@@ -4,7 +4,7 @@
   <title><![CDATA[Category: なでしこ | shigeponが関心のある技術情報など]]></title>
   <link href="http://shigepon.github.io/blog/categories/nadesiko/atom.xml" rel="self"/>
   <link href="http://shigepon.github.io/"/>
-  <updated>2014-01-30T21:48:48+09:00</updated>
+  <updated>2014-01-30T21:50:38+09:00</updated>
   <id>http://shigepon.github.io/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -18,8 +18,11 @@
     <link href="http://shigepon.github.io/blog/2014/01/30/nadesiko-make-exe/"/>
     <updated>2014-01-30T09:22:46+09:00</updated>
     <id>http://shigepon.github.io/blog/2014/01/30/nadesiko-make-exe</id>
-    <content type="html"><![CDATA[<p>+パックファイル作る時はメインになるファイルだけnadesiko.nakoというパック名にして、その他はファイル名自身をパック名とする
-+データを埋め込む場合は、そのデータを呼び出す時にフルパスにしない。データが無いと言われる。</p>
+    <content type="html"><![CDATA[<ul>
+<li>パックファイル作る時はメインになるファイルだけnadesiko.nakoというパック名にして、その他はファイル名自身をパック名とする</li>
+<li>データを埋め込む場合は、そのデータを呼び出す時にフルパスにしない。データが無いと言われる。</li>
+</ul>
+
 
 <p>何となくマニュアル見ても分かりにくかったのでメモ</p>
 
