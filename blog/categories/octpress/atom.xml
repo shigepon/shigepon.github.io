@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Octpress | shigeponが関心のある技術情報など]]></title>
+  <link href="http://shigepon.github.io/blog/categories/octpress/atom.xml" rel="self"/>
+  <link href="http://shigepon.github.io/"/>
+  <updated>2014-02-03T08:41:45+09:00</updated>
+  <id>http://shigepon.github.io/</id>
+  <author>
+    <name><![CDATA[shigepon]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[octpress tips]]></title>
+    <link href="http://shigepon.github.io/blog/2014/01/31/octpress-tips/"/>
+    <updated>2014-01-31T08:33:56+09:00</updated>
+    <id>http://shigepon.github.io/blog/2014/01/31/octpress-tips</id>
+    <content type="html"><![CDATA[<p>Octpressのインストール後に行ったカスタマイズをまとめておきます。</p>
+
+<h2>外部リンクを別ウィンドウで開く</h2>
+
+<p>source/_includes/custom/head.html
+に下のコードを追加します</p>
+
+<p>```</p>
+
+<script language="JavaScript">
+$(document).ready( function () {
+   $("a[href^='http']:not([href*='" + location.hostname + "'])").attr('target', '_blank');
+})
+</script>
+
+
+<p>```</p>
+
+<p>のようにJavascriptで対応します</p>
+]]></content>
+  </entry>
+  
+</feed>

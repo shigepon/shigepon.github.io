@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://shigepon.github.io/atom.xml" rel="self"/>
   <link href="http://shigepon.github.io/"/>
-  <updated>2014-01-31T08:29:08+09:00</updated>
+  <updated>2014-02-03T08:41:45+09:00</updated>
   <id>http://shigepon.github.io/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,105 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Basic認証する時に気をつけること]]></title>
+    <link href="http://shigepon.github.io/blog/2014/02/03/basic-auth/"/>
+    <updated>2014-02-03T07:48:33+09:00</updated>
+    <id>http://shigepon.github.io/blog/2014/02/03/basic-auth</id>
+    <content type="html"><![CDATA[<p>rhaco3で作ったWebサービス全体にBasic認証をかけた時にちょっとハマったのでメモ。</p>
+
+<h2>症状</h2>
+
+<p>rhaco3の認証が入っているサービスで全体にBasic認証をかけると、</p>
+
+<ol>
+<li>トップページに入る時にBasic認証がかかる</li>
+<li>認証完了</li>
+<li>ログインページに移動</li>
+<li>またBasic認証がかかる</li>
+</ol>
+
+
+<p>というケースが見られました。Webサーバにはnginxを使いました。</p>
+
+<h2>原因</h2>
+
+<p>nginx側の設定が悪いのかなとか色々試行錯誤しましたが、結論としてrhaco3の認証部分が401のレスポンスを吐いてたのが問題でした。</p>
+
+<p><a href="http://www.slogical.co.jp/tech/http_basicauth.html">Basic認証の動作</a>というページで詳しく書かれています（以下に引用します）が</p>
+
+<blockquote><ol>
+<li>ユーザーがクライアント（IE等のWebブラウザ）に目的のURLを入力する。</li>
+<li>クライアントが、Authorization: ヘッダを付加しないで、
+目的のコンテンツにアクセスする。</li>
+<li>サーバーは、401 Authorization Required のレスポンスを返して、
+クライアントに認証が必要である旨を伝える。</li>
+<li>クライアントがユーザーに ID/PW の入力を求める
+（IE等のブラウザが、ポップアップウインドウを出して、
+　ID/PW の入力をユーザーに求めるアレです。）</li>
+<li>ユーザーが ID/PW を入力する。</li>
+<li>クライアントが、Authorization: ヘッダに ID/PW の情報を付加
+して目的のコンテンツに再度アクセスする。</li>
+<li>サーバが ID/PW を解析して、認証OKであればコンテンツをクライ
+アントに返す。</li>
+<li>クライアントがコンテンツを表示して、ユーザーがそれを閲覧する。</li>
+</ol>
+
+
+<p><code>       +------+  1---&gt;  +--------+  2---&gt;  +-------+
+</code>        |      |  &lt;&mdash;-4  |        |  &lt;&mdash;-3  |       |
+<code>       | User |         | Client |         | httpd |
+</code>        |      |  5&mdash;&ndash;>  |        |  6&mdash;&ndash;>  |       |
+`        +&mdash;&mdash;&mdash;+  &lt;&mdash;-8  +&mdash;&mdash;&mdash;&mdash;+  &lt;&mdash;-7  +&mdash;&mdash;&mdash;&ndash;+</p>
+
+<p>（コンテンツデータを１つ取得するために、リクエスト・レスポンスの
+　やりとりが２回行われています。）</p>
+
+<p>なお、
+Authorization: ヘッダには、
+Basic認証の ID と PW とを :（半角のコロン）でつなげた文字列を、
+base64した値が格納さています。
+（例えば、
+　Authorization: Basic dXNlcjAxOnBhc3N3b3JkCg==　といったようになります。）</p></blockquote>
+
+<p>ように、Basic認証ではサーバが401のレスポンスを返すことで、ブラウザ側にポップアップを出させているようです。その為rhaco3の認証部分で401のレスポンスを出した時に認証の情報がリセットされてしまったのではないかと思われます。</p>
+
+<h2>対処</h2>
+
+<p>rhaco3の認証部分(\org\rhaco\flow\parts\RequestFlow::do_login)で401を送信していた部分で200を送信することで対処できました。</p>
+
+<p>rhaco3で見られた症状でしたが、他のフレームワークでも特に何も考えてなかったら引っかかる可能性があります。というかBasic認証とフレームワークの認証両方掛けるとか普通無いですよねそうですよね。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[octpress tips]]></title>
+    <link href="http://shigepon.github.io/blog/2014/01/31/octpress-tips/"/>
+    <updated>2014-01-31T08:33:56+09:00</updated>
+    <id>http://shigepon.github.io/blog/2014/01/31/octpress-tips</id>
+    <content type="html"><![CDATA[<p>Octpressのインストール後に行ったカスタマイズをまとめておきます。</p>
+
+<h2>外部リンクを別ウィンドウで開く</h2>
+
+<p>source/_includes/custom/head.html
+に下のコードを追加します</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;script language="JavaScript"&gt;
+</span><span class='line'>$(document).ready( function () {
+</span><span class='line'>   $("a[href^='http']:not([href*='" + location.hostname + "'])").attr('target', '_blank');
+</span><span class='line'>})
+</span><span class='line'>&lt;/script&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>のようにJavascriptで対応します</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[なでしこで実行ファイルを作る時のメモ]]></title>

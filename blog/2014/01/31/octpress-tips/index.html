@@ -5,11 +5,18 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: test1 - shigeponが関心のある技術情報など</title>
+  <title>octpress tips - shigeponが関心のある技術情報など</title>
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Category: test1">
+  <meta name="description" content="Octpressのインストール後に行ったカスタマイズをまとめておきます。 外部リンクを別ウィンドウで開く source/_includes/custom/head.html
+に下のコードを追加します 1
+2
+3
+4
+5
+&lt;script language="JavaScript"&gt;
+$( &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +25,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://shigepon.github.ioblog/categories/test1">
+  <link rel="canonical" href="http://shigepon.github.io/blog/2014/01/31/octpress-tips">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -78,49 +85,107 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Test1</h1>
+    
+      <h1 class="entry-title">Octpress Tips</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-31T08:33:56+09:00" pubdate data-updated="true">Jan 31<span>st</span>, 2014</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>Octpressのインストール後に行ったカスタマイズをまとめておきます。</p>
 
-  
-  <h2>2014</h2>
+<h2>外部リンクを別ウィンドウで開く</h2>
 
-<article>
-  
-<h1><a href="/blog/2014/01/28/test-post2/">test post2</a></h1>
-<time datetime="2014-01-28T14:43:59+09:00" pubdate><span class='month'>Jan</span> <span class='day'>28</span> <span class='year'>2014</span></time>
+<p>source/_includes/custom/head.html
+に下のコードを追加します</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/test1/'>test1</a>, <a class='category' href='/blog/categories/test2/'>test2</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2014/01/28/test-post/">test post</a></h1>
-<time datetime="2014-01-28T12:59:29+09:00" pubdate><span class='month'>Jan</span> <span class='day'>28</span> <span class='year'>2014</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/test1/'>test1</a>, <a class='category' href='/blog/categories/test2/'>test2</a></span>
-</footer>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;script language="JavaScript"&gt;
+</span><span class='line'>$(document).ready( function () {
+</span><span class='line'>   $("a[href^='http']:not([href*='" + location.hostname + "'])").attr('target', '_blank');
+</span><span class='line'>})
+</span><span class='line'>&lt;/script&gt;</span></code></pre></td></tr></table></div></figure>
 
 
-</article>
-
+<p>のようにJavascriptで対応します</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">shigepon</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-31T08:33:56+09:00" pubdate data-updated="true">Jan 31<span>st</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/octpress/'>Octpress</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://shigepon.github.io/blog/2014/01/31/octpress-tips/" data-via="shigepon" data-counturl="http://shigepon.github.io/blog/2014/01/31/octpress-tips/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/01/30/nadesiko-make-exe/" title="Previous Post: なでしこで実行ファイルを作る時のメモ">&laquo; なでしこで実行ファイルを作る時のメモ</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/02/03/basic-auth/" title="Next Post: Basic認証する時に気をつけること">Basic認証する時に気をつけること &raquo;</a>
+      
+    </p>
+  </footer>
 </article>
 
 </div>
