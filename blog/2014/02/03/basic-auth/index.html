@@ -146,15 +146,21 @@
 アントに返す。</li>
 <li>クライアントがコンテンツを表示して、ユーザーがそれを閲覧する。</li>
 </ol>
+</blockquote>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>    +------+  1---&gt;  +--------+  2---&gt;  +-------+
+</span><span class='line'>    |      |  &lt;---4  |        |  &lt;---3  |       |
+</span><span class='line'>    | User |         | Client |         | httpd |
+</span><span class='line'>    |      |  5---&gt;  |        |  6---&gt;  |       |
+</span><span class='line'>    +------+  &lt;---8  +--------+  &lt;---7  +-------+</span></code></pre></td></tr></table></div></figure>
 
 
-<p><code>       +------+  1---&gt;  +--------+  2---&gt;  +-------+
-</code>        |      |  &lt;&mdash;-4  |        |  &lt;&mdash;-3  |       |
-<code>       | User |         | Client |         | httpd |
-</code>        |      |  5&mdash;&ndash;>  |        |  6&mdash;&ndash;>  |       |
-`        +&mdash;&mdash;&mdash;+  &lt;&mdash;-8  +&mdash;&mdash;&mdash;&mdash;+  &lt;&mdash;-7  +&mdash;&mdash;&mdash;&ndash;+</p>
-
-<p>（コンテンツデータを１つ取得するために、リクエスト・レスポンスの
+<blockquote><p>（コンテンツデータを１つ取得するために、リクエスト・レスポンスの
 　やりとりが２回行われています。）</p>
 
 <p>なお、
