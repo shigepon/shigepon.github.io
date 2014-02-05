@@ -110,16 +110,18 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 
 <h2>insert時に「デフォルト値を入れる」だけの処理をしたい場合</h2>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>insert into テーブル名 default value;</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">insert</span> <span class="k">into</span> <span class="err">テーブル名</span> <span class="k">default</span> <span class="n">value</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>でOK</p>
 
 <h2>integerのカラムとかにlikeを適用したい場合</h2>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>select * from テーブル名 where id::text like &#039;%abc%&#039;;</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="err">テーブル名</span> <span class="k">where</span> <span class="n">id</span><span class="p">::</span><span class="nb">text</span> <span class="k">like</span> <span class="o">&amp;#</span><span class="mi">039</span><span class="p">;</span><span class="o">%</span><span class="n">abc</span><span class="o">%&amp;#</span><span class="mi">039</span><span class="p">;;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>のようにカラムをテキストにキャストする。MySQLのvarcharをselectする時はデフォルトignore case。ついでにtrimも勝手にかける？らしい</p>
@@ -134,28 +136,32 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 
 <p>毎日0時0分に実行する場合</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>0 0 * * * /path/to/psql -U username -c "sql" database &gt; /dev/null</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="mi">0</span> <span class="mi">0</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="k">to</span><span class="o">/</span><span class="n">psql</span> <span class="o">-</span><span class="n">U</span> <span class="n">username</span> <span class="o">-</span><span class="k">c</span> <span class="ss">&quot;sql&quot;</span> <span class="k">database</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="k">null</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <h2>select結果でinsert, update</h2>
 
 <p>insertの場合はinsert文の後でselect文を書く。以下は一例</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>insert into table select a,b from table2 where a like 'hoge%';</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">insert</span> <span class="k">into</span> <span class="k">table</span> <span class="k">select</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="k">from</span> <span class="n">table2</span> <span class="k">where</span> <span class="n">a</span> <span class="k">like</span> <span class="s1">&#39;hoge%&#39;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>別テーブルへの一部データのバックアップ代わりにも使える</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>insert into backup_table (select * from table where id=1);</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">insert</span> <span class="k">into</span> <span class="n">backup_table</span> <span class="p">(</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="k">table</span> <span class="k">where</span> <span class="n">id</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>updateは次のように行う</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>update table set a = t.a from (select * from table2) t where table.b = t.b;</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">update</span> <span class="k">table</span> <span class="k">set</span> <span class="n">a</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">a</span> <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">table2</span><span class="p">)</span> <span class="n">t</span> <span class="k">where</span> <span class="k">table</span><span class="p">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">b</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>どの範囲のデータが更新されるかに注意してwhere句を使う。上の場合、tの中でwhere句を使う場合とで異なる結果になる場合がある。</p>

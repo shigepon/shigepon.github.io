@@ -4,7 +4,7 @@
   <title><![CDATA[Category: postgresql | shigeponが関心のある技術情報など]]></title>
   <link href="http://shigepon.github.io/blog/categories/postgresql/atom.xml" rel="self"/>
   <link href="http://shigepon.github.io/"/>
-  <updated>2014-02-05T22:17:34+09:00</updated>
+  <updated>2014-02-05T22:20:58+09:00</updated>
   <id>http://shigepon.github.io/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -22,7 +22,7 @@
 
 <h2>insert時に「デフォルト値を入れる」だけの処理をしたい場合</h2>
 
-<p><code>
+<p><code>sql
 insert into テーブル名 default value;
 </code></p>
 
@@ -30,7 +30,7 @@ insert into テーブル名 default value;
 
 <h2>integerのカラムとかにlikeを適用したい場合</h2>
 
-<p><code>
+<p><code>sql
 select * from テーブル名 where id::text like &amp;#039;%abc%&amp;#039;;
 </code></p>
 
@@ -54,19 +54,19 @@ select * from テーブル名 where id::text like &amp;#039;%abc%&amp;#039;;
 
 <p>insertの場合はinsert文の後でselect文を書く。以下は一例</p>
 
-<p><code>
+<p><code>sql
 insert into table select a,b from table2 where a like 'hoge%';
 </code></p>
 
 <p>別テーブルへの一部データのバックアップ代わりにも使える</p>
 
-<p><code>
+<p><code>sql
 insert into backup_table (select * from table where id=1);
 </code></p>
 
 <p>updateは次のように行う</p>
 
-<p><code>
+<p><code>sql
 update table set a = t.a from (select * from table2) t where table.b = t.b;
 </code></p>
 
