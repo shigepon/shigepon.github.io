@@ -4,7 +4,7 @@
   <title><![CDATA[Category: postgresql | shigeponが関心のある技術情報など]]></title>
   <link href="http://shigepon.github.io/blog/categories/postgresql/atom.xml" rel="self"/>
   <link href="http://shigepon.github.io/"/>
-  <updated>2014-02-03T13:06:06+09:00</updated>
+  <updated>2014-02-05T22:17:34+09:00</updated>
   <id>http://shigepon.github.io/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -71,6 +71,20 @@ update table set a = t.a from (select * from table2) t where table.b = t.b;
 </code></p>
 
 <p>どの範囲のデータが更新されるかに注意してwhere句を使う。上の場合、tの中でwhere句を使う場合とで異なる結果になる場合がある。</p>
+
+<h2>インデックス一覧を表示</h2>
+
+<p>インデックス一覧を表示。インデックスを2重に登録しようとするとエラーが出るので、チェックに使う</p>
+
+<p><code>sql
+SELECT tablename, indexname FROM pg_indexes;
+</code></p>
+
+<h2>ビューの一覧を表示</h2>
+
+<p><code>sql
+SELECT viewname FROM pg_views ORDER BY viewname;
+</code></p>
 ]]></content>
   </entry>
   
