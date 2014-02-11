@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://shigepon.github.io/atom.xml" rel="self"/>
   <link href="http://shigepon.github.io/"/>
-  <updated>2014-02-06T09:05:29+09:00</updated>
+  <updated>2014-02-11T11:45:35+09:00</updated>
   <id>http://shigepon.github.io/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,19 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[unity memo]]></title>
+    <link href="http://shigepon.github.io/blog/2014/02/10/unity-memo/"/>
+    <updated>2014-02-10T23:25:11+09:00</updated>
+    <id>http://shigepon.github.io/blog/2014/02/10/unity-memo</id>
+    <content type="html"><![CDATA[<p>unity使ってこれから何か作っていこうと思うのでめも。</p>
+
+<h3>物をバウンドさせる</h3>
+
+<p> physicalMaterialでBouncinessに数値を入れる。1とか。1でバウンド時の力のロスが無い。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Basic認証する時に気をつけること]]></title>
