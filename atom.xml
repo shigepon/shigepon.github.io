@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://shigepon.github.io/atom.xml" rel="self"/>
   <link href="http://shigepon.github.io/"/>
-  <updated>2014-02-11T11:45:35+09:00</updated>
+  <updated>2014-02-12T08:01:39+09:00</updated>
   <id>http://shigepon.github.io/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,49 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[svn memo]]></title>
+    <link href="http://shigepon.github.io/blog/2014/02/11/svn-memo/"/>
+    <updated>2014-02-11T11:53:32+09:00</updated>
+    <id>http://shigepon.github.io/blog/2014/02/11/svn-memo</id>
+    <content type="html"><![CDATA[<p>svn使っててはまることが結構あるのでメモ</p>
+
+<h2>ubuntuでsvnコマンドすると認証失敗する場合</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Password <span class="k">for</span> ‘<span class="o">(</span>null<span class="o">)</span>’ GNOME keyring:
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>というメッセージが表示される場合、gnome-keyringというやつが邪魔をしているらしい。ログイン情報を削除すれば解決。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rm ~/.gnome2/keyrings/login.keyring
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でいける。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[sqlite memo]]></title>
+    <link href="http://shigepon.github.io/blog/2014/02/11/sqlite-memo/"/>
+    <updated>2014-02-11T11:48:39+09:00</updated>
+    <id>http://shigepon.github.io/blog/2014/02/11/sqlite-memo</id>
+    <content type="html"><![CDATA[<p>SQLiteでたまに使う操作をメモ</p>
+
+<h2>テーブルの存在チェック</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">sqlite_master</span> <span class="k">WHERE</span> <span class="k">type</span><span class="o">=</span><span class="s1">&#39;table&#39;</span> <span class="k">AND</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;テーブル名&#39;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[unity memo]]></title>
@@ -23,6 +66,37 @@
 <h3>物をバウンドさせる</h3>
 
 <p> physicalMaterialでBouncinessに数値を入れる。1とか。1でバウンド時の力のロスが無い。</p>
+
+<h3>効果音を鳴らす</h3>
+
+<ul>
+<li><a href="http://www.senses-circuit.com/material/se_game.html">フリー効果音素材HP</a>などから音源をダウンロード</li>
+<li>Assetに音源をドラッグアンドドロップして追加</li>
+<li>追加したいオブジェクトでAddComponentボタンからComponent>Audio>Audio Sourceを選択</li>
+<li>Audio ClipにAssetに入れた音源を入れる。</li>
+<li>Audio Sourceコンポーネント内で3D Sound Setting>Min Distanceを10くらいに設定</li>
+</ul>
+
+
+<p>オブジェクトに設定したコードでは次のように書く。例としてスペースを押したら効果音が出るようにしてみた。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>var clip : AudioClip;
+</span><span class='line'>function Update() {
+</span><span class='line'>    if (Input.GetButton("Jump")) {
+</span><span class='line'>        audio.PlayOneShot(clip); 
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>BGMをかける</h3>
+
+<p>Assetに追加したBGMをHiearchyに追加して、InspectorのLoopをチェックしたらOK</p>
 ]]></content>
   </entry>
   

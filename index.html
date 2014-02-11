@@ -9,8 +9,8 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="unity使ってこれから何か作っていこうと思うのでめも。 物をバウンドさせる physicalMaterialでBouncinessに数値を入れる。1とか。1でバウンド時の力のロスが無い。
-">
+  <meta name="description" content="svn使っててはまることが結構あるのでメモ ubuntuでsvnコマンドすると認証失敗する場合 1
+Password for ‘(null)’ GNOME keyring: というメッセージが表示される場合、gnome-keyringというやつが邪魔をしているらしい。ログイン情報を削除すれば解決 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -86,6 +86,103 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2014/02/11/svn-memo/">Svn Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-11T11:53:32+09:00" pubdate data-updated="true">Feb 11<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>svn使っててはまることが結構あるのでメモ</p>
+
+<h2>ubuntuでsvnコマンドすると認証失敗する場合</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Password <span class="k">for</span> ‘<span class="o">(</span>null<span class="o">)</span>’ GNOME keyring:
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>というメッセージが表示される場合、gnome-keyringというやつが邪魔をしているらしい。ログイン情報を削除すれば解決。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rm ~/.gnome2/keyrings/login.keyring
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でいける。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/11/sqlite-memo/">Sqlite Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-11T11:48:39+09:00" pubdate data-updated="true">Feb 11<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>SQLiteでたまに使う操作をメモ</p>
+
+<h2>テーブルの存在チェック</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">sqlite_master</span> <span class="k">WHERE</span> <span class="k">type</span><span class="o">=</span><span class="s1">&#39;table&#39;</span> <span class="k">AND</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;テーブル名&#39;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2014/02/10/unity-memo/">Unity Memo</a></h1>
     
     
@@ -114,6 +211,37 @@
 <h3>物をバウンドさせる</h3>
 
 <p> physicalMaterialでBouncinessに数値を入れる。1とか。1でバウンド時の力のロスが無い。</p>
+
+<h3>効果音を鳴らす</h3>
+
+<ul>
+<li><a href="http://www.senses-circuit.com/material/se_game.html">フリー効果音素材HP</a>などから音源をダウンロード</li>
+<li>Assetに音源をドラッグアンドドロップして追加</li>
+<li>追加したいオブジェクトでAddComponentボタンからComponent>Audio>Audio Sourceを選択</li>
+<li>Audio ClipにAssetに入れた音源を入れる。</li>
+<li>Audio Sourceコンポーネント内で3D Sound Setting>Min Distanceを10くらいに設定</li>
+</ul>
+
+
+<p>オブジェクトに設定したコードでは次のように書く。例としてスペースを押したら効果音が出るようにしてみた。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>var clip : AudioClip;
+</span><span class='line'>function Update() {
+</span><span class='line'>    if (Input.GetButton("Jump")) {
+</span><span class='line'>        audio.PlayOneShot(clip); 
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>BGMをかける</h3>
+
+<p>Assetに追加したBGMをHiearchyに追加して、InspectorのLoopをチェックしたらOK</p>
 </div>
   
   
@@ -725,249 +853,6 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/28/nadesiko-lua/">なでしこでLuaエディタ？を作る（ネタ）</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-28T21:37:03+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>なでしこではLuaを使えるので、なでしこのGUIと組み合わせたら簡単にLuaエディタ作れるんじゃね？ということで作ってみました。（ただのネタです）</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>母艦は「メインフォーム」
-</span><span class='line'>そのクライアントW=640#数値
-</span><span class='line'>そのクライアントH=400#数値
-</span><span class='line'>そのタイトル=「なでしこ」#文字列
-</span><span class='line'>※ ---
-</span><span class='line'>LuaエディタとはTエディタ##生成
-</span><span class='line'>そのX=8#数値
-</span><span class='line'>そのY=8#数値
-</span><span class='line'>そのW=616#数値
-</span><span class='line'>そのH=344#数値
-</span><span class='line'>そのテキスト=「」#文字列
-</span><span class='line'>そのスクロールバー=「」#文字列
-</span><span class='line'>※ ---
-</span><span class='line'>Luaボタンとはボタン##生成
-</span><span class='line'>そのX=280#数値
-</span><span class='line'>そのY=360#数値
-</span><span class='line'>そのW=64#数値
-</span><span class='line'>そのH=32#数値
-</span><span class='line'>そのテキスト=「luaする」#文字列
-</span><span class='line'>そのクリックした時は～Luaボタン__クリックした時#イベント
-</span><span class='line'>※※※積み木デザイナ:ここまで※
-</span><span class='line'>●Luaボタン__クリックした時　　# ここにイベントを書きます。
-</span><span class='line'># 字下げした部分がイベント範囲です。
-</span><span class='line'>  エラー監視
-</span><span class='line'>      ソース=Luaエディタのテキスト
-</span><span class='line'>      A=50
-</span><span class='line'>      結果とは変数
-</span><span class='line'>      LUA(&quot;---
-</span><span class='line'>      {ソース}
-</span><span class='line'>      ---&quot;)
-</span><span class='line'>  エラーならば
-</span><span class='line'>      「エラー」と言う。</span></code></pre></td></tr></table></div></figure>
-
-
-<p>セーブやロードなどは全て省いてますが実装は簡単です。</p>
-
-<p>あとLUA(&quot;<del>&hellip;</del>&quot;)の箇所を変更すれば、返り値を得ることも簡単にできます。例えばこんな感じ</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>LUA(&quot;---ret=0{ソース}nako_set(&#039;結果&#039;&cedil;ret)---&quot;)結果を言う。</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Luaをちょっといじってみたいなと思う時に使えるんじゃないかと思います。</p>
-
-<p>※なぜか「LUAする」命令だとieとかexcelを立ち上げた時にvisible=trueに出来ませんでした。何かやり方が悪かったのかな。（なでしこのバージョンはデラックス版1.5322です）</p>
-
-<p>※LuaComではUTF-8を扱うので、日本語をまぜる場合はソースをUTF-8に変換しておく必要があります</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>LUA(UTF8N変換(&quot;...&quot;))</span></code></pre></td></tr></table></div></figure>
-
-
-<p>結果もnako_setでセットした値もUTF8で返ってきますのでSJIS変換命令で変換する必要があります。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/28/postgresql/">PostgreSQLメモ</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-28T21:24:42+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>rhaco2をPostgreSQL8.3で使えるように色々調べていくうちに学んだメモ。</p>
-
-<h2>insert時に「デフォルト値を入れる」だけの処理をしたい場合</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">insert</span> <span class="k">into</span> <span class="err">テーブル名</span> <span class="k">default</span> <span class="n">value</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でOK</p>
-
-<h2>integerのカラムとかにlikeを適用したい場合</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="err">テーブル名</span> <span class="k">where</span> <span class="n">id</span><span class="p">::</span><span class="nb">text</span> <span class="k">like</span> <span class="o">&amp;#</span><span class="mi">039</span><span class="p">;</span><span class="o">%</span><span class="n">abc</span><span class="o">%&amp;#</span><span class="mi">039</span><span class="p">;;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>のようにカラムをテキストにキャストする。MySQLのvarcharをselectする時はデフォルトignore case。ついでにtrimも勝手にかける？らしい</p>
-
-<h2>show column</h2>
-
-<p>Mysqlで使えるshow columnは無いが、information_schemaの情報をselectすることで同じようなことが出来る。
-ただし、create table時にserialで指定してもinformation_schema.columnsから取得できるカラム情報はinteger(int4)のみ。
-なのでserialと判定するにはカラムがintegerであり、かつデフォルト値としてnextvalが指定されていることなど、複合的にチェックする必要がある。</p>
-
-<h2>cronでsqlを実行</h2>
-
-<p>毎日0時0分に実行する場合</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="mi">0</span> <span class="mi">0</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="k">to</span><span class="o">/</span><span class="n">psql</span> <span class="o">-</span><span class="n">U</span> <span class="n">username</span> <span class="o">-</span><span class="k">c</span> <span class="ss">&quot;sql&quot;</span> <span class="k">database</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="k">null</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>select結果でinsert, update</h2>
-
-<p>insertの場合はinsert文の後でselect文を書く。以下は一例</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">insert</span> <span class="k">into</span> <span class="k">table</span> <span class="k">select</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="k">from</span> <span class="n">table2</span> <span class="k">where</span> <span class="n">a</span> <span class="k">like</span> <span class="s1">&#39;hoge%&#39;</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>別テーブルへの一部データのバックアップ代わりにも使える</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">insert</span> <span class="k">into</span> <span class="n">backup_table</span> <span class="p">(</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="k">table</span> <span class="k">where</span> <span class="n">id</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>updateは次のように行う</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">update</span> <span class="k">table</span> <span class="k">set</span> <span class="n">a</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">a</span> <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">table2</span><span class="p">)</span> <span class="n">t</span> <span class="k">where</span> <span class="k">table</span><span class="p">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">b</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>どの範囲のデータが更新されるかに注意してwhere句を使う。上の場合、tの中でwhere句を使う場合とで異なる結果になる場合がある。</p>
-
-<h2>インデックス一覧を表示</h2>
-
-<p>インデックス一覧を表示。インデックスを2重に登録しようとするとエラーが出るので、チェックに使う</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">SELECT</span> <span class="n">tablename</span><span class="p">,</span> <span class="n">indexname</span> <span class="k">FROM</span> <span class="n">pg_indexes</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>ビューの一覧を表示</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">SELECT</span> <span class="n">viewname</span> <span class="k">FROM</span> <span class="n">pg_views</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">viewname</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>psqlで実行結果を見やすくする</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="n">psql</span> <span class="o">=&gt;</span> <span class="err">\</span><span class="n">x</span>
-</span><span class='line'><span class="n">psql</span> <span class="o">=&gt;</span> <span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="k">table</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>カラムの数が多いと表示が崩れやすいので、これで見やすくなる</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -993,6 +878,14 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/02/11/svn-memo/">Svn Memo</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/02/11/sqlite-memo/">Sqlite Memo</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/02/10/unity-memo/">Unity Memo</a>
       </li>
     
@@ -1002,14 +895,6 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
     
       <li class="post">
         <a href="/blog/2014/01/31/octpress-tips/">Octpress Tips</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/01/30/nadesiko-make-exe/">なでしこで実行ファイルを作る時のメモ</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/01/29/nadesiko2-make-plugin/">なでしこ2のプラグインを作る方法</a>
       </li>
     
   </ul>

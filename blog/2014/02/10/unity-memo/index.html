@@ -9,8 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="unity使ってこれから何か作っていこうと思うのでめも。 物をバウンドさせる physicalMaterialでBouncinessに数値を入れる。1とか。1でバウンド時の力のロスが無い。
-">
+  <meta name="description" content="unity使ってこれから何か作っていこうと思うのでめも。 物をバウンドさせる physicalMaterialでBouncinessに数値を入れる。1とか。1でバウンド時の力のロスが無い。 効果音を鳴らす フリー効果音素材HPなどから音源をダウンロード &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -111,6 +110,37 @@
 <h3>物をバウンドさせる</h3>
 
 <p> physicalMaterialでBouncinessに数値を入れる。1とか。1でバウンド時の力のロスが無い。</p>
+
+<h3>効果音を鳴らす</h3>
+
+<ul>
+<li><a href="http://www.senses-circuit.com/material/se_game.html">フリー効果音素材HP</a>などから音源をダウンロード</li>
+<li>Assetに音源をドラッグアンドドロップして追加</li>
+<li>追加したいオブジェクトでAddComponentボタンからComponent>Audio>Audio Sourceを選択</li>
+<li>Audio ClipにAssetに入れた音源を入れる。</li>
+<li>Audio Sourceコンポーネント内で3D Sound Setting>Min Distanceを10くらいに設定</li>
+</ul>
+
+
+<p>オブジェクトに設定したコードでは次のように書く。例としてスペースを押したら効果音が出るようにしてみた。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>var clip : AudioClip;
+</span><span class='line'>function Update() {
+</span><span class='line'>    if (Input.GetButton("Jump")) {
+</span><span class='line'>        audio.PlayOneShot(clip); 
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>BGMをかける</h3>
+
+<p>Assetに追加したBGMをHiearchyに追加して、InspectorのLoopをチェックしたらOK</p>
 </div>
 
 
@@ -155,6 +185,8 @@
         <a class="basic-alignment left" href="/blog/2014/02/03/basic-auth/" title="Previous Post: Basic認証する時に気をつけること">&laquo; Basic認証する時に気をつけること</a>
       
       
+        <a class="basic-alignment right" href="/blog/2014/02/11/sqlite-memo/" title="Next Post: sqlite memo">sqlite memo &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -178,6 +210,14 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/02/11/svn-memo/">Svn Memo</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/02/11/sqlite-memo/">Sqlite Memo</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/02/10/unity-memo/">Unity Memo</a>
       </li>
     
@@ -187,14 +227,6 @@
     
       <li class="post">
         <a href="/blog/2014/01/31/octpress-tips/">Octpress Tips</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/01/30/nadesiko-make-exe/">なでしこで実行ファイルを作る時のメモ</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/01/29/nadesiko2-make-plugin/">なでしこ2のプラグインを作る方法</a>
       </li>
     
   </ul>

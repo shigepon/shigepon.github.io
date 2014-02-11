@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: なでしこ2 - shigeponが関心のある技術情報など</title>
+  <title>svn memo - shigeponが関心のある技術情報など</title>
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Category: なでしこ2">
+  <meta name="description" content="svn使っててはまることが結構あるのでメモ ubuntuでsvnコマンドすると認証失敗する場合 1
+Password for ‘(null)’ GNOME keyring: というメッセージが表示される場合、gnome-keyringというやつが邪魔をしているらしい。ログイン情報を削除すれば解決 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://shigepon.github.ioblog/categories/nadesiko2">
+  <link rel="canonical" href="http://shigepon.github.io/blog/2014/02/11/svn-memo">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -78,35 +79,96 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: なでしこ2</h1>
+    
+      <h1 class="entry-title">Svn Memo</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-11T11:53:32+09:00" pubdate data-updated="true">Feb 11<span>th</span>, 2014</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>svn使っててはまることが結構あるのでメモ</p>
 
-  
-  <h2>2014</h2>
+<h2>ubuntuでsvnコマンドすると認証失敗する場合</h2>
 
-<article>
-  
-<h1><a href="/blog/2014/01/29/nadesiko2-make-plugin/">なでしこ2のプラグインを作る方法</a></h1>
-<time datetime="2014-01-29T09:49:17+09:00" pubdate><span class='month'>Jan</span> <span class='day'>29</span> <span class='year'>2014</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/c-number/'>C#</a>, <a class='category' href='/blog/categories/nadesiko/'>なでしこ</a>, <a class='category' href='/blog/categories/nadesiko2/'>なでしこ2</a></span>
-</footer>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Password <span class="k">for</span> ‘<span class="o">(</span>null<span class="o">)</span>’ GNOME keyring:
+</span></code></pre></td></tr></table></div></figure>
 
 
-</article>
+<p>というメッセージが表示される場合、gnome-keyringというやつが邪魔をしているらしい。ログイン情報を削除すれば解決。</p>
 
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rm ~/.gnome2/keyrings/login.keyring
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でいける。</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">shigepon</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-11T11:53:32+09:00" pubdate data-updated="true">Feb 11<span>th</span>, 2014</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://shigepon.github.io/blog/2014/02/11/svn-memo/" data-via="shigepon" data-counturl="http://shigepon.github.io/blog/2014/02/11/svn-memo/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/02/11/sqlite-memo/" title="Previous Post: sqlite memo">&laquo; sqlite memo</a>
+      
+      
+    </p>
+  </footer>
 </article>
 
 </div>
