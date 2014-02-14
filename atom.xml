@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://shigepon.github.io/atom.xml" rel="self"/>
   <link href="http://shigepon.github.io/"/>
-  <updated>2014-02-12T08:01:39+09:00</updated>
+  <updated>2014-02-14T22:46:14+09:00</updated>
   <id>http://shigepon.github.io/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -78,25 +78,83 @@
 </ul>
 
 
-<p>オブジェクトに設定したコードでは次のように書く。例としてスペースを押したら効果音が出るようにしてみた。</p>
+<p>オブジェクトに設定したコードでは次のように書く。例としてスペースを押したら効果音が出るようにしてみた。
+コードの設定部分でこの例の場合clipに音源を入れる（でないと聞こえなかったような）</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>var clip : AudioClip;
-</span><span class='line'>function Update() {
-</span><span class='line'>    if (Input.GetButton("Jump")) {
-</span><span class='line'>        audio.PlayOneShot(clip); 
-</span><span class='line'>    }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="n">AudioClip</span> <span class="n">clip</span><span class="p">;</span>
+</span><span class='line'><span class="k">public</span> <span class="n">function</span> <span class="nf">Update</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="n">GetButton</span><span class="p">(</span><span class="s">&quot;Jump&quot;</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">audio</span><span class="p">.</span><span class="n">PlayOneShot</span><span class="p">(</span><span class="n">clip</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <h3>BGMをかける</h3>
 
 <p>Assetに追加したBGMをHiearchyに追加して、InspectorのLoopをチェックしたらOK</p>
+
+<h3>位置移動</h3>
+
+<p>transform.positionにVectorオブジェクトを代入すればOK
+transform.position.xに直接値を入れるとC#では怒られた。</p>
+
+<h3>トリガで衝突判定</h3>
+
+<p>Collider2Dでis Triggerにチェックを入れるとTriggerを用いて衝突判定できる。衝突しないケースと衝突するケースを使い分けられるので便利。
+イベントとして2Dの場合は、</p>
+
+<ul>
+<li>OnTriggerEnter2D</li>
+<li>OnTriggerStay2D</li>
+<li>OntriggerExit2D</li>
+</ul>
+
+
+<p>が使える。2Dで物理エンジン使わない時とか使える。なんか使える条件があるような情報があった。</p>
+
+<h3>時間待ちの作法</h3>
+
+<p>コルーチンを使うらしい。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="n">function</span> <span class="nf">Update</span><span class="p">(){</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'>  <span class="n">StartCoroutine</span><span class="p">(</span><span class="s">&quot;GameOver&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">private</span> <span class="n">IENumerator</span> <span class="nf">GameOver</span><span class="p">(){</span>
+</span><span class='line'>  <span class="k">yield</span> <span class="k">return</span> <span class="k">new</span> <span class="nf">WaitForSeconds</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">Application</span><span class="p">.</span><span class="n">LoadLevel</span><span class="p">(</span><span class="s">&quot;GameOver&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じ。時間待ちとは言え、動きが止まったりするわけじゃない。</p>
+
+<h3>デバッグ</h3>
+
+<p>Unity Remoteを使う。Free Aspectだと上手く表示できないとか上手く行かないケースがあるので注意。かならずアスペクト比？を設定。</p>
+
+<h3>その他</h3>
+
+<ul>
+<li>位置のScaleを-1にして反転するとアニメーションもそのまま反転した。すごい。</li>
+<li>StartよりAwakeが先に呼び出される。初期化に使える。</li>
+</ul>
+
 ]]></content>
   </entry>
   
