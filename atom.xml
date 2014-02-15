@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://shigepon.github.io/atom.xml" rel="self"/>
   <link href="http://shigepon.github.io/"/>
-  <updated>2014-02-14T22:46:14+09:00</updated>
+  <updated>2014-02-15T11:07:46+09:00</updated>
   <id>http://shigepon.github.io/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -144,9 +144,36 @@ transform.position.xに直接値を入れるとC#では怒られた。</p>
 
 <p>こんな感じ。時間待ちとは言え、動きが止まったりするわけじゃない。</p>
 
+<h3>座標変換</h3>
+
+<p>タップやクリックの座標とUnity内での座標の場合は座標変換が必要。カメラのScreenToWorldPointメソッドを使うが2Dの場合直感的に行かなく、次のようにする</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="n">Vector3</span> <span class="n">screenPosition</span> <span class="p">=</span> <span class="n">Camera</span><span class="p">.</span><span class="n">main</span><span class="p">.</span><span class="n">ScreenToWorldPoint</span><span class="p">(</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">);</span>
+</span><span class='line'><span class="n">Vector2</span> <span class="n">clickPosition</span> <span class="p">=</span> <span class="n">Camera</span><span class="p">.</span><span class="n">main</span><span class="p">.</span><span class="n">ScreenToWorldPoint</span><span class="p">(</span><span class="k">new</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="n">mousePosition</span><span class="p">.</span><span class="n">x</span><span class="p">,</span><span class="n">Input</span><span class="p">.</span><span class="n">mousePosition</span><span class="p">.</span><span class="n">y</span><span class="p">,</span><span class="n">screenPosition</span><span class="p">.</span><span class="n">z</span><span class="p">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と2DなのにVector3（３次元座標）で指定する。</p>
+
 <h3>デバッグ</h3>
 
 <p>Unity Remoteを使う。Free Aspectだと上手く表示できないとか上手く行かないケースがあるので注意。かならずアスペクト比？を設定。</p>
+
+<h3>Androidへの実装</h3>
+
+<p>実機に実装する場合はBuild and Runをすれば良い。ただしXperia SO-01Bに実装すると初期の設定ではエラーがポコポコ出たので対処をメモしておく</p>
+
+<p>まずはEGL_BAD_MATCHというエラーが出た。ググっでも答えが出ないので、ddmsを使ってログを取ってみると、どうも32bit Display Bufferとか24bit Display Bufferの処理をした後にエラーが出てたので、Player Setting > Android > Resolution and Presentationにある32bit Dispay Bufferと24bit Display Bufferのチェックをはずした。するとEGL_BAD_MATCHは消えた。</p>
+
+<p>次にProfilerも使ってないのに
+ Profiler is only supported in Unity Pro
+ というメッセージが出た。結局分からなかった。私が実装した時の問題点は画像が表示されないことだったのでこれは関係ないだろうと考えて無視。</p>
+
+<p>結局画面が表示されない
+ Build Setting画面のTexture CompressionをDon&rsquo;t overrideからETC1 or RGB16に変更すると動いた！
+なんかどっかにこの話があったんだけど、どこか忘れたのでまた思い出したらリンクする。</p>
 
 <h3>その他</h3>
 
