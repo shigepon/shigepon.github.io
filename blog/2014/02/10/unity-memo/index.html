@@ -9,7 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="unity使ってこれから何か作っていこうと思うのでめも。 物をバウンドさせる physicalMaterialでBouncinessに数値を入れる。1とか。1でバウンド時の力のロスが無い。 効果音を鳴らす フリー効果音素材HPなどから音源をダウンロード &hellip;">
+  <meta name="description" content="unity使ってこれから何か作っていこうと思うのでめも。 最初にやったこと 【Unity】素人が7日間クソゲーを作り続けてわかったこと – uinyan. comに載っていたUNITY &ndash; Developer &ndash; はじめての Unity &ndash; 第1回 世界の「骨格 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -107,6 +107,11 @@
 
 <div class="entry-content"><p>unity使ってこれから何か作っていこうと思うのでめも。</p>
 
+<h3>最初にやったこと</h3>
+
+<p><a href="http://uinyan.com/unity_7days_kusoge_challenge/">【Unity】素人が7日間クソゲーを作り続けてわかったこと – uinyan. com</a>に載っていた<a href="http://japan.unity3d.com/developer/document/tutorial/my-first-unity/01.html">UNITY &ndash; Developer &ndash; はじめての Unity &ndash; 第1回 世界の「骨格」をつくろう</a>に沿ってブロックとボールを作ってみた。
+ 実際にどう操作するかは<a href="https://www.google.com/url?q=http://dotinstall.com/&amp;usd=2&amp;usg=AFQjCNHZtbpqtTDbVeGhAQfx3_H-UUYI1Q">ドットインストールのUnity講座</a>を参考にした。</p>
+
 <h3>物をバウンドさせる</h3>
 
 <p> physicalMaterialでBouncinessに数値を入れる。1とか。1でバウンド時の力のロスが無い。</p>
@@ -123,7 +128,7 @@
 
 
 <p>オブジェクトに設定したコードでは次のように書く。例としてスペースを押したら効果音が出るようにしてみた。
-コードの設定部分でこの例の場合clipに音源を入れる（でないと聞こえなかったような）</p>
+ コードの設定部分でこの例の場合clipに音源を入れる（でないと聞こえなかったような）</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -147,7 +152,7 @@
 <h3>位置移動</h3>
 
 <p>transform.positionにVectorオブジェクトを代入すればOK
-transform.position.xに直接値を入れるとC#では怒られた。</p>
+ transform.position.xに直接値を入れるとC#では怒られた。</p>
 
 <h3>トリガで衝突判定</h3>
 
