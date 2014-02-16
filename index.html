@@ -211,7 +211,7 @@ Password for ‘(null)’ GNOME keyring: というメッセージが表示され
 <h3>最初にやったこと</h3>
 
 <p><a href="http://uinyan.com/unity_7days_kusoge_challenge/">【Unity】素人が7日間クソゲーを作り続けてわかったこと – uinyan. com</a>に載っていた<a href="http://japan.unity3d.com/developer/document/tutorial/my-first-unity/01.html">UNITY &ndash; Developer &ndash; はじめての Unity &ndash; 第1回 世界の「骨格」をつくろう</a>に沿ってブロックとボールを作ってみた。
- 実際にどう操作するかは<a href="https://www.google.com/url?q=http://dotinstall.com/&amp;usd=2&amp;usg=AFQjCNHZtbpqtTDbVeGhAQfx3_H-UUYI1Q">ドットインストールのUnity講座</a>を参考にした。</p>
+  実際にどう操作するかは<a href="https://www.google.com/url?q=http://dotinstall.com/&amp;usd=2&amp;usg=AFQjCNHZtbpqtTDbVeGhAQfx3_H-UUYI1Q">ドットインストールのUnity講座</a>を参考にした。</p>
 
 <h3>物をバウンドさせる</h3>
 
@@ -229,7 +229,7 @@ Password for ‘(null)’ GNOME keyring: というメッセージが表示され
 
 
 <p>オブジェクトに設定したコードでは次のように書く。例としてスペースを押したら効果音が出るようにしてみた。
- コードの設定部分でこの例の場合clipに音源を入れる（でないと聞こえなかったような）</p>
+  コードの設定部分でこの例の場合clipに音源を入れる（でないと聞こえなかったような）</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -253,7 +253,7 @@ Password for ‘(null)’ GNOME keyring: というメッセージが表示され
 <h3>位置移動</h3>
 
 <p>transform.positionにVectorオブジェクトを代入すればOK
- transform.position.xに直接値を入れるとC#では怒られた。</p>
+  transform.position.xに直接値を入れるとC#では怒られた。</p>
 
 <h3>トリガで衝突判定</h3>
 
@@ -318,11 +318,11 @@ Password for ‘(null)’ GNOME keyring: というメッセージが表示され
 <p>まずはEGL_BAD_MATCHというエラーが出た。ググっでも答えが出ないので、ddmsを使ってログを取ってみると、どうも32bit Display Bufferとか24bit Display Bufferの処理をした後にエラーが出てたので、Player Setting > Android > Resolution and Presentationにある32bit Dispay Bufferと24bit Display Bufferのチェックをはずした。するとEGL_BAD_MATCHは消えた。</p>
 
 <p>次にProfilerも使ってないのに
- Profiler is only supported in Unity Pro
- というメッセージが出た。結局分からなかった。私が実装した時の問題点は画像が表示されないことだったのでこれは関係ないだろうと考えて無視。</p>
+  Profiler is only supported in Unity Pro
+  というメッセージが出た。結局分からなかった。私が実装した時の問題点は画像が表示されないことだったのでこれは関係ないだろうと考えて無視。</p>
 
 <p>結局画面が表示されない
- Build Setting画面のTexture CompressionをDon&rsquo;t overrideからETC1 or RGB16に変更すると動いた！
+  Build Setting画面のTexture CompressionをDon&rsquo;t overrideからETC1 or RGB16に変更すると動いた！
 なんかどっかにこの話があったんだけど、どこか忘れたのでまた思い出したらリンクする。</p>
 
 <h3>その他</h3>
