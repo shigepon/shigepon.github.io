@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://shigepon.github.io/atom.xml" rel="self"/>
   <link href="http://shigepon.github.io/"/>
-  <updated>2014-02-16T23:18:11+09:00</updated>
+  <updated>2014-02-16T23:22:50+09:00</updated>
   <id>http://shigepon.github.io/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -170,14 +170,19 @@ transform.position.xに直接値を入れるとC#では怒られた。</p>
 
 <p>実機に実装する場合はBuild and Runをすれば良い。ただしXperia SO-01Bに実装すると初期の設定ではエラーがポコポコ出たので対処をメモしておく</p>
 
-<p>まずはEGL_BAD_MATCHというエラーが出た。ググっでも答えが出ないので、ddmsを使ってログを取ってみると、どうも32bit Display Bufferとか24bit Display Bufferの処理をした後にエラーが出てたので、Player Setting > Android > Resolution and Presentationにある32bit Dispay Bufferと24bit Display Bufferのチェックをはずした。するとEGL_BAD_MATCHは消えた。</p>
+<h4>EGL_BAD_MATCH</h4>
+
+<p>まずは<strong>EGL_BAD_MATCH</strong>というエラーが出た。ググっでも答えが出ないので、ddmsを使ってログを取ってみると、どうも32bit Display Bufferとか24bit Display Bufferの処理をした後にエラーが出てたので、Player Setting > Android > Resolution and Presentationにある32bit Dispay Bufferと24bit Display Bufferのチェックをはずした。するとEGL_BAD_MATCHは消えた。</p>
+
+<h4>Profiler is only supported in Unity Pro</h4>
 
 <p>次にProfilerも使ってないのに<br/>
-Profiler is only supported in Unity Pro<br/>
+<strong>Profiler is only supported in Unity Pro</strong><br/>
 というメッセージが出た。結局分からなかった。私が実装した時の問題点は画像が表示されないことだったのでこれは関係ないだろうと考えて無視。</p>
 
-<p>結局画面が表示されない<br/>
-Build Setting画面のTexture CompressionをDon&rsquo;t overrideからETC1 or RGB16に変更すると動いた！
+<h4>結局画面が表示されない</h4>
+
+<p>Build Setting画面のTexture CompressionをDon&rsquo;t overrideからETC1 or RGB16に変更すると動いた！
 なんかどっかにこの話があったんだけど、どこか忘れたのでまた思い出したらリンクする。</p>
 
 <h3>その他</h3>
