@@ -214,6 +214,25 @@ transform.position.xに直接値を入れるとC#では怒られた。</p>
 
 <p>実機に実装する場合はBuild and Runをすれば良い。ただしXperia SO-01Bに実装すると初期の設定ではエラーがポコポコ出たので対処をメモしておく</p>
 
+<h3>iPhoneへの実装</h3>
+
+<p>iPhoneへの実装はios Developer Programへの登録など色々面倒で複数サイトを参考にした。
+ios Developer Programへの登録などUnity関係なくやらないといけない作業は、<a href="http://r-dimension.xsrv.jp/classes_j/ios_test/">iOSデバイス（iPhone・iPad）実機テスト | Yasushi Noguchi Class</a>が参考になった<br/>
+unity側での作業は<a href="http://tech.gmo-media.jp/post/54095871491/running-unity-app-on-iphone">iPhone実機でUnityを動かしてみた &ndash; unity部 | GMOメディア エンジニアブログ</a>を参考にすれば上手くいった。
+バージョンが変わったりすると、また画面構成とか変わるんだろうけど。</p>
+
+<p>あとiPhone初心者だったせいで、マナーモードになっているのに気づかず、音が出ないと１時間くらい悩んでた。（これでハマる人は少ないと思うけど一応メモ）</p>
+
+<h3>iPhoneへのadhocビルドと配布</h3>
+
+<p>やること色々あるので、参考にしたサイトの一覧を紹介する程度。</p>
+
+<ul>
+<li><a href="http://dev.classmethod.jp/smartphone/iphone/ios-app-how-to-release/#toc-xcode-">よく分かる！iOS アプリのリリース手順のまとめ ｜ Developers.IO</a>←App Storeでの配布についてのページだけどこのページが一番参考になった。多分画面が最新のものに対応してるから。</li>
+<li><a href="http://plus.vc/iphone/4357/">iPhoneアプリのAd Hoc配信方法まとめ完全版 [Xcode4対応] | PLUS</a> 上のページで分からないところはこのページを参考にした。Xcodeのビルド設定以降は参考になる。</li>
+</ul>
+
+
 <h4>EGL_BAD_MATCH</h4>
 
 <p>まずは<strong>EGL_BAD_MATCH</strong>というエラーが出た。ググっでも答えが出ないので、ddmsを使ってログを取ってみると、どうも32bit Display Bufferとか24bit Display Bufferの処理をした後にエラーが出てたので、Player Setting > Android > Resolution and Presentationにある32bit Dispay Bufferと24bit Display Bufferのチェックをはずした。するとEGL_BAD_MATCHは消えた。</p>
