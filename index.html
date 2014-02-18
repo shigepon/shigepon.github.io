@@ -334,6 +334,14 @@ unity側での作業は<a href="http://tech.gmo-media.jp/post/54095871491/runnin
 </ul>
 
 
+<p>adhocで端末を追加したい場合に、またもハマった</p>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/mswar/20090303/1236087158">iPhone Developper Programingに 新しくデバイス追加する方法(２台目、３台目～) &ndash; mswar的電網日誌</a> adhocじゃないけど、それ以外の部分は参考になった</li>
+<li><a href="http://plus.vc/iphone/7015/">Adhocでデバイスを追加したものの、インストールできない場合のチェック方法 | PLUS</a>これはチェックしておかないといけない感じ</li>
+</ul>
+
+
 <h4>EGL_BAD_MATCH</h4>
 
 <p>まずは<strong>EGL_BAD_MATCH</strong>というエラーが出た。ググっでも答えが出ないので、ddmsを使ってログを取ってみると、どうも32bit Display Bufferとか24bit Display Bufferの処理をした後にエラーが出てたので、Player Setting > Android > Resolution and Presentationにある32bit Dispay Bufferと24bit Display Bufferのチェックをはずした。するとEGL_BAD_MATCHは消えた。</p>

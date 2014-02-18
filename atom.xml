@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://shigepon.github.io/atom.xml" rel="self"/>
   <link href="http://shigepon.github.io/"/>
-  <updated>2014-02-18T00:52:01+09:00</updated>
+  <updated>2014-02-18T11:04:16+09:00</updated>
   <id>http://shigepon.github.io/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -186,6 +186,14 @@ unity側での作業は<a href="http://tech.gmo-media.jp/post/54095871491/runnin
 <ul>
 <li><a href="http://dev.classmethod.jp/smartphone/iphone/ios-app-how-to-release/#toc-xcode-">よく分かる！iOS アプリのリリース手順のまとめ ｜ Developers.IO</a>←App Storeでの配布についてのページだけどこのページが一番参考になった。多分画面が最新のものに対応してるから。</li>
 <li><a href="http://plus.vc/iphone/4357/">iPhoneアプリのAd Hoc配信方法まとめ完全版 [Xcode4対応] | PLUS</a> 上のページで分からないところはこのページを参考にした。Xcodeのビルド設定以降は参考になる。</li>
+</ul>
+
+
+<p>adhocで端末を追加したい場合に、またもハマった</p>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/mswar/20090303/1236087158">iPhone Developper Programingに 新しくデバイス追加する方法(２台目、３台目～) &ndash; mswar的電網日誌</a> adhocじゃないけど、それ以外の部分は参考になった</li>
+<li><a href="http://plus.vc/iphone/7015/">Adhocでデバイスを追加したものの、インストールできない場合のチェック方法 | PLUS</a>これはチェックしておかないといけない感じ</li>
 </ul>
 
 
