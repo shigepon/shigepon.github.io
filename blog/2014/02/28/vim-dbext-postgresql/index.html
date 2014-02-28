@@ -5,12 +5,22 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>なでしこで実行ファイルを作る時のメモ - shigeponが関心のある技術情報など</title>
+  <title>dbext.vimでpostgresqlにアクセスする - shigeponが関心のある技術情報など</title>
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="パックファイル作る時はメインになるファイルだけnadesiko.nakoというパック名にして、その他はファイル名自身をパック名とする
-データを埋め込む場合は、そのデータを呼び出す時にフルパスにしない。データが無いと言われる。 何となくマニュアル見ても分かりにくかったのでメモ ついでにリンク &hellip;">
+  <meta name="description" content="ググってみたけど無かったのでメモ。
+単純に.vimrcに 1
+2
+3
+4
+5
+6
+7
+let dbext_default_profile=""
+let dbext_default_type="PGSQL"
+let dbext_default_user="username"
+let &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +29,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://shigepon.github.io/blog/2014/01/30/nadesiko-make-exe">
+  <link rel="canonical" href="http://shigepon.github.io/blog/2014/02/28/vim-dbext-postgresql">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -83,7 +93,7 @@
   
   <header>
     
-      <h1 class="entry-title">なでしこで実行ファイルを作る時のメモ</h1>
+      <h1 class="entry-title">dbext.vimでpostgresqlにアクセスする</h1>
     
     
       <p class="meta">
@@ -99,24 +109,59 @@
   
 
 
-<time datetime="2014-01-30T09:22:46+09:00" pubdate data-updated="true">Jan 30<span>th</span>, 2014</time>
+<time datetime="2014-02-28T11:48:20+09:00" pubdate data-updated="true">Feb 28<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><ul>
-<li>パックファイル作る時はメインになるファイルだけnadesiko.nakoというパック名にして、その他はファイル名自身をパック名とする</li>
-<li>データを埋め込む場合は、そのデータを呼び出す時にフルパスにしない。データが無いと言われる。</li>
-</ul>
+<div class="entry-content"><p>ググってみたけど無かったのでメモ。
+単純に.vimrcに</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>let dbext_default_profile=""
+</span><span class='line'>let dbext_default_type="PGSQL"
+</span><span class='line'>let dbext_default_user="username"
+</span><span class='line'>let dbext_default_passwd="password"
+</span><span class='line'>let dbext_default_dbname="dbname"
+</span><span class='line'>let dbext_default_host="host"
+</span><span class='line'>let dbext_default_port="port"</span></code></pre></td></tr></table></div></figure>
 
 
-<p>何となくマニュアル見ても分かりにくかったのでメモ</p>
+<p>と入力してvimを再起動して</p>
 
-<p>ついでにリンク</p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="p">:</span><span class="k">Select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">hoge</span> <span class="k">limit</span> <span class="mi">1</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p><a href="http://nadesi.com">なでしこ</a></p>
+
+<p>と何かのテーブルから１行だけ出力してみようとしてみたけど</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="n">dbext</span><span class="p">:</span><span class="n">PostgreSQL</span> <span class="n">requires</span> <span class="n">a</span> <span class="s1">&#39;$HOME/.pgpass&#39;</span> <span class="n">file</span> <span class="k">in</span> <span class="k">order</span> <span class="k">to</span> <span class="n">authenticate</span><span class="p">.</span> <span class="n">This</span> <span class="n">file</span> <span class="k">is</span> <span class="n">missing</span><span class="p">.</span> <span class="n">If</span> <span class="n">you</span> <span class="k">are</span> <span class="k">using</span> <span class="n">a</span> <span class="k">local</span> <span class="k">connection</span><span class="p">,</span> <span class="n">you</span> <span class="n">can</span> <span class="k">create</span> <span class="n">an</span> <span class="n">empty</span> <span class="p">.</span><span class="n">pgpass</span> <span class="n">file</span><span class="p">.</span>  <span class="n">The</span> <span class="n">b</span>
+</span><span class='line'><span class="n">inary</span> <span class="s1">&#39;psql&#39;</span> <span class="n">does</span> <span class="k">not</span> <span class="n">accept</span> <span class="n">commandline</span> <span class="n">passwords</span><span class="p">.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>というエラーメッセージが！
+どうもpsqlがコマンドラインでパスワードを受け付けないので、パスワード設定しても意味ないみたい。
+なので、~/.pgpassに</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">host</span><span class="p">:</span><span class="n">port</span><span class="p">:</span><span class="n">dbname</span><span class="p">:</span><span class="n">username</span><span class="p">:</span><span class="n">password</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>を入力したらエラー無く動いた。良かった良かった。
+ちなみに.vimrcに書いたパスワード設定を消すと、それはそれでパスワード聞かれるので残しておいた方がいい。</p>
 </div>
 
 
@@ -139,21 +184,15 @@
   
 
 
-<time datetime="2014-01-30T09:22:46+09:00" pubdate data-updated="true">Jan 30<span>th</span>, 2014</time>
+<time datetime="2014-02-28T11:48:20+09:00" pubdate data-updated="true">Feb 28<span>th</span>, 2014</time>
       
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/nadesiko/'>なでしこ</a>
-  
-</span>
 
 
     </p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://shigepon.github.io/blog/2014/01/30/nadesiko-make-exe/" data-via="shigepon" data-counturl="http://shigepon.github.io/blog/2014/01/30/nadesiko-make-exe/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://shigepon.github.io/blog/2014/02/28/vim-dbext-postgresql/" data-via="shigepon" data-counturl="http://shigepon.github.io/blog/2014/02/28/vim-dbext-postgresql/" >Tweet</a>
   
   
   
@@ -164,10 +203,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/01/29/nadesiko2-make-plugin/" title="Previous Post: なでしこ2のプラグインを作る方法">&laquo; なでしこ2のプラグインを作る方法</a>
+        <a class="basic-alignment left" href="/blog/2014/02/26/rails-startup/" title="Previous Post: Ruby on Railsを入れてみた">&laquo; Ruby on Railsを入れてみた</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/01/31/octpress-tips/" title="Next Post: octpress tips">octpress tips &raquo;</a>
       
     </p>
   </footer>

@@ -9,8 +9,18 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="rhaco使わないでWebサービス作るならもうPHP使わずに他の言語でやってみようかなと思い、
-DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強という意味を込めてRailsでやってみることにした。 とりあえずまずはインストール出来ないと話にならないので、 &hellip;">
+  <meta name="description" content="ググってみたけど無かったのでメモ。
+単純に.vimrcに 1
+2
+3
+4
+5
+6
+7
+let dbext_default_profile=""
+let dbext_default_type="PGSQL"
+let dbext_default_user="username"
+let &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +90,87 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/28/vim-dbext-postgresql/">dbext.vimでpostgresqlにアクセスする</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-28T11:48:20+09:00" pubdate data-updated="true">Feb 28<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ググってみたけど無かったのでメモ。
+単純に.vimrcに</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>let dbext_default_profile=""
+</span><span class='line'>let dbext_default_type="PGSQL"
+</span><span class='line'>let dbext_default_user="username"
+</span><span class='line'>let dbext_default_passwd="password"
+</span><span class='line'>let dbext_default_dbname="dbname"
+</span><span class='line'>let dbext_default_host="host"
+</span><span class='line'>let dbext_default_port="port"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と入力してvimを再起動して</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="p">:</span><span class="k">Select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">hoge</span> <span class="k">limit</span> <span class="mi">1</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と何かのテーブルから１行だけ出力してみようとしてみたけど</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="n">dbext</span><span class="p">:</span><span class="n">PostgreSQL</span> <span class="n">requires</span> <span class="n">a</span> <span class="s1">&#39;$HOME/.pgpass&#39;</span> <span class="n">file</span> <span class="k">in</span> <span class="k">order</span> <span class="k">to</span> <span class="n">authenticate</span><span class="p">.</span> <span class="n">This</span> <span class="n">file</span> <span class="k">is</span> <span class="n">missing</span><span class="p">.</span> <span class="n">If</span> <span class="n">you</span> <span class="k">are</span> <span class="k">using</span> <span class="n">a</span> <span class="k">local</span> <span class="k">connection</span><span class="p">,</span> <span class="n">you</span> <span class="n">can</span> <span class="k">create</span> <span class="n">an</span> <span class="n">empty</span> <span class="p">.</span><span class="n">pgpass</span> <span class="n">file</span><span class="p">.</span>  <span class="n">The</span> <span class="n">b</span>
+</span><span class='line'><span class="n">inary</span> <span class="s1">&#39;psql&#39;</span> <span class="n">does</span> <span class="k">not</span> <span class="n">accept</span> <span class="n">commandline</span> <span class="n">passwords</span><span class="p">.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>というエラーメッセージが！
+どうもpsqlがコマンドラインでパスワードを受け付けないので、パスワード設定しても意味ないみたい。
+なので、~/.pgpassに</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">host</span><span class="p">:</span><span class="n">port</span><span class="p">:</span><span class="n">dbname</span><span class="p">:</span><span class="n">username</span><span class="p">:</span><span class="n">password</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>を入力したらエラー無く動いた。良かった良かった。
+ちなみに.vimrcに書いたパスワード設定を消すと、それはそれでパスワード聞かれるので残しておいた方がいい。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1098,99 +1189,6 @@ base64した値が格納さています。
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/28/nadesiko-plugin-cs/">C#で作ったdllをC++/CLIで使う</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-28T22:27:58+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><strong>画像やファイルが無くなっていますがご了承下さい</strong></p>
-
-<p>なでしこでプラグインを作る時にC#を使いたかったので、本格的にdllを作る前に、C++/CLIからMessageBoxを表示する程度のC#のdllを呼び出してみました。</p>
-
-<p>C#のdllコード</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>using System;
-</span><span class='line'>using System.Collections.Generic;
-</span><span class='line'>using System.Windows.Forms;
-</span><span class='line'>using System.Text;
-</span><span class='line'>namespace ClassLibrary1{
-</span><span class='line'>    public class Class1
-</span><span class='line'>    {
-</span><span class='line'>        public static void Method1()
-</span><span class='line'>        {
-</span><span class='line'>            MessageBox.Show(&quot;method1&quot;);
-</span><span class='line'>        }
-</span><span class='line'>    }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>C++フォームアプリケーション</p>
-
-<p>C#で作ったdllの参照とかフォームの構成とか画像が消えちゃったので適当に想像してください。
-用はC++のアプリケーションでC#のdllを参照します。</p>
-
-<p>ボタンクリック時のコード</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>private: System::Void button1_Click(System::Object^  sender&cedil; System::EventArgs^  e) {
-</span><span class='line'>   try{
-</span><span class='line'>      ClassLibrary1::Class1::Method1();
-</span><span class='line'>   }catch(Exception^ e){
-</span><span class='line'>      System::Windows::Forms::MessageBox::Show(e-&gt;Message);
-</span><span class='line'>   }
-</span><span class='line'> }</span></code></pre></td></tr></table></div></figure>
-
-
-<p>で動かしてみるときちんと動かせました。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1216,6 +1214,10 @@ base64した値が格納さています。
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/02/28/vim-dbext-postgresql/">dbext.vimでpostgresqlにアクセスする</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/02/26/rails-startup/">Ruby on Railsを入れてみた</a>
       </li>
     
@@ -1229,10 +1231,6 @@ base64した値が格納さています。
     
       <li class="post">
         <a href="/blog/2014/02/10/unity-memo/">Unity Memo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/02/03/basic-auth/">Basic認証する時に気をつけること</a>
       </li>
     
   </ul>
