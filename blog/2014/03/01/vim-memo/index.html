@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>C#で作ったdllをなでしこで使う - shigeponが関心のある技術情報など</title>
+  <title>vim memo - shigeponが関心のある技術情報など</title>
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="C#のdllを呼び出せるように、C#のdllを参照した後、Plugin.cppの一部を以下のように書き換えました 1
+  <meta name="description" content="vimでsnippet 色々方法があるみたいだけど、neocomplecacheを入れているので、それと相性が良さそうな（作者が同じ）プラグインを入れた 1
 2
 3
 4
@@ -20,7 +20,15 @@
 9
 10
 11
-PHiValue __stdcall sample01(DWORD param) { PHiValue result; &hellip;">
+12
+13
+14
+15
+16
+17
+18
+19
+NeoBundle 'Shougo/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -29,7 +37,7 @@ PHiValue __stdcall sample01(DWORD param) { PHiValue result; &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin-cs2">
+  <link rel="canonical" href="http://shigepon.github.io/blog/2014/03/01/vim-memo">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -93,7 +101,7 @@ PHiValue __stdcall sample01(DWORD param) { PHiValue result; &hellip;">
   
   <header>
     
-      <h1 class="entry-title">C#で作ったdllをなでしこで使う</h1>
+      <h1 class="entry-title">Vim Memo</h1>
     
     
       <p class="meta">
@@ -109,14 +117,16 @@ PHiValue __stdcall sample01(DWORD param) { PHiValue result; &hellip;">
   
 
 
-<time datetime="2014-01-28T22:42:43+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
+<time datetime="2014-03-01T14:14:10+09:00" pubdate data-updated="true">Mar 1<span>st</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>C#のdllを呼び出せるように、C#のdllを参照した後、Plugin.cppの一部を以下のように書き換えました</p>
+<div class="entry-content"><h2>vimでsnippet</h2>
+
+<p>色々方法があるみたいだけど、neocomplecacheを入れているので、それと相性が良さそうな（作者が同じ）プラグインを入れた</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -129,36 +139,46 @@ PHiValue __stdcall sample01(DWORD param) { PHiValue result; &hellip;">
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>PHiValue __stdcall sample01(DWORD param) {
-</span><span class='line'>  PHiValue result;
-</span><span class='line'>  ClassLibrary1::Class1::Method1();
-</span><span class='line'>  result = nako_var_new(NULL);
-</span><span class='line'>  hi_setStr(result&cedil; &quot;abc&quot;&cedil; sizeof(&quot;abc&quot;));
-</span><span class='line'>  return result;
-</span><span class='line'>}
-</span><span class='line'>NAKO_API(void) ImportNakoFunction(void) {
-</span><span class='line'>  // ユーザー命令の追加
-</span><span class='line'>  nako_addFunction(&quot;sample01&quot;&cedil;&quot;&quot;&cedil; sample01&cedil; 0);
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>NeoBundle 'Shougo/neosnippet'
+</span><span class='line'>NeoBundle 'Shougo/neosnippet-snippets'
+</span><span class='line'>
+</span><span class='line'>" Plugin key-mappings.
+</span><span class='line'>imap &lt;C-k&gt;     &lt;Plug&gt;(neosnippet_expand_or_jump)
+</span><span class='line'>smap &lt;C-k&gt;     &lt;Plug&gt;(neosnippet_expand_or_jump)
+</span><span class='line'>xmap &lt;C-k&gt;     &lt;Plug&gt;(neosnippet_expand_target)
+</span><span class='line'>" " SuperTab like snippets behavior.
+</span><span class='line'>imap &lt;expr&gt;&lt;TAB&gt; neosnippet#expandable_or_jumpable() ?
+</span><span class='line'>\ "\&lt;Plug&gt;(neosnippet_expand_or_jump)"
+</span><span class='line'>\: pumvisible() ? "\&lt;C-n&gt;" : "\&lt;TAB&gt;"
+</span><span class='line'>smap &lt;expr&gt;&lt;TAB&gt; neosnippet#expandable_or_jumpable() ?
+</span><span class='line'>\ "\&lt;Plug&gt;(neosnippet_expand_or_jump)"
+</span><span class='line'>\: "\&lt;TAB&gt;"
+</span><span class='line'>"
+</span><span class='line'>" " For snippet_complete marker.
+</span><span class='line'>if has('conceal')
+</span><span class='line'>  set conceallevel=2 concealcursor=i
+</span><span class='line'>endif</span></code></pre></td></tr></table></div></figure>
 
 
-<p>なでしこ側のソースは以下のようにして呼び出してみました</p>
+<p>を.vimrcに追記して、vimを再起動後、</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>結果=sample01
-</span><span class='line'>結果を言う</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>:NeoBundleInstall</span></code></pre></td></tr></table></div></figure>
 
 
-<p>これでダイアログボックスに「method1」が表示され、続いて「abc」が表示されればOKです。</p>
+<p>でインストール完了。もう一度vimを再起動して、phpファイルを空けて
+おもむろにインサートモードで「for」とか打ったらちゃんとsnippetが表示された。&lt;C-n>などで選択してからtab押したらちゃんと入力された。
+いいね〜！！</p>
 
-<p>しかし・・・結果は外部例外　E0434F4Dを出力してちゃんと動きませんでしたorz。この例外はtry&hellip;catchで掴もうとしても掴めません。どうも処理の関数（ここではsample01）に入った瞬間にエラーを返してしまうようです。ちなみにこのコードでググっても原因は理解できませんでした。ということで、クジラ飛行机氏（なでしこ作者）にメールで泣きつきました。</p>
-
-<p>すると</p>
-
-<blockquote><p>vnako.exe と同じフォルダに配置したらエラー出ませんでした。たぶん、plug-ins フォルダにパスを通さない限り、DLLがもう一方を参照できなくなるのだと思います。</p></blockquote>
-
-<p>という返事が！まじで！？と思い試してみると・・・上手くいくじゃないですか！これでC#で作ったdllもなでしこで利用できるようになりました。</p>
+<p>現在、デフォルトのsnippetとしてneosnippet-snippetsをインストールしないとデフォルトのsnippetを出してくれないことに注意。</p>
 </div>
 
 
@@ -181,21 +201,15 @@ PHiValue __stdcall sample01(DWORD param) { PHiValue result; &hellip;">
   
 
 
-<time datetime="2014-01-28T22:42:43+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
+<time datetime="2014-03-01T14:14:10+09:00" pubdate data-updated="true">Mar 1<span>st</span>, 2014</time>
       
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/c-number/'>C#</a>, <a class='category' href='/blog/categories/c-plus-plus/'>C++</a>, <a class='category' href='/blog/categories/nadesiko/'>なでしこ</a>
-  
-</span>
 
 
     </p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin-cs2/" data-via="shigepon" data-counturl="http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin-cs2/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://shigepon.github.io/blog/2014/03/01/vim-memo/" data-via="shigepon" data-counturl="http://shigepon.github.io/blog/2014/03/01/vim-memo/" >Tweet</a>
   
   
   
@@ -206,10 +220,8 @@ PHiValue __stdcall sample01(DWORD param) { PHiValue result; &hellip;">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/01/28/nadesiko-plugin-cs/" title="Previous Post: C#で作ったdllをC++/CLIで使う">&laquo; C#で作ったdllをC++/CLIで使う</a>
+        <a class="basic-alignment left" href="/blog/2014/02/28/vim-dbext-postgresql/" title="Previous Post: dbext.vimでpostgresqlにアクセスする">&laquo; dbext.vimでpostgresqlにアクセスする</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/01/29/nadesiko2-make-plugin/" title="Next Post: なでしこ2のプラグインを作る方法">なでしこ2のプラグインを作る方法 &raquo;</a>
       
     </p>
   </footer>
