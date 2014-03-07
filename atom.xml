@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://shigepon.github.io/atom.xml" rel="self"/>
   <link href="http://shigepon.github.io/"/>
-  <updated>2014-03-07T09:14:11+09:00</updated>
+  <updated>2014-03-07T09:18:28+09:00</updated>
   <id>http://shigepon.github.io/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -35,11 +35,14 @@
 </pre></td><td class='code'><pre><code class=''><span class='line'>$ cat access.log | grep -v -i "bot" | grep "referer:-" | grep "status:200" | awk '{print $3}' | sort | uniq -c</span></code></pre></td></tr></table></div></figure>
 
 
-<p>100回以上アクセスあったIPだけ取り出してみた</p>
+<p>軽くbot避けを入れてるけど、crawlerとかspiderとかを避けておくとより正確になるかも。
+これだけだと一杯出てくるので100回以上アクセスあったIPだけ取り出してみた。</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>$ cat access.log | grep -v -i "bot" | grep "referer:-" | grep "status:200" | awk '{print $3}' | sort | uniq -c | grep "[0-9]\{3,\}\s"</span></code></pre></td></tr></table></div></figure>
 
+
+<p>ただ、最初の目的には最初の集計の方が役に立った。結局Bingのボットだったみたい。Analyticsではじけなかったアクセスがあったのかな。</p>
 ]]></content>
   </entry>
   
