@@ -5,16 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>octpress tips - shigeponが関心のある技術情報など</title>
+  <title>Google Analyticsからbotアクセスを取り除く - shigeponが関心のある技術情報など</title>
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Octpressのインストール後に行ったカスタマイズをまとめておきます。 外部リンクを別ウィンドウで開く 下のコードを追加します :source/_inclides/custom/head.html1
-2
-3
-4
-5
-&lt;script language=&quot;JavaScript& &hellip;">
+  <meta name="description" content="Google Analyticsからbotアクセスを取り除く 参考ページHow to Block Bots from Your Google Analytics ここ数日Google Analyticsにアメリカからリファラ無し直帰率100%近くのアクセスを大量に発見。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -23,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://shigepon.github.io/blog/2014/01/31/octpress-tips">
+  <link rel="canonical" href="http://shigepon.github.io/blog/2014/03/09/how-to-block-bot-access-from-google-analytics">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -87,7 +82,7 @@
   
   <header>
     
-      <h1 class="entry-title">Octpress Tips</h1>
+      <h1 class="entry-title">Google Analyticsからbotアクセスを取り除く</h1>
     
     
       <p class="meta">
@@ -103,33 +98,41 @@
   
 
 
-<time datetime="2014-01-31T08:33:56+09:00" pubdate data-updated="true">Jan 31<span>st</span>, 2014</time>
+<time datetime="2014-03-09T21:53:40+09:00" pubdate data-updated="true">Mar 9<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Octpressのインストール後に行ったカスタマイズをまとめておきます。</p>
+<div class="entry-content"><h2>Google Analyticsからbotアクセスを取り除く</h2>
 
-<h2>外部リンクを別ウィンドウで開く</h2>
+<p>参考ページ<a href="http://www.lunametrics.com/blog/2013/09/05/filter-bots-google-analytics/#sr=d&amp;m=n&amp;cp=d&amp;ct=-tmc&amp;ts=1394369739">How to Block Bots from Your Google Analytics</a></p>
 
-<p>下のコードを追加します</p>
+<p>ここ数日Google Analyticsにアメリカからリファラ無し直帰率100%近くのアクセスを大量に発見。
+どう考えてもbotですどうも(ry
+本当はGoogle Analyticsに自動でフィルタして欲しいけど、どうもフィルタしてないので、自力でフィルタ設定しないといけないみたい。</p>
 
-<figure class='code'><figcaption><span>:source/_inclides/custom/head.html</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="o">&lt;</span><span class="nx">script</span> <span class="nx">language</span><span class="o">=</span><span class="s2">&quot;JavaScript&quot;</span><span class="o">&gt;</span>
-</span><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>   <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;a[href^=&#39;http&#39;]:not([href*=&#39;&quot;</span> <span class="o">+</span> <span class="nx">location</span><span class="p">.</span><span class="nx">hostname</span> <span class="o">+</span> <span class="s2">&quot;&#39;])&quot;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;target&#39;</span><span class="p">,</span> <span class="s1">&#39;_blank&#39;</span><span class="p">);</span>
-</span><span class='line'><span class="p">})</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/script&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
+<p>上のリンクを参考に設定してみる</p>
 
+<p>+アナリティクス設定→ ビュー→フィルタと移動
++「新しいボタン」をクリック</p>
 
-<p>のようにJavascriptで対応します</p>
+<p>設定は以下の通り</p>
+
+<p>+新しいフィルタを作成
++フィルタ名：適当（Smart Bot 除外）とか？
++フィルタの種類：カスタムフィルタ
++除外
++フィルタフィールド：ISPドメインからのトラフィック
++フィルタパターン：<sup>microsoft corp(oration)?|inktomi corporation|yahoo! inc.|google inc.|stumbleupon inc.</sup>$|gomez
++大文字小文字を区別：いいえ</p>
+
+<p>+「保存」をクリック</p>
+
+<p>これでフィルタできるけど、フィルタをかける以前の情報には反映しない。
+参考ページに設定テンプレートがあったのでここでもリンクしておく
+<a href="https://www.google.com/analytics/web/template?uid=svscm2YdTe6s0yJeGHQM4Q">Smart Botを除外するテンプレート</a></p>
 </div>
 
 
@@ -152,21 +155,15 @@
   
 
 
-<time datetime="2014-01-31T08:33:56+09:00" pubdate data-updated="true">Jan 31<span>st</span>, 2014</time>
+<time datetime="2014-03-09T21:53:40+09:00" pubdate data-updated="true">Mar 9<span>th</span>, 2014</time>
       
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/octpress/'>Octpress</a>
-  
-</span>
 
 
     </p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://shigepon.github.io/blog/2014/01/31/octpress-tips/" data-via="shigepon" data-counturl="http://shigepon.github.io/blog/2014/01/31/octpress-tips/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://shigepon.github.io/blog/2014/03/09/how-to-block-bot-access-from-google-analytics/" data-via="shigepon" data-counturl="http://shigepon.github.io/blog/2014/03/09/how-to-block-bot-access-from-google-analytics/" >Tweet</a>
   
   
   
@@ -177,10 +174,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/01/30/nadesiko-make-exe/" title="Previous Post: なでしこで実行ファイルを作る時のメモ">&laquo; なでしこで実行ファイルを作る時のメモ</a>
+        <a class="basic-alignment left" href="/blog/2014/03/07/linux-command-memo/" title="Previous Post: linux command memo">&laquo; linux command memo</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/02/03/basic-auth/" title="Next Post: Basic認証する時に気をつけること">Basic認証する時に気をつけること &raquo;</a>
       
     </p>
   </footer>
