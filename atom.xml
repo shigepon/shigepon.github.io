@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://shigepon.github.io/atom.xml" rel="self"/>
   <link href="http://shigepon.github.io/"/>
-  <updated>2014-03-09T22:46:59+09:00</updated>
+  <updated>2014-03-09T23:09:10+09:00</updated>
   <id>http://shigepon.github.io/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -18,9 +18,7 @@
     <link href="http://shigepon.github.io/blog/2014/03/09/how-to-block-bot-access-from-google-analytics/"/>
     <updated>2014-03-09T21:53:40+09:00</updated>
     <id>http://shigepon.github.io/blog/2014/03/09/how-to-block-bot-access-from-google-analytics</id>
-    <content type="html"><![CDATA[<h2>Google Analyticsからbotアクセスを取り除く</h2>
-
-<p>参考ページ<a href="http://www.lunametrics.com/blog/2013/09/05/filter-bots-google-analytics/#sr=d&amp;m=n&amp;cp=d&amp;ct=-tmc&amp;ts=1394369739">How to Block Bots from Your Google Analytics</a></p>
+    <content type="html"><![CDATA[<p>参考ページ<a href="http://www.lunametrics.com/blog/2013/09/05/filter-bots-google-analytics/#sr=d&amp;m=n&amp;cp=d&amp;ct=-tmc&amp;ts=1394369739">How to Block Bots from Your Google Analytics</a></p>
 
 <p>ここ数日Google Analyticsにアメリカからリファラ無し直帰率100%近くのアクセスを大量に発見。
 どう考えてもbotですどうも(ry
@@ -28,20 +26,25 @@
 
 <p>上のリンクを参考に設定してみる</p>
 
-<p>+アナリティクス設定→ ビュー→フィルタと移動
-+「新しいボタン」をクリック</p>
+<ul>
+<li>アナリティクス設定→ ビュー→フィルタと移動</li>
+<li>「新しいボタン」をクリック</li>
+</ul>
 
-<p>設定は以下の通り</p>
 
-<p>+新しいフィルタを作成
-+フィルタ名：適当（Smart Bot 除外）とか？
-+フィルタの種類：カスタムフィルタ
-+除外
-+フィルタフィールド：ISPドメインからのトラフィック
-+フィルタパターン：<sup>microsoft corp(oration)?|inktomi corporation|yahoo! inc.|google inc.|stumbleupon inc.</sup>$|gomez
-+大文字小文字を区別：いいえ</p>
+<h3>設定は以下の通り</h3>
 
-<p>+「保存」をクリック</p>
+<ul>
+<li>新しいフィルタを作成</li>
+<li>フィルタ名：適当（Smart Bot 除外）とか？</li>
+<li>フィルタの種類：カスタムフィルタ</li>
+<li>除外</li>
+<li>フィルタフィールド：ISPドメインからのトラフィック</li>
+<li>フィルタパターン：<sup>microsoft corp(oration)?|inktomi corporation|yahoo! inc.|google inc.|stumbleupon inc.</sup>$|gomez</li>
+<li><p>大文字小文字を区別：いいえ</p></li>
+<li><p>「保存」をクリック</p></li>
+</ul>
+
 
 <p>これでフィルタできるけど、フィルタをかける以前の情報には反映しない。
 参考ページに設定テンプレートがあったのでここでもリンクしておく
