@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://shigepon.github.io/atom.xml" rel="self"/>
   <link href="http://shigepon.github.io/"/>
-  <updated>2014-03-10T19:34:49+09:00</updated>
+  <updated>2014-03-10T21:45:48+09:00</updated>
   <id>http://shigepon.github.io/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -74,7 +74,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>でサーバを起動させて、<a href="http://0.0.0.0:3000/events/index%E3%81%A8http://0.0.0.0:3000/events/show%E3%82%92%E7%A2%BA%E8%AA%8D">http://0.0.0.0:3000/events/index%E3%81%A8http://0.0.0.0:3000/events/show%E3%82%92%E7%A2%BA%E8%AA%8D</a></p>
+<p>でサーバを起動させて、[<a href="http://0.0.0.0:3000/events/index">http://0.0.0.0:3000/events/index</a>]と[<a href="http://0.0.0.0:3000/events/show">http://0.0.0.0:3000/events/show</a>]を確認</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
