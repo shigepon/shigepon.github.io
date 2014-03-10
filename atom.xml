@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://shigepon.github.io/atom.xml" rel="self"/>
   <link href="http://shigepon.github.io/"/>
-  <updated>2014-03-10T21:46:57+09:00</updated>
+  <updated>2014-03-10T22:03:20+09:00</updated>
   <id>http://shigepon.github.io/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -116,8 +116,48 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>と表示される。なるほど@変数名に値を入れたらテンプレでアクセス出来るようになるのね。
-とりあえずここまで。</p>
+<p>と表示される。なるほど@変数名に値を入れたらテンプレでアクセス出来るようになるのね。</p>
+
+<h3>URLにパラメーターを入れる</h3>
+
+<p>テーブルのidが1のデータを[<a href="http://0.0.0.0:3000/events/show/1">http://0.0.0.0:3000/events/show/1</a>]で表示出来るように考える。
+そのためにはconfig/routes.rbを</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'>  <span class="n">get</span> <span class="s2">&quot;events/show/&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'>  <span class="n">get</span> <span class="s2">&quot;events/show/:eventid&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;events#show&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こうすると上のURLにアクセスするとevents_controller.rbのshowメソッド内でparams[:eventid]に1が入る
+events_controller.rbを次のように変えると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'>  <span class="k">def</span> <span class="nf">show</span>
+</span><span class='line'>    <span class="vi">@event</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>          <span class="vi">@event</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span> <span class="o">=</span> <span class="n">params</span><span class="o">[</span><span class="ss">:eventid</span><span class="o">]</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>[<a href="http://0.0.0.0:3000/events/show/1">http://0.0.0.0:3000/events/show/1</a>]にアクセスすると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;h1&gt;</span>1<span class="nt">&lt;/h1&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と表示されるようになる。（あくまでこういうコードはテスト用）
+とりあえずここまで</p>
 ]]></content>
   </entry>
   
