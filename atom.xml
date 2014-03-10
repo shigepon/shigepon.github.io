@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://shigepon.github.io/atom.xml" rel="self"/>
   <link href="http://shigepon.github.io/"/>
-  <updated>2014-03-09T23:09:10+09:00</updated>
+  <updated>2014-03-10T19:34:49+09:00</updated>
   <id>http://shigepon.github.io/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,114 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずRailsアプリを作ってみた]]></title>
+    <link href="http://shigepon.github.io/blog/2014/03/10/a-way-of-creating-rails-application/"/>
+    <updated>2014-03-10T18:10:41+09:00</updated>
+    <id>http://shigepon.github.io/blog/2014/03/10/a-way-of-creating-rails-application</id>
+    <content type="html"><![CDATA[<p>参考にした記事URL一覧</p>
+
+<ul>
+<li><a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a></li>
+<li><a href="http://www.oiax.jp/rails3book/setup_postgresql.html">データベースとの接続（PostgreSQL編） &ndash; Ruby on Rails with OIAX</a></li>
+<li><a href="http://qiita.com/stkn_bb/items/72d06c149d3e6f315f8c">[Rails]既存のMySQLテーブルに接続する方法 &ndash; Qiita</a></li>
+<li><a href="http://ubiqlog.com/archives/8749">Ruby on Rails 4.0正式リリースとBootstrapの正しい設定法 | ユービックログ研究所</a></li>
+<li><a href="http://railscasts.com/episodes/328-twitter-bootstrap-basics?language=ja&amp;view=asciicast">#328 Twitter Bootstrap Basics &ndash; RailsCasts</a></li>
+<li><a href="http://qiita.com/somewhatgood@github/items/9890e75b4c195d47715a">Rails &ndash; link_to の引数と展開の違いまとめ &ndash; Qiita</a></li>
+</ul>
+
+
+<p>基本的なところは<a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a>をなぞってみる。
+ただし、PostgreSQLの既存テーブルを使い、テンプレートにBootstrapを使うので、途中から色々やることが変わっている。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>rails new bocho
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><a href="">Ruby on Railsを入れてみた</a>に注意点であげたようにGemfileからtherubyracerに関する行をコメントアウトしてbundle install
+これをしないとrails g controllerコマンドで</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>autodetect<span class="s1">&#39;: Could not find a Javascript runtime. ...&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>というエラーが出た</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>rails g controller events index show
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と入力してビューとコントローラーを作った。これの意味はeventsというコントローラーとindex、showというビューを作る。ビューはスペース区切りで複数書けるみたい。indexはデータ一覧、showは個別データの表示を意味している
+ファイルとしては</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>app/controllers/events_controller.rb
+</span><span class='line'>app/views/events/index.html.erb
+</span><span class='line'>app/views/events/show.html.erb
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>が出来る。events_controller.rbにはindexとshowメソッドが入っている</p>
+
+<h3>確認</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>rails s
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でサーバを起動させて、<a href="http://0.0.0.0:3000/events/index%E3%81%A8http://0.0.0.0:3000/events/show%E3%82%92%E7%A2%BA%E8%AA%8D">http://0.0.0.0:3000/events/index%E3%81%A8http://0.0.0.0:3000/events/show%E3%82%92%E7%A2%BA%E8%AA%8D</a></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Events##index
+</span><span class='line'>Find me in app/view/events/index.html.erb
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいなメッセージが出てたらおk</p>
+
+<h3>コントローラー、ビューを修正</h3>
+
+<p>ビューって言っていいのかテンプレートなのか良くわからないけどapp/views/events/show.html.erbを修正</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='erb'><span class='line'><span class="x">&lt;h1&gt;</span><span class="cp">&lt;%=</span> <span class="vi">@event</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span> <span class="cp">%&gt;</span><span class="x">&lt;/h1&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで<a href="http://0.0.0.0:3000/events/show%E3%82%92%E7%A2%BA%E8%AA%8D%E3%81%99%E3%82%8B%E3%81%A8%E3%82%A8%E3%83%A9%E3%83%BC%E3%81%8C%E8%A1%A8%E7%A4%BA%E3%81%95%E3%82%8C%E3%82%8B%E3%80%82">http://0.0.0.0:3000/events/show%E3%82%92%E7%A2%BA%E8%AA%8D%E3%81%99%E3%82%8B%E3%81%A8%E3%82%A8%E3%83%A9%E3%83%BC%E3%81%8C%E8%A1%A8%E7%A4%BA%E3%81%95%E3%82%8C%E3%82%8B%E3%80%82</a></p>
+
+<p>@eventが登録されてないので、コントローラーで登録する</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'>  <span class="k">def</span> <span class="nf">show</span>
+</span><span class='line'>    <span class="vi">@event</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>          <span class="vi">@event</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;hoge&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これでさっきのURLにアクセスすると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;h1&gt;</span>hoge<span class="nt">&lt;/h1&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と表示される。なるほど@変数名に値を入れたらテンプレでアクセス出来るようになるのね。
+とりあえずここまで。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Google Analyticsからbotアクセスを取り除く]]></title>

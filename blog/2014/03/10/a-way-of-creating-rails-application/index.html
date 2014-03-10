@@ -5,12 +5,14 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>PostgreSQLメモ - shigeponが関心のある技術情報など</title>
+  <title>Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずRailsアプリを作ってみた - shigeponが関心のある技術情報など</title>
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="rhaco2をPostgreSQL8.3で使えるように色々調べていくうちに学んだメモ。 insert時に「デフォルト値を入れる」だけの処理をしたい場合 1
-insert into テーブル名 default value; でOK integerのカラムとかにlikeを適用したい場合 1 &hellip;">
+  <meta name="description" content="参考にした記事URL一覧 小学生でもわかるRuby on Rails入門 | OpenBook
+データベースとの接続（PostgreSQL編） &ndash; Ruby on Rails with OIAX
+[Rails]既存のMySQLテーブルに接続する方法 &ndash; Qiita
+Ruby &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +21,7 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://shigepon.github.io/blog/2014/01/28/postgresql">
+  <link rel="canonical" href="http://shigepon.github.io/blog/2014/03/10/a-way-of-creating-rails-application">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -83,7 +85,7 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
   
   <header>
     
-      <h1 class="entry-title">PostgreSQLメモ</h1>
+      <h1 class="entry-title">Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずRailsアプリを作ってみた</h1>
     
     
       <p class="meta">
@@ -99,99 +101,113 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
   
 
 
-<time datetime="2014-01-28T21:24:42+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
+<time datetime="2014-03-10T18:10:41+09:00" pubdate data-updated="true">Mar 10<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>rhaco2をPostgreSQL8.3で使えるように色々調べていくうちに学んだメモ。</p>
+<div class="entry-content"><p>参考にした記事URL一覧</p>
 
-<h2>insert時に「デフォルト値を入れる」だけの処理をしたい場合</h2>
+<ul>
+<li><a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a></li>
+<li><a href="http://www.oiax.jp/rails3book/setup_postgresql.html">データベースとの接続（PostgreSQL編） &ndash; Ruby on Rails with OIAX</a></li>
+<li><a href="http://qiita.com/stkn_bb/items/72d06c149d3e6f315f8c">[Rails]既存のMySQLテーブルに接続する方法 &ndash; Qiita</a></li>
+<li><a href="http://ubiqlog.com/archives/8749">Ruby on Rails 4.0正式リリースとBootstrapの正しい設定法 | ユービックログ研究所</a></li>
+<li><a href="http://railscasts.com/episodes/328-twitter-bootstrap-basics?language=ja&amp;view=asciicast">#328 Twitter Bootstrap Basics &ndash; RailsCasts</a></li>
+<li><a href="http://qiita.com/somewhatgood@github/items/9890e75b4c195d47715a">Rails &ndash; link_to の引数と展開の違いまとめ &ndash; Qiita</a></li>
+</ul>
+
+
+<p>基本的なところは<a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a>をなぞってみる。
+ただし、PostgreSQLの既存テーブルを使い、テンプレートにBootstrapを使うので、途中から色々やることが変わっている。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">insert</span> <span class="k">into</span> <span class="err">テーブル名</span> <span class="k">default</span> <span class="n">value</span><span class="p">;</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>rails new bocho
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>でOK</p>
-
-<h2>integerのカラムとかにlikeを適用したい場合</h2>
+<p><a href="">Ruby on Railsを入れてみた</a>に注意点であげたようにGemfileからtherubyracerに関する行をコメントアウトしてbundle install
+これをしないとrails g controllerコマンドで</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="err">テーブル名</span> <span class="k">where</span> <span class="n">id</span><span class="p">::</span><span class="nb">text</span> <span class="k">like</span> <span class="o">&amp;#</span><span class="mi">039</span><span class="p">;</span><span class="o">%</span><span class="n">abc</span><span class="o">%&amp;#</span><span class="mi">039</span><span class="p">;;</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>autodetect<span class="s1">&#39;: Could not find a Javascript runtime. ...&#39;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>のようにカラムをテキストにキャストする。MySQLのvarcharをselectする時はデフォルトignore case。ついでにtrimも勝手にかける？らしい</p>
-
-<h2>show column</h2>
-
-<p>Mysqlで使えるshow columnは無いが、information_schemaの情報をselectすることで同じようなことが出来る。
-ただし、create table時にserialで指定してもinformation_schema.columnsから取得できるカラム情報はinteger(int4)のみ。
-なのでserialと判定するにはカラムがintegerであり、かつデフォルト値としてnextvalが指定されていることなど、複合的にチェックする必要がある。</p>
-
-<h2>cronでsqlを実行</h2>
-
-<p>毎日0時0分に実行する場合</p>
+<p>というエラーが出た</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="mi">0</span> <span class="mi">0</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="k">to</span><span class="o">/</span><span class="n">psql</span> <span class="o">-</span><span class="n">U</span> <span class="n">username</span> <span class="o">-</span><span class="k">c</span> <span class="ss">&quot;sql&quot;</span> <span class="k">database</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="k">null</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>rails g controller events index show
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h2>select結果でinsert, update</h2>
-
-<p>insertの場合はinsert文の後でselect文を書く。以下は一例</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">insert</span> <span class="k">into</span> <span class="k">table</span> <span class="k">select</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="k">from</span> <span class="n">table2</span> <span class="k">where</span> <span class="n">a</span> <span class="k">like</span> <span class="s1">&#39;hoge%&#39;</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>別テーブルへの一部データのバックアップ代わりにも使える</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">insert</span> <span class="k">into</span> <span class="n">backup_table</span> <span class="p">(</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="k">table</span> <span class="k">where</span> <span class="n">id</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>updateは次のように行う</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">update</span> <span class="k">table</span> <span class="k">set</span> <span class="n">a</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">a</span> <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">table2</span><span class="p">)</span> <span class="n">t</span> <span class="k">where</span> <span class="k">table</span><span class="p">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">b</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>どの範囲のデータが更新されるかに注意してwhere句を使う。上の場合、tの中でwhere句を使う場合とで異なる結果になる場合がある。</p>
-
-<h2>インデックス一覧を表示</h2>
-
-<p>インデックス一覧を表示。インデックスを2重に登録しようとするとエラーが出るので、チェックに使う</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">SELECT</span> <span class="n">tablename</span><span class="p">,</span> <span class="n">indexname</span> <span class="k">FROM</span> <span class="n">pg_indexes</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>ビューの一覧を表示</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">SELECT</span> <span class="n">viewname</span> <span class="k">FROM</span> <span class="n">pg_views</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">viewname</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>psqlで実行結果を見やすくする</h2>
+<p>と入力してビューとコントローラーを作った。これの意味はeventsというコントローラーとindex、showというビューを作る。ビューはスペース区切りで複数書けるみたい。indexはデータ一覧、showは個別データの表示を意味している
+ファイルとしては</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="n">psql</span> <span class="o">=&gt;</span> <span class="err">\</span><span class="n">x</span>
-</span><span class='line'><span class="n">psql</span> <span class="o">=&gt;</span> <span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="k">table</span><span class="p">;</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>app/controllers/events_controller.rb
+</span><span class='line'>app/views/events/index.html.erb
+</span><span class='line'>app/views/events/show.html.erb
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>カラムの数が多いと表示が崩れやすいので、これで見やすくなる</p>
+<p>が出来る。events_controller.rbにはindexとshowメソッドが入っている</p>
+
+<h3>確認</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>rails s
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でサーバを起動させて、<a href="http://0.0.0.0:3000/events/index%E3%81%A8http://0.0.0.0:3000/events/show%E3%82%92%E7%A2%BA%E8%AA%8D">http://0.0.0.0:3000/events/index%E3%81%A8http://0.0.0.0:3000/events/show%E3%82%92%E7%A2%BA%E8%AA%8D</a></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Events##index
+</span><span class='line'>Find me in app/view/events/index.html.erb
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいなメッセージが出てたらおk</p>
+
+<h3>コントローラー、ビューを修正</h3>
+
+<p>ビューって言っていいのかテンプレートなのか良くわからないけどapp/views/events/show.html.erbを修正</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='erb'><span class='line'><span class="x">&lt;h1&gt;</span><span class="cp">&lt;%=</span> <span class="vi">@event</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span> <span class="cp">%&gt;</span><span class="x">&lt;/h1&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで<a href="http://0.0.0.0:3000/events/show%E3%82%92%E7%A2%BA%E8%AA%8D%E3%81%99%E3%82%8B%E3%81%A8%E3%82%A8%E3%83%A9%E3%83%BC%E3%81%8C%E8%A1%A8%E7%A4%BA%E3%81%95%E3%82%8C%E3%82%8B%E3%80%82">http://0.0.0.0:3000/events/show%E3%82%92%E7%A2%BA%E8%AA%8D%E3%81%99%E3%82%8B%E3%81%A8%E3%82%A8%E3%83%A9%E3%83%BC%E3%81%8C%E8%A1%A8%E7%A4%BA%E3%81%95%E3%82%8C%E3%82%8B%E3%80%82</a></p>
+
+<p>@eventが登録されてないので、コントローラーで登録する</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'>  <span class="k">def</span> <span class="nf">show</span>
+</span><span class='line'>    <span class="vi">@event</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>          <span class="vi">@event</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;hoge&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これでさっきのURLにアクセスすると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;h1&gt;</span>hoge<span class="nt">&lt;/h1&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と表示される。なるほど@変数名に値を入れたらテンプレでアクセス出来るようになるのね。
+とりあえずここまで。</p>
 </div>
 
 
@@ -214,21 +230,15 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
   
 
 
-<time datetime="2014-01-28T21:24:42+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
+<time datetime="2014-03-10T18:10:41+09:00" pubdate data-updated="true">Mar 10<span>th</span>, 2014</time>
       
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/postgresql/'>postgresql</a>
-  
-</span>
 
 
     </p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://shigepon.github.io/blog/2014/01/28/postgresql/" data-via="shigepon" data-counturl="http://shigepon.github.io/blog/2014/01/28/postgresql/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://shigepon.github.io/blog/2014/03/10/a-way-of-creating-rails-application/" data-via="shigepon" data-counturl="http://shigepon.github.io/blog/2014/03/10/a-way-of-creating-rails-application/" >Tweet</a>
   
   
   
@@ -239,10 +249,8 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/01/28/test-post2/" title="Previous Post: test post2">&laquo; test post2</a>
+        <a class="basic-alignment left" href="/blog/2014/03/09/how-to-block-bot-access-from-google-analytics/" title="Previous Post: Google Analyticsからbotアクセスを取り除く">&laquo; Google Analyticsからbotアクセスを取り除く</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/01/28/nadesiko-lua/" title="Next Post: なでしこでLuaエディタ？を作る（ネタ）">なでしこでLuaエディタ？を作る（ネタ） &raquo;</a>
       
     </p>
   </footer>
