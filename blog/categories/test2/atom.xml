@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: test2 | shigeponが関心のある技術情報など]]></title>
-  <link href="http://shigepon.github.io/blog/categories/test2/atom.xml" rel="self"/>
-  <link href="http://shigepon.github.io/"/>
-  <updated>2014-03-11T12:19:01+09:00</updated>
-  <id>http://shigepon.github.io/</id>
+  <link href="http://blog.shigepon.com/blog/categories/test2/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.com/"/>
+  <updated>2014-03-11T20:38:43+09:00</updated>
+  <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
     
@@ -15,18 +15,18 @@
   
   <entry>
     <title type="html"><![CDATA[test post2]]></title>
-    <link href="http://shigepon.github.io/blog/2014/01/28/test-post2/"/>
+    <link href="http://blog.shigepon.com/blog/2014/01/28/test-post2/"/>
     <updated>2014-01-28T14:43:59+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/01/28/test-post2</id>
+    <id>http://blog.shigepon.com/blog/2014/01/28/test-post2</id>
     <content type="html"><![CDATA[<p>テスト投稿（2時間ぶり2度目）</p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[test post]]></title>
-    <link href="http://shigepon.github.io/blog/2014/01/28/test-post/"/>
+    <link href="http://blog.shigepon.com/blog/2014/01/28/test-post/"/>
     <updated>2014-01-28T12:59:29+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/01/28/test-post</id>
+    <id>http://blog.shigepon.com/blog/2014/01/28/test-post</id>
     <content type="html"><![CDATA[<p>本文を投稿するテスト
 こんな感じ？</p>
 ]]></content>

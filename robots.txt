@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 
-Sitemap: http://shigepon.github.io/sitemap.xml 
+Sitemap: http://blog.shigepon.com/sitemap.xml 

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Web | shigeponが関心のある技術情報など]]></title>
-  <link href="http://shigepon.github.io/blog/categories/web/atom.xml" rel="self"/>
-  <link href="http://shigepon.github.io/"/>
-  <updated>2014-03-11T12:19:01+09:00</updated>
-  <id>http://shigepon.github.io/</id>
+  <link href="http://blog.shigepon.com/blog/categories/web/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.com/"/>
+  <updated>2014-03-11T20:38:43+09:00</updated>
+  <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Basic認証する時に気をつけること]]></title>
-    <link href="http://shigepon.github.io/blog/2014/02/03/basic-auth/"/>
+    <link href="http://blog.shigepon.com/blog/2014/02/03/basic-auth/"/>
     <updated>2014-02-03T07:48:33+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/02/03/basic-auth</id>
+    <id>http://blog.shigepon.com/blog/2014/02/03/basic-auth</id>
     <content type="html"><![CDATA[<p>rhaco3で作ったWebサービス全体にBasic認証をかけた時にちょっとハマったのでメモ。</p>
 
 <h2>症状</h2>

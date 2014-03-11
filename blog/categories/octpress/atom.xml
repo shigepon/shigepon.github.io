@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Octpress | shigeponが関心のある技術情報など]]></title>
-  <link href="http://shigepon.github.io/blog/categories/octpress/atom.xml" rel="self"/>
-  <link href="http://shigepon.github.io/"/>
-  <updated>2014-03-11T12:19:01+09:00</updated>
-  <id>http://shigepon.github.io/</id>
+  <link href="http://blog.shigepon.com/blog/categories/octpress/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.com/"/>
+  <updated>2014-03-11T20:38:43+09:00</updated>
+  <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[octpress tips]]></title>
-    <link href="http://shigepon.github.io/blog/2014/01/31/octpress-tips/"/>
+    <link href="http://blog.shigepon.com/blog/2014/01/31/octpress-tips/"/>
     <updated>2014-01-31T08:33:56+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/01/31/octpress-tips</id>
+    <id>http://blog.shigepon.com/blog/2014/01/31/octpress-tips</id>
     <content type="html"><![CDATA[<p>Octpressのインストール後に行ったカスタマイズをまとめておきます。</p>
 
 <h2>外部リンクを別ウィンドウで開く</h2>

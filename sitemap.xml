@@ -1,105 +1,105 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://shigepon.github.io/blog/2014/01/28/test-post/</loc>
+        <loc>http://blog.shigepon.com/blog/2014/01/28/test-post/</loc>
         <lastmod>2014-01-28T17:45:55+09:00</lastmod>
     </url>
     <url>
-        <loc>http://shigepon.github.io/blog/2014/01/28/test-post2/</loc>
+        <loc>http://blog.shigepon.com/blog/2014/01/28/test-post2/</loc>
         <lastmod>2014-01-28T17:45:55+09:00</lastmod>
     </url>
     <url>
-        <loc>http://shigepon.github.io/blog/2014/01/28/postgresql/</loc>
+        <loc>http://blog.shigepon.com/blog/2014/01/28/postgresql/</loc>
         <lastmod>2014-02-06T09:05:24+09:00</lastmod>
     </url>
     <url>
-        <loc>http://shigepon.github.io/blog/2014/01/28/nadesiko-lua/</loc>
+        <loc>http://blog.shigepon.com/blog/2014/01/28/nadesiko-lua/</loc>
         <lastmod>2014-01-28T21:44:28+09:00</lastmod>
     </url>
     <url>
-        <loc>http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin/</loc>
+        <loc>http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin/</loc>
         <lastmod>2014-01-28T23:07:33+09:00</lastmod>
     </url>
     <url>
-        <loc>http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin-cs/</loc>
+        <loc>http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin-cs/</loc>
         <lastmod>2014-01-28T22:50:25+09:00</lastmod>
     </url>
     <url>
-        <loc>http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin-cs2/</loc>
+        <loc>http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin-cs2/</loc>
         <lastmod>2014-01-28T22:58:03+09:00</lastmod>
     </url>
     <url>
-        <loc>http://shigepon.github.io/blog/2014/01/29/nadesiko2-make-plugin/</loc>
+        <loc>http://blog.shigepon.com/blog/2014/01/29/nadesiko2-make-plugin/</loc>
         <lastmod>2014-01-29T10:07:20+09:00</lastmod>
     </url>
     <url>
-        <loc>http://shigepon.github.io/blog/2014/01/30/nadesiko-make-exe/</loc>
+        <loc>http://blog.shigepon.com/blog/2014/01/30/nadesiko-make-exe/</loc>
         <lastmod>2014-01-30T21:50:04+09:00</lastmod>
     </url>
     <url>
-        <loc>http://shigepon.github.io/blog/2014/01/31/octpress-tips/</loc>
+        <loc>http://blog.shigepon.com/blog/2014/01/31/octpress-tips/</loc>
         <lastmod>2014-02-03T13:05:48+09:00</lastmod>
     </url>
     <url>
-        <loc>http://shigepon.github.io/blog/2014/02/03/basic-auth/</loc>
+        <loc>http://blog.shigepon.com/blog/2014/02/03/basic-auth/</loc>
         <lastmod>2014-02-03T09:15:05+09:00</lastmod>
     </url>
     <url>
-        <loc>http://shigepon.github.io/blog/2014/02/10/unity-memo/</loc>
+        <loc>http://blog.shigepon.com/blog/2014/02/10/unity-memo/</loc>
         <lastmod>2014-03-05T10:31:33+09:00</lastmod>
     </url>
     <url>
-        <loc>http://shigepon.github.io/blog/2014/02/11/sqlite-memo/</loc>
+        <loc>http://blog.shigepon.com/blog/2014/02/11/sqlite-memo/</loc>
         <lastmod>2014-02-11T11:53:15+09:00</lastmod>
     </url>
     <url>
-        <loc>http://shigepon.github.io/blog/2014/02/11/svn-memo/</loc>
+        <loc>http://blog.shigepon.com/blog/2014/02/11/svn-memo/</loc>
         <lastmod>2014-02-11T11:57:33+09:00</lastmod>
     </url>
     <url>
-        <loc>http://shigepon.github.io/blog/2014/02/26/rails-startup/</loc>
+        <loc>http://blog.shigepon.com/blog/2014/02/26/rails-startup/</loc>
         <lastmod>2014-02-26T15:35:22+09:00</lastmod>
     </url>
     <url>
-        <loc>http://shigepon.github.io/blog/2014/02/28/vim-dbext-postgresql/</loc>
+        <loc>http://blog.shigepon.com/blog/2014/02/28/vim-dbext-postgresql/</loc>
         <lastmod>2014-02-28T11:59:45+09:00</lastmod>
     </url>
     <url>
-        <loc>http://shigepon.github.io/blog/2014/03/01/vim-memo/</loc>
+        <loc>http://blog.shigepon.com/blog/2014/03/01/vim-memo/</loc>
         <lastmod>2014-03-01T14:21:00+09:00</lastmod>
     </url>
     <url>
-        <loc>http://shigepon.github.io/blog/2014/03/07/linux-command-memo/</loc>
+        <loc>http://blog.shigepon.com/blog/2014/03/07/linux-command-memo/</loc>
         <lastmod>2014-03-07T09:18:11+09:00</lastmod>
     </url>
     <url>
         <loc>
-            http://shigepon.github.io/blog/2014/03/09/how-to-block-bot-access-from-google-analytics/
+            http://blog.shigepon.com/blog/2014/03/09/how-to-block-bot-access-from-google-analytics/
         </loc>
         <lastmod>2014-03-09T23:08:57+09:00</lastmod>
     </url>
     <url>
-        <loc>http://shigepon.github.io/blog/2014/03/10/a-way-of-creating-rails-application/</loc>
+        <loc>http://blog.shigepon.com/blog/2014/03/10/a-way-of-creating-rails-application/</loc>
         <lastmod>2014-03-10T22:03:13+09:00</lastmod>
     </url>
     <url>
-        <loc>http://shigepon.github.io/blog/2014/03/10/a-way-of-creating-rails-application2/</loc>
+        <loc>http://blog.shigepon.com/blog/2014/03/10/a-way-of-creating-rails-application2/</loc>
         <lastmod>2014-03-10T22:49:45+09:00</lastmod>
     </url>
     <url>
-        <loc>http://shigepon.github.io/blog/archives/</loc>
+        <loc>http://blog.shigepon.com/blog/archives/</loc>
         <lastmod>2014-03-10T22:49:45+09:00</lastmod>
     </url>
     <url>
-        <loc>http://shigepon.github.io/archives/</loc>
+        <loc>http://blog.shigepon.com/archives/</loc>
         <lastmod>2014-03-10T22:49:45+09:00</lastmod>
     </url>
     <url>
-        <loc>http://shigepon.github.io/</loc>
+        <loc>http://blog.shigepon.com/</loc>
         <lastmod>2014-03-10T22:49:45+09:00</lastmod>
     </url>
     <url>
-        <loc>http://shigepon.github.io/robots.txt</loc>
+        <loc>http://blog.shigepon.com/robots.txt</loc>
         <lastmod>2014-01-28T12:31:57+09:00</lastmod>
     </url>
 </urlset>

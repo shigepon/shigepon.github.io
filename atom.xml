@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
-  <link href="http://shigepon.github.io/atom.xml" rel="self"/>
-  <link href="http://shigepon.github.io/"/>
-  <updated>2014-03-11T12:19:01+09:00</updated>
-  <id>http://shigepon.github.io/</id>
+  <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.com/"/>
+  <updated>2014-03-11T20:38:43+09:00</updated>
+  <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(2):データベースにPostgreSQLを使ってみた]]></title>
-    <link href="http://shigepon.github.io/blog/2014/03/10/a-way-of-creating-rails-application2/"/>
+    <link href="http://blog.shigepon.com/blog/2014/03/10/a-way-of-creating-rails-application2/"/>
     <updated>2014-03-10T18:10:41+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/03/10/a-way-of-creating-rails-application2</id>
+    <id>http://blog.shigepon.com/blog/2014/03/10/a-way-of-creating-rails-application2</id>
     <content type="html"><![CDATA[<p>参考にした記事URL一覧</p>
 
 <ul>
@@ -208,9 +208,9 @@ id=1,date=2014/03/01 10:00:00,name=ほげ
   
   <entry>
     <title type="html"><![CDATA[Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずRailsアプリを作ってみた]]></title>
-    <link href="http://shigepon.github.io/blog/2014/03/10/a-way-of-creating-rails-application/"/>
+    <link href="http://blog.shigepon.com/blog/2014/03/10/a-way-of-creating-rails-application/"/>
     <updated>2014-03-10T18:10:41+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/03/10/a-way-of-creating-rails-application</id>
+    <id>http://blog.shigepon.com/blog/2014/03/10/a-way-of-creating-rails-application</id>
     <content type="html"><![CDATA[<p>参考にした記事URL一覧</p>
 
 <ul>
@@ -356,9 +356,9 @@ events_controller.rbを次のように変えると</p>
   
   <entry>
     <title type="html"><![CDATA[Google Analyticsからbotアクセスを取り除く]]></title>
-    <link href="http://shigepon.github.io/blog/2014/03/09/how-to-block-bot-access-from-google-analytics/"/>
+    <link href="http://blog.shigepon.com/blog/2014/03/09/how-to-block-bot-access-from-google-analytics/"/>
     <updated>2014-03-09T21:53:40+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/03/09/how-to-block-bot-access-from-google-analytics</id>
+    <id>http://blog.shigepon.com/blog/2014/03/09/how-to-block-bot-access-from-google-analytics</id>
     <content type="html"><![CDATA[<p>参考ページ<a href="http://www.lunametrics.com/blog/2013/09/05/filter-bots-google-analytics/#sr=d&amp;m=n&amp;cp=d&amp;ct=-tmc&amp;ts=1394369739">How to Block Bots from Your Google Analytics</a></p>
 
 <p>ここ数日Google Analyticsにアメリカからリファラ無し直帰率100%近くのアクセスを大量に発見。
@@ -395,9 +395,9 @@ events_controller.rbを次のように変えると</p>
   
   <entry>
     <title type="html"><![CDATA[linux command memo]]></title>
-    <link href="http://shigepon.github.io/blog/2014/03/07/linux-command-memo/"/>
+    <link href="http://blog.shigepon.com/blog/2014/03/07/linux-command-memo/"/>
     <updated>2014-03-07T08:50:21+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/03/07/linux-command-memo</id>
+    <id>http://blog.shigepon.com/blog/2014/03/07/linux-command-memo</id>
     <content type="html"><![CDATA[<h2>アクセスログのIPアドレスを集計してみる</h2>
 
 <p>参考：<a href="http://blog.livedoor.jp/stock_value/archives/51443839.html">Linux サーバーでお手軽にログの集計：こっそりと。 &ndash; livedoor Blog（ブログ）</a></p>
@@ -428,9 +428,9 @@ events_controller.rbを次のように変えると</p>
   
   <entry>
     <title type="html"><![CDATA[vim memo]]></title>
-    <link href="http://shigepon.github.io/blog/2014/03/01/vim-memo/"/>
+    <link href="http://blog.shigepon.com/blog/2014/03/01/vim-memo/"/>
     <updated>2014-03-01T14:14:10+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/03/01/vim-memo</id>
+    <id>http://blog.shigepon.com/blog/2014/03/01/vim-memo</id>
     <content type="html"><![CDATA[<h2>vimでsnippet</h2>
 
 <p>色々方法があるみたいだけど、neocomplecacheを入れているので、それと相性が良さそうな（作者が同じ）プラグインを入れた</p>
@@ -491,9 +491,9 @@ events_controller.rbを次のように変えると</p>
   
   <entry>
     <title type="html"><![CDATA[dbext.vimでpostgresqlにアクセスする]]></title>
-    <link href="http://shigepon.github.io/blog/2014/02/28/vim-dbext-postgresql/"/>
+    <link href="http://blog.shigepon.com/blog/2014/02/28/vim-dbext-postgresql/"/>
     <updated>2014-02-28T11:48:20+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/02/28/vim-dbext-postgresql</id>
+    <id>http://blog.shigepon.com/blog/2014/02/28/vim-dbext-postgresql</id>
     <content type="html"><![CDATA[<p>ググってみたけど無かったのでメモ。
 単純に.vimrcに</p>
 
@@ -545,9 +545,9 @@ events_controller.rbを次のように変えると</p>
   
   <entry>
     <title type="html"><![CDATA[Ruby on Railsを入れてみた]]></title>
-    <link href="http://shigepon.github.io/blog/2014/02/26/rails-startup/"/>
+    <link href="http://blog.shigepon.com/blog/2014/02/26/rails-startup/"/>
     <updated>2014-02-26T14:51:16+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/02/26/rails-startup</id>
+    <id>http://blog.shigepon.com/blog/2014/02/26/rails-startup</id>
     <content type="html"><![CDATA[<p>rhaco使わないでWebサービス作るならもうPHP使わずに他の言語でやってみようかなと思い、
 DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強という意味を込めてRailsでやってみることにした。</p>
 
@@ -817,9 +817,9 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
   
   <entry>
     <title type="html"><![CDATA[svn memo]]></title>
-    <link href="http://shigepon.github.io/blog/2014/02/11/svn-memo/"/>
+    <link href="http://blog.shigepon.com/blog/2014/02/11/svn-memo/"/>
     <updated>2014-02-11T11:53:32+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/02/11/svn-memo</id>
+    <id>http://blog.shigepon.com/blog/2014/02/11/svn-memo</id>
     <content type="html"><![CDATA[<p>svn使っててはまることが結構あるのでメモ</p>
 
 <h2>ubuntuでsvnコマンドすると認証失敗する場合</h2>
@@ -842,9 +842,9 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
   
   <entry>
     <title type="html"><![CDATA[sqlite memo]]></title>
-    <link href="http://shigepon.github.io/blog/2014/02/11/sqlite-memo/"/>
+    <link href="http://blog.shigepon.com/blog/2014/02/11/sqlite-memo/"/>
     <updated>2014-02-11T11:48:39+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/02/11/sqlite-memo</id>
+    <id>http://blog.shigepon.com/blog/2014/02/11/sqlite-memo</id>
     <content type="html"><![CDATA[<p>SQLiteでたまに使う操作をメモ</p>
 
 <h2>テーブルの存在チェック</h2>
@@ -860,9 +860,9 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
   
   <entry>
     <title type="html"><![CDATA[unity memo]]></title>
-    <link href="http://shigepon.github.io/blog/2014/02/10/unity-memo/"/>
+    <link href="http://blog.shigepon.com/blog/2014/02/10/unity-memo/"/>
     <updated>2014-02-10T23:25:11+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/02/10/unity-memo</id>
+    <id>http://blog.shigepon.com/blog/2014/02/10/unity-memo</id>
     <content type="html"><![CDATA[<p>unity使ってこれから何か作っていこうと思うのでめも。</p>
 
 <h3>最初にやったこと</h3>
@@ -1027,9 +1027,9 @@ unity側での作業は<a href="http://tech.gmo-media.jp/post/54095871491/runnin
   
   <entry>
     <title type="html"><![CDATA[Basic認証する時に気をつけること]]></title>
-    <link href="http://shigepon.github.io/blog/2014/02/03/basic-auth/"/>
+    <link href="http://blog.shigepon.com/blog/2014/02/03/basic-auth/"/>
     <updated>2014-02-03T07:48:33+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/02/03/basic-auth</id>
+    <id>http://blog.shigepon.com/blog/2014/02/03/basic-auth</id>
     <content type="html"><![CDATA[<p>rhaco3で作ったWebサービス全体にBasic認証をかけた時にちょっとハマったのでメモ。</p>
 
 <h2>症状</h2>
@@ -1104,9 +1104,9 @@ base64した値が格納さています。
   
   <entry>
     <title type="html"><![CDATA[octpress tips]]></title>
-    <link href="http://shigepon.github.io/blog/2014/01/31/octpress-tips/"/>
+    <link href="http://blog.shigepon.com/blog/2014/01/31/octpress-tips/"/>
     <updated>2014-01-31T08:33:56+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/01/31/octpress-tips</id>
+    <id>http://blog.shigepon.com/blog/2014/01/31/octpress-tips</id>
     <content type="html"><![CDATA[<p>Octpressのインストール後に行ったカスタマイズをまとめておきます。</p>
 
 <h2>外部リンクを別ウィンドウで開く</h2>
@@ -1132,9 +1132,9 @@ base64した値が格納さています。
   
   <entry>
     <title type="html"><![CDATA[なでしこで実行ファイルを作る時のメモ]]></title>
-    <link href="http://shigepon.github.io/blog/2014/01/30/nadesiko-make-exe/"/>
+    <link href="http://blog.shigepon.com/blog/2014/01/30/nadesiko-make-exe/"/>
     <updated>2014-01-30T09:22:46+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/01/30/nadesiko-make-exe</id>
+    <id>http://blog.shigepon.com/blog/2014/01/30/nadesiko-make-exe</id>
     <content type="html"><![CDATA[<ul>
 <li>パックファイル作る時はメインになるファイルだけnadesiko.nakoというパック名にして、その他はファイル名自身をパック名とする</li>
 <li>データを埋め込む場合は、そのデータを呼び出す時にフルパスにしない。データが無いと言われる。</li>
@@ -1151,9 +1151,9 @@ base64した値が格納さています。
   
   <entry>
     <title type="html"><![CDATA[なでしこ2のプラグインを作る方法]]></title>
-    <link href="http://shigepon.github.io/blog/2014/01/29/nadesiko2-make-plugin/"/>
+    <link href="http://blog.shigepon.com/blog/2014/01/29/nadesiko2-make-plugin/"/>
     <updated>2014-01-29T09:49:17+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/01/29/nadesiko2-make-plugin</id>
+    <id>http://blog.shigepon.com/blog/2014/01/29/nadesiko2-make-plugin</id>
     <content type="html"><![CDATA[<p>なでしこ2でプラグインを作りたい人向けというニッチすぎるネタです。現在なでしこの時期バージョンなでしこ2が開発中です(えらい長いこと開発中です)が、構文の実装がある程度終わっているので、プラグインを開発することが出来ます。try catchの実装どうするかなーとか考えて進んでないですが、それはそれ。</p>
 
 <p>なでしこ2はC#で組まれているので、プラグインもC#で組むことができます。</p>
@@ -1269,9 +1269,9 @@ base64した値が格納さています。
   
   <entry>
     <title type="html"><![CDATA[C#で作ったdllをなでしこで使う]]></title>
-    <link href="http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin-cs2/"/>
+    <link href="http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin-cs2/"/>
     <updated>2014-01-28T22:42:43+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin-cs2</id>
+    <id>http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin-cs2</id>
     <content type="html"><![CDATA[<p>C#のdllを呼び出せるように、C#のdllを参照した後、Plugin.cppの一部を以下のように書き換えました</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -1320,9 +1320,9 @@ base64した値が格納さています。
   
   <entry>
     <title type="html"><![CDATA[C#で作ったdllをC++/CLIで使う]]></title>
-    <link href="http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin-cs/"/>
+    <link href="http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin-cs/"/>
     <updated>2014-01-28T22:27:58+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin-cs</id>
+    <id>http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin-cs</id>
     <content type="html"><![CDATA[<p><strong>画像やファイルが無くなっていますがご了承下さい</strong></p>
 
 <p>なでしこでプラグインを作る時にC#を使いたかったので、本格的にdllを作る前に、C++/CLIからMessageBoxを表示する程度のC#のdllを呼び出してみました。</p>
@@ -1386,9 +1386,9 @@ base64した値が格納さています。
   
   <entry>
     <title type="html"><![CDATA[C++/CLIでなでしこのプラグインを作る方法(Visual C++ Express Edition)]]></title>
-    <link href="http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin/"/>
+    <link href="http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin/"/>
     <updated>2014-01-28T21:45:15+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin</id>
+    <id>http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin</id>
     <content type="html"><![CDATA[<p>なでしこでプラグインを作る時にC#を使いたかったので、その前段階としてC++/CLIでプラグインを作る方法を探ってみました。</p>
 
 <p>C++/CLIが使えると、.Netを使えるようになり、C#で作ったdllもVC++の参照設定から読み込んで使えるようになります。</p>
@@ -1442,9 +1442,9 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
   
   <entry>
     <title type="html"><![CDATA[なでしこでLuaエディタ？を作る（ネタ）]]></title>
-    <link href="http://shigepon.github.io/blog/2014/01/28/nadesiko-lua/"/>
+    <link href="http://blog.shigepon.com/blog/2014/01/28/nadesiko-lua/"/>
     <updated>2014-01-28T21:37:03+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/01/28/nadesiko-lua</id>
+    <id>http://blog.shigepon.com/blog/2014/01/28/nadesiko-lua</id>
     <content type="html"><![CDATA[<p>なでしこではLuaを使えるので、なでしこのGUIと組み合わせたら簡単にLuaエディタ作れるんじゃね？ということで作ってみました。（ただのネタです）</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -1537,9 +1537,9 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
   
   <entry>
     <title type="html"><![CDATA[PostgreSQLメモ]]></title>
-    <link href="http://shigepon.github.io/blog/2014/01/28/postgresql/"/>
+    <link href="http://blog.shigepon.com/blog/2014/01/28/postgresql/"/>
     <updated>2014-01-28T21:24:42+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/01/28/postgresql</id>
+    <id>http://blog.shigepon.com/blog/2014/01/28/postgresql</id>
     <content type="html"><![CDATA[<p>rhaco2をPostgreSQL8.3で使えるように色々調べていくうちに学んだメモ。</p>
 
 <h2>insert時に「デフォルト値を入れる」だけの処理をしたい場合</h2>
@@ -1631,9 +1631,9 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
   
   <entry>
     <title type="html"><![CDATA[test post2]]></title>
-    <link href="http://shigepon.github.io/blog/2014/01/28/test-post2/"/>
+    <link href="http://blog.shigepon.com/blog/2014/01/28/test-post2/"/>
     <updated>2014-01-28T14:43:59+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/01/28/test-post2</id>
+    <id>http://blog.shigepon.com/blog/2014/01/28/test-post2</id>
     <content type="html"><![CDATA[<p>テスト投稿（2時間ぶり2度目）</p>
 ]]></content>
   </entry>

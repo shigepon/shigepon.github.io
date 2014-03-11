@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: なでしこ2 | shigeponが関心のある技術情報など]]></title>
-  <link href="http://shigepon.github.io/blog/categories/nadesiko2/atom.xml" rel="self"/>
-  <link href="http://shigepon.github.io/"/>
-  <updated>2014-03-11T12:19:01+09:00</updated>
-  <id>http://shigepon.github.io/</id>
+  <link href="http://blog.shigepon.com/blog/categories/nadesiko2/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.com/"/>
+  <updated>2014-03-11T20:38:43+09:00</updated>
+  <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[なでしこ2のプラグインを作る方法]]></title>
-    <link href="http://shigepon.github.io/blog/2014/01/29/nadesiko2-make-plugin/"/>
+    <link href="http://blog.shigepon.com/blog/2014/01/29/nadesiko2-make-plugin/"/>
     <updated>2014-01-29T09:49:17+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/01/29/nadesiko2-make-plugin</id>
+    <id>http://blog.shigepon.com/blog/2014/01/29/nadesiko2-make-plugin</id>
     <content type="html"><![CDATA[<p>なでしこ2でプラグインを作りたい人向けというニッチすぎるネタです。現在なでしこの時期バージョンなでしこ2が開発中です(えらい長いこと開発中です)が、構文の実装がある程度終わっているので、プラグインを開発することが出来ます。try catchの実装どうするかなーとか考えて進んでないですが、それはそれ。</p>
 
 <p>なでしこ2はC#で組まれているので、プラグインもC#で組むことができます。</p>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: ネタ | shigeponが関心のある技術情報など]]></title>
-  <link href="http://shigepon.github.io/blog/categories/neta/atom.xml" rel="self"/>
-  <link href="http://shigepon.github.io/"/>
-  <updated>2014-03-11T12:19:01+09:00</updated>
-  <id>http://shigepon.github.io/</id>
+  <link href="http://blog.shigepon.com/blog/categories/neta/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.com/"/>
+  <updated>2014-03-11T20:38:43+09:00</updated>
+  <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[なでしこでLuaエディタ？を作る（ネタ）]]></title>
-    <link href="http://shigepon.github.io/blog/2014/01/28/nadesiko-lua/"/>
+    <link href="http://blog.shigepon.com/blog/2014/01/28/nadesiko-lua/"/>
     <updated>2014-01-28T21:37:03+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/01/28/nadesiko-lua</id>
+    <id>http://blog.shigepon.com/blog/2014/01/28/nadesiko-lua</id>
     <content type="html"><![CDATA[<p>なでしこではLuaを使えるので、なでしこのGUIと組み合わせたら簡単にLuaエディタ作れるんじゃね？ということで作ってみました。（ただのネタです）</p>
 
 <p>```

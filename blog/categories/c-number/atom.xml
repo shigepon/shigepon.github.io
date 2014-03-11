@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: C# | shigeponが関心のある技術情報など]]></title>
-  <link href="http://shigepon.github.io/blog/categories/c-number/atom.xml" rel="self"/>
-  <link href="http://shigepon.github.io/"/>
-  <updated>2014-03-11T12:19:01+09:00</updated>
-  <id>http://shigepon.github.io/</id>
+  <link href="http://blog.shigepon.com/blog/categories/c-number/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.com/"/>
+  <updated>2014-03-11T20:38:43+09:00</updated>
+  <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[なでしこ2のプラグインを作る方法]]></title>
-    <link href="http://shigepon.github.io/blog/2014/01/29/nadesiko2-make-plugin/"/>
+    <link href="http://blog.shigepon.com/blog/2014/01/29/nadesiko2-make-plugin/"/>
     <updated>2014-01-29T09:49:17+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/01/29/nadesiko2-make-plugin</id>
+    <id>http://blog.shigepon.com/blog/2014/01/29/nadesiko2-make-plugin</id>
     <content type="html"><![CDATA[<p>なでしこ2でプラグインを作りたい人向けというニッチすぎるネタです。現在なでしこの時期バージョンなでしこ2が開発中です(えらい長いこと開発中です)が、構文の実装がある程度終わっているので、プラグインを開発することが出来ます。try catchの実装どうするかなーとか考えて進んでないですが、それはそれ。</p>
 
 <p>なでしこ2はC#で組まれているので、プラグインもC#で組むことができます。</p>
@@ -96,9 +96,9 @@ Object o = info.StackPop();//配列の場合はこれを使う
   
   <entry>
     <title type="html"><![CDATA[C#で作ったdllをなでしこで使う]]></title>
-    <link href="http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin-cs2/"/>
+    <link href="http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin-cs2/"/>
     <updated>2014-01-28T22:42:43+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin-cs2</id>
+    <id>http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin-cs2</id>
     <content type="html"><![CDATA[<p>C#のdllを呼び出せるように、C#のdllを参照した後、Plugin.cppの一部を以下のように書き換えました</p>
 
 <p>```
@@ -142,9 +142,9 @@ nako_addFunction(&amp;quot;sample01&amp;quot;&amp;cedil;&amp;quot;&amp;quot;&amp
   
   <entry>
     <title type="html"><![CDATA[C#で作ったdllをC++/CLIで使う]]></title>
-    <link href="http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin-cs/"/>
+    <link href="http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin-cs/"/>
     <updated>2014-01-28T22:27:58+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin-cs</id>
+    <id>http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin-cs</id>
     <content type="html"><![CDATA[<p><strong>画像やファイルが無くなっていますがご了承下さい</strong></p>
 
 <p>なでしこでプラグインを作る時にC#を使いたかったので、本格的にdllを作る前に、C++/CLIからMessageBoxを表示する程度のC#のdllを呼び出してみました。</p>
@@ -196,9 +196,9 @@ namespace ClassLibrary1{</p>
   
   <entry>
     <title type="html"><![CDATA[C++/CLIでなでしこのプラグインを作る方法(Visual C++ Express Edition)]]></title>
-    <link href="http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin/"/>
+    <link href="http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin/"/>
     <updated>2014-01-28T21:45:15+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/01/28/nadesiko-plugin</id>
+    <id>http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin</id>
     <content type="html"><![CDATA[<p>なでしこでプラグインを作る時にC#を使いたかったので、その前段階としてC++/CLIでプラグインを作る方法を探ってみました。</p>
 
 <p>C++/CLIが使えると、.Netを使えるようになり、C#で作ったdllもVC++の参照設定から読み込んで使えるようになります。</p>

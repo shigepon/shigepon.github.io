@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: postgresql | shigeponが関心のある技術情報など]]></title>
-  <link href="http://shigepon.github.io/blog/categories/postgresql/atom.xml" rel="self"/>
-  <link href="http://shigepon.github.io/"/>
-  <updated>2014-03-11T12:19:01+09:00</updated>
-  <id>http://shigepon.github.io/</id>
+  <link href="http://blog.shigepon.com/blog/categories/postgresql/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.com/"/>
+  <updated>2014-03-11T20:38:43+09:00</updated>
+  <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[PostgreSQLメモ]]></title>
-    <link href="http://shigepon.github.io/blog/2014/01/28/postgresql/"/>
+    <link href="http://blog.shigepon.com/blog/2014/01/28/postgresql/"/>
     <updated>2014-01-28T21:24:42+09:00</updated>
-    <id>http://shigepon.github.io/blog/2014/01/28/postgresql</id>
+    <id>http://blog.shigepon.com/blog/2014/01/28/postgresql</id>
     <content type="html"><![CDATA[<p>rhaco2をPostgreSQL8.3で使えるように色々調べていくうちに学んだメモ。</p>
 
 <h2>insert時に「デフォルト値を入れる」だけの処理をしたい場合</h2>
