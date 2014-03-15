@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-03-12T22:59:20+09:00</updated>
+  <updated>2014-03-15T13:47:02+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,138 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[rhaco3 memo]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/03/15/rhaco3-memo/"/>
+    <updated>2014-03-15T13:28:55+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/03/15/rhaco3-memo</id>
+    <content type="html"><![CDATA[<p>rhaco3を使ってる人なんて世界で何人居るのかなと思いつつ、あまりに情報が少ないので、メモ書きしていく。
+大きめネタは別記事にまとめるが小さいネタはここに追記する。</p>
+
+<h3>Daoで作ったSQLを確認する方法</h3>
+
+<p>Daoを継承したモデルとして、Hogeモデルがあるとして</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nx">\Hoge</span><span class="o">::</span><span class="na">start_record</span><span class="p">();</span>
+</span><span class='line'><span class="nx">\Hoge</span><span class="o">::</span><span class="na">find_get</span><span class="p">(</span><span class="nx">\org\rhaco\store\db\Q</span><span class="o">::</span><span class="na">eq</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">));</span><span class="c1">//\Hogeモデルからid=1のデータを1件取得する命令</span>
+</span><span class='line'><span class="nv">$queries</span> <span class="o">=</span> <span class="nx">\Hoge</span><span class="o">::</span><span class="na">stop_record</span><span class="p">();</span>
+</span><span class='line'><span class="nb">var_dump</span><span class="p">(</span><span class="nv">$queries</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じで使う。出力は</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>array(1) {
+</span><span class='line'>  [0]=&gt;
+</span><span class='line'>  array(2) {
+</span><span class='line'>    [0]=&gt;
+</span><span class='line'>    string(291) &quot;select t4.&quot;id&quot; as c5,t4.&quot;name&quot; as c10 from hoge t4 where  ( (t4.&quot;id&quot; = ?) )   offset 0 limit 1 &quot;
+</span><span class='line'>    [1]=&gt;
+</span><span class='line'>    array(1) {
+</span><span class='line'>      [0]=&gt;
+</span><span class='line'>      string(1) &quot;1&quot;
+</span><span class='line'>    }
+</span><span class='line'>  }
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいに出る</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(4):ビューにBootstrapを使う]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/03/14/a-way-of-creating-rails-application4/"/>
+    <updated>2014-03-14T09:10:41+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/03/14/a-way-of-creating-rails-application4</id>
+    <content type="html"><![CDATA[<p>参考にした記事URL一覧</p>
+
+<ul>
+<li><a href="http://ubiqlog.com/archives/8749">Ruby on Rails 4.0正式リリースとBootstrapの正しい設定法 | ユービックログ研究所</a></li>
+<li><a href="http://railscasts.com/episodes/328-twitter-bootstrap-basics?language=ja&amp;view=asciicast">#328 Twitter Bootstrap Basics &ndash; RailsCasts</a></li>
+</ul>
+
+
+<p>今回はそっけない表示画面をそれっぽくするためにビューにBootstrapを当てはめる。</p>
+
+<p>Gemfileを編集</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>+gem 'less-rails'
+</span><span class='line'>+gem 'twitter-bootstrap-rails'
+</span><span class='line'>+gem 'execjs'
+</span><span class='line'>-gem 'sass-rails'</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以下のコマンドを実行</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle install
+</span><span class='line'><span class="nv">$ </span>rails g bootstrap:install
+</span><span class='line'><span class="nv">$ </span>rails g bootstrap:layout application
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と実行したけど、最後のコマンドはビューを勝手に色々いじるので、しない方が良いかもしれない。上のコマンドを実行すると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>app/assets/javascripts/application.js
+</span><span class='line'>app/assets/javascripts/bootstrap.js.coffee
+</span><span class='line'>app/assets/stylesheets/application.css
+</span><span class='line'>app/assets/stylesheets/bootstrap_and_overrides.css.less
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>が出来る。さて、この状態で出力を見ると、ページ上部がナビゲーションバーで隠れてしまった。
+app/assets/stylesheets/bootstrap_and_overrides.css.lessを修正することで対処する</p>
+
+<p>変更前</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="k">@import</span> <span class="s2">&quot;twitter/bootstrap/bootstrap&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="k">@import</span> <span class="s2">&quot;twitter/bootstrap/responsive&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>変更後</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="k">@import</span> <span class="s2">&quot;twitter/bootstrap/bootstrap&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nt">body</span> <span class="p">{</span><span class="k">padding-top</span><span class="o">:</span><span class="m">60px</span><span class="p">;}</span>
+</span><span class='line'><span class="k">@import</span> <span class="s2">&quot;twitter/bootstrap/responsive&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これでページが隠れなくなる。レイアウト変更にはapp/views/layouts/application.html.erbを編集する必要がある。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データ一覧ページを作って、詳細ページへのリンクを貼る]]></title>
@@ -1554,195 +1686,6 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
 +dnako_import\let.h内にある各GetProcAddressの第一引数hDllをstatic_castでHMODULE型にキャスト</p>
 
 <p>すると問題なくビルドが通り、.Netを使用することが出来ました。と言ってもMessageBoxを試した程度ですが。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[なでしこでLuaエディタ？を作る（ネタ）]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/01/28/nadesiko-lua/"/>
-    <updated>2014-01-28T21:37:03+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/01/28/nadesiko-lua</id>
-    <content type="html"><![CDATA[<p>なでしこではLuaを使えるので、なでしこのGUIと組み合わせたら簡単にLuaエディタ作れるんじゃね？ということで作ってみました。（ただのネタです）</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>母艦は「メインフォーム」
-</span><span class='line'>そのクライアントW=640#数値
-</span><span class='line'>そのクライアントH=400#数値
-</span><span class='line'>そのタイトル=「なでしこ」#文字列
-</span><span class='line'>※ ---
-</span><span class='line'>LuaエディタとはTエディタ##生成
-</span><span class='line'>そのX=8#数値
-</span><span class='line'>そのY=8#数値
-</span><span class='line'>そのW=616#数値
-</span><span class='line'>そのH=344#数値
-</span><span class='line'>そのテキスト=「」#文字列
-</span><span class='line'>そのスクロールバー=「」#文字列
-</span><span class='line'>※ ---
-</span><span class='line'>Luaボタンとはボタン##生成
-</span><span class='line'>そのX=280#数値
-</span><span class='line'>そのY=360#数値
-</span><span class='line'>そのW=64#数値
-</span><span class='line'>そのH=32#数値
-</span><span class='line'>そのテキスト=「luaする」#文字列
-</span><span class='line'>そのクリックした時は～Luaボタン__クリックした時#イベント
-</span><span class='line'>※※※積み木デザイナ:ここまで※
-</span><span class='line'>●Luaボタン__クリックした時　　# ここにイベントを書きます。
-</span><span class='line'># 字下げした部分がイベント範囲です。
-</span><span class='line'>  エラー監視
-</span><span class='line'>      ソース=Luaエディタのテキスト
-</span><span class='line'>      A=50
-</span><span class='line'>      結果とは変数
-</span><span class='line'>      LUA(&quot;---
-</span><span class='line'>      {ソース}
-</span><span class='line'>      ---&quot;)
-</span><span class='line'>  エラーならば
-</span><span class='line'>      「エラー」と言う。</span></code></pre></td></tr></table></div></figure>
-
-
-<p>セーブやロードなどは全て省いてますが実装は簡単です。</p>
-
-<p>あとLUA(&quot;<del>&hellip;</del>&quot;)の箇所を変更すれば、返り値を得ることも簡単にできます。例えばこんな感じ</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>LUA(&quot;---ret=0{ソース}nako_set(&#039;結果&#039;&cedil;ret)---&quot;)結果を言う。</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Luaをちょっといじってみたいなと思う時に使えるんじゃないかと思います。</p>
-
-<p>※なぜか「LUAする」命令だとieとかexcelを立ち上げた時にvisible=trueに出来ませんでした。何かやり方が悪かったのかな。（なでしこのバージョンはデラックス版1.5322です）</p>
-
-<p>※LuaComではUTF-8を扱うので、日本語をまぜる場合はソースをUTF-8に変換しておく必要があります</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>LUA(UTF8N変換(&quot;...&quot;))</span></code></pre></td></tr></table></div></figure>
-
-
-<p>結果もnako_setでセットした値もUTF8で返ってきますのでSJIS変換命令で変換する必要があります。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[PostgreSQLメモ]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/01/28/postgresql/"/>
-    <updated>2014-01-28T21:24:42+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/01/28/postgresql</id>
-    <content type="html"><![CDATA[<p>rhaco2をPostgreSQL8.3で使えるように色々調べていくうちに学んだメモ。</p>
-
-<h2>insert時に「デフォルト値を入れる」だけの処理をしたい場合</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">insert</span> <span class="k">into</span> <span class="err">テーブル名</span> <span class="k">default</span> <span class="n">value</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でOK</p>
-
-<h2>integerのカラムとかにlikeを適用したい場合</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="err">テーブル名</span> <span class="k">where</span> <span class="n">id</span><span class="p">::</span><span class="nb">text</span> <span class="k">like</span> <span class="o">&amp;#</span><span class="mi">039</span><span class="p">;</span><span class="o">%</span><span class="n">abc</span><span class="o">%&amp;#</span><span class="mi">039</span><span class="p">;;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>のようにカラムをテキストにキャストする。MySQLのvarcharをselectする時はデフォルトignore case。ついでにtrimも勝手にかける？らしい</p>
-
-<h2>show column</h2>
-
-<p>Mysqlで使えるshow columnは無いが、information_schemaの情報をselectすることで同じようなことが出来る。
-ただし、create table時にserialで指定してもinformation_schema.columnsから取得できるカラム情報はinteger(int4)のみ。
-なのでserialと判定するにはカラムがintegerであり、かつデフォルト値としてnextvalが指定されていることなど、複合的にチェックする必要がある。</p>
-
-<h2>cronでsqlを実行</h2>
-
-<p>毎日0時0分に実行する場合</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="mi">0</span> <span class="mi">0</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="k">to</span><span class="o">/</span><span class="n">psql</span> <span class="o">-</span><span class="n">U</span> <span class="n">username</span> <span class="o">-</span><span class="k">c</span> <span class="ss">&quot;sql&quot;</span> <span class="k">database</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="k">null</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>select結果でinsert, update</h2>
-
-<p>insertの場合はinsert文の後でselect文を書く。以下は一例</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">insert</span> <span class="k">into</span> <span class="k">table</span> <span class="k">select</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="k">from</span> <span class="n">table2</span> <span class="k">where</span> <span class="n">a</span> <span class="k">like</span> <span class="s1">&#39;hoge%&#39;</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>別テーブルへの一部データのバックアップ代わりにも使える</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">insert</span> <span class="k">into</span> <span class="n">backup_table</span> <span class="p">(</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="k">table</span> <span class="k">where</span> <span class="n">id</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>updateは次のように行う</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">update</span> <span class="k">table</span> <span class="k">set</span> <span class="n">a</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">a</span> <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">table2</span><span class="p">)</span> <span class="n">t</span> <span class="k">where</span> <span class="k">table</span><span class="p">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">b</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>どの範囲のデータが更新されるかに注意してwhere句を使う。上の場合、tの中でwhere句を使う場合とで異なる結果になる場合がある。</p>
-
-<h2>インデックス一覧を表示</h2>
-
-<p>インデックス一覧を表示。インデックスを2重に登録しようとするとエラーが出るので、チェックに使う</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">SELECT</span> <span class="n">tablename</span><span class="p">,</span> <span class="n">indexname</span> <span class="k">FROM</span> <span class="n">pg_indexes</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>ビューの一覧を表示</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">SELECT</span> <span class="n">viewname</span> <span class="k">FROM</span> <span class="n">pg_views</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">viewname</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>psqlで実行結果を見やすくする</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="n">psql</span> <span class="o">=&gt;</span> <span class="err">\</span><span class="n">x</span>
-</span><span class='line'><span class="n">psql</span> <span class="o">=&gt;</span> <span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="k">table</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>カラムの数が多いと表示が崩れやすいので、これで見やすくなる</p>
 ]]></content>
   </entry>
   

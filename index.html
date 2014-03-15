@@ -9,8 +9,12 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="参考にした記事URL一覧 小学生でもわかるRuby on Rails入門 | OpenBook
-Rails &ndash; link_to の引数と展開の違いまとめ &ndash; Qiita 前回に引き続き小学生でもわかるRuby on Rails入門 | OpenBookを参考にしているが、 &hellip;">
+  <meta name="description" content="rhaco3を使ってる人なんて世界で何人居るのかなと思いつつ、あまりに情報が少ないので、メモ書きしていく。
+大きめネタは別記事にまとめるが小さいネタはここに追記する。 Daoで作ったSQLを確認する方法 Daoを継承したモデルとして、Hogeモデルがあるとして 1
+2
+3
+4
+\Hoge:: &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +84,192 @@ Rails &ndash; link_to の引数と展開の違いまとめ &ndash; Qiita 前回�
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/15/rhaco3-memo/">Rhaco3 Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-15T13:28:55+09:00" pubdate data-updated="true">Mar 15<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>rhaco3を使ってる人なんて世界で何人居るのかなと思いつつ、あまりに情報が少ないので、メモ書きしていく。
+大きめネタは別記事にまとめるが小さいネタはここに追記する。</p>
+
+<h3>Daoで作ったSQLを確認する方法</h3>
+
+<p>Daoを継承したモデルとして、Hogeモデルがあるとして</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nx">\Hoge</span><span class="o">::</span><span class="na">start_record</span><span class="p">();</span>
+</span><span class='line'><span class="nx">\Hoge</span><span class="o">::</span><span class="na">find_get</span><span class="p">(</span><span class="nx">\org\rhaco\store\db\Q</span><span class="o">::</span><span class="na">eq</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">));</span><span class="c1">//\Hogeモデルからid=1のデータを1件取得する命令</span>
+</span><span class='line'><span class="nv">$queries</span> <span class="o">=</span> <span class="nx">\Hoge</span><span class="o">::</span><span class="na">stop_record</span><span class="p">();</span>
+</span><span class='line'><span class="nb">var_dump</span><span class="p">(</span><span class="nv">$queries</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じで使う。出力は</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>array(1) {
+</span><span class='line'>  [0]=&gt;
+</span><span class='line'>  array(2) {
+</span><span class='line'>    [0]=&gt;
+</span><span class='line'>    string(291) &quot;select t4.&quot;id&quot; as c5,t4.&quot;name&quot; as c10 from hoge t4 where  ( (t4.&quot;id&quot; = ?) )   offset 0 limit 1 &quot;
+</span><span class='line'>    [1]=&gt;
+</span><span class='line'>    array(1) {
+</span><span class='line'>      [0]=&gt;
+</span><span class='line'>      string(1) &quot;1&quot;
+</span><span class='line'>    }
+</span><span class='line'>  }
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいに出る</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/14/a-way-of-creating-rails-application4/">Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(4):ビューにBootstrapを使う</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-14T09:10:41+09:00" pubdate data-updated="true">Mar 14<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>参考にした記事URL一覧</p>
+
+<ul>
+<li><a href="http://ubiqlog.com/archives/8749">Ruby on Rails 4.0正式リリースとBootstrapの正しい設定法 | ユービックログ研究所</a></li>
+<li><a href="http://railscasts.com/episodes/328-twitter-bootstrap-basics?language=ja&amp;view=asciicast">#328 Twitter Bootstrap Basics &ndash; RailsCasts</a></li>
+</ul>
+
+
+<p>今回はそっけない表示画面をそれっぽくするためにビューにBootstrapを当てはめる。</p>
+
+<p>Gemfileを編集</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>+gem 'less-rails'
+</span><span class='line'>+gem 'twitter-bootstrap-rails'
+</span><span class='line'>+gem 'execjs'
+</span><span class='line'>-gem 'sass-rails'</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以下のコマンドを実行</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle install
+</span><span class='line'><span class="nv">$ </span>rails g bootstrap:install
+</span><span class='line'><span class="nv">$ </span>rails g bootstrap:layout application
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と実行したけど、最後のコマンドはビューを勝手に色々いじるので、しない方が良いかもしれない。上のコマンドを実行すると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>app/assets/javascripts/application.js
+</span><span class='line'>app/assets/javascripts/bootstrap.js.coffee
+</span><span class='line'>app/assets/stylesheets/application.css
+</span><span class='line'>app/assets/stylesheets/bootstrap_and_overrides.css.less
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>が出来る。さて、この状態で出力を見ると、ページ上部がナビゲーションバーで隠れてしまった。
+app/assets/stylesheets/bootstrap_and_overrides.css.lessを修正することで対処する</p>
+
+<p>変更前</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="k">@import</span> <span class="s2">&quot;twitter/bootstrap/bootstrap&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="k">@import</span> <span class="s2">&quot;twitter/bootstrap/responsive&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>変更後</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="k">@import</span> <span class="s2">&quot;twitter/bootstrap/bootstrap&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nt">body</span> <span class="p">{</span><span class="k">padding-top</span><span class="o">:</span><span class="m">60px</span><span class="p">;}</span>
+</span><span class='line'><span class="k">@import</span> <span class="s2">&quot;twitter/bootstrap/responsive&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これでページが隠れなくなる。レイアウト変更にはapp/views/layouts/application.html.erbを編集する必要がある。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1216,103 +1406,6 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/11/svn-memo/">Svn Memo</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-11T11:53:32+09:00" pubdate data-updated="true">Feb 11<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>svn使っててはまることが結構あるのでメモ</p>
-
-<h2>ubuntuでsvnコマンドすると認証失敗する場合</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>Password <span class="k">for</span> ‘<span class="o">(</span>null<span class="o">)</span>’ GNOME keyring:
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>というメッセージが表示される場合、gnome-keyringというやつが邪魔をしているらしい。ログイン情報を削除すれば解決。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>rm ~/.gnome2/keyrings/login.keyring
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でいける。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/11/sqlite-memo/">Sqlite Memo</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-11T11:48:39+09:00" pubdate data-updated="true">Feb 11<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>SQLiteでたまに使う操作をメモ</p>
-
-<h2>テーブルの存在チェック</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">sqlite_master</span> <span class="k">WHERE</span> <span class="k">type</span><span class="o">=</span><span class="s1">&#39;table&#39;</span> <span class="k">AND</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;テーブル名&#39;</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1338,6 +1431,14 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/03/15/rhaco3-memo/">Rhaco3 Memo</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/14/a-way-of-creating-rails-application4/">Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(4):ビューにBootstrapを使う</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/03/10/a-way-of-creating-rails-application3/">Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データ一覧ページを作って、詳細ページへのリンクを貼る</a>
       </li>
     
@@ -1347,14 +1448,6 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
     
       <li class="post">
         <a href="/blog/2014/03/10/a-way-of-creating-rails-application/">Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずRailsアプリを作ってみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/09/how-to-block-bot-access-from-google-analytics/">Google Analyticsからbotアクセスを取り除く</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/07/linux-command-memo/">Linux Command Memo</a>
       </li>
     
   </ul>
