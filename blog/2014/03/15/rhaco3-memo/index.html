@@ -156,6 +156,35 @@
 
 
 <p>みたいに出る</p>
+
+<h3>あるクラス用に設定したConfを別クラスから参照したい</h3>
+
+<p>\org\rhaco\Confはクラス用に設定値を決めるのに良く使う。
+大体commons/hoge.phpみたいにrhaco3で設定値を書くファイルに書くことが多い。</p>
+
+<p>例としてFlowクラスでルートURLを設定するには</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>\org\rhaco\Conf::set(&quot;org.rhaco.Flow&quot;,&quot;app_url&quot;,&quot;localhost&quot;);
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じでcommons/hoge.phpに書いたりする。Flowクラス内では</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>$app_url = \org\rhaco\Conf::get(&quot;app_url&quot;);
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で設定した値を読み込める。
+他のクラスで読み込みたい場合にどうするか良く分からなかったがソース読んだら分かったのでメモしておく</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>$app_url = \org\rhaco\Conf::get(&quot;org.rhaco.Flow@app_url&quot;);
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これでおk。@で区切ってクラス名と取得したい値のキーを書くと値を取って来れる。</p>
 </div>
 
 
