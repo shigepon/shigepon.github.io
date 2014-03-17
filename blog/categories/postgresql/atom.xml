@@ -4,7 +4,7 @@
   <title><![CDATA[Category: postgresql | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/postgresql/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-03-17T10:36:21+09:00</updated>
+  <updated>2014-03-17T23:12:50+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -94,6 +94,17 @@ psql =&gt; select * from table;
 </code></p>
 
 <p>カラムの数が多いと表示が崩れやすいので、これで見やすくなる</p>
+
+<h2>カラム追加時にNOT NULLを指定する手順</h2>
+
+<p><code>sql
+ALTER TABLE table_name ADD COLUMN column_name text;
+ALTER TABLE table_name ALTER COLUMN column_name SET DEFAULT '';
+UPDATE table_name SET column_name = '';
+ALTER TABLE table_name ALTER COLUMN column_name SET NOT NULL;
+</code></p>
+
+<p>こんな感じで複数業使ってNOT NULL制約を入れる</p>
 ]]></content>
   </entry>
   
