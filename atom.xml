@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-03-17T10:34:11+09:00</updated>
+  <updated>2014-03-17T10:36:21+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -73,14 +73,14 @@
 <p>例としてFlowクラスでルートURLを設定するには</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'>\org\rhaco\Conf::set(&quot;org.rhaco.Flow&quot;,&quot;app_url&quot;,&quot;localhost&quot;);
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nx">\org\rhaco\Conf</span><span class="o">::</span><span class="na">set</span><span class="p">(</span><span class="s2">&quot;org.rhaco.Flow&quot;</span><span class="p">,</span><span class="s2">&quot;app_url&quot;</span><span class="p">,</span><span class="s2">&quot;localhost&quot;</span><span class="p">);</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>こんな感じでcommons/hoge.phpに書いたりする。Flowクラス内では</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'>$app_url = \org\rhaco\Conf::get(&quot;app_url&quot;);
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nv">$app_url</span> <span class="o">=</span> <span class="nx">\org\rhaco\Conf</span><span class="o">::</span><span class="na">get</span><span class="p">(</span><span class="s2">&quot;app_url&quot;</span><span class="p">);</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -88,7 +88,7 @@
 他のクラスで読み込みたい場合にどうするか良く分からなかったがソース読んだら分かったのでメモしておく</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'>$app_url = \org\rhaco\Conf::get(&quot;org.rhaco.Flow@app_url&quot;);
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nv">$app_url</span> <span class="o">=</span> <span class="nx">\org\rhaco\Conf</span><span class="o">::</span><span class="na">get</span><span class="p">(</span><span class="s2">&quot;org.rhaco.Flow@app_url&quot;</span><span class="p">);</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
