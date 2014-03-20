@@ -9,12 +9,8 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="rhaco3を使ってる人なんて世界で何人居るのかなと思いつつ、あまりに情報が少ないので、メモ書きしていく。
-大きめネタは別記事にまとめるが小さいネタはここに追記する。 Daoで作ったSQLを確認する方法 Daoを継承したモデルとして、Hogeモデルがあるとして 1
-2
-3
-4
-\Hoge:: &hellip;">
+  <meta name="description" content="Nginxで503コードのページをカスタマイズする なるべく手軽にメンテナンスページを出すための手順 path/to/root/error/503.htmlにページを用意する。
+path/to/root/error/以下に画像やcss、javascriptなど必要なものを用意する。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,6 +80,101 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/20/nginx-memo/">Nginx Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-20T16:04:53+09:00" pubdate data-updated="true">Mar 20<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Nginxで503コードのページをカスタマイズする</h2>
+
+<p>なるべく手軽にメンテナンスページを出すための手順</p>
+
+<ul>
+<li>path/to/root/error/503.htmlにページを用意する。</li>
+<li>path/to/root/error/以下に画像やcss、javascriptなど必要なものを用意する。</li>
+<li>nginxの設定を変更する。必要な部分だけ抜粋</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>server {
+</span><span class='line'>  server_name xxx.xxx;
+</span><span class='line'>        set $maintenance false;
+</span><span class='line'>        if (-f $document_root/error/503.html ){
+</span><span class='line'>                set $maintenance true;
+</span><span class='line'>        }
+</span><span class='line'>        if ($uri ~ "^/error/") {
+</span><span class='line'>            set $maintenance false;
+</span><span class='line'>        }
+</span><span class='line'>        if ($remote_addr = XXX.XXX.XXX.XXX ){
+</span><span class='line'>                set $maintenance false;#指定したIPからのアクセスは普通に見れるようにする
+</span><span class='line'>        }
+</span><span class='line'>        if ($maintenance = true) {
+</span><span class='line'>                return 503;
+</span><span class='line'>        }
+</span><span class='line'>        error_page 503 @maintenance;
+</span><span class='line'>        location @maintenance {
+</span><span class='line'>                rewrite ^(.*)$ /error/503.html break;
+</span><span class='line'>                expires 0;
+</span><span class='line'>        }
+</span><span class='line'>        location /error/ {}
+</span><span class='line'>
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>path/to/root/error/503.htmlがあれば、メンテナンス画面を表示する。なければ表示しない。一度nginx設定をリロードすればその後はリロードの必要もない。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1136,305 +1227,6 @@ events_controller.rbを次のように変えると</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/26/rails-startup/">Ruby on Railsを入れてみた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-26T14:51:16+09:00" pubdate data-updated="true">Feb 26<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>rhaco使わないでWebサービス作るならもうPHP使わずに他の言語でやってみようかなと思い、
-DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強という意味を込めてRailsでやってみることにした。</p>
-
-<p>とりあえずまずはインストール出来ないと話にならないので、Railsをインストールしてみた話。</p>
-
-<p>Ubuntu使ってるので、aptitude install railsでさくっと終わるかなと思ってTwitterで何となく</p>
-
-<blockquote><p>shigepon: railsはバージョンいくつを使うと吉なんでしょ？</p></blockquote>
-
-<p>とつぶやいたら、@sugamasaoさんから</p>
-
-<blockquote><p>sugamasao: @shigepon しがらみがなければ、最新の4.0.2が良いと思います。お試しで触って見るなら、4.1のbeta版を使って見ても良いかもしれません〜</p></blockquote>
-
-<p>という話が！そうなるとrubyも2系入れないとダメじゃん！と思いつつ</p>
-
-<blockquote><p>shigepon: @sugamasao ただ、うちのubuntuのrubyが1.8なので、まずは2.0にしないといけないっすね。</p></blockquote>
-
-<p>とボヤいたら、やっぱり</p>
-
-<blockquote><p>sugamasao: @shigepon なるほど〜！1.8系はもうオワコンなので、2系を入れたほうが良いですねwちなみに、いまは2.1がリリースされてます！</p></blockquote>
-
-<p>とのお達しが。んじゃ2系入れるかとググりながらインストールしてみた。
-参考にしたページは次のとおり</p>
-
-<ul>
-<li><a href="http://qiita.com/emadurandal/items/a60886152a4c99ce1017">Rails開発環境の構築（rbenvでRuby導入からBundler、Rails導入まで） &ndash; Qiita</a></li>
-<li><a href="http://stackoverflow.com/questions/19031633/starting-the-rails-sqlite3-error">Starting the rails, sqlite3 Error &ndash; Stack Overflow</a></li>
-<li><a href="http://kiyotakagoto.hatenablog.com/entry/2013/05/28/235727">rails server 時に `autodetect&#8217;: Could not find a JavaScript runtime が出たら。 &ndash; 人生ずっと勉強</a></li>
-</ul>
-
-
-<h3>手順</h3>
-
-<p>行ったり来たりしてるからこんな感じでスッと出来てないけど、だいたいこんな感じ</p>
-
-<h4>rbenvインストール</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git clone git://github.com/sstephenson/rbenv.git ~/.rbenv
-</span><span class='line'>mkdir -p ~/.rbenv/plugins
-</span><span class='line'>git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build</span></code></pre></td></tr></table></div></figure>
-
-
-<p>~/.profileに以下を追加</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;$HOME/.rbenv/bin:$PATH&quot;</span>
-</span><span class='line'><span class="nb">eval</span> <span class="s2">&quot;$(rbenv init -)&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>んで</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">source</span> ~/.profile
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>opensslは入ってたから特に何もしなかったけど必要なら</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo aptitude install openssl
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>iconv, readlineは最初から入ってるんじゃないかな？
-んでインストール</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo rbenv install -l
-</span><span class='line'>rbenv install 2.1.0
-</span><span class='line'>rbenv global 2.1.0
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>rbenvで何かやったら</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>rbenv rehash
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>を忘れずに</p>
-
-<h3>Bundlerインストール</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>rbenv <span class="nb">exec </span>gem install bundler
-</span><span class='line'>rbenv rehash
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Railsインストール</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>bundle init
-</span><span class='line'>vim Gemfile
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Gemfile内に</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>gem rails <span class="s2">&quot;4.0.2&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>を追加。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>bundle install --path vendor/bundle
-</span><span class='line'>bundle <span class="nb">exec </span>new hoge --skip-bundle
-</span><span class='line'>rm -f Gemfile
-</span><span class='line'>rm -f Gemfile.lock
-</span><span class='line'>rm -rf .bundle
-</span><span class='line'>rm -rf vendor/bundle
-</span><span class='line'><span class="nb">cd </span>hoge
-</span><span class='line'>bundle install --path vendor/bundle
-</span><span class='line'><span class="nb">echo</span> <span class="s1">&#39;/vendor/bundle&#39;</span> &gt;&gt; .gitignore
-</span><span class='line'>bundle <span class="nb">exec </span>rails server
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>で途中下のようにハマりながら起動を確認した。</p>
-
-<h3>はまったポイント</h3>
-
-<p>Ruby on Railsをインストールする時にプロジェクトのディレクトリで</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>bundle install -path vendor/bundle
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>すると、</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>Gem::Installer::ExtensionBuildError: ERROR: Failed to build gem native extension.
-</span><span class='line'>
-</span><span class='line'>        /usr/bin/ruby1.9.1 extconf.rb
-</span><span class='line'>checking <span class="k">for </span>sqlite3.h... no
-</span><span class='line'>sqlite3.h is missing. Try <span class="s1">&#39;port install sqlite3 +universal&#39;</span>
-</span><span class='line'>or <span class="s1">&#39;yum install sqlite-devel&#39;</span> and check your shared library search path <span class="o">(</span>the
-</span><span class='line'>location where your sqlite3 shared library is located<span class="o">)</span>.
-</span><span class='line'>*** extconf.rb failed ***
-</span><span class='line'>Could not create Makefile due to some reason, probably lack of
-</span><span class='line'>necessary libraries and/or headers.  Check the mkmf.log file <span class="k">for </span>more
-</span><span class='line'>details.  You may need configuration options.
-</span><span class='line'>
-</span><span class='line'>Provided configuration options:
-</span><span class='line'>    --with-opt-dir
-</span><span class='line'>    --without-opt-dir
-</span><span class='line'>    --with-opt-include
-</span><span class='line'>    --without-opt-include<span class="o">=</span><span class="k">${</span><span class="nv">opt</span><span class="p">-dir</span><span class="k">}</span>/include
-</span><span class='line'>    --with-opt-lib
-</span><span class='line'>    --without-opt-lib<span class="o">=</span><span class="k">${</span><span class="nv">opt</span><span class="p">-dir</span><span class="k">}</span>/lib
-</span><span class='line'>    --with-make-prog
-</span><span class='line'>    --without-make-prog
-</span><span class='line'>    --srcdir<span class="o">=</span>.
-</span><span class='line'>    --curdir
-</span><span class='line'>    --ruby<span class="o">=</span>/usr/bin/ruby1.9.1
-</span><span class='line'>    --with-sqlite3-dir
-</span><span class='line'>    --without-sqlite3-dir
-</span><span class='line'>    --with-sqlite3-include
-</span><span class='line'>    --without-sqlite3-include<span class="o">=</span><span class="k">${</span><span class="nv">sqlite3</span><span class="p">-dir</span><span class="k">}</span>/include
-</span><span class='line'>    --with-sqlite3-lib
-</span><span class='line'>    --without-sqlite3-lib<span class="o">=</span><span class="k">${</span><span class="nv">sqlite3</span><span class="p">-dir</span><span class="k">}</span>/lib
-</span><span class='line'>    --enable-local
-</span><span class='line'>    --disable-local
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>Gem files will remain installed in /home/helio/.bundler/tmp/23089/gems/sqlite3-1.3.8 <span class="k">for </span>inspection.
-</span><span class='line'>Results logged to /home/helio/.bundler/tmp/23089/gems/sqlite3-1.3.8/ext/sqlite3/gem_make.out
-</span><span class='line'>
-</span><span class='line'>An error occurred <span class="k">while </span>installing sqlite3 <span class="o">(</span>1.3.8<span class="o">)</span>, and Bundler
-</span><span class='line'>cannot <span class="k">continue</span>.
-</span><span class='line'>Make sure that <span class="sb">`</span>gem install sqlite3 -v <span class="s1">&#39;1.3.8&#39;</span><span class="sb">`</span> succeeds before
-</span><span class='line'>bundling.
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>というエラーが出たのは</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo aptitude install sqlite3 libsqlite3-dev
-</span><span class='line'>bundle install --path vendor/bundle
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>で出なくなった。インストールパスの指定が無ければpathオプションは要らない。</p>
-
-<p>bundle exec rails serverで</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>autodetect<span class="err">&#39;</span>: Could not find a JavaScript runtime. See https://github.com/sstephenson/execjs <span class="k">for </span>a list of available runtimes. <span class="o">(</span>ExecJS::RuntimeUnavailable<span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>というエラーが出て、サーバを起動出来なかった。これは
-プロジェクトに入っているGemfileに書いてあるtherubyracerに関する行をコメントアウトして</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>bundle install --path vendor/bundle
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とすれば起動出来るようになった。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1460,6 +1252,10 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/03/20/nginx-memo/">Nginx Memo</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/03/15/rhaco3-memo/">Rhaco3 Memo</a>
       </li>
     
@@ -1473,10 +1269,6 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
     
       <li class="post">
         <a href="/blog/2014/03/10/a-way-of-creating-rails-application2/">Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(2):データベースにPostgreSQLを使ってみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/10/a-way-of-creating-rails-application/">Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずRailsアプリを作ってみた</a>
       </li>
     
   </ul>

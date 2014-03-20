@@ -9,34 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="なでしこではLuaを使えるので、なでしこのGUIと組み合わせたら簡単にLuaエディタ作れるんじゃね？ということで作ってみました。（ただのネタです） 1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28 &hellip;">
+  <meta name="description" content="なでしこでプラグインを作る時にC#を使いたかったので、その前段階としてC++/CLIでプラグインを作る方法を探ってみました。 C++/CLIが使えると、.Netを使えるようになり、C#で作ったdllもVC++の参照設定から読み込んで使えるようになります。 なでしこにはC++ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -106,6 +79,89 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/28/nadesiko-plugin/">C++/CLIでなでしこのプラグインを作る方法(Visual C++ Express Edition)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-28T21:45:15+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>なでしこでプラグインを作る時にC#を使いたかったので、その前段階としてC++/CLIでプラグインを作る方法を探ってみました。</p>
+
+<p>C++/CLIが使えると、.Netを使えるようになり、C#で作ったdllもVC++の参照設定から読み込んで使えるようになります。</p>
+
+<p>なでしこにはC++でプラグイン開発するためのsdkがあります。</p>
+
+<p>ただし、VC++で使用するには<a href="http://www.himanavi.net/cgi/nade-bbs2/cbbs.cgi?mode=one&amp;number=7462&amp;type=7446&amp;space=60&amp;no=0">なでしこ質問掲示板</a>にあるような設定をしなければいけません。（以下引用）</p>
+
+<ol>
+<li>Win32プロジェクトを作成</li>
+<li>plugins_sdk_cからソースを追加</li>
+<li>dnako_import.defを作成</li>
+<li>すべての構成でプロジェクトのプロパティを修正　全般→文字セットを「マルチ バイト文字セットを使用する」に変更　リンカ→入力→モジュール定義ファイルに「dnako_import.def」と入力</li>
+<li>ビルド</li>
+</ol>
+
+
+<p>dnako_import.defは以下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>EXPORTS
+</span><span class='line'>ImportNakoFunction
+</span><span class='line'>PluginInfo
+</span><span class='line'>PluginVersion
+</span><span class='line'>PluginRequire
+</span><span class='line'>PluginInit
+</span><span class='line'>PluginFin</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実際こちらで試した場合は他にも4の箇所で</p>
+
+<p>全般→共通言語ランタイムサポートを「共通言語ランタイムサポートを使用しない」に
+C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘッダーの作成/使用を「プリコンパイル済みヘッダーを使用しない」に</p>
+
+<p>変更が必要でした。</p>
+
+<p>ただし、この方法だとC++/CLIを使えないので、.Netを使うことは出来ません。そこで、次のように変更しました。</p>
+
+<p>+sdkに含まれる.cファイルを全て.cppに変更
++dnako_import\let.h内にある各GetProcAddressの第一引数hDllをstatic_castでHMODULE型にキャスト</p>
+
+<p>すると問題なくビルドが通り、.Netを使用することが出来ました。と言ってもMessageBoxを試した程度ですが。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -463,6 +519,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/03/20/nginx-memo/">Nginx Memo</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/03/15/rhaco3-memo/">Rhaco3 Memo</a>
       </li>
     
@@ -476,10 +536,6 @@
     
       <li class="post">
         <a href="/blog/2014/03/10/a-way-of-creating-rails-application2/">Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(2):データベースにPostgreSQLを使ってみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/10/a-way-of-creating-rails-application/">Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずRailsアプリを作ってみた</a>
       </li>
     
   </ul>

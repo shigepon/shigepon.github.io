@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-03-17T23:12:50+09:00</updated>
+  <updated>2014-03-20T16:14:20+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,74 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[nginx memo]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/03/20/nginx-memo/"/>
+    <updated>2014-03-20T16:04:53+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/03/20/nginx-memo</id>
+    <content type="html"><![CDATA[<h2>Nginxで503コードのページをカスタマイズする</h2>
+
+<p>なるべく手軽にメンテナンスページを出すための手順</p>
+
+<ul>
+<li>path/to/root/error/503.htmlにページを用意する。</li>
+<li>path/to/root/error/以下に画像やcss、javascriptなど必要なものを用意する。</li>
+<li>nginxの設定を変更する。必要な部分だけ抜粋</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>server {
+</span><span class='line'>  server_name xxx.xxx;
+</span><span class='line'>        set $maintenance false;
+</span><span class='line'>        if (-f $document_root/error/503.html ){
+</span><span class='line'>                set $maintenance true;
+</span><span class='line'>        }
+</span><span class='line'>        if ($uri ~ "^/error/") {
+</span><span class='line'>            set $maintenance false;
+</span><span class='line'>        }
+</span><span class='line'>        if ($remote_addr = XXX.XXX.XXX.XXX ){
+</span><span class='line'>                set $maintenance false;#指定したIPからのアクセスは普通に見れるようにする
+</span><span class='line'>        }
+</span><span class='line'>        if ($maintenance = true) {
+</span><span class='line'>                return 503;
+</span><span class='line'>        }
+</span><span class='line'>        error_page 503 @maintenance;
+</span><span class='line'>        location @maintenance {
+</span><span class='line'>                rewrite ^(.*)$ /error/503.html break;
+</span><span class='line'>                expires 0;
+</span><span class='line'>        }
+</span><span class='line'>        location /error/ {}
+</span><span class='line'>
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>path/to/root/error/503.htmlがあれば、メンテナンス画面を表示する。なければ表示しない。一度nginx設定をリロードすればその後はリロードの必要もない。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[rhaco3 memo]]></title>
@@ -1659,62 +1727,6 @@ base64した値が格納さています。
 
 
 <p>で動かしてみるときちんと動かせました。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[C++/CLIでなでしこのプラグインを作る方法(Visual C++ Express Edition)]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin/"/>
-    <updated>2014-01-28T21:45:15+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin</id>
-    <content type="html"><![CDATA[<p>なでしこでプラグインを作る時にC#を使いたかったので、その前段階としてC++/CLIでプラグインを作る方法を探ってみました。</p>
-
-<p>C++/CLIが使えると、.Netを使えるようになり、C#で作ったdllもVC++の参照設定から読み込んで使えるようになります。</p>
-
-<p>なでしこにはC++でプラグイン開発するためのsdkがあります。</p>
-
-<p>ただし、VC++で使用するには<a href="http://www.himanavi.net/cgi/nade-bbs2/cbbs.cgi?mode=one&amp;number=7462&amp;type=7446&amp;space=60&amp;no=0">なでしこ質問掲示板</a>にあるような設定をしなければいけません。（以下引用）</p>
-
-<ol>
-<li>Win32プロジェクトを作成</li>
-<li>plugins_sdk_cからソースを追加</li>
-<li>dnako_import.defを作成</li>
-<li>すべての構成でプロジェクトのプロパティを修正　全般→文字セットを「マルチ バイト文字セットを使用する」に変更　リンカ→入力→モジュール定義ファイルに「dnako_import.def」と入力</li>
-<li>ビルド</li>
-</ol>
-
-
-<p>dnako_import.defは以下</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>EXPORTS
-</span><span class='line'>ImportNakoFunction
-</span><span class='line'>PluginInfo
-</span><span class='line'>PluginVersion
-</span><span class='line'>PluginRequire
-</span><span class='line'>PluginInit
-</span><span class='line'>PluginFin</span></code></pre></td></tr></table></div></figure>
-
-
-<p>実際こちらで試した場合は他にも4の箇所で</p>
-
-<p>全般→共通言語ランタイムサポートを「共通言語ランタイムサポートを使用しない」に
-C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘッダーの作成/使用を「プリコンパイル済みヘッダーを使用しない」に</p>
-
-<p>変更が必要でした。</p>
-
-<p>ただし、この方法だとC++/CLIを使えないので、.Netを使うことは出来ません。そこで、次のように変更しました。</p>
-
-<p>+sdkに含まれる.cファイルを全て.cppに変更
-+dnako_import\let.h内にある各GetProcAddressの第一引数hDllをstatic_castでHMODULE型にキャスト</p>
-
-<p>すると問題なくビルドが通り、.Netを使用することが出来ました。と言ってもMessageBoxを試した程度ですが。</p>
 ]]></content>
   </entry>
   
