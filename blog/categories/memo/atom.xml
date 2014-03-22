@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: memo | shigeponが関心のある技術情報など]]></title>
+  <link href="http://blog.shigepon.com/blog/categories/memo/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.com/"/>
+  <updated>2014-03-22T23:41:55+09:00</updated>
+  <id>http://blog.shigepon.com/</id>
+  <author>
+    <name><![CDATA[shigepon]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[nginx memo]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/03/20/nginx-memo/"/>
+    <updated>2014-03-20T16:04:53+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/03/20/nginx-memo</id>
+    <content type="html"><![CDATA[<h2>Nginxで503コードのページをカスタマイズする</h2>
+
+<p>なるべく手軽にメンテナンスページを出すための手順</p>
+
+<ul>
+<li>path/to/root/error/503.htmlにページを用意する。</li>
+<li>path/to/root/error/以下に画像やcss、javascriptなど必要なものを用意する。</li>
+<li>nginxの設定を変更する。必要な部分だけ抜粋</li>
+</ul>
+
+
+<p>```
+server {</p>
+
+<pre><code>server_name xxx.xxx;
+    set $maintenance false;
+    if (-f $document_root/error/503.html ){
+            set $maintenance true;
+    }
+    if ($uri ~ "^/error/") {
+        set $maintenance false;
+    }
+    if ($remote_addr = XXX.XXX.XXX.XXX ){
+            set $maintenance false;#指定したIPからのアクセスは普通に見れるようにする
+    }
+    if ($maintenance = true) {
+            return 503;
+    }
+    error_page 503 @maintenance;
+    location @maintenance {
+            rewrite ^(.*)$ /error/503.html break;
+            expires 0;
+    }
+    location /error/ {}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>path/to/root/error/503.htmlがあれば、メンテナンス画面を表示する。なければ表示しない。一度nginx設定をリロードすればその後はリロードの必要もない。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[rhaco3 memo]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/03/15/rhaco3-memo/"/>
+    <updated>2014-03-15T13:28:55+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/03/15/rhaco3-memo</id>
+    <content type="html"><![CDATA[<p>rhaco3を使ってる人なんて世界で何人居るのかなと思いつつ、あまりに情報が少ないので、メモ書きしていく。
+大きめネタは別記事にまとめるが小さいネタはここに追記する。</p>
+
+<h3>Daoで作ったSQLを確認する方法</h3>
+
+<p>Daoを継承したモデルとして、Hogeモデルがあるとして</p>
+
+<p><code>php
+\Hoge::start_record();
+\Hoge::find_get(\org\rhaco\store\db\Q::eq("id",1));//\Hogeモデルからid=1のデータを1件取得する命令
+$queries = \Hoge::stop_record();
+var_dump($queries);
+</code></p>
+
+<p>こんな感じで使う。出力は</p>
+
+<p>```html
+array(1) {
+  [0]=>
+  array(2) {</p>
+
+<pre><code>[0]=&gt;
+string(291) "select t4."id" as c5,t4."name" as c10 from hoge t4 where  ( (t4."id" = ?) )   offset 0 limit 1 "
+[1]=&gt;
+array(1) {
+  [0]=&gt;
+  string(1) "1"
+}
+</code></pre>
+
+<p>  }
+```</p>
+
+<p>みたいに出る</p>
+
+<h3>あるクラス用に設定したConfを別クラスから参照したい</h3>
+
+<p>\org\rhaco\Confはクラス用に設定値を決めるのに良く使う。
+大体commons/hoge.phpみたいにrhaco3で設定値を書くファイルに書くことが多い。</p>
+
+<p>例としてFlowクラスでルートURLを設定するには</p>
+
+<p><code>php
+\org\rhaco\Conf::set("org.rhaco.Flow","app_url","localhost");
+</code></p>
+
+<p>こんな感じでcommons/hoge.phpに書いたりする。Flowクラス内では</p>
+
+<p><code>php
+$app_url = \org\rhaco\Conf::get("app_url");
+</code></p>
+
+<p>で設定した値を読み込める。
+他のクラスで読み込みたい場合にどうするか良く分からなかったがソース読んだら分かったのでメモしておく</p>
+
+<p><code>php
+$app_url = \org\rhaco\Conf::get("org.rhaco.Flow@app_url");
+</code></p>
+
+<p>これでおk。@で区切ってクラス名と取得したい値のキーを書くと値を取って来れる。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[linux command memo]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/03/07/linux-command-memo/"/>
+    <updated>2014-03-07T08:50:21+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/03/07/linux-command-memo</id>
+    <content type="html"><![CDATA[<h2>アクセスログのIPアドレスを集計してみる</h2>
+
+<p>参考：<a href="http://blog.livedoor.jp/stock_value/archives/51443839.html">Linux サーバーでお手軽にログの集計：こっそりと。 &ndash; livedoor Blog（ブログ）</a></p>
+
+<p>Google Analyticsでリファラ無しの変なアクセスが増えたので、アクセスログからIPを集計してみた。
+アクセスログの書式はLTSVでこんな感じ</p>
+
+<p><code>
+time:07/Mar/2014:06:25:22 +0900       host::11.22.33.46       forwardedfor:-  req:GET / HTTP/1.1   status:200      size:1       referer:-ua:Mozilla/5.0 (***)      reqtime:0.777   cache:- runtime:-       vhost:hoge.fuga
+</code></p>
+
+<p>なんか色々ソフト使うのとか面倒だったのでgrepとかawkでほげほげした。要はhost:11.22.33.44に当たる箇所を取り出して表示回数をまとめれば良い。</p>
+
+<p><code>
+$ cat access.log | grep -v -i "bot" | grep "referer:-" | grep "status:200" | awk '{print $3}' | sort | uniq -c
+</code></p>
+
+<p>軽くbot避けを入れてるけど、crawlerとかspiderとかを避けておくとより正確になるかも。
+これだけだと一杯出てくるので100回以上アクセスあったIPだけ取り出してみた。</p>
+
+<p><code>
+$ cat access.log | grep -v -i "bot" | grep "referer:-" | grep "status:200" | awk '{print $3}' | sort | uniq -c | grep "[0-9]\{3,\}\s"
+</code></p>
+
+<p>ただ、最初の目的には最初の集計の方が役に立った。結局Bingのボットだったみたい。Analyticsではじけなかったアクセスがあったのかな。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[vim memo]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/03/01/vim-memo/"/>
+    <updated>2014-03-01T14:14:10+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/03/01/vim-memo</id>
+    <content type="html"><![CDATA[<h2>vimでsnippet</h2>
+
+<p>色々方法があるみたいだけど、neocomplecacheを入れているので、それと相性が良さそうな（作者が同じ）プラグインを入れた</p>
+
+<p>```
+NeoBundle &lsquo;Shougo/neosnippet&rsquo;
+NeoBundle &lsquo;Shougo/neosnippet-snippets&rsquo;</p>
+
+<p>&ldquo; Plugin key-mappings.
+imap &lt;C-k>     <Plug>(neosnippet_expand_or_jump)
+smap &lt;C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap &lt;C-k>     <Plug>(neosnippet_expand_target)
+&rdquo; &ldquo; SuperTab like snippets behavior.
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ &rdquo;&lt;Plug>(neosnippet_expand_or_jump)&ldquo;
+\: pumvisible() ? &rdquo;&lt;C-n>&ldquo; : &rdquo;&lt;TAB>&ldquo;
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ &rdquo;&lt;Plug>(neosnippet_expand_or_jump)&ldquo;
+\: &rdquo;&lt;TAB>&ldquo;
+&rdquo;
+&ldquo; &rdquo; For snippet_complete marker.
+if has(&lsquo;conceal&rsquo;)
+  set conceallevel=2 concealcursor=i
+endif
+```</p>
+
+<p>を.vimrcに追記して、vimを再起動後、</p>
+
+<p><code>
+:NeoBundleInstall
+</code></p>
+
+<p>でインストール完了。もう一度vimを再起動して、phpファイルを空けて
+おもむろにインサートモードで「for」とか打ったらちゃんとsnippetが表示された。&lt;C-n>などで選択してからtab押したらちゃんと入力された。
+いいね〜！！</p>
+
+<p>現在、デフォルトのsnippetとしてneosnippet-snippetsをインストールしないとデフォルトのsnippetを出してくれないことに注意。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[svn memo]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/02/11/svn-memo/"/>
+    <updated>2014-02-11T11:53:32+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/02/11/svn-memo</id>
+    <content type="html"><![CDATA[<p>svn使っててはまることが結構あるのでメモ</p>
+
+<h2>ubuntuでsvnコマンドすると認証失敗する場合</h2>
+
+<p><code>sh
+Password for ‘(null)’ GNOME keyring:
+</code></p>
+
+<p>というメッセージが表示される場合、gnome-keyringというやつが邪魔をしているらしい。ログイン情報を削除すれば解決。</p>
+
+<p><code>sh
+rm ~/.gnome2/keyrings/login.keyring
+</code></p>
+
+<p>でいける。</p>
+]]></content>
+  </entry>
+  
+</feed>

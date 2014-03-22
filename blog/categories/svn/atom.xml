@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: svn | shigeponが関心のある技術情報など]]></title>
+  <link href="http://blog.shigepon.com/blog/categories/svn/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.com/"/>
+  <updated>2014-03-22T23:41:55+09:00</updated>
+  <id>http://blog.shigepon.com/</id>
+  <author>
+    <name><![CDATA[shigepon]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[svn memo]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/02/11/svn-memo/"/>
+    <updated>2014-02-11T11:53:32+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/02/11/svn-memo</id>
+    <content type="html"><![CDATA[<p>svn使っててはまることが結構あるのでメモ</p>
+
+<h2>ubuntuでsvnコマンドすると認証失敗する場合</h2>
+
+<p><code>sh
+Password for ‘(null)’ GNOME keyring:
+</code></p>
+
+<p>というメッセージが表示される場合、gnome-keyringというやつが邪魔をしているらしい。ログイン情報を削除すれば解決。</p>
+
+<p><code>sh
+rm ~/.gnome2/keyrings/login.keyring
+</code></p>
+
+<p>でいける。</p>
+]]></content>
+  </entry>
+  
+</feed>

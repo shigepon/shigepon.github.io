@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rhaco | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/rhaco/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-03-20T16:14:20+09:00</updated>
+  <updated>2014-03-22T23:41:55+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,74 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[rhaco3 memo]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/03/15/rhaco3-memo/"/>
+    <updated>2014-03-15T13:28:55+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/03/15/rhaco3-memo</id>
+    <content type="html"><![CDATA[<p>rhaco3を使ってる人なんて世界で何人居るのかなと思いつつ、あまりに情報が少ないので、メモ書きしていく。
+大きめネタは別記事にまとめるが小さいネタはここに追記する。</p>
+
+<h3>Daoで作ったSQLを確認する方法</h3>
+
+<p>Daoを継承したモデルとして、Hogeモデルがあるとして</p>
+
+<p><code>php
+\Hoge::start_record();
+\Hoge::find_get(\org\rhaco\store\db\Q::eq("id",1));//\Hogeモデルからid=1のデータを1件取得する命令
+$queries = \Hoge::stop_record();
+var_dump($queries);
+</code></p>
+
+<p>こんな感じで使う。出力は</p>
+
+<p>```html
+array(1) {
+  [0]=>
+  array(2) {</p>
+
+<pre><code>[0]=&gt;
+string(291) "select t4."id" as c5,t4."name" as c10 from hoge t4 where  ( (t4."id" = ?) )   offset 0 limit 1 "
+[1]=&gt;
+array(1) {
+  [0]=&gt;
+  string(1) "1"
+}
+</code></pre>
+
+<p>  }
+```</p>
+
+<p>みたいに出る</p>
+
+<h3>あるクラス用に設定したConfを別クラスから参照したい</h3>
+
+<p>\org\rhaco\Confはクラス用に設定値を決めるのに良く使う。
+大体commons/hoge.phpみたいにrhaco3で設定値を書くファイルに書くことが多い。</p>
+
+<p>例としてFlowクラスでルートURLを設定するには</p>
+
+<p><code>php
+\org\rhaco\Conf::set("org.rhaco.Flow","app_url","localhost");
+</code></p>
+
+<p>こんな感じでcommons/hoge.phpに書いたりする。Flowクラス内では</p>
+
+<p><code>php
+$app_url = \org\rhaco\Conf::get("app_url");
+</code></p>
+
+<p>で設定した値を読み込める。
+他のクラスで読み込みたい場合にどうするか良く分からなかったがソース読んだら分かったのでメモしておく</p>
+
+<p><code>php
+$app_url = \org\rhaco\Conf::get("org.rhaco.Flow@app_url");
+</code></p>
+
+<p>これでおk。@で区切ってクラス名と取得したい値のキーを書くと値を取って来れる。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Basic認証する時に気をつけること]]></title>
