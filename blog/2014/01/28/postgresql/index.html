@@ -207,6 +207,22 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 
 
 <p>こんな感じで複数業使ってNOT NULL制約を入れる</p>
+
+<h2>テーブル（ビュー）のスキーマをファイルに書き込む</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pg_dump -s -t table_name db_name &gt; file_name
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これだけ。反映したい時は</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>cat file_name | psql db_name
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でおk</p>
 </div>
 
 

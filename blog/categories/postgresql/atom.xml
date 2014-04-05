@@ -4,7 +4,7 @@
   <title><![CDATA[Category: postgresql | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/postgresql/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-03-23T00:04:07+09:00</updated>
+  <updated>2014-04-05T21:54:51+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -105,6 +105,20 @@ ALTER TABLE table_name ALTER COLUMN column_name SET NOT NULL;
 </code></p>
 
 <p>こんな感じで複数業使ってNOT NULL制約を入れる</p>
+
+<h2>テーブル（ビュー）のスキーマをファイルに書き込む</h2>
+
+<p><code>sh
+$ pg_dump -s -t table_name db_name &gt; file_name
+</code></p>
+
+<p>これだけ。反映したい時は</p>
+
+<p><code>sh
+$ cat file_name | psql db_name
+</code></p>
+
+<p>でおk</p>
 ]]></content>
   </entry>
   
