@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-04-08T14:53:50+09:00</updated>
+  <updated>2014-04-08T14:55:51+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[update openssl security patch]]></title>
+    <title type="html"><![CDATA[Ubuntuでopensslのsecurity patchを当てる]]></title>
     <link href="http://blog.shigepon.com/blog/2014/04/08/update-openssl-security-patch/"/>
     <updated>2014-04-08T14:39:21+09:00</updated>
     <id>http://blog.shigepon.com/blog/2014/04/08/update-openssl-security-patch</id>
