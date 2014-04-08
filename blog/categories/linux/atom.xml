@@ -4,7 +4,7 @@
   <title><![CDATA[Category: linux | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-04-08T14:55:51+09:00</updated>
+  <updated>2014-04-08T14:57:08+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,47 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntuでopensslのsecurity patchを当てる]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/04/08/update-openssl-security-patch/"/>
+    <updated>2014-04-08T14:39:21+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/04/08/update-openssl-security-patch</id>
+    <content type="html"><![CDATA[<p>本日、<a href="http://jp.techcrunch.com/2014/04/08/20140407massive-security-bug-in-openssl-could-effect-a-huge-chunk-of-the-internet/">OpenSSLの重大バグが発覚。インターネットの大部分に影響の可能性 | TechCrunch Japan</a>というニュースで</p>
+
+<blockquote><p>過去2年以内のあらゆるバージョンのOpenSSLが走るシステムで、システムメモリー上にある大量のデータを暴露することが可能</p></blockquote>
+
+<p>と書いてあった、これはまずいので、あわててセキュリティパッチを当てたので手順をメモ。 OSはUbuntu 12.04LTS。</p>
+
+<p>Ubuntuでは<a href="http://www.ubuntu.com/usn/usn-2165-1/">USN-2165-1: OpenSSL vulnerabilities | Ubuntu</a>にあるように、Ubuntu 13.10、12.10、12.04 LTSでセキュリティパッチが出ている（2014年4月7日現在)。ということでaptを使えばセキュリティパッチを当てることが出来る。</p>
+
+<p><code>sh
+$ sudo apt-get update
+$ sudo apt-get upgrade
+</code></p>
+
+<p>または</p>
+
+<p><code>sh
+$ sudo aptitude update
+$ sudo aptitude upgrade
+</code></p>
+
+<p>でおk。ただしopenssl versionでバージョン確認してもパッチが当たったかどうか良く分からないので以下のコマンドで確認</p>
+
+<p><code>sh
+$ dpkg -l | grep openssl
+</code></p>
+
+<p>Ubuntu 12.04LTSの場合</p>
+
+<p><code>sh
+ii  openssl                              1.0.1-4ubuntu5.12                   Secure Socket Layer (SSL) binary and related cryptographic tools
+</code></p>
+
+<p>と出ればおk。確認してないけど、Ubuntu 13.10なら1.0.1e-3ubuntu1.2、Ubuntu 12.10なら1.0.1c-3ubuntu2.7と出ていればおk。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[svn memo]]></title>
