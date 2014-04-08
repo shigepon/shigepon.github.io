@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-04-05T21:54:51+09:00</updated>
+  <updated>2014-04-08T14:53:50+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,53 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[update openssl security patch]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/04/08/update-openssl-security-patch/"/>
+    <updated>2014-04-08T14:39:21+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/04/08/update-openssl-security-patch</id>
+    <content type="html"><![CDATA[<p>本日、<a href="http://jp.techcrunch.com/2014/04/08/20140407massive-security-bug-in-openssl-could-effect-a-huge-chunk-of-the-internet/">OpenSSLの重大バグが発覚。インターネットの大部分に影響の可能性 | TechCrunch Japan</a>というニュースで</p>
+
+<blockquote><p>過去2年以内のあらゆるバージョンのOpenSSLが走るシステムで、システムメモリー上にある大量のデータを暴露することが可能</p></blockquote>
+
+<p>と書いてあった、これはまずいので、あわててセキュリティパッチを当てたので手順をメモ。 OSはUbuntu 12.04LTS。</p>
+
+<p>Ubuntuでは<a href="http://www.ubuntu.com/usn/usn-2165-1/">USN-2165-1: OpenSSL vulnerabilities | Ubuntu</a>にあるように、Ubuntu 13.10、12.10、12.04 LTSでセキュリティパッチが出ている（2014年4月7日現在)。ということでaptを使えばセキュリティパッチを当てることが出来る。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo apt-get update
+</span><span class='line'><span class="nv">$ </span>sudo apt-get upgrade
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>または</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude update
+</span><span class='line'><span class="nv">$ </span>sudo aptitude upgrade
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でおk。ただしopenssl versionでバージョン確認してもパッチが当たったかどうか良く分からないので以下のコマンドで確認</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>dpkg -l | grep openssl
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ubuntu 12.04LTSの場合</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>ii  openssl                              1.0.1-4ubuntu5.12                   Secure Socket Layer <span class="o">(</span>SSL<span class="o">)</span> binary and related cryptographic tools
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と出ればおk。確認してないけど、Ubuntu 13.10なら1.0.1e-3ubuntu1.2、Ubuntu 12.10なら1.0.1c-3ubuntu2.7と出ていればおk。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[nginx memo]]></title>
@@ -1661,72 +1708,6 @@ base64した値が格納さています。
 <blockquote><p>vnako.exe と同じフォルダに配置したらエラー出ませんでした。たぶん、plug-ins フォルダにパスを通さない限り、DLLがもう一方を参照できなくなるのだと思います。</p></blockquote>
 
 <p>という返事が！まじで！？と思い試してみると・・・上手くいくじゃないですか！これでC#で作ったdllもなでしこで利用できるようになりました。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[C#で作ったdllをC++/CLIで使う]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin-cs/"/>
-    <updated>2014-01-28T22:27:58+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin-cs</id>
-    <content type="html"><![CDATA[<p><strong>画像やファイルが無くなっていますがご了承下さい</strong></p>
-
-<p>なでしこでプラグインを作る時にC#を使いたかったので、本格的にdllを作る前に、C++/CLIからMessageBoxを表示する程度のC#のdllを呼び出してみました。</p>
-
-<p>C#のdllコード</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>using System;
-</span><span class='line'>using System.Collections.Generic;
-</span><span class='line'>using System.Windows.Forms;
-</span><span class='line'>using System.Text;
-</span><span class='line'>namespace ClassLibrary1{
-</span><span class='line'>    public class Class1
-</span><span class='line'>    {
-</span><span class='line'>        public static void Method1()
-</span><span class='line'>        {
-</span><span class='line'>            MessageBox.Show(&quot;method1&quot;);
-</span><span class='line'>        }
-</span><span class='line'>    }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>C++フォームアプリケーション</p>
-
-<p>C#で作ったdllの参照とかフォームの構成とか画像が消えちゃったので適当に想像してください。
-用はC++のアプリケーションでC#のdllを参照します。</p>
-
-<p>ボタンクリック時のコード</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>private: System::Void button1_Click(System::Object^  sender&cedil; System::EventArgs^  e) {
-</span><span class='line'>   try{
-</span><span class='line'>      ClassLibrary1::Class1::Method1();
-</span><span class='line'>   }catch(Exception^ e){
-</span><span class='line'>      System::Windows::Forms::MessageBox::Show(e-&gt;Message);
-</span><span class='line'>   }
-</span><span class='line'> }</span></code></pre></td></tr></table></div></figure>
-
-
-<p>で動かしてみるときちんと動かせました。</p>
 ]]></content>
   </entry>
   
