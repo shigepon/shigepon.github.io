@@ -4,7 +4,7 @@
   <title><![CDATA[Category: postgresql | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/postgresql/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-04-09T12:39:33+09:00</updated>
+  <updated>2014-04-09T15:07:09+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -116,9 +116,28 @@ $ pg_dump -s -t table_name db_name &gt; file_name
 
 <p><code>sh
 $ cat file_name | psql db_name
+</code>
+でおk</p>
+
+<h2>csvの取り込み</h2>
+
+<p><code>csv
+1,"hoge"
 </code></p>
 
-<p>でおk</p>
+<p>みたいなデータを/path/to/csvに保存して</p>
+
+<p><code>sql
+copy tablename from '/path/to/csv' with csv;
+</code></p>
+
+<p>とpsql で実行すると取り込みできる。</p>
+
+<p><code>sql
+copy tablename (column1,column2) from '/path/to/csv' with csv;
+</code></p>
+
+<p>とやれば、カラム名と順序の指定が可能</p>
 ]]></content>
   </entry>
   
