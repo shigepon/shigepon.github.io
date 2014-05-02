@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ruby | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-05-02T15:34:36+09:00</updated>
+  <updated>2014-05-02T15:35:39+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -92,7 +92,7 @@ upstream unicorn-unix-domain-socket {</p>
 <h2>unicorn起動</h2>
 
 <p><code>sh
-$ bundle exec unicorn\_rails -D
+$ bundle exec unicorn_rails -D
 </code></p>
 
 <p>-Dはデーモンとして起動。configファイルを指定する場合は、-c path/to/config.rbを指定する。</p>
