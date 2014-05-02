@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-04-09T12:39:33+09:00</updated>
+  <updated>2014-05-02T15:34:36+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,117 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[nginx,unicornをさくらvpsにインストールしてrailsアプリを手動でデプロイしてみる]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/05/02/use-nginxand-unicorn-on-sakura-vps/"/>
+    <updated>2014-05-02T15:10:23+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/05/02/use-nginxand-unicorn-on-sakura-vps</id>
+    <content type="html"><![CDATA[<p>さくらvpsのUbuntu12.04にnginxとunicornをインストールしてローカル環境に作ったRailsアプリを手動でアップロードして表示させてみた。何となくユニコーンって名前が好きなので、unicornを使うことにした。</p>
+
+<h2>nginxインストール</h2>
+
+<p>nginxは本当は手動でインストールするのがいいんだろうけど、面倒なので</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install nginx
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でインストール</p>
+
+<h2>unicornインストール</h2>
+
+<p>rubyとかbundlerとかが必要なので、無い場合は<a href="http://blog.shigepon.com/blog/2014/02/26/rails-startup/">Ruby on Railsを入れてみた</a>に書いた通りにインストール。unicornはGemfileに</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>gem <span class="s2">&quot;unicorn&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と追記して</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle install -path vendor/bundle
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でインストール出来る。要らないかもしれないけどお約束のようにインストール後はrbenv rehashしておく。</p>
+
+<h2>nginxの設定</h2>
+
+<p>設定ファイルは最低限これくらい書いておけばよさげ</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>upstream unicorn-unix-domain-socket <span class="o">{</span>
+</span><span class='line'>        server unix:/var/run/unicorn/unicorn_<span class="o">[</span>app_name<span class="o">]</span>.sock <span class="nv">fail_timeout</span><span class="o">=</span>0;
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>upstream unicorn-tcp <span class="o">{</span>
+</span><span class='line'>        server 127.0.0.1:8080;
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>server <span class="o">{</span>
+</span><span class='line'>        listen 80;
+</span><span class='line'>        server_name http://hoge;
+</span><span class='line'>
+</span><span class='line'>        root /path/to/app_root/public;
+</span><span class='line'>
+</span><span class='line'>        access_log  /var/log/nginx/access.log;
+</span><span class='line'>        error_log /var/log/nginx/error.log;
+</span><span class='line'>
+</span><span class='line'>        location / <span class="o">{</span>
+</span><span class='line'>                proxy_pass http://unicorn-tcp;
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>/var/run/unicornディレクトリは前もって作っておく。/tmpとかでも良さげなんだけど、どうなんだろう？</p>
+
+<h2>railsアプリのアップロード</h2>
+
+<p>適当にアップロード。rsyncで適当にやった。</p>
+
+<h2>unicorn起動</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle <span class="nb">exec </span>unicorn<span class="se">\_</span>rails -D
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>-Dはデーモンとして起動。configファイルを指定する場合は、-c path/to/config.rbを指定する。</p>
+
+<h2>nginx起動</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>service nginx start
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以上で<a href="http://hoge%E3%81%AB%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E3%81%97%E3%81%9F%E3%82%89rails%E3%82%A2%E3%83%97%E3%83%AA%E3%81%8C%E8%A6%8B%E3%82%8C%E3%82%8B%E3%82%88%E3%81%86%E3%81%AB%E3%81%AA%E3%82%8B%E3%80%82">http://hoge%E3%81%AB%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E3%81%97%E3%81%9F%E3%82%89rails%E3%82%A2%E3%83%97%E3%83%AA%E3%81%8C%E8%A6%8B%E3%82%8C%E3%82%8B%E3%82%88%E3%81%86%E3%81%AB%E3%81%AA%E3%82%8B%E3%80%82</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[git memo]]></title>
@@ -1564,124 +1675,6 @@ base64した値が格納さています。
 <p>ついでにリンク</p>
 
 <p><a href="http://nadesi.com">なでしこ</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[なでしこ2のプラグインを作る方法]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/01/29/nadesiko2-make-plugin/"/>
-    <updated>2014-01-29T09:49:17+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/01/29/nadesiko2-make-plugin</id>
-    <content type="html"><![CDATA[<p>なでしこ2でプラグインを作りたい人向けというニッチすぎるネタです。現在なでしこの時期バージョンなでしこ2が開発中です(えらい長いこと開発中です)が、構文の実装がある程度終わっているので、プラグインを開発することが出来ます。try catchの実装どうするかなーとか考えて進んでないですが、それはそれ。</p>
-
-<p>なでしこ2はC#で組まれているので、プラグインもC#で組むことができます。</p>
-
-<p>まずは準備として、なでしこ2のソースをsvnでチェックアウトします。 <a href="http://code.google.com/p/nadesiko2/source/checkout">URL</a></p>
-
-<p>SharpDevelopで開発中なので、SharpDevelopでソリューションを開きます。で、中にNakoPluginXXXというプロジェクトがあるので、それを参考にすれば良いわけですが、軽く説明しておきます。</p>
-
-<p>プラグインのソースは下のようになります。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>/*
-</span><span class='line'> * Created by SharpDevelop.
-</span><span class='line'> * User: shigepon
-</span><span class='line'> * Date: 2011/04/04
-</span><span class='line'> * Time: 9:42
-</span><span class='line'> *
-</span><span class='line'> * To change this template use Tools | Options | Coding | Edit Standard Headers.
-</span><span class='line'> */
-</span><span class='line'>using System;
-</span><span class='line'>using System.Collections.Generic;
-</span><span class='line'>using System.Text;
-</span><span class='line'>using Libnako.JPNCompiler;
-</span><span class='line'>using NakoPlugin;
-</span><span class='line'>namespace NakoPluginSample{
-</span><span class='line'>    public class NakoPluginSample : INakoPlugin    {
-</span><span class='line'>  string _description = &quot;サンプルプラグイン&quot;;
-</span><span class='line'>        double _version = 1.0;
-</span><span class='line'>        //&lt;del&gt; プラグイン共通の部分 &lt;/del&gt;
-</span><span class='line'>        public double TargetNakoVersion { get { return 2.0; } }
-</span><span class='line'>        public bool Used { get; set; }
-</span><span class='line'>        public string Name { get { return this.GetType().FullName; } }
-</span><span class='line'>        public double PluginVersion { get { return _version; } }
-</span><span class='line'>        public string Description { get { return _description; } }
-</span><span class='line'>        //&lt;del&gt; 関数の定義 &lt;/del&gt;
-</span><span class='line'>        public void DefineFunction(INakoPluginBank bank)        {
-</span><span class='line'>            bank.AddFunc({関数名}&cedil; {なでしこ形式の引数}&cedil; {戻り値の形式}&cedil; {実際の呼び出し先}&cedil;{関数の説明}&cedil; {関数のよみかた});
-</span><span class='line'>        }
-</span><span class='line'>  // プラグインの初期化処理
-</span><span class='line'>        public void PluginInit(INakoInterpreter runner)        {
-</span><span class='line'>        }
-</span><span class='line'>        // プラグインの終了処理
-</span><span class='line'>        public void PluginFin(INakoInterpreter runner)        {
-</span><span class='line'>        }
-</span><span class='line'>       public Object {実際の処理}(INakoFuncCallInfo info){
-</span><span class='line'>            ...
-</span><span class='line'>        }
-</span><span class='line'>    }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>実装時に大事なとこを説明します。</p>
-
-<p>+まずプラグイン共通部分とPluginInit、PluginFinはコピペでもかまわないと思います。私もまだ初期処理、終了処理の必要なプラグインは作っていません。
-+なでしこ上での関数呼び出し方法の定義はDefineFunctionで行います。bank.AddFuncメソッドで関数を追加できます。メソッド内の引数は下のように設定します。
-++関数名はなでしこで呼び出す名前になります。（例：文字検索）なでしこで使う助詞を使わないとか、他の命令の名称とかぶらないなどの制限があります。
-++なでしこ形式の引数は「SでAを」のようになでしこで一般的に使う形式で指定します。引数を参照渡しにしたい場合は「{参照渡し}SでAを」のように指定します。助詞を複数指定したい場合は「SでAを|Sが」という形式で指定します。参照渡しを使う場合は実装が少々複雑になります。後日やり方を書こうと思います。
-++戻り値の形式はenum NakoVarTypeで指定します。(Void&cedil; Int&cedil; Double&cedil; String&cedil; Array)
-++実際の呼び出し先はそのままメソッド名を指定します。(_hogeとか)
-++関数の説明と関数のよみかたは分かりやすさの為に必要です。個人用なら適当でも良いと思います。（多分今後エディタとかそういうのにつかわれると思います）
-+実際の処理は必ずINakoFuncCallInfo型のインスタンスを引数に取ります。なでしこで渡された引数はこのインスタンスから取得します。取得方法は以下</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>long l = info.StackPopAsInt();
-</span><span class='line'>double d = info.StackPopAsDouble();
-</span><span class='line'>String s = info.StackPopAsString();
-</span><span class='line'>Object o = info.StackPop();//配列の場合はこれを使う</span></code></pre></td></tr></table></div></figure>
-
-
-<p>StackPopメソッドで得られる値はNakoVariable型なので、ちょっと扱いが難しくなります。実際の処理の実装方法はまた今度</p>
 ]]></content>
   </entry>
   

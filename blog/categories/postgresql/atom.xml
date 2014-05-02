@@ -4,7 +4,7 @@
   <title><![CDATA[Category: postgresql | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/postgresql/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-04-09T15:07:09+09:00</updated>
+  <updated>2014-05-02T15:34:36+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -121,7 +121,7 @@ $ cat file_name | psql db_name
 
 <h2>csvの取り込み</h2>
 
-<p><code>csv
+<p><code>
 1,"hoge"
 </code></p>
 

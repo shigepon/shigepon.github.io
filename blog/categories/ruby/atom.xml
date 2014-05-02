@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ruby | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-04-09T15:07:09+09:00</updated>
+  <updated>2014-05-02T15:34:36+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,100 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[nginx,unicornをさくらvpsにインストールしてrailsアプリを手動でデプロイしてみる]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/05/02/use-nginxand-unicorn-on-sakura-vps/"/>
+    <updated>2014-05-02T15:10:23+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/05/02/use-nginxand-unicorn-on-sakura-vps</id>
+    <content type="html"><![CDATA[<p>さくらvpsのUbuntu12.04にnginxとunicornをインストールしてローカル環境に作ったRailsアプリを手動でアップロードして表示させてみた。何となくユニコーンって名前が好きなので、unicornを使うことにした。</p>
+
+<h2>nginxインストール</h2>
+
+<p>nginxは本当は手動でインストールするのがいいんだろうけど、面倒なので</p>
+
+<p><code>sh
+$ sudo aptitude install nginx
+</code></p>
+
+<p>でインストール</p>
+
+<h2>unicornインストール</h2>
+
+<p>rubyとかbundlerとかが必要なので、無い場合は<a href="http://blog.shigepon.com/blog/2014/02/26/rails-startup/">Ruby on Railsを入れてみた</a>に書いた通りにインストール。unicornはGemfileに</p>
+
+<p><code>
+gem "unicorn"
+</code></p>
+
+<p>と追記して</p>
+
+<p><code>sh
+$ bundle install -path vendor/bundle
+</code></p>
+
+<p>でインストール出来る。要らないかもしれないけどお約束のようにインストール後はrbenv rehashしておく。</p>
+
+<h2>nginxの設定</h2>
+
+<p>設定ファイルは最低限これくらい書いておけばよさげ</p>
+
+<p>```
+upstream unicorn-unix-domain-socket {</p>
+
+<pre><code>    server unix:/var/run/unicorn/unicorn_[app_name].sock fail_timeout=0;
+</code></pre>
+
+<p>}</p>
+
+<p>upstream unicorn-tcp {</p>
+
+<pre><code>    server 127.0.0.1:8080;
+</code></pre>
+
+<p>}</p>
+
+<p>server {</p>
+
+<pre><code>    listen 80;
+    server_name http://hoge;
+
+    root /path/to/app_root/public;
+
+    access_log  /var/log/nginx/access.log;
+    error_log /var/log/nginx/error.log;
+
+    location / {
+            proxy_pass http://unicorn-tcp;
+    }
+</code></pre>
+
+<p>}
+```</p>
+
+<p>/var/run/unicornディレクトリは前もって作っておく。/tmpとかでも良さげなんだけど、どうなんだろう？</p>
+
+<h2>railsアプリのアップロード</h2>
+
+<p>適当にアップロード。rsyncで適当にやった。</p>
+
+<h2>unicorn起動</h2>
+
+<p><code>sh
+$ bundle exec unicorn\_rails -D
+</code></p>
+
+<p>-Dはデーモンとして起動。configファイルを指定する場合は、-c path/to/config.rbを指定する。</p>
+
+<h2>nginx起動</h2>
+
+<p><code>sh
+$ service nginx start
+</code></p>
+
+<p>以上で<a href="http://hoge%E3%81%AB%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E3%81%97%E3%81%9F%E3%82%89rails%E3%82%A2%E3%83%97%E3%83%AA%E3%81%8C%E8%A6%8B%E3%82%8C%E3%82%8B%E3%82%88%E3%81%86%E3%81%AB%E3%81%AA%E3%82%8B%E3%80%82">http://hoge%E3%81%AB%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E3%81%97%E3%81%9F%E3%82%89rails%E3%82%A2%E3%83%97%E3%83%AA%E3%81%8C%E8%A6%8B%E3%82%8C%E3%82%8B%E3%82%88%E3%81%86%E3%81%AB%E3%81%AA%E3%82%8B%E3%80%82</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(4):ビューにBootstrapを使う]]></title>
@@ -472,208 +566,6 @@ events_controller.rbを次のように変えると</p>
 
 <p>と表示されるようになる。（あくまでこういうコードはテスト用）
 とりあえずここまで</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Ruby on Railsを入れてみた]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/02/26/rails-startup/"/>
-    <updated>2014-02-26T14:51:16+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/02/26/rails-startup</id>
-    <content type="html"><![CDATA[<p>rhaco使わないでWebサービス作るならもうPHP使わずに他の言語でやってみようかなと思い、
-DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強という意味を込めてRailsでやってみることにした。</p>
-
-<p>とりあえずまずはインストール出来ないと話にならないので、Railsをインストールしてみた話。</p>
-
-<p>Ubuntu使ってるので、aptitude install railsでさくっと終わるかなと思ってTwitterで何となく</p>
-
-<blockquote><p>shigepon: railsはバージョンいくつを使うと吉なんでしょ？</p></blockquote>
-
-<p>とつぶやいたら、@sugamasaoさんから</p>
-
-<blockquote><p>sugamasao: @shigepon しがらみがなければ、最新の4.0.2が良いと思います。お試しで触って見るなら、4.1のbeta版を使って見ても良いかもしれません〜</p></blockquote>
-
-<p>という話が！そうなるとrubyも2系入れないとダメじゃん！と思いつつ</p>
-
-<blockquote><p>shigepon: @sugamasao ただ、うちのubuntuのrubyが1.8なので、まずは2.0にしないといけないっすね。</p></blockquote>
-
-<p>とボヤいたら、やっぱり</p>
-
-<blockquote><p>sugamasao: @shigepon なるほど〜！1.8系はもうオワコンなので、2系を入れたほうが良いですねwちなみに、いまは2.1がリリースされてます！</p></blockquote>
-
-<p>とのお達しが。んじゃ2系入れるかとググりながらインストールしてみた。
-参考にしたページは次のとおり</p>
-
-<ul>
-<li><a href="http://qiita.com/emadurandal/items/a60886152a4c99ce1017">Rails開発環境の構築（rbenvでRuby導入からBundler、Rails導入まで） &ndash; Qiita</a></li>
-<li><a href="http://stackoverflow.com/questions/19031633/starting-the-rails-sqlite3-error">Starting the rails, sqlite3 Error &ndash; Stack Overflow</a></li>
-<li><a href="http://kiyotakagoto.hatenablog.com/entry/2013/05/28/235727">rails server 時に `autodetect': Could not find a JavaScript runtime が出たら。 &ndash; 人生ずっと勉強</a></li>
-</ul>
-
-
-<h3>手順</h3>
-
-<p>行ったり来たりしてるからこんな感じでスッと出来てないけど、だいたいこんな感じ</p>
-
-<h4>rbenvインストール</h4>
-
-<p><code>
-git clone git://github.com/sstephenson/rbenv.git ~/.rbenv
-mkdir -p ~/.rbenv/plugins
-git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
-</code></p>
-
-<p>~/.profileに以下を追加</p>
-
-<p><code>sh
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
-</code></p>
-
-<p>んで</p>
-
-<p><code>
-source ~/.profile
-</code></p>
-
-<p>opensslは入ってたから特に何もしなかったけど必要なら</p>
-
-<p><code>
-sudo aptitude install openssl
-</code></p>
-
-<p>iconv, readlineは最初から入ってるんじゃないかな？
-んでインストール</p>
-
-<p><code>
-sudo rbenv install -l
-rbenv install 2.1.0
-rbenv global 2.1.0
-</code></p>
-
-<p>rbenvで何かやったら
-<code>
-rbenv rehash
-</code>
-を忘れずに</p>
-
-<h3>Bundlerインストール</h3>
-
-<p><code>
-rbenv exec gem install bundler
-rbenv rehash
-</code></p>
-
-<h3>Railsインストール</h3>
-
-<p><code>
-bundle init
-vim Gemfile
-</code></p>
-
-<p>Gemfile内に</p>
-
-<p><code>
-gem rails "4.0.2"
-</code></p>
-
-<p>を追加。</p>
-
-<p><code>
-bundle install --path vendor/bundle
-bundle exec new hoge --skip-bundle
-rm -f Gemfile
-rm -f Gemfile.lock
-rm -rf .bundle
-rm -rf vendor/bundle
-cd hoge
-bundle install --path vendor/bundle
-echo '/vendor/bundle' &gt;&gt; .gitignore
-bundle exec rails server
-</code></p>
-
-<p>で途中下のようにハマりながら起動を確認した。</p>
-
-<h3>はまったポイント</h3>
-
-<p>Ruby on Railsをインストールする時にプロジェクトのディレクトリで</p>
-
-<p><code>
-bundle install -path vendor/bundle
-</code></p>
-
-<p>すると、</p>
-
-<p>```
-Gem::Installer::ExtensionBuildError: ERROR: Failed to build gem native extension.</p>
-
-<pre><code>    /usr/bin/ruby1.9.1 extconf.rb 
-</code></pre>
-
-<p>checking for sqlite3.h&hellip; no
-sqlite3.h is missing. Try &lsquo;port install sqlite3 +universal&rsquo;
-or &lsquo;yum install sqlite-devel&rsquo; and check your shared library search path (the
-location where your sqlite3 shared library is located).
-<strong><em> extconf.rb failed </em></strong>
-Could not create Makefile due to some reason, probably lack of
-necessary libraries and/or headers.  Check the mkmf.log file for more
-details.  You may need configuration options.</p>
-
-<p>Provided configuration options:</p>
-
-<pre><code>--with-opt-dir
---without-opt-dir
---with-opt-include
---without-opt-include=${opt-dir}/include
---with-opt-lib
---without-opt-lib=${opt-dir}/lib
---with-make-prog
---without-make-prog
---srcdir=.
---curdir
---ruby=/usr/bin/ruby1.9.1
---with-sqlite3-dir
---without-sqlite3-dir
---with-sqlite3-include
---without-sqlite3-include=${sqlite3-dir}/include
---with-sqlite3-lib
---without-sqlite3-lib=${sqlite3-dir}/lib
---enable-local
---disable-local
-</code></pre>
-
-<p>Gem files will remain installed in /home/helio/.bundler/tmp/23089/gems/sqlite3-1.3.8 for inspection.
-Results logged to /home/helio/.bundler/tmp/23089/gems/sqlite3-1.3.8/ext/sqlite3/gem_make.out</p>
-
-<p>An error occurred while installing sqlite3 (1.3.8), and Bundler
-cannot continue.
-Make sure that <code>gem install sqlite3 -v '1.3.8'</code> succeeds before
-bundling.
-```</p>
-
-<p>というエラーが出たのは</p>
-
-<p><code>
-sudo aptitude install sqlite3 libsqlite3-dev
-bundle install --path vendor/bundle
-</code></p>
-
-<p>で出なくなった。インストールパスの指定が無ければpathオプションは要らない。</p>
-
-<p>bundle exec rails serverで</p>
-
-<p><code>
-autodetect': Could not find a JavaScript runtime. See https://github.com/sstephenson/execjs for a list of available runtimes. (ExecJS::RuntimeUnavailable)
-</code></p>
-
-<p>というエラーが出て、サーバを起動出来なかった。これは
-プロジェクトに入っているGemfileに書いてあるtherubyracerに関する行をコメントアウトして</p>
-
-<p><code>
-bundle install --path vendor/bundle
-</code></p>
-
-<p>とすれば起動出来るようになった。</p>
 ]]></content>
   </entry>
   
