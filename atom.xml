@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-05-02T15:36:24+09:00</updated>
+  <updated>2014-05-04T11:09:17+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,83 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Capistrano3でbitbucketからデプロイしようとしたらハマった話]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/"/>
+    <updated>2014-05-04T10:04:00+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket</id>
+    <content type="html"><![CDATA[<p>まだデプロイ作業を途中までしか確認していないので、とりあえずハマったポイントを書いておく。
+ デプロイ作業をテストしてみたらこんなエラーが出た</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle <span class="nb">exec </span>cap production deploy:check
+</span><span class='line'> INFO <span class="o">[</span>5f874a7e<span class="o">]</span> Running /usr/bin/env mkdir -p /tmp/hoge/ on fuga
+</span><span class='line'>DEBUG <span class="o">[</span>5f874a7e<span class="o">]</span> Command: /usr/bin/env mkdir -p /tmp/hoge/
+</span><span class='line'> INFO <span class="o">[</span>5f874a7e<span class="o">]</span> Finished in 0.321 seconds with <span class="nb">exit </span>status 0 <span class="o">(</span>successful<span class="o">)</span>.
+</span><span class='line'>DEBUG Uploading /tmp/hoge/git-ssh.sh 0.0%
+</span><span class='line'> INFO Uploading /tmp/hoge/git-ssh.sh 100.0%
+</span><span class='line'> INFO <span class="o">[</span>c2bf6ab8<span class="o">]</span> Running /usr/bin/env chmod +x /tmp/hoge/git-ssh.sh on fuga
+</span><span class='line'>DEBUG <span class="o">[</span>c2bf6ab8<span class="o">]</span> Command: /usr/bin/env chmod +x /tmp/hoge/git-ssh.sh
+</span><span class='line'> INFO <span class="o">[</span>c2bf6ab8<span class="o">]</span> Finished in 0.031 seconds with <span class="nb">exit </span>status 0 <span class="o">(</span>successful<span class="o">)</span>.
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span> Running /usr/bin/env git ls-remote -h git@bitbucket.org:fuga/hoge.git on fuga
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span> Command: <span class="o">(</span> <span class="nv">GIT_ASKPASS</span><span class="o">=</span>/bin/echo <span class="nv">GIT_SSH</span><span class="o">=</span>/tmp/hoge/git-ssh.sh /usr/bin/env git ls-remote -h git@bitbucket.org:fuga/hoge.git <span class="o">)</span>
+</span><span class='line'>DEBUG <span class="o">[</span>cb27da31<span class="o">]</span>    Error reading response length from authentication socket
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span>    Permission denied <span class="o">(</span>publickey<span class="o">)</span>.
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span>    
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span>    fatal: The remote end hung up unexpectedly
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span>    
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span> Finished in 2.287 seconds with <span class="nb">exit </span>status 128 <span class="o">(</span>failed<span class="o">)</span>.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>うげげ。gitで鍵認証のエラー出てるわ。とりあえずbitbucketに公開鍵を登録してみた。
+ <a href="http://morizyun.github.io/blog/ssh-key-bitbucket-github/">SSH認証キーをBitbucket/GitHubに設定しよう！ [Mac簡単手順] &ndash; 酒と泪とRubyとRailsと</a>の通りに登録したら出来た。~/.ssh/configに秘密鍵を追加して</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Host bitbucket.org
+</span><span class='line'>  HostName bitbucket.org
+</span><span class='line'>  IdentityFile ~/.ssh/id_rsa
+</span><span class='line'>  User git
+</span><span class='line'>  TCPKeepAlive yes
+</span><span class='line'>  IdentitiesOnly yes
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p> じゃあ再度デプロイをテストしてみたら・・・同じエラーが出た。
+色々試行錯誤して、「Error reading response length from authentication socket」でググった結果、ssh_agentが動いてないことが判明したので</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">eval</span> <span class="sb">`</span>ssh-agent -s<span class="sb">`</span>
+</span><span class='line'><span class="nv">$ </span>ssh-add ~/.ssh/id_rsa
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>としてデプロイをテストしたら無事動いた。めでたしめでたし。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[nginx,unicornをさくらvpsにインストールしてrailsアプリを手動でデプロイしてみる]]></title>
@@ -1187,7 +1264,7 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
 <p>Gemfile内に</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>gem rails <span class="s2">&quot;4.0.2&quot;</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>gem <span class="s2">&quot;rails&quot;</span>, <span class="s2">&quot;4.0.2&quot;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -1204,7 +1281,7 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'>bundle install --path vendor/bundle
-</span><span class='line'>bundle <span class="nb">exec </span>new hoge --skip-bundle
+</span><span class='line'>bundle <span class="nb">exec </span>rails new hoge --skip-bundle
 </span><span class='line'>rm -f Gemfile
 </span><span class='line'>rm -f Gemfile.lock
 </span><span class='line'>rm -rf .bundle
@@ -1656,25 +1733,6 @@ base64した値が格納さています。
 
 
 <p>のようにJavascriptで対応します</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[なでしこで実行ファイルを作る時のメモ]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/01/30/nadesiko-make-exe/"/>
-    <updated>2014-01-30T09:22:46+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/01/30/nadesiko-make-exe</id>
-    <content type="html"><![CDATA[<ul>
-<li>パックファイル作る時はメインになるファイルだけnadesiko.nakoというパック名にして、その他はファイル名自身をパック名とする</li>
-<li>データを埋め込む場合は、そのデータを呼び出す時にフルパスにしない。データが無いと言われる。</li>
-</ul>
-
-
-<p>何となくマニュアル見ても分かりにくかったのでメモ</p>
-
-<p>ついでにリンク</p>
-
-<p><a href="http://nadesi.com">なでしこ</a></p>
 ]]></content>
   </entry>
   

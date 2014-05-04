@@ -58,7 +58,7 @@
     </url>
     <url>
         <loc>http://blog.shigepon.com/blog/2014/02/26/rails-startup/</loc>
-        <lastmod>2014-03-22T23:39:22+09:00</lastmod>
+        <lastmod>2014-05-04T11:07:36+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/blog/2014/02/28/vim-dbext-postgresql/</loc>
@@ -115,16 +115,22 @@
         <lastmod>2014-05-02T15:36:20+09:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://blog.shigepon.com/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/
+        </loc>
+        <lastmod>2014-05-04T11:08:45+09:00</lastmod>
+    </url>
+    <url>
         <loc>http://blog.shigepon.com/blog/archives/</loc>
-        <lastmod>2014-05-02T15:36:20+09:00</lastmod>
+        <lastmod>2014-05-04T11:08:45+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/archives/</loc>
-        <lastmod>2014-05-02T15:36:20+09:00</lastmod>
+        <lastmod>2014-05-04T11:08:45+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/</loc>
-        <lastmod>2014-05-02T15:36:20+09:00</lastmod>
+        <lastmod>2014-05-04T11:08:45+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/robots.txt</loc>
