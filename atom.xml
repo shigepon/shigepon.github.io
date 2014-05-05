@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-05-05T11:16:38+09:00</updated>
+  <updated>2014-05-05T12:54:34+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -113,7 +113,23 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>としてデプロイをテストしたら無事動いた。めでたしめでたし。でも実際にデプロイすると下のようにエラーでまくった。</p>
+<p>としてデプロイをテストしたら無事動いた。めでたしめでたし。でも一旦ログアウトしたりするとssh-agentに接続しないとまた同じエラーが出た。ssh-agentへの接続方法は<a href="http://tipspc.blogspot.jp/2010/02/ssh-agent.html">PC便利帳: ssh-agentを使用したパスワードなしの接続</a>を参考にして</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ps ax | grep ssh-agent
+</span><span class='line'><span class="nv">$ </span>ls /tmp | grep ssh
+</span><span class='line'><span class="nv">$ SSH_AUTH_SOCK</span><span class="o">=</span>/tmp/ssh-XXXXX1111/agent.1111; <span class="nb">export </span>SSH_AUTH_SOCK;
+</span><span class='line'><span class="nv">$ SSH_AGENT_PID</span><span class="o">=</span>2222; <span class="nb">export </span>SSH_AGENT_PID;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>`</p>
+
+<p>とやれば接続できて、デプロイできた。
+ さらに実際にデプロイすると下のようにエラーでまくった。</p>
 
 <h2>capistrano3でbundle exec cap production deloyしようとしたらエラーが出まくる</h2>
 
