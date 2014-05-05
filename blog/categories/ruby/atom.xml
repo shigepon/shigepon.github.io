@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ruby | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-05-04T11:09:17+09:00</updated>
+  <updated>2014-05-05T11:16:38+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -61,7 +61,57 @@ $ eval `ssh-agent -s`
 $ ssh-add ~/.ssh/id_rsa
 </code></p>
 
-<p>としてデプロイをテストしたら無事動いた。めでたしめでたし。</p>
+<p>としてデプロイをテストしたら無事動いた。めでたしめでたし。でも実際にデプロイすると下のようにエラーでまくった。</p>
+
+<h2>capistrano3でbundle exec cap production deloyしようとしたらエラーが出まくる</h2>
+
+<p>Gemfileから色々省いてたらエラーが出まくる</p>
+
+<ul>
+<li>rubyが指定されてない（rbenvが足りない）</li>
+<li>uglifierが無いとかsassが足りないとか</li>
+<li>いちいちGemfile.lockをアップデートしないとエラー出る</li>
+</ul>
+
+
+<p>rbenvはcapistrano-rbenvをGemfileに追加して、Capfileにcapistrano/rbenvを指定して、config/deploy.rbに</p>
+
+<p><code>rb
+set :rbenv_ruby, '2.1.0'
+</code></p>
+
+<p>とか何とか設定するとおk。</p>
+
+<p>uglifierとかsassとかproductionを指定した場合に使うような設定になってるみたいい（config/environments/production.rb）。とりあえずuglifierとかsassとかcofee-railsとか色々Gemfileに入れておけばエラーでなかった。</p>
+
+<h2>デプロイした後でcss関連でエラーが出た</h2>
+
+<p>sassが足らないと言われた。sass使わないので、sassが関わるファイル（app/assets/stylesheets内のscssファイル）を消すとエラーは消えた</p>
+
+<h2>productionモードでデプロイすると、cssやjsを読み込んでくれない</h2>
+
+<p>config/environments/production.rbに次の行を追記</p>
+
+<p><code>rb
+ config.assets.compile = true
+ config.assets.precompile = ['*.js','*.css','*.css.erb']
+</code></p>
+
+<p>参考<a href="http://stackoverflow.com/questions/18700219/rails-4-assets-not-loading-in-production">ruby &ndash; Rails 4: assets not loading in production &ndash; Stack Overflow</a>
+すると解決した。なんかバッドノウハウみたいでやだ。</p>
+
+<h2>productionモードでunicornが起動してくれない</h2>
+
+<p>capistranoとは関係なかったけどcapistrano関連と思い込んでたのでメモ。capistranoの設定にミスがあると思って苦しんでたけど、単にunicornのオプションを指定してなかったのが悪かった。</p>
+
+<p><code>sh
+$ bundle exec unicorn_rails -E production
+</code></p>
+
+<p>でおkだった。</p>
+
+<p>Capistranoは確かに便利なんだけど、なんかハマりポイントが多いような印象。
+バージョン変わって設定方法も変わったみたいだし。最初のハードルが高い感じがする。慣れたら楽になるのかな。</p>
 ]]></content>
   </entry>
   

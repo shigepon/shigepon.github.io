@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-05-04T11:09:17+09:00</updated>
+  <updated>2014-05-05T11:16:38+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,33 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Rails4でJSONを出力する]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/05/05/output-json-by-rails4/"/>
+    <updated>2014-05-05T10:33:26+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/05/05/output-json-by-rails4</id>
+    <content type="html"><![CDATA[<p>Rails4にはjbuilderが標準で入っていて、viewを設定するだけでJSON出力が可能ならしい。
+ 例えば<a href="http://blog.shigepon.com/blog/2014/03/10/a-way-of-creating-rails-application3/">Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データ一覧ページを作って、詳細ページへのリンクを貼る &ndash; shigeponが関心のある技術情報など</a>のページをとりあえずjsonで出力するにはapp/views/events/index.json.jbuilderを用意するだけでOK。<a href="http://0.0.0.0:3000/events/index.json">http://0.0.0.0:3000/events/index.json</a> にアクセスするとJSONで表示してくれる。なんと楽チンな！
+ JSONの出力形式を変更する場合はindex.json.jbuilderを編集する</p>
+
+<p>例えばこんな感じ</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="n">json</span><span class="o">.</span><span class="n">array!</span><span class="p">(</span><span class="vi">@events</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">json</span><span class="o">.</span><span class="n">name</span>  <span class="n">item</span><span class="o">.</span><span class="n">name</span>
+</span><span class='line'>  <span class="n">json</span><span class="o">.</span><span class="n">date</span>  <span class="n">item</span><span class="o">.</span><span class="n">date</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>例えばこうしておくと一覧を配列出力しつつ、出力したいフィールドを指定出来る。viewだけで操作出来るのは楽チンだわ。
+ 詳しい書式はブログ等の記事を見るよりも、英語だけど<a href="https://github.com/rails/jbuilder">rails/jbuilder · GitHub</a>を見るとよさげ。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Capistrano3でbitbucketからデプロイしようとしたらハマった話]]></title>
@@ -86,7 +113,61 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>としてデプロイをテストしたら無事動いた。めでたしめでたし。</p>
+<p>としてデプロイをテストしたら無事動いた。めでたしめでたし。でも実際にデプロイすると下のようにエラーでまくった。</p>
+
+<h2>capistrano3でbundle exec cap production deloyしようとしたらエラーが出まくる</h2>
+
+<p>Gemfileから色々省いてたらエラーが出まくる</p>
+
+<ul>
+<li>rubyが指定されてない（rbenvが足りない）</li>
+<li>uglifierが無いとかsassが足りないとか</li>
+<li>いちいちGemfile.lockをアップデートしないとエラー出る</li>
+</ul>
+
+
+<p>rbenvはcapistrano-rbenvをGemfileに追加して、Capfileにcapistrano/rbenvを指定して、config/deploy.rbに</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="n">set</span> <span class="ss">:rbenv_ruby</span><span class="p">,</span> <span class="s1">&#39;2.1.0&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とか何とか設定するとおk。</p>
+
+<p>uglifierとかsassとかproductionを指定した場合に使うような設定になってるみたいい（config/environments/production.rb）。とりあえずuglifierとかsassとかcofee-railsとか色々Gemfileに入れておけばエラーでなかった。</p>
+
+<h2>デプロイした後でcss関連でエラーが出た</h2>
+
+<p>sassが足らないと言われた。sass使わないので、sassが関わるファイル（app/assets/stylesheets内のscssファイル）を消すとエラーは消えた</p>
+
+<h2>productionモードでデプロイすると、cssやjsを読み込んでくれない</h2>
+
+<p>config/environments/production.rbに次の行を追記</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="n">config</span><span class="o">.</span><span class="n">assets</span><span class="o">.</span><span class="n">compile</span> <span class="o">=</span> <span class="kp">true</span>
+</span><span class='line'> <span class="n">config</span><span class="o">.</span><span class="n">assets</span><span class="o">.</span><span class="n">precompile</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;*.js&#39;</span><span class="p">,</span><span class="s1">&#39;*.css&#39;</span><span class="p">,</span><span class="s1">&#39;*.css.erb&#39;</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考<a href="http://stackoverflow.com/questions/18700219/rails-4-assets-not-loading-in-production">ruby &ndash; Rails 4: assets not loading in production &ndash; Stack Overflow</a>
+すると解決した。なんかバッドノウハウみたいでやだ。</p>
+
+<h2>productionモードでunicornが起動してくれない</h2>
+
+<p>capistranoとは関係なかったけどcapistrano関連と思い込んでたのでメモ。capistranoの設定にミスがあると思って苦しんでたけど、単にunicornのオプションを指定してなかったのが悪かった。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle <span class="nb">exec </span>unicorn_rails -E production
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でおkだった。</p>
+
+<p>Capistranoは確かに便利なんだけど、なんかハマりポイントが多いような印象。
+バージョン変わって設定方法も変わったみたいだし。最初のハードルが高い感じがする。慣れたら楽になるのかな。</p>
 ]]></content>
   </entry>
   
@@ -1705,34 +1786,6 @@ base64した値が格納さています。
 <p>rhaco3の認証部分(\org\rhaco\flow\parts\RequestFlow::do_login)で401を送信していた部分で200を送信することで対処できました。</p>
 
 <p>rhaco3で見られた症状でしたが、他のフレームワークでも特に何も考えてなかったら引っかかる可能性があります。というかBasic認証とフレームワークの認証両方掛けるとか普通無いですよねそうですよね。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[octpress tips]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/01/31/octpress-tips/"/>
-    <updated>2014-01-31T08:33:56+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/01/31/octpress-tips</id>
-    <content type="html"><![CDATA[<p>Octpressのインストール後に行ったカスタマイズをまとめておきます。</p>
-
-<h2>外部リンクを別ウィンドウで開く</h2>
-
-<p>下のコードを追加します</p>
-
-<figure class='code'><figcaption><span>:source/_inclides/custom/head.html</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="o">&lt;</span><span class="nx">script</span> <span class="nx">language</span><span class="o">=</span><span class="s2">&quot;JavaScript&quot;</span><span class="o">&gt;</span>
-</span><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>   <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;a[href^=&#39;http&#39;]:not([href*=&#39;&quot;</span> <span class="o">+</span> <span class="nx">location</span><span class="p">.</span><span class="nx">hostname</span> <span class="o">+</span> <span class="s2">&quot;&#39;])&quot;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;target&#39;</span><span class="p">,</span> <span class="s1">&#39;_blank&#39;</span><span class="p">);</span>
-</span><span class='line'><span class="p">})</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/script&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>のようにJavascriptで対応します</p>
 ]]></content>
   </entry>
   

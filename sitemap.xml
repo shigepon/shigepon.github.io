@@ -118,19 +118,23 @@
         <loc>
             http://blog.shigepon.com/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/
         </loc>
-        <lastmod>2014-05-04T11:08:45+09:00</lastmod>
+        <lastmod>2014-05-05T11:14:51+09:00</lastmod>
+    </url>
+    <url>
+        <loc>http://blog.shigepon.com/blog/2014/05/05/output-json-by-rails4/</loc>
+        <lastmod>2014-05-05T11:16:27+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/blog/archives/</loc>
-        <lastmod>2014-05-04T11:08:45+09:00</lastmod>
+        <lastmod>2014-05-05T11:16:27+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/archives/</loc>
-        <lastmod>2014-05-04T11:08:45+09:00</lastmod>
+        <lastmod>2014-05-05T11:16:27+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/</loc>
-        <lastmod>2014-05-04T11:08:45+09:00</lastmod>
+        <lastmod>2014-05-05T11:16:27+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/robots.txt</loc>

@@ -190,7 +190,61 @@ $ bundle exec cap production deploy: &hellip;">
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>としてデプロイをテストしたら無事動いた。めでたしめでたし。</p>
+<p>としてデプロイをテストしたら無事動いた。めでたしめでたし。でも実際にデプロイすると下のようにエラーでまくった。</p>
+
+<h2>capistrano3でbundle exec cap production deloyしようとしたらエラーが出まくる</h2>
+
+<p>Gemfileから色々省いてたらエラーが出まくる</p>
+
+<ul>
+<li>rubyが指定されてない（rbenvが足りない）</li>
+<li>uglifierが無いとかsassが足りないとか</li>
+<li>いちいちGemfile.lockをアップデートしないとエラー出る</li>
+</ul>
+
+
+<p>rbenvはcapistrano-rbenvをGemfileに追加して、Capfileにcapistrano/rbenvを指定して、config/deploy.rbに</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="n">set</span> <span class="ss">:rbenv_ruby</span><span class="p">,</span> <span class="s1">&#39;2.1.0&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とか何とか設定するとおk。</p>
+
+<p>uglifierとかsassとかproductionを指定した場合に使うような設定になってるみたいい（config/environments/production.rb）。とりあえずuglifierとかsassとかcofee-railsとか色々Gemfileに入れておけばエラーでなかった。</p>
+
+<h2>デプロイした後でcss関連でエラーが出た</h2>
+
+<p>sassが足らないと言われた。sass使わないので、sassが関わるファイル（app/assets/stylesheets内のscssファイル）を消すとエラーは消えた</p>
+
+<h2>productionモードでデプロイすると、cssやjsを読み込んでくれない</h2>
+
+<p>config/environments/production.rbに次の行を追記</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="n">config</span><span class="o">.</span><span class="n">assets</span><span class="o">.</span><span class="n">compile</span> <span class="o">=</span> <span class="kp">true</span>
+</span><span class='line'> <span class="n">config</span><span class="o">.</span><span class="n">assets</span><span class="o">.</span><span class="n">precompile</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;*.js&#39;</span><span class="p">,</span><span class="s1">&#39;*.css&#39;</span><span class="p">,</span><span class="s1">&#39;*.css.erb&#39;</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考<a href="http://stackoverflow.com/questions/18700219/rails-4-assets-not-loading-in-production">ruby &ndash; Rails 4: assets not loading in production &ndash; Stack Overflow</a>
+すると解決した。なんかバッドノウハウみたいでやだ。</p>
+
+<h2>productionモードでunicornが起動してくれない</h2>
+
+<p>capistranoとは関係なかったけどcapistrano関連と思い込んでたのでメモ。capistranoの設定にミスがあると思って苦しんでたけど、単にunicornのオプションを指定してなかったのが悪かった。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle <span class="nb">exec </span>unicorn_rails -E production
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でおkだった。</p>
+
+<p>Capistranoは確かに便利なんだけど、なんかハマりポイントが多いような印象。
+バージョン変わって設定方法も変わったみたいだし。最初のハードルが高い感じがする。慣れたら楽になるのかな。</p>
 </div>
 
 
@@ -250,6 +304,8 @@ $ bundle exec cap production deploy: &hellip;">
         <a class="basic-alignment left" href="/blog/2014/05/02/use-nginxand-unicorn-on-sakura-vps/" title="Previous Post: nginx,unicornをさくらvpsにインストールしてrailsアプリを手動でデプロイしてみる">&laquo; nginx,unicornをさくらvpsにインストールしてrailsアプリを手動でデプロイしてみる</a>
       
       
+        <a class="basic-alignment right" href="/blog/2014/05/05/output-json-by-rails4/" title="Next Post: Rails4でJSONを出力する">Rails4でJSONを出力する &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -273,6 +329,10 @@ $ bundle exec cap production deploy: &hellip;">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/05/output-json-by-rails4/">Rails4でJSONを出力する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/">Capistrano3でbitbucketからデプロイしようとしたらハマった話</a>
       </li>
     
@@ -286,10 +346,6 @@ $ bundle exec cap production deploy: &hellip;">
     
       <li class="post">
         <a href="/blog/2014/04/08/update-openssl-security-patch/">Ubuntuでopensslのsecurity Patchを当てる</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/20/nginx-memo/">Nginx Memo</a>
       </li>
     
   </ul>
