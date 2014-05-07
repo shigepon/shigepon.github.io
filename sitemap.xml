@@ -118,23 +118,27 @@
         <loc>
             http://blog.shigepon.com/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/
         </loc>
-        <lastmod>2014-05-05T12:54:25+09:00</lastmod>
+        <lastmod>2014-05-05T23:47:08+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/blog/2014/05/05/output-json-by-rails4/</loc>
-        <lastmod>2014-05-05T11:16:27+09:00</lastmod>
+        <lastmod>2014-05-07T12:18:22+09:00</lastmod>
+    </url>
+    <url>
+        <loc>http://blog.shigepon.com/blog/2014/05/05/rails-url-for-shows-proxy-pass/</loc>
+        <lastmod>2014-05-05T14:06:17+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/blog/archives/</loc>
-        <lastmod>2014-05-05T12:54:25+09:00</lastmod>
+        <lastmod>2014-05-07T12:18:22+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/archives/</loc>
-        <lastmod>2014-05-05T12:54:25+09:00</lastmod>
+        <lastmod>2014-05-07T12:18:22+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/</loc>
-        <lastmod>2014-05-05T12:54:25+09:00</lastmod>
+        <lastmod>2014-05-07T12:18:22+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/robots.txt</loc>

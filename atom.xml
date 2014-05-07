@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-05-05T12:54:34+09:00</updated>
+  <updated>2014-05-07T12:18:32+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,33 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Railsでurl forを使ったらshows proxy passで設定したURLになってしまう件]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/05/05/rails-url-for-shows-proxy-pass/"/>
+    <updated>2014-05-05T14:00:54+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/05/05/rails-url-for-shows-proxy-pass</id>
+    <content type="html"><![CDATA[<p>Nginx, Unicorn, Rails4でurl_forを使ったら変なURLになってしまったので対処法を書いておく</p>
+
+<p>Ninxで</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>server hoge.com;
+</span><span class='line'>proxy_pass http://upstream;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>のような設定をしているとurl_forで「<a href="http://hoge.com%E3%80%8D%E3%81%A8%E3%81%AA%E3%81%A3%E3%81%A6%E3%81%BB%E3%81%97%E3%81%84%E3%81%A8%E3%81%93%E3%82%8D%E3%81%8C%E3%80%8Chttp://upstream%E3%80%8D%E3%81%A8%E3%81%AA%E3%81%A3%E3%81%A6%E3%81%97%E3%81%BE%E3%81%86%E3%81%AE%E3%81%A7%E3%80%81%E3%82%B0%E3%82%B0%E3%81%A3%E3%81%A6%E5%AF%BE%E5%87%A6%E3%82%92%E8%AA%BF%E3%81%B9%E3%81%9F%E3%80%82">http://hoge.com%E3%80%8D%E3%81%A8%E3%81%AA%E3%81%A3%E3%81%A6%E3%81%BB%E3%81%97%E3%81%84%E3%81%A8%E3%81%93%E3%82%8D%E3%81%8C%E3%80%8Chttp://upstream%E3%80%8D%E3%81%A8%E3%81%AA%E3%81%A3%E3%81%A6%E3%81%97%E3%81%BE%E3%81%86%E3%81%AE%E3%81%A7%E3%80%81%E3%82%B0%E3%82%B0%E3%81%A3%E3%81%A6%E5%AF%BE%E5%87%A6%E3%82%92%E8%AA%BF%E3%81%B9%E3%81%9F%E3%80%82</a></p>
+
+<p><a href="http://stackoverflow.com/questions/5834025/how-to-preserve-request-url-with-nginx-proxy-pass">ruby &ndash; How to preserve request url with nginx proxy_pass &ndash; Stack Overflow</a>を参考にして</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>proxy_set_header Host http://hoge.com</span></code></pre></td></tr></table></div></figure>
+
+
+<p>を追記したら上手く動いた。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rails4でJSONを出力する]]></title>
@@ -37,6 +64,28 @@
 
 <p>例えばこうしておくと一覧を配列出力しつつ、出力したいフィールドを指定出来る。viewだけで操作出来るのは楽チンだわ。
  詳しい書式はブログ等の記事を見るよりも、英語だけど<a href="https://github.com/rails/jbuilder">rails/jbuilder · GitHub</a>を見るとよさげ。</p>
+
+<h2>jbuilderでネストした配列を出力する</h2>
+
+<p>大抵の説明では一番外側が配列で、中身はハッシュというものばかりで、配列の中が配列という形での出力方法の説明が無かったのでメモ</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">]]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいなjsonを出力する場合</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="n">json</span><span class="o">.</span><span class="n">array!</span><span class="p">(</span><span class="vi">@events</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">json</span><span class="o">.</span><span class="n">array!</span><span class="p">(</span><span class="o">[</span><span class="n">item</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">to_i</span><span class="p">,</span><span class="n">item</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">to_i</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>という指定をする。</p>
 ]]></content>
   </entry>
   
@@ -184,6 +233,12 @@
 
 <p>Capistranoは確かに便利なんだけど、なんかハマりポイントが多いような印象。
 バージョン変わって設定方法も変わったみたいだし。最初のハードルが高い感じがする。慣れたら楽になるのかな。</p>
+
+<h2>capistrano3でunicornの再起動に失敗する</h2>
+
+<p><a href="http://qiita.com/satococoa/items/9b0cc416ffc042680b9b">unicorn + rails 用 Capistrano 3 の設定ファイル &ndash; Qiita</a>と<a href="http://blog.dealforest.net/2014/02/failed_restart_unicorn_with_capistrano3/">Capistrano3 で Unicorn の再起動に失敗したのを対応したメモ | Supernova</a>が参考になった。</p>
+
+<p>でもrestartでちゃんと再起動して修正箇所が反映しない。stopしてstartしないと。うーん。</p>
 ]]></content>
   </entry>
   
@@ -1725,83 +1780,6 @@ unity側での作業は<a href="http://tech.gmo-media.jp/post/54095871491/runnin
 <li>MonoDevelop-UnityをMacにインストールしてて、C#の通常アプリが作れると思ったら大間違い。C#のアプリ作ろうと思ったらXamarin Studio入れた方がよさげ。NUnitが無いって怒られて散々だった。</li>
 </ul>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Basic認証する時に気をつけること]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/02/03/basic-auth/"/>
-    <updated>2014-02-03T07:48:33+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/02/03/basic-auth</id>
-    <content type="html"><![CDATA[<p>rhaco3で作ったWebサービス全体にBasic認証をかけた時にちょっとハマったのでメモ。</p>
-
-<h2>症状</h2>
-
-<p>rhaco3の認証が入っているサービスで全体にBasic認証をかけると、</p>
-
-<ol>
-<li>トップページに入る時にBasic認証がかかる</li>
-<li>認証完了</li>
-<li>ログインページに移動</li>
-<li>またBasic認証がかかる</li>
-</ol>
-
-
-<p>というケースが見られました。Webサーバにはnginxを使いました。</p>
-
-<h2>原因</h2>
-
-<p>nginx側の設定が悪いのかなとか色々試行錯誤しましたが、結論としてrhaco3の認証部分が401のレスポンスを吐いてたのが問題でした。</p>
-
-<p><a href="http://www.slogical.co.jp/tech/http_basicauth.html">Basic認証の動作</a>というページで詳しく書かれています（以下に引用します）が</p>
-
-<blockquote><ol>
-<li>ユーザーがクライアント（IE等のWebブラウザ）に目的のURLを入力する。</li>
-<li>クライアントが、Authorization: ヘッダを付加しないで、
-目的のコンテンツにアクセスする。</li>
-<li>サーバーは、401 Authorization Required のレスポンスを返して、
-クライアントに認証が必要である旨を伝える。</li>
-<li>クライアントがユーザーに ID/PW の入力を求める
-（IE等のブラウザが、ポップアップウインドウを出して、
-　ID/PW の入力をユーザーに求めるアレです。）</li>
-<li>ユーザーが ID/PW を入力する。</li>
-<li>クライアントが、Authorization: ヘッダに ID/PW の情報を付加
-して目的のコンテンツに再度アクセスする。</li>
-<li>サーバが ID/PW を解析して、認証OKであればコンテンツをクライ
-アントに返す。</li>
-<li>クライアントがコンテンツを表示して、ユーザーがそれを閲覧する。</li>
-</ol>
-</blockquote>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>    +------+  1---&gt;  +--------+  2---&gt;  +-------+
-</span><span class='line'>    |      |  &lt;---4  |        |  &lt;---3  |       |
-</span><span class='line'>    | User |         | Client |         | httpd |
-</span><span class='line'>    |      |  5---&gt;  |        |  6---&gt;  |       |
-</span><span class='line'>    +------+  &lt;---8  +--------+  &lt;---7  +-------+</span></code></pre></td></tr></table></div></figure>
-
-
-<blockquote><p>（コンテンツデータを１つ取得するために、リクエスト・レスポンスの
-　やりとりが２回行われています。）</p>
-
-<p>なお、
-Authorization: ヘッダには、
-Basic認証の ID と PW とを :（半角のコロン）でつなげた文字列を、
-base64した値が格納さています。
-（例えば、
-　Authorization: Basic dXNlcjAxOnBhc3N3b3JkCg==　といったようになります。）</p></blockquote>
-
-<p>ように、Basic認証ではサーバが401のレスポンスを返すことで、ブラウザ側にポップアップを出させているようです。その為rhaco3の認証部分で401のレスポンスを出した時に認証の情報がリセットされてしまったのではないかと思われます。</p>
-
-<h2>対処</h2>
-
-<p>rhaco3の認証部分(\org\rhaco\flow\parts\RequestFlow::do_login)で401を送信していた部分で200を送信することで対処できました。</p>
-
-<p>rhaco3で見られた症状でしたが、他のフレームワークでも特に何も考えてなかったら引っかかる可能性があります。というかBasic認証とフレームワークの認証両方掛けるとか普通無いですよねそうですよね。</p>
 ]]></content>
   </entry>
   

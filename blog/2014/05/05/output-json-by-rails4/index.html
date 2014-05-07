@@ -124,6 +124,28 @@
 
 <p>例えばこうしておくと一覧を配列出力しつつ、出力したいフィールドを指定出来る。viewだけで操作出来るのは楽チンだわ。
  詳しい書式はブログ等の記事を見るよりも、英語だけど<a href="https://github.com/rails/jbuilder">rails/jbuilder · GitHub</a>を見るとよさげ。</p>
+
+<h2>jbuilderでネストした配列を出力する</h2>
+
+<p>大抵の説明では一番外側が配列で、中身はハッシュというものばかりで、配列の中が配列という形での出力方法の説明が無かったのでメモ</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">]]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいなjsonを出力する場合</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="n">json</span><span class="o">.</span><span class="n">array!</span><span class="p">(</span><span class="vi">@events</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">json</span><span class="o">.</span><span class="n">array!</span><span class="p">(</span><span class="o">[</span><span class="n">item</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">to_i</span><span class="p">,</span><span class="n">item</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">to_i</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>という指定をする。</p>
 </div>
 
 
@@ -177,6 +199,8 @@
         <a class="basic-alignment left" href="/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/" title="Previous Post: Capistrano3でbitbucketからデプロイしようとしたらハマった話">&laquo; Capistrano3でbitbucketからデプロイしようとしたらハマった話</a>
       
       
+        <a class="basic-alignment right" href="/blog/2014/05/05/rails-url-for-shows-proxy-pass/" title="Next Post: Railsでurl forを使ったらshows proxy passで設定したURLになってしまう件">Railsでurl forを使ったらshows proxy passで設定したURLになってしまう件 &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -200,6 +224,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/05/rails-url-for-shows-proxy-pass/">Railsでurl forを使ったらshows proxy passで設定したURLになってしまう件</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/05/output-json-by-rails4/">Rails4でJSONを出力する</a>
       </li>
     
@@ -215,10 +243,6 @@
         <a href="/blog/2014/04/09/git-memo/">Git Memo</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/04/08/update-openssl-security-patch/">Ubuntuでopensslのsecurity Patchを当てる</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -231,7 +255,7 @@
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (5)</a></li>
-<li class='category'><a href='/blog/categories/rails/'>Rails (7)</a></li>
+<li class='category'><a href='/blog/categories/rails/'>Rails (8)</a></li>
 <li class='category'><a href='/blog/categories/web/'>Web (1)</a></li>
 <li class='category'><a href='/blog/categories/linux/'>linux (2)</a></li>
 <li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
@@ -241,7 +265,7 @@
 <li class='category'><a href='/blog/categories/postgresql/'>postgresql (1)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (2)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>
-<li class='category'><a href='/blog/categories/ruby/'>ruby (7)</a></li>
+<li class='category'><a href='/blog/categories/ruby/'>ruby (8)</a></li>
 <li class='category'><a href='/blog/categories/sqlite/'>sqlite (1)</a></li>
 <li class='category'><a href='/blog/categories/svn/'>svn (1)</a></li>
 <li class='category'><a href='/blog/categories/test1/'>test1 (2)</a></li>
