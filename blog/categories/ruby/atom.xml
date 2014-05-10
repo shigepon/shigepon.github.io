@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ruby | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-05-07T12:18:32+09:00</updated>
+  <updated>2014-05-10T22:01:36+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -27,7 +27,19 @@ server hoge.com;
 proxy_pass http://upstream;
 </code></p>
 
-<p>のような設定をしているとurl_forで「<a href="http://hoge.com%E3%80%8D%E3%81%A8%E3%81%AA%E3%81%A3%E3%81%A6%E3%81%BB%E3%81%97%E3%81%84%E3%81%A8%E3%81%93%E3%82%8D%E3%81%8C%E3%80%8Chttp://upstream%E3%80%8D%E3%81%A8%E3%81%AA%E3%81%A3%E3%81%A6%E3%81%97%E3%81%BE%E3%81%86%E3%81%AE%E3%81%A7%E3%80%81%E3%82%B0%E3%82%B0%E3%81%A3%E3%81%A6%E5%AF%BE%E5%87%A6%E3%82%92%E8%AA%BF%E3%81%B9%E3%81%9F%E3%80%82">http://hoge.com%E3%80%8D%E3%81%A8%E3%81%AA%E3%81%A3%E3%81%A6%E3%81%BB%E3%81%97%E3%81%84%E3%81%A8%E3%81%93%E3%82%8D%E3%81%8C%E3%80%8Chttp://upstream%E3%80%8D%E3%81%A8%E3%81%AA%E3%81%A3%E3%81%A6%E3%81%97%E3%81%BE%E3%81%86%E3%81%AE%E3%81%A7%E3%80%81%E3%82%B0%E3%82%B0%E3%81%A3%E3%81%A6%E5%AF%BE%E5%87%A6%E3%82%92%E8%AA%BF%E3%81%B9%E3%81%9F%E3%80%82</a></p>
+<p>のような設定をしているとurl_forで</p>
+
+<p><code>
+http://hoge.com
+</code></p>
+
+<p>となってほしいところが</p>
+
+<p><code>
+http://upstream
+</code></p>
+
+<p>となってしまうので、ググって対処を調べた。</p>
 
 <p><a href="http://stackoverflow.com/questions/5834025/how-to-preserve-request-url-with-nginx-proxy-pass">ruby &ndash; How to preserve request url with nginx proxy_pass &ndash; Stack Overflow</a>を参考にして</p>
 

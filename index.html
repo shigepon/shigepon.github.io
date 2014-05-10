@@ -12,7 +12,8 @@
   <meta name="description" content="Nginx, Unicorn, Rails4でurl_forを使ったら変なURLになってしまったので対処法を書いておく Ninxで 1
 2
 server hoge.com;
-proxy_pass http://upstream; のような設定をしているとurl_forで「http://hoge. &hellip;">
+proxy_pass http://upstream; のような設定をしているとurl_forで 1
+http://hoge &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -121,7 +122,19 @@ proxy_pass http://upstream; のような設定をしているとurl_forで「htt
 </span><span class='line'>proxy_pass http://upstream;</span></code></pre></td></tr></table></div></figure>
 
 
-<p>のような設定をしているとurl_forで「<a href="http://hoge.com%E3%80%8D%E3%81%A8%E3%81%AA%E3%81%A3%E3%81%A6%E3%81%BB%E3%81%97%E3%81%84%E3%81%A8%E3%81%93%E3%82%8D%E3%81%8C%E3%80%8Chttp://upstream%E3%80%8D%E3%81%A8%E3%81%AA%E3%81%A3%E3%81%A6%E3%81%97%E3%81%BE%E3%81%86%E3%81%AE%E3%81%A7%E3%80%81%E3%82%B0%E3%82%B0%E3%81%A3%E3%81%A6%E5%AF%BE%E5%87%A6%E3%82%92%E8%AA%BF%E3%81%B9%E3%81%9F%E3%80%82">http://hoge.com%E3%80%8D%E3%81%A8%E3%81%AA%E3%81%A3%E3%81%A6%E3%81%BB%E3%81%97%E3%81%84%E3%81%A8%E3%81%93%E3%82%8D%E3%81%8C%E3%80%8Chttp://upstream%E3%80%8D%E3%81%A8%E3%81%AA%E3%81%A3%E3%81%A6%E3%81%97%E3%81%BE%E3%81%86%E3%81%AE%E3%81%A7%E3%80%81%E3%82%B0%E3%82%B0%E3%81%A3%E3%81%A6%E5%AF%BE%E5%87%A6%E3%82%92%E8%AA%BF%E3%81%B9%E3%81%9F%E3%80%82</a></p>
+<p>のような設定をしているとurl_forで</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>http://hoge.com</span></code></pre></td></tr></table></div></figure>
+
+
+<p>となってほしいところが</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>http://upstream</span></code></pre></td></tr></table></div></figure>
+
+
+<p>となってしまうので、ググって対処を調べた。</p>
 
 <p><a href="http://stackoverflow.com/questions/5834025/how-to-preserve-request-url-with-nginx-proxy-pass">ruby &ndash; How to preserve request url with nginx proxy_pass &ndash; Stack Overflow</a>を参考にして</p>
 
