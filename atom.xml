@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-05-12T23:31:18+09:00</updated>
+  <updated>2014-05-12T23:33:48+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -14,9 +14,9 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Access Postgresql Through Odbc Ubuntu]]></title>
+    <title type="html"><![CDATA[ubuntuでodbcを用いてpostgresqlにアクセスする]]></title>
     <link href="http://blog.shigepon.com/blog/2014/05/12/access-postgresql-through-odbc-ubuntu/"/>
-    <updated>2014-05-12T00:00:00+09:00</updated>
+    <updated>2014-05-12T22:11:33+09:00</updated>
     <id>http://blog.shigepon.com/blog/2014/05/12/access-postgresql-through-odbc-ubuntu</id>
     <content type="html"><![CDATA[<p>なでしこ2のテストのためにubuntuにodbcドライバをインストールしたりしたのでメモ</p>
 

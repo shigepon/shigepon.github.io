@@ -4,7 +4,7 @@
   <title><![CDATA[Category: linux | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-05-12T23:31:18+09:00</updated>
+  <updated>2014-05-12T23:33:48+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,38 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[ubuntuでodbcを用いてpostgresqlにアクセスする]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/05/12/access-postgresql-through-odbc-ubuntu/"/>
+    <updated>2014-05-12T22:11:33+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/05/12/access-postgresql-through-odbc-ubuntu</id>
+    <content type="html"><![CDATA[<p>なでしこ2のテストのためにubuntuにodbcドライバをインストールしたりしたのでメモ</p>
+
+<h2>odbcドライバのインストール</h2>
+
+<p><code>sh
+$ sudo aptitude install unixodbc, odbc-postgresql
+$ sudo odbcinst -i -d -f /usr/share/psqlodbc/odbcinst.ini.template
+$ sudo odbcinst -i -s -l  -n adyoung-pg -f /usr/share/doc/odbc-postgresql/examples/odbc.ini.template
+$ vim /etc/odbc.ini
+</code></p>
+
+<p>odbc.iniにはサンプルの設定が入っているので、それを参考にしながら設定</p>
+
+<h2>odbcアクセスしてみる</h2>
+
+<p><code>sh
+$ isql -v DSN (UID (PWD))
+</code></p>
+
+<p>でアクセスできる。あとはSQLを入力すれば結果を見たりできる。</p>
+
+<h2>monoを使ってアクセスする場合</h2>
+
+<p>monoというかなでしこ2でアクセスする場合に必要だった。libodbc.soが必要というエラーが出るのでunixodbc-devの追加インストールが必要。インストールすればエラー出ずに動くようになる。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Ubuntuでopensslのsecurity patchを当てる]]></title>
