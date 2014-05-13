@@ -4,7 +4,7 @@
   <title><![CDATA[Category: postgresql | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/postgresql/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-05-12T23:33:48+09:00</updated>
+  <updated>2014-05-13T09:15:05+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -138,6 +138,12 @@ copy tablename (column1,column2) from '/path/to/csv' with csv;
 </code></p>
 
 <p>とやれば、カラム名と順序の指定が可能</p>
+
+<h2>SQL結果をcsvに出力</h2>
+
+<p><code>sh
+$ psql db_name -c "SQL" -A -F, -t &gt; filename
+</code></p>
 ]]></content>
   </entry>
   

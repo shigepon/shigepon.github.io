@@ -246,6 +246,13 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 
 
 <p>とやれば、カラム名と順序の指定が可能</p>
+
+<h2>SQL結果をcsvに出力</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>psql db_name -c <span class="s2">&quot;SQL&quot;</span> -A -F, -t &gt; filename
+</span></code></pre></td></tr></table></div></figure>
+
 </div>
 
 
