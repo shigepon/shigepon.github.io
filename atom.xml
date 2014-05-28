@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-05-13T09:15:05+09:00</updated>
+  <updated>2014-05-29T08:52:22+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,31 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[find by sqlでプリペアードステートメントを使う]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/05/28/use-prepared-statement-in-find-by-sql/"/>
+    <updated>2014-05-28T08:19:12+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/05/28/use-prepared-statement-in-find-by-sql</id>
+    <content type="html"><![CDATA[<p>ActiveRecordは便利なのかどうか知らないけど、allなどのメソッドで:conditionとかで?を使うことが出来る。だけど、sqlを直接打ちたいケースは必ず出てくるので、その時に?使いたいなと思ったけど、なかなか例文が無かった。</p>
+
+<p>んで結局こうするといいみたい。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="vi">@results</span> <span class="o">=</span> <span class="no">Model</span><span class="o">.</span><span class="n">find_by_sql</span><span class="p">(</span><span class="o">[</span><span class="s2">&quot;select * from hoge where fuga=?&quot;</span><span class="p">,</span><span class="s2">&quot;hage&quot;</span><span class="o">]</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>しかし他にも直接sqlを実行する方法があって、</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">raw_connection</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;select * from hoge where fuga = :1&quot;</span><span class="p">,</span> <span class="s1">&#39;hage&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな書き方も出来るらしい。ActiveRecord::Base.connectionでは無理らしい。うーむ。むか〜しからRailsはちょっとレールからはずれるととたんに難しくなるんだなー。やる気が減って来た＞＜。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ubuntuでodbcを用いてpostgresqlにアクセスする]]></title>
@@ -1644,24 +1669,6 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
 
 
 <p>でいける。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[sqlite memo]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/02/11/sqlite-memo/"/>
-    <updated>2014-02-11T11:48:39+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/02/11/sqlite-memo</id>
-    <content type="html"><![CDATA[<p>SQLiteでたまに使う操作をメモ</p>
-
-<h2>テーブルの存在チェック</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">sqlite_master</span> <span class="k">WHERE</span> <span class="k">type</span><span class="o">=</span><span class="s1">&#39;table&#39;</span> <span class="k">AND</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;テーブル名&#39;</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
 ]]></content>
   </entry>
   

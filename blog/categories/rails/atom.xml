@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Rails | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-05-28T08:28:31+09:00</updated>
+  <updated>2014-05-29T08:52:22+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -22,13 +22,13 @@
 
 <p>んで結局こうするといいみたい。</p>
 
-<p><code>.rb
+<p><code>rb
 @results = Model.find_by_sql(["select * from hoge where fuga=?","hage"])
 </code></p>
 
 <p>しかし他にも直接sqlを実行する方法があって、</p>
 
-<p><code>.rb
+<p><code>rb
 ActiveRecord::Base.connection.raw_connection.exec("select * from hoge where fuga = :1", 'hage')
 </code></p>
 

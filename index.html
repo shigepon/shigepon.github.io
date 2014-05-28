@@ -9,12 +9,8 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="なでしこ2のテストのためにubuntuにodbcドライバをインストールしたりしたのでメモ odbcドライバのインストール 1
-2
-3
-4
-$ sudo aptitude install unixodbc, odbc-postgresql
-$ sudo odbcinst -i -d -f /usr/ &hellip;">
+  <meta name="description" content="ActiveRecordは便利なのかどうか知らないけど、allなどのメソッドで:conditionとかで?を使うことが出来る。だけど、sqlを直接打ちたいケースは必ず出てくるので、その時に?使いたいなと思ったけど、なかなか例文が無かった。 んで結局こうするといいみたい。 1
+@results = &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,6 +80,58 @@ $ sudo odbcinst -i -d -f /usr/ &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/28/use-prepared-statement-in-find-by-sql/">Find by sqlでプリペアードステートメントを使う</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-28T08:19:12+09:00" pubdate data-updated="true">May 28<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ActiveRecordは便利なのかどうか知らないけど、allなどのメソッドで:conditionとかで?を使うことが出来る。だけど、sqlを直接打ちたいケースは必ず出てくるので、その時に?使いたいなと思ったけど、なかなか例文が無かった。</p>
+
+<p>んで結局こうするといいみたい。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="vi">@results</span> <span class="o">=</span> <span class="no">Model</span><span class="o">.</span><span class="n">find_by_sql</span><span class="p">(</span><span class="o">[</span><span class="s2">&quot;select * from hoge where fuga=?&quot;</span><span class="p">,</span><span class="s2">&quot;hage&quot;</span><span class="o">]</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>しかし他にも直接sqlを実行する方法があって、</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">raw_connection</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;select * from hoge where fuga = :1&quot;</span><span class="p">,</span> <span class="s1">&#39;hage&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな書き方も出来るらしい。ActiveRecord::Base.connectionでは無理らしい。うーむ。むか〜しからRailsはちょっとレールからはずれるととたんに難しくなるんだなー。やる気が減って来た＞＜。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -940,111 +988,6 @@ $ sudo odbcinst -i -d -f /usr/ &hellip;">
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/14/a-way-of-creating-rails-application4/">Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(4):ビューにBootstrapを使う</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-14T09:10:41+09:00" pubdate data-updated="true">Mar 14<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>参考にした記事URL一覧</p>
-
-<ul>
-<li><a href="http://ubiqlog.com/archives/8749">Ruby on Rails 4.0正式リリースとBootstrapの正しい設定法 | ユービックログ研究所</a></li>
-<li><a href="http://railscasts.com/episodes/328-twitter-bootstrap-basics?language=ja&amp;view=asciicast">#328 Twitter Bootstrap Basics &ndash; RailsCasts</a></li>
-</ul>
-
-
-<p>今回はそっけない表示画面をそれっぽくするためにビューにBootstrapを当てはめる。</p>
-
-<p>Gemfileを編集</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>+gem 'less-rails'
-</span><span class='line'>+gem 'twitter-bootstrap-rails'
-</span><span class='line'>+gem 'execjs'
-</span><span class='line'>-gem 'sass-rails'</span></code></pre></td></tr></table></div></figure>
-
-
-<p>以下のコマンドを実行</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle install
-</span><span class='line'><span class="nv">$ </span>rails g bootstrap:install
-</span><span class='line'><span class="nv">$ </span>rails g bootstrap:layout application
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と実行したけど、最後のコマンドはビューを勝手に色々いじるので、しない方が良いかもしれない。上のコマンドを実行すると</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>app/assets/javascripts/application.js
-</span><span class='line'>app/assets/javascripts/bootstrap.js.coffee
-</span><span class='line'>app/assets/stylesheets/application.css
-</span><span class='line'>app/assets/stylesheets/bootstrap_and_overrides.css.less
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>が出来る。さて、この状態で出力を見ると、ページ上部がナビゲーションバーで隠れてしまった。
-app/assets/stylesheets/bootstrap_and_overrides.css.lessを修正することで対処する</p>
-
-<p>変更前</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="k">@import</span> <span class="s2">&quot;twitter/bootstrap/bootstrap&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="k">@import</span> <span class="s2">&quot;twitter/bootstrap/responsive&quot;</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>変更後</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="k">@import</span> <span class="s2">&quot;twitter/bootstrap/bootstrap&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="nt">body</span> <span class="p">{</span><span class="k">padding-top</span><span class="o">:</span><span class="m">60px</span><span class="p">;}</span>
-</span><span class='line'><span class="k">@import</span> <span class="s2">&quot;twitter/bootstrap/responsive&quot;</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これでページが隠れなくなる。レイアウト変更にはapp/views/layouts/application.html.erbを編集する必要がある。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1070,6 +1013,10 @@ app/assets/stylesheets/bootstrap_and_overrides.css.lessを修正することで�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/28/use-prepared-statement-in-find-by-sql/">Find by sqlでプリペアードステートメントを使う</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/12/access-postgresql-through-odbc-ubuntu/">Ubuntuでodbcを用いてpostgresqlにアクセスする</a>
       </li>
     
@@ -1085,10 +1032,6 @@ app/assets/stylesheets/bootstrap_and_overrides.css.lessを修正することで�
         <a href="/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/">Capistrano3でbitbucketからデプロイしようとしたらハマった話</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/05/02/use-nginxand-unicorn-on-sakura-vps/">Nginx,unicornをさくらvpsにインストールしてrailsアプリを手動でデプロイしてみる</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -1101,7 +1044,7 @@ app/assets/stylesheets/bootstrap_and_overrides.css.lessを修正することで�
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (6)</a></li>
-<li class='category'><a href='/blog/categories/rails/'>Rails (8)</a></li>
+<li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/web/'>Web (1)</a></li>
 <li class='category'><a href='/blog/categories/linux/'>linux (3)</a></li>
 <li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
@@ -1112,7 +1055,7 @@ app/assets/stylesheets/bootstrap_and_overrides.css.lessを修正することで�
 <li class='category'><a href='/blog/categories/postgresql/'>postgresql (1)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (2)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>
-<li class='category'><a href='/blog/categories/ruby/'>ruby (8)</a></li>
+<li class='category'><a href='/blog/categories/ruby/'>ruby (9)</a></li>
 <li class='category'><a href='/blog/categories/sqlite/'>sqlite (1)</a></li>
 <li class='category'><a href='/blog/categories/svn/'>svn (1)</a></li>
 <li class='category'><a href='/blog/categories/test1/'>test1 (2)</a></li>

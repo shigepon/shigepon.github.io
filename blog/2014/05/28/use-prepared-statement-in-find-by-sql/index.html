@@ -5,14 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>git memo - shigeponが関心のある技術情報など</title>
+  <title>find by sqlでプリペアードステートメントを使う - shigeponが関心のある技術情報など</title>
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="git関連のメモ 変更履歴を見る 1
-$ git log -p で全体の変更履歴 1
-$ git log -p filename でfilenameの変更履歴を表示する
-">
+  <meta name="description" content="ActiveRecordは便利なのかどうか知らないけど、allなどのメソッドで:conditionとかで?を使うことが出来る。だけど、sqlを直接打ちたいケースは必ず出てくるので、その時に?使いたいなと思ったけど、なかなか例文が無かった。 んで結局こうするといいみたい。 1
+@results = &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +19,7 @@ $ git log -p filename でfilenameの変更履歴を表示する
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.shigepon.com/blog/2014/04/09/git-memo">
+  <link rel="canonical" href="http://blog.shigepon.com/blog/2014/05/28/use-prepared-statement-in-find-by-sql">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -85,7 +83,7 @@ $ git log -p filename でfilenameの変更履歴を表示する
   
   <header>
     
-      <h1 class="entry-title">Git Memo</h1>
+      <h1 class="entry-title">Find by sqlでプリペアードステートメントを使う</h1>
     
     
       <p class="meta">
@@ -101,30 +99,30 @@ $ git log -p filename でfilenameの変更履歴を表示する
   
 
 
-<time datetime="2014-04-09T12:36:49+09:00" pubdate data-updated="true">Apr 9<span>th</span>, 2014</time>
+<time datetime="2014-05-28T08:19:12+09:00" pubdate data-updated="true">May 28<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>git関連のメモ</p>
+<div class="entry-content"><p>ActiveRecordは便利なのかどうか知らないけど、allなどのメソッドで:conditionとかで?を使うことが出来る。だけど、sqlを直接打ちたいケースは必ず出てくるので、その時に?使いたいなと思ったけど、なかなか例文が無かった。</p>
 
-<h3>変更履歴を見る</h3>
+<p>んで結局こうするといいみたい。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git log -p
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="vi">@results</span> <span class="o">=</span> <span class="no">Model</span><span class="o">.</span><span class="n">find_by_sql</span><span class="p">(</span><span class="o">[</span><span class="s2">&quot;select * from hoge where fuga=?&quot;</span><span class="p">,</span><span class="s2">&quot;hage&quot;</span><span class="o">]</span><span class="p">)</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>で全体の変更履歴</p>
+<p>しかし他にも直接sqlを実行する方法があって、</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git log -p filename
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">raw_connection</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;select * from hoge where fuga = :1&quot;</span><span class="p">,</span> <span class="s1">&#39;hage&#39;</span><span class="p">)</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>でfilenameの変更履歴を表示する</p>
+<p>こんな書き方も出来るらしい。ActiveRecord::Base.connectionでは無理らしい。うーむ。むか〜しからRailsはちょっとレールからはずれるととたんに難しくなるんだなー。やる気が減って来た＞＜。</p>
 </div>
 
 
@@ -147,15 +145,21 @@ $ git log -p filename でfilenameの変更履歴を表示する
   
 
 
-<time datetime="2014-04-09T12:36:49+09:00" pubdate data-updated="true">Apr 9<span>th</span>, 2014</time>
+<time datetime="2014-05-28T08:19:12+09:00" pubdate data-updated="true">May 28<span>th</span>, 2014</time>
       
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>Rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
 
 
     </p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2014/04/09/git-memo/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2014/04/09/git-memo/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2014/05/28/use-prepared-statement-in-find-by-sql/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2014/05/28/use-prepared-statement-in-find-by-sql/" >Tweet</a>
   
   
   
@@ -175,10 +179,8 @@ $ git log -p filename でfilenameの変更履歴を表示する
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/04/08/update-openssl-security-patch/" title="Previous Post: Ubuntuでopensslのsecurity patchを当てる">&laquo; Ubuntuでopensslのsecurity patchを当てる</a>
+        <a class="basic-alignment left" href="/blog/2014/05/12/access-postgresql-through-odbc-ubuntu/" title="Previous Post: ubuntuでodbcを用いてpostgresqlにアクセスする">&laquo; ubuntuでodbcを用いてpostgresqlにアクセスする</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/05/02/use-nginxand-unicorn-on-sakura-vps/" title="Next Post: nginx,unicornをさくらvpsにインストールしてrailsアプリを手動でデプロイしてみる">nginx,unicornをさくらvpsにインストールしてrailsアプリを手動でデプロイしてみる &raquo;</a>
       
     </p>
   </footer>
