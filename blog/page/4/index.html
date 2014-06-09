@@ -9,8 +9,18 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="rhaco2をPostgreSQL8.3で使えるように色々調べていくうちに学んだメモ。 insert時に「デフォルト値を入れる」だけの処理をしたい場合 1
-insert into テーブル名 default value; でOK integerのカラムとかにlikeを適用したい場合 1 &hellip;">
+  <meta name="description" content="C#のdllを呼び出せるように、C#のdllを参照した後、Plugin.cppの一部を以下のように書き換えました 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+PHiValue __stdcall sample01(DWORD param) { PHiValue result; &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +90,382 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/28/nadesiko-plugin-cs2/">C#で作ったdllをなでしこで使う</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-28T22:42:43+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>C#のdllを呼び出せるように、C#のdllを参照した後、Plugin.cppの一部を以下のように書き換えました</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>PHiValue __stdcall sample01(DWORD param) {
+</span><span class='line'>  PHiValue result;
+</span><span class='line'>  ClassLibrary1::Class1::Method1();
+</span><span class='line'>  result = nako_var_new(NULL);
+</span><span class='line'>  hi_setStr(result&cedil; &quot;abc&quot;&cedil; sizeof(&quot;abc&quot;));
+</span><span class='line'>  return result;
+</span><span class='line'>}
+</span><span class='line'>NAKO_API(void) ImportNakoFunction(void) {
+</span><span class='line'>  // ユーザー命令の追加
+</span><span class='line'>  nako_addFunction(&quot;sample01&quot;&cedil;&quot;&quot;&cedil; sample01&cedil; 0);
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>なでしこ側のソースは以下のようにして呼び出してみました</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>結果=sample01
+</span><span class='line'>結果を言う</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これでダイアログボックスに「method1」が表示され、続いて「abc」が表示されればOKです。</p>
+
+<p>しかし・・・結果は外部例外　E0434F4Dを出力してちゃんと動きませんでしたorz。この例外はtry&hellip;catchで掴もうとしても掴めません。どうも処理の関数（ここではsample01）に入った瞬間にエラーを返してしまうようです。ちなみにこのコードでググっても原因は理解できませんでした。ということで、クジラ飛行机氏（なでしこ作者）にメールで泣きつきました。</p>
+
+<p>すると</p>
+
+<blockquote><p>vnako.exe と同じフォルダに配置したらエラー出ませんでした。たぶん、plug-ins フォルダにパスを通さない限り、DLLがもう一方を参照できなくなるのだと思います。</p></blockquote>
+
+<p>という返事が！まじで！？と思い試してみると・・・上手くいくじゃないですか！これでC#で作ったdllもなでしこで利用できるようになりました。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/28/nadesiko-plugin-cs/">C#で作ったdllをC++/CLIで使う</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-28T22:27:58+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong>画像やファイルが無くなっていますがご了承下さい</strong></p>
+
+<p>なでしこでプラグインを作る時にC#を使いたかったので、本格的にdllを作る前に、C++/CLIからMessageBoxを表示する程度のC#のdllを呼び出してみました。</p>
+
+<p>C#のdllコード</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>using System;
+</span><span class='line'>using System.Collections.Generic;
+</span><span class='line'>using System.Windows.Forms;
+</span><span class='line'>using System.Text;
+</span><span class='line'>namespace ClassLibrary1{
+</span><span class='line'>    public class Class1
+</span><span class='line'>    {
+</span><span class='line'>        public static void Method1()
+</span><span class='line'>        {
+</span><span class='line'>            MessageBox.Show(&quot;method1&quot;);
+</span><span class='line'>        }
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>C++フォームアプリケーション</p>
+
+<p>C#で作ったdllの参照とかフォームの構成とか画像が消えちゃったので適当に想像してください。
+用はC++のアプリケーションでC#のdllを参照します。</p>
+
+<p>ボタンクリック時のコード</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>private: System::Void button1_Click(System::Object^  sender&cedil; System::EventArgs^  e) {
+</span><span class='line'>   try{
+</span><span class='line'>      ClassLibrary1::Class1::Method1();
+</span><span class='line'>   }catch(Exception^ e){
+</span><span class='line'>      System::Windows::Forms::MessageBox::Show(e-&gt;Message);
+</span><span class='line'>   }
+</span><span class='line'> }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で動かしてみるときちんと動かせました。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/28/nadesiko-plugin/">C++/CLIでなでしこのプラグインを作る方法(Visual C++ Express Edition)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-28T21:45:15+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>なでしこでプラグインを作る時にC#を使いたかったので、その前段階としてC++/CLIでプラグインを作る方法を探ってみました。</p>
+
+<p>C++/CLIが使えると、.Netを使えるようになり、C#で作ったdllもVC++の参照設定から読み込んで使えるようになります。</p>
+
+<p>なでしこにはC++でプラグイン開発するためのsdkがあります。</p>
+
+<p>ただし、VC++で使用するには<a href="http://www.himanavi.net/cgi/nade-bbs2/cbbs.cgi?mode=one&amp;number=7462&amp;type=7446&amp;space=60&amp;no=0">なでしこ質問掲示板</a>にあるような設定をしなければいけません。（以下引用）</p>
+
+<ol>
+<li>Win32プロジェクトを作成</li>
+<li>plugins_sdk_cからソースを追加</li>
+<li>dnako_import.defを作成</li>
+<li>すべての構成でプロジェクトのプロパティを修正　全般→文字セットを「マルチ バイト文字セットを使用する」に変更　リンカ→入力→モジュール定義ファイルに「dnako_import.def」と入力</li>
+<li>ビルド</li>
+</ol>
+
+
+<p>dnako_import.defは以下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>EXPORTS
+</span><span class='line'>ImportNakoFunction
+</span><span class='line'>PluginInfo
+</span><span class='line'>PluginVersion
+</span><span class='line'>PluginRequire
+</span><span class='line'>PluginInit
+</span><span class='line'>PluginFin</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実際こちらで試した場合は他にも4の箇所で</p>
+
+<p>全般→共通言語ランタイムサポートを「共通言語ランタイムサポートを使用しない」に
+C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘッダーの作成/使用を「プリコンパイル済みヘッダーを使用しない」に</p>
+
+<p>変更が必要でした。</p>
+
+<p>ただし、この方法だとC++/CLIを使えないので、.Netを使うことは出来ません。そこで、次のように変更しました。</p>
+
+<p>+sdkに含まれる.cファイルを全て.cppに変更
++dnako_import\let.h内にある各GetProcAddressの第一引数hDllをstatic_castでHMODULE型にキャスト</p>
+
+<p>すると問題なくビルドが通り、.Netを使用することが出来ました。と言ってもMessageBoxを試した程度ですが。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/28/nadesiko-lua/">なでしこでLuaエディタ？を作る（ネタ）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-28T21:37:03+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>なでしこではLuaを使えるので、なでしこのGUIと組み合わせたら簡単にLuaエディタ作れるんじゃね？ということで作ってみました。（ただのネタです）</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>母艦は「メインフォーム」
+</span><span class='line'>そのクライアントW=640#数値
+</span><span class='line'>そのクライアントH=400#数値
+</span><span class='line'>そのタイトル=「なでしこ」#文字列
+</span><span class='line'>※ ---
+</span><span class='line'>LuaエディタとはTエディタ##生成
+</span><span class='line'>そのX=8#数値
+</span><span class='line'>そのY=8#数値
+</span><span class='line'>そのW=616#数値
+</span><span class='line'>そのH=344#数値
+</span><span class='line'>そのテキスト=「」#文字列
+</span><span class='line'>そのスクロールバー=「」#文字列
+</span><span class='line'>※ ---
+</span><span class='line'>Luaボタンとはボタン##生成
+</span><span class='line'>そのX=280#数値
+</span><span class='line'>そのY=360#数値
+</span><span class='line'>そのW=64#数値
+</span><span class='line'>そのH=32#数値
+</span><span class='line'>そのテキスト=「luaする」#文字列
+</span><span class='line'>そのクリックした時は～Luaボタン__クリックした時#イベント
+</span><span class='line'>※※※積み木デザイナ:ここまで※
+</span><span class='line'>●Luaボタン__クリックした時　　# ここにイベントを書きます。
+</span><span class='line'># 字下げした部分がイベント範囲です。
+</span><span class='line'>  エラー監視
+</span><span class='line'>      ソース=Luaエディタのテキスト
+</span><span class='line'>      A=50
+</span><span class='line'>      結果とは変数
+</span><span class='line'>      LUA(&quot;---
+</span><span class='line'>      {ソース}
+</span><span class='line'>      ---&quot;)
+</span><span class='line'>  エラーならば
+</span><span class='line'>      「エラー」と言う。</span></code></pre></td></tr></table></div></figure>
+
+
+<p>セーブやロードなどは全て省いてますが実装は簡単です。</p>
+
+<p>あとLUA(&quot;<del>&hellip;</del>&quot;)の箇所を変更すれば、返り値を得ることも簡単にできます。例えばこんな感じ</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>LUA(&quot;---ret=0{ソース}nako_set(&#039;結果&#039;&cedil;ret)---&quot;)結果を言う。</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Luaをちょっといじってみたいなと思う時に使えるんじゃないかと思います。</p>
+
+<p>※なぜか「LUAする」命令だとieとかexcelを立ち上げた時にvisible=trueに出来ませんでした。何かやり方が悪かったのかな。（なでしこのバージョンはデラックス版1.5322です）</p>
+
+<p>※LuaComではUTF-8を扱うので、日本語をまぜる場合はソースをUTF-8に変換しておく必要があります</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>LUA(UTF8N変換(&quot;...&quot;))</span></code></pre></td></tr></table></div></figure>
+
+
+<p>結果もnako_setでセットした値もUTF8で返ってきますのでSJIS変換命令で変換する必要があります。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -361,23 +747,23 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/06/08/ubuntu-aptitude-error-in-initramfs-tools/">Ubuntuでaptitude Installした時にinitramfs-toolsのエラーが出た</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/07/build-php-with-phpenv/">Phpenvとphp-buildを使って適当なバージョンのphpをビルドする</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/06/difficult-to-use-rails/">Railsやりにくいから挫折しそうという話</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/29/rails-memo/">Rails Memo</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/28/use-prepared-statement-in-find-by-sql/">Find by sqlでプリペアードステートメントを使う</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/12/access-postgresql-through-odbc-ubuntu/">Ubuntuでodbcを用いてpostgresqlにアクセスする</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/05/rails-url-for-shows-proxy-pass/">Railsでurl forを使ったらshows proxy passで設定したURLになってしまう件</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/05/output-json-by-rails4/">Rails4でJSONを出力する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/">Capistrano3でbitbucketからデプロイしようとしたらハマった話</a>
       </li>
     
   </ul>

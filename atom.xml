@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-05-29T08:52:22+09:00</updated>
+  <updated>2014-06-09T21:33:51+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,226 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[ubuntuでaptitude installした時にinitramfs-toolsのエラーが出た]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/06/08/ubuntu-aptitude-error-in-initramfs-tools/"/>
+    <updated>2014-06-08T21:41:18+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/06/08/ubuntu-aptitude-error-in-initramfs-tools</id>
+    <content type="html"><![CDATA[<p>virtualboxをインストールしようとしたら</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>以下のパッケージの処理中にエラーが発生しました:
+</span><span class='line'> initramfs-tools
+</span><span class='line'>E: Sub-process /usr/bin/dpkg returned an error code <span class="o">(</span>1<span class="o">)</span>
+</span><span class='line'>パッケージをインストールできませんでした。復旧を試みています:
+</span><span class='line'>initramfs-tools <span class="o">(</span>0.99ubuntu13.5<span class="o">)</span> を設定しています ...
+</span><span class='line'>update-initramfs: deferring update <span class="o">(</span>trigger activated<span class="o">)</span>
+</span><span class='line'>initramfs-tools のトリガを処理しています ...
+</span><span class='line'>update-initramfs: Generating /boot/initrd.img-3.2.0-53-generic
+</span><span class='line'>
+</span><span class='line'>gzip: stdout: No space left on device
+</span><span class='line'>cpio: 書き込みエラー: Broken pipe
+</span><span class='line'>E: mkinitramfs failure cpio 1 gzip 1
+</span><span class='line'>update-initramfs: failed <span class="k">for</span> /boot/initrd.img-3.2.0-53-generic with 1.
+</span><span class='line'>dpkg: initramfs-tools の処理中にエラーが発生しました <span class="o">(</span>--configure<span class="o">)</span>:
+</span><span class='line'> サブプロセス インストール済みの post-installation スクリプト はエラー終了ステータス 1 を返しました
+</span><span class='line'>以下のパッケージの処理中にエラーが発生しました:
+</span><span class='line'> initramfs-tools
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいなエラーが出た。どうも/bootが一杯になってると出るらしい。
+<a href="http://www.cagylogic.com/archives/2012/11/04150426.php">/bootがあふれてapt-get upgradeが失敗したでござる | cagylogic</a>を参考にして削除することにした。ただ、普通にapt-get purgeとかapt-get removeしても結局エラーメッセージはなぜか出たまま。</p>
+
+<p>で、さらにググって<a href="http://tatuas.hatenablog.com/entry/2013/08/22/015141">Ubuntuでboot容量不足という警告の対処法 &ndash; Tatuas Blog</a>のように</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo apt-get remove linux-image-xxxx
+</span><span class='line'><span class="nv">$ </span>sudo apt-get autoremove
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とすると、上手く消すことが出来た</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[phpenvとphp-buildを使って適当なバージョンのphpをビルドする]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/06/07/build-php-with-phpenv/"/>
+    <updated>2014-06-07T00:42:03+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/06/07/build-php-with-phpenv</id>
+    <content type="html"><![CDATA[<p>基本は<a href="http://d.hatena.ne.jp/hnw/20130626">php-buildで複数バージョンのPHP-FPMを用意する &ndash; hnwの日記</a>を参考にして進める</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>curl https://raw.github.com/CHH/phpenv/master/bin/phpenv-install.sh | bash
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これが何故か上手くいかなかったので</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>wget https://raw.github.com/CHH/phpenv/master/bin/phpenv-install.sh
+</span><span class='line'><span class="nv">$ </span>chmod +x phpenv-install.sh
+</span><span class='line'><span class="nv">$ </span>./phpenv-install.sh
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こうやった。コマンド終了時のメッセージに従って.zshrcを変更して反映。
+php-buildのインストールは下のような感じ</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone git://github.com/CHH/php-build.git ~/.phpenv/plugins/php-build
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で、おもむろにphpをインストール</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>phpenv install 5.5.5
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とかやると出るわ出るわエラーが出るわ。どうもビルド用のライブラリやヘッダファイルみたいなのが何かと足りないみたいで色々出て来た。出るメッセージは人によって違うと思うので、入れるライブラリの一覧より、ライブラリが無い場合の対処法を書いておく。ubuntuにはapt-fileというアプリ？があって、これを使うとライブラリをインストールした時にインストールされるファイル名で検索することが出来る。</p>
+
+<p>例えば「configure: error: mcrypt.h not found. Please reinstall libmcrypt.」みたいなエラーが出た場合、</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>apt-file search mcrypt.h
+</span><span class='line'>libmcrypt-dev: /usr/include/mcrypt.h
+</span><span class='line'>libmcrypt-dev: /usr/include/mutils/mcrypt.h
+</span><span class='line'>libtomcrypt-dev: /usr/include/tomcrypt.h
+</span><span class='line'>php-doc: /usr/share/doc/php-doc/html/book.mcrypt.html
+</span><span class='line'>php-doc: /usr/share/doc/php-doc/html/intro.mcrypt.html
+</span><span class='line'>php-doc: /usr/share/doc/php-doc/html/ref.mcrypt.html
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいにすると、mcrypt.hを含むライブラリとインストール箇所が表示されるので、これを見ながらインストールするライブラリを選んだ（この場合だとlibmcrypt-devをインストールした）</p>
+
+<p>これを地道に何度か繰り返して何とかビルド出来た。rbenvに比べると面倒だった。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Railsやりにくいから挫折しそうという話]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/06/06/difficult-to-use-rails/"/>
+    <updated>2014-06-06T10:38:10+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/06/06/difficult-to-use-rails</id>
+    <content type="html"><![CDATA[<p>今までphpの<a href="http://rhaco.org">rhaco</a>というドマイナーなフレームワークを使ってきてたので、メジャーなフレームワークでも使ってみるかー。ついでにrubyの練習にもなるかーと思ってRails4をはじめたんだけど、なんかこー色々自分の開発方法に合ってないような気がするので挫折する。</p>
+
+<p>使いにくいなと思った点はメリットとの二律背反の部分もあるんだけど、次のような感じ</p>
+
+<ul>
+<li>モデルをコマンドで作ると、テーブル名が勝手に複数形になる</li>
+<li>viewでurl表示させたりするのが面倒。きっとやり方知らないだけだろうけど。</li>
+<li>コマンドありきで作っていくので、手作業でどこまで修正して良いか分からない</li>
+<li>どんな流れで処理が進むのかさっぱり分からない（フレームワークが大きすぎるから？）。本読めって話だろうけど・・・なー(めんどい)。</li>
+<li>分からない時に聞く相手が居ない</li>
+<li>バージョンによってやり方が結構変わるみたいで、ググってもそれが正しい手法か分からない時がある（これはrhacoも同じだからrhacoにも何とかして欲しいとこではある）</li>
+<li>Capistrano+nginx+unicornで結構ハマってそれだけで挫折しそうになった。未だにちゃんとunicornをリロード出来ない。</li>
+<li>メジャーなフレームワークのはずなのに、ちょこちょこバッドノウハウない？違う？</li>
+<li>SassやCofeeScriptがデフォみたいなのがやだ</li>
+<li>いちいちgemファイルでほにゃららしないと上手く動かない？Bootstrapとか。そしてgemがあるかどうかをいちいちググって探さないといけない。</li>
+</ul>
+
+
+<p>なんとなくだけどRailsって先に設計とかかっちりやってから作るってやり方な感じがして、「大雑把に作って、そこから細部をつめていく」みたいなやり方には合ってないんじゃないかと思った。個人でサクサクっとWebサービス作りたい場合には大雑把にまず作りたいんだよなー。</p>
+
+<p>見当違いかもしれないけどね。とりあえず他を当たってみる？メジャーどころでDjango？同じように挫折するかもしれないけどとりあえず試してみよう。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Rails memo]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/05/29/rails-memo/"/>
+    <updated>2014-05-29T08:54:12+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/05/29/rails-memo</id>
+    <content type="html"><![CDATA[<p>Rails関係でいつでも確認出来るようにメモ。</p>
+
+<h2>ルーティングでのパラメータの使い方</h2>
+
+<p>config/route.rbを編集する</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="n">get</span> <span class="s2">&quot;main/index/:hoge&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;main#index&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>app/controllers/main_controller.rbを編集</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">class</span> <span class="nc">MainController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">index</span>
+</span><span class='line'>    <span class="vi">@hoge</span> <span class="o">=</span> <span class="n">params</span><span class="o">[</span><span class="ss">:hoge</span><span class="o">]</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と書いておくとrouteで設定したパラメーターにアクセス出来る。</p>
+
+<h2>ルーティング中でURLの一部を省略可能にする</h2>
+
+<p>config/route.rbを編集する</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="n">get</span> <span class="s2">&quot;main/index/:hoge(/fuga/:hage)&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;main#index&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とやっておくと、main/index/1/fuga/2でもアクセス出来るし、main/index/1でもアクセス出来るようになる</p>
+
+<h2>ルーティング時にパラメーターの初期値を設定する</h2>
+
+<p>config/route.rbを編集する</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="n">get</span> <span class="s2">&quot;main/index/:hoge(/fuga/:hage)&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;main#index&quot;</span><span class="p">,</span><span class="ss">:defaults</span><span class="o">=&gt;</span><span class="p">{</span><span class="ss">:hage</span><span class="o">=&gt;</span><span class="mi">3</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と設定しておくと、app/controllers/main_controller.rb中のparams[:hage]の初期値として3を入れることが出来る。</p>
+
+<h2>Dateクラスの使い方メモ</h2>
+
+<p>個人的に文字列からDateクラスにして、1年前にするとか1ヶ月前にするとかそういう作業をすることが多いのでメモ</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'>  <span class="n">d</span> <span class="o">=</span> <span class="no">Date</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot;2014-05-24&quot;</span><span class="p">,</span><span class="s2">&quot;%Y-%m-%d&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">prev_year</span> <span class="c1">#1年前に指定</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[find by sqlでプリペアードステートメントを使う]]></title>
@@ -1255,420 +1475,6 @@ events_controller.rbを次のように変えると</p>
 
 
 <p>ただ、最初の目的には最初の集計の方が役に立った。結局Bingのボットだったみたい。Analyticsではじけなかったアクセスがあったのかな。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[vim memo]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/03/01/vim-memo/"/>
-    <updated>2014-03-01T14:14:10+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/03/01/vim-memo</id>
-    <content type="html"><![CDATA[<h2>vimでsnippet</h2>
-
-<p>色々方法があるみたいだけど、neocomplecacheを入れているので、それと相性が良さそうな（作者が同じ）プラグインを入れた</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>NeoBundle 'Shougo/neosnippet'
-</span><span class='line'>NeoBundle 'Shougo/neosnippet-snippets'
-</span><span class='line'>
-</span><span class='line'>" Plugin key-mappings.
-</span><span class='line'>imap &lt;C-k&gt;     &lt;Plug&gt;(neosnippet_expand_or_jump)
-</span><span class='line'>smap &lt;C-k&gt;     &lt;Plug&gt;(neosnippet_expand_or_jump)
-</span><span class='line'>xmap &lt;C-k&gt;     &lt;Plug&gt;(neosnippet_expand_target)
-</span><span class='line'>" " SuperTab like snippets behavior.
-</span><span class='line'>imap &lt;expr&gt;&lt;TAB&gt; neosnippet#expandable_or_jumpable() ?
-</span><span class='line'>\ "\&lt;Plug&gt;(neosnippet_expand_or_jump)"
-</span><span class='line'>\: pumvisible() ? "\&lt;C-n&gt;" : "\&lt;TAB&gt;"
-</span><span class='line'>smap &lt;expr&gt;&lt;TAB&gt; neosnippet#expandable_or_jumpable() ?
-</span><span class='line'>\ "\&lt;Plug&gt;(neosnippet_expand_or_jump)"
-</span><span class='line'>\: "\&lt;TAB&gt;"
-</span><span class='line'>"
-</span><span class='line'>" " For snippet_complete marker.
-</span><span class='line'>if has('conceal')
-</span><span class='line'>  set conceallevel=2 concealcursor=i
-</span><span class='line'>endif</span></code></pre></td></tr></table></div></figure>
-
-
-<p>を.vimrcに追記して、vimを再起動後、</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>:NeoBundleInstall</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でインストール完了。もう一度vimを再起動して、phpファイルを空けて
-おもむろにインサートモードで「for」とか打ったらちゃんとsnippetが表示された。&lt;C-n>などで選択してからtab押したらちゃんと入力された。
-いいね〜！！</p>
-
-<p>現在、デフォルトのsnippetとしてneosnippet-snippetsをインストールしないとデフォルトのsnippetを出してくれないことに注意。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[dbext.vimでpostgresqlにアクセスする]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/02/28/vim-dbext-postgresql/"/>
-    <updated>2014-02-28T11:48:20+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/02/28/vim-dbext-postgresql</id>
-    <content type="html"><![CDATA[<p>ググってみたけど無かったのでメモ。
-単純に.vimrcに</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>let dbext_default_profile=""
-</span><span class='line'>let dbext_default_type="PGSQL"
-</span><span class='line'>let dbext_default_user="username"
-</span><span class='line'>let dbext_default_passwd="password"
-</span><span class='line'>let dbext_default_dbname="dbname"
-</span><span class='line'>let dbext_default_host="host"
-</span><span class='line'>let dbext_default_port="port"</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と入力してvimを再起動して</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="p">:</span><span class="k">Select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">hoge</span> <span class="k">limit</span> <span class="mi">1</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と何かのテーブルから１行だけ出力してみようとしてみたけど</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="n">dbext</span><span class="p">:</span><span class="n">PostgreSQL</span> <span class="n">requires</span> <span class="n">a</span> <span class="s1">&#39;$HOME/.pgpass&#39;</span> <span class="n">file</span> <span class="k">in</span> <span class="k">order</span> <span class="k">to</span> <span class="n">authenticate</span><span class="p">.</span> <span class="n">This</span> <span class="n">file</span> <span class="k">is</span> <span class="n">missing</span><span class="p">.</span> <span class="n">If</span> <span class="n">you</span> <span class="k">are</span> <span class="k">using</span> <span class="n">a</span> <span class="k">local</span> <span class="k">connection</span><span class="p">,</span> <span class="n">you</span> <span class="n">can</span> <span class="k">create</span> <span class="n">an</span> <span class="n">empty</span> <span class="p">.</span><span class="n">pgpass</span> <span class="n">file</span><span class="p">.</span>  <span class="n">The</span> <span class="n">b</span>
-</span><span class='line'><span class="n">inary</span> <span class="s1">&#39;psql&#39;</span> <span class="n">does</span> <span class="k">not</span> <span class="n">accept</span> <span class="n">commandline</span> <span class="n">passwords</span><span class="p">.</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>というエラーメッセージが！
-どうもpsqlがコマンドラインでパスワードを受け付けないので、パスワード設定しても意味ないみたい。
-なので、~/.pgpassに</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">host</span><span class="p">:</span><span class="n">port</span><span class="p">:</span><span class="n">dbname</span><span class="p">:</span><span class="n">username</span><span class="p">:</span><span class="n">password</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>を入力したらエラー無く動いた。良かった良かった。
-ちなみに.vimrcに書いたパスワード設定を消すと、それはそれでパスワード聞かれるので残しておいた方がいい。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Ruby on Railsを入れてみた]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/02/26/rails-startup/"/>
-    <updated>2014-02-26T14:51:16+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/02/26/rails-startup</id>
-    <content type="html"><![CDATA[<p>rhaco使わないでWebサービス作るならもうPHP使わずに他の言語でやってみようかなと思い、
-DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強という意味を込めてRailsでやってみることにした。</p>
-
-<p>とりあえずまずはインストール出来ないと話にならないので、Railsをインストールしてみた話。</p>
-
-<p>Ubuntu使ってるので、aptitude install railsでさくっと終わるかなと思ってTwitterで何となく</p>
-
-<blockquote><p>shigepon: railsはバージョンいくつを使うと吉なんでしょ？</p></blockquote>
-
-<p>とつぶやいたら、@sugamasaoさんから</p>
-
-<blockquote><p>sugamasao: @shigepon しがらみがなければ、最新の4.0.2が良いと思います。お試しで触って見るなら、4.1のbeta版を使って見ても良いかもしれません〜</p></blockquote>
-
-<p>という話が！そうなるとrubyも2系入れないとダメじゃん！と思いつつ</p>
-
-<blockquote><p>shigepon: @sugamasao ただ、うちのubuntuのrubyが1.8なので、まずは2.0にしないといけないっすね。</p></blockquote>
-
-<p>とボヤいたら、やっぱり</p>
-
-<blockquote><p>sugamasao: @shigepon なるほど〜！1.8系はもうオワコンなので、2系を入れたほうが良いですねwちなみに、いまは2.1がリリースされてます！</p></blockquote>
-
-<p>とのお達しが。んじゃ2系入れるかとググりながらインストールしてみた。
-参考にしたページは次のとおり</p>
-
-<ul>
-<li><a href="http://qiita.com/emadurandal/items/a60886152a4c99ce1017">Rails開発環境の構築（rbenvでRuby導入からBundler、Rails導入まで） &ndash; Qiita</a></li>
-<li><a href="http://stackoverflow.com/questions/19031633/starting-the-rails-sqlite3-error">Starting the rails, sqlite3 Error &ndash; Stack Overflow</a></li>
-<li><a href="http://kiyotakagoto.hatenablog.com/entry/2013/05/28/235727">rails server 時に `autodetect&#8217;: Could not find a JavaScript runtime が出たら。 &ndash; 人生ずっと勉強</a></li>
-</ul>
-
-
-<h3>手順</h3>
-
-<p>行ったり来たりしてるからこんな感じでスッと出来てないけど、だいたいこんな感じ</p>
-
-<h4>rbenvインストール</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git clone git://github.com/sstephenson/rbenv.git ~/.rbenv
-</span><span class='line'>mkdir -p ~/.rbenv/plugins
-</span><span class='line'>git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build</span></code></pre></td></tr></table></div></figure>
-
-
-<p>~/.profileに以下を追加</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;$HOME/.rbenv/bin:$PATH&quot;</span>
-</span><span class='line'><span class="nb">eval</span> <span class="s2">&quot;$(rbenv init -)&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>んで</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">source</span> ~/.profile
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>opensslは入ってたから特に何もしなかったけど必要なら</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo aptitude install openssl
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>iconv, readlineは最初から入ってるんじゃないかな？
-んでインストール</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo rbenv install -l
-</span><span class='line'>rbenv install 2.1.0
-</span><span class='line'>rbenv global 2.1.0
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>rbenvで何かやったら</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>rbenv rehash
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>を忘れずに</p>
-
-<h3>Bundlerインストール</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>rbenv <span class="nb">exec </span>gem install bundler
-</span><span class='line'>rbenv rehash
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Railsインストール</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>bundle init
-</span><span class='line'>vim Gemfile
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Gemfile内に</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>gem <span class="s2">&quot;rails&quot;</span>, <span class="s2">&quot;4.0.2&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>を追加。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>bundle install --path vendor/bundle
-</span><span class='line'>bundle <span class="nb">exec </span>rails new hoge --skip-bundle
-</span><span class='line'>rm -f Gemfile
-</span><span class='line'>rm -f Gemfile.lock
-</span><span class='line'>rm -rf .bundle
-</span><span class='line'>rm -rf vendor/bundle
-</span><span class='line'><span class="nb">cd </span>hoge
-</span><span class='line'>bundle install --path vendor/bundle
-</span><span class='line'><span class="nb">echo</span> <span class="s1">&#39;/vendor/bundle&#39;</span> &gt;&gt; .gitignore
-</span><span class='line'>bundle <span class="nb">exec </span>rails server
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>で途中下のようにハマりながら起動を確認した。</p>
-
-<h3>はまったポイント</h3>
-
-<p>Ruby on Railsをインストールする時にプロジェクトのディレクトリで</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>bundle install -path vendor/bundle
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>すると、</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>Gem::Installer::ExtensionBuildError: ERROR: Failed to build gem native extension.
-</span><span class='line'>
-</span><span class='line'>        /usr/bin/ruby1.9.1 extconf.rb
-</span><span class='line'>checking <span class="k">for </span>sqlite3.h... no
-</span><span class='line'>sqlite3.h is missing. Try <span class="s1">&#39;port install sqlite3 +universal&#39;</span>
-</span><span class='line'>or <span class="s1">&#39;yum install sqlite-devel&#39;</span> and check your shared library search path <span class="o">(</span>the
-</span><span class='line'>location where your sqlite3 shared library is located<span class="o">)</span>.
-</span><span class='line'>*** extconf.rb failed ***
-</span><span class='line'>Could not create Makefile due to some reason, probably lack of
-</span><span class='line'>necessary libraries and/or headers.  Check the mkmf.log file <span class="k">for </span>more
-</span><span class='line'>details.  You may need configuration options.
-</span><span class='line'>
-</span><span class='line'>Provided configuration options:
-</span><span class='line'>    --with-opt-dir
-</span><span class='line'>    --without-opt-dir
-</span><span class='line'>    --with-opt-include
-</span><span class='line'>    --without-opt-include<span class="o">=</span><span class="k">${</span><span class="nv">opt</span><span class="p">-dir</span><span class="k">}</span>/include
-</span><span class='line'>    --with-opt-lib
-</span><span class='line'>    --without-opt-lib<span class="o">=</span><span class="k">${</span><span class="nv">opt</span><span class="p">-dir</span><span class="k">}</span>/lib
-</span><span class='line'>    --with-make-prog
-</span><span class='line'>    --without-make-prog
-</span><span class='line'>    --srcdir<span class="o">=</span>.
-</span><span class='line'>    --curdir
-</span><span class='line'>    --ruby<span class="o">=</span>/usr/bin/ruby1.9.1
-</span><span class='line'>    --with-sqlite3-dir
-</span><span class='line'>    --without-sqlite3-dir
-</span><span class='line'>    --with-sqlite3-include
-</span><span class='line'>    --without-sqlite3-include<span class="o">=</span><span class="k">${</span><span class="nv">sqlite3</span><span class="p">-dir</span><span class="k">}</span>/include
-</span><span class='line'>    --with-sqlite3-lib
-</span><span class='line'>    --without-sqlite3-lib<span class="o">=</span><span class="k">${</span><span class="nv">sqlite3</span><span class="p">-dir</span><span class="k">}</span>/lib
-</span><span class='line'>    --enable-local
-</span><span class='line'>    --disable-local
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>Gem files will remain installed in /home/helio/.bundler/tmp/23089/gems/sqlite3-1.3.8 <span class="k">for </span>inspection.
-</span><span class='line'>Results logged to /home/helio/.bundler/tmp/23089/gems/sqlite3-1.3.8/ext/sqlite3/gem_make.out
-</span><span class='line'>
-</span><span class='line'>An error occurred <span class="k">while </span>installing sqlite3 <span class="o">(</span>1.3.8<span class="o">)</span>, and Bundler
-</span><span class='line'>cannot <span class="k">continue</span>.
-</span><span class='line'>Make sure that <span class="sb">`</span>gem install sqlite3 -v <span class="s1">&#39;1.3.8&#39;</span><span class="sb">`</span> succeeds before
-</span><span class='line'>bundling.
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>というエラーが出たのは</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo aptitude install sqlite3 libsqlite3-dev
-</span><span class='line'>bundle install --path vendor/bundle
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>で出なくなった。インストールパスの指定が無ければpathオプションは要らない。</p>
-
-<p>bundle exec rails serverで</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>autodetect<span class="err">&#39;</span>: Could not find a JavaScript runtime. See https://github.com/sstephenson/execjs <span class="k">for </span>a list of available runtimes. <span class="o">(</span>ExecJS::RuntimeUnavailable<span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>というエラーが出て、サーバを起動出来なかった。これは
-プロジェクトに入っているGemfileに書いてあるtherubyracerに関する行をコメントアウトして</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>bundle install --path vendor/bundle
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とすれば起動出来るようになった。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[svn memo]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/02/11/svn-memo/"/>
-    <updated>2014-02-11T11:53:32+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/02/11/svn-memo</id>
-    <content type="html"><![CDATA[<p>svn使っててはまることが結構あるのでメモ</p>
-
-<h2>ubuntuでsvnコマンドすると認証失敗する場合</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>Password <span class="k">for</span> ‘<span class="o">(</span>null<span class="o">)</span>’ GNOME keyring:
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>というメッセージが表示される場合、gnome-keyringというやつが邪魔をしているらしい。ログイン情報を削除すれば解決。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>rm ~/.gnome2/keyrings/login.keyring
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でいける。</p>
 ]]></content>
   </entry>
   
