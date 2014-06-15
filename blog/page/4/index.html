@@ -642,6 +642,17 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
 </pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>psql db_name -c <span class="s2">&quot;SQL&quot;</span> -A -F, -t &gt; filename
 </span></code></pre></td></tr></table></div></figure>
 
+
+<h2>IN句に複数条件を指定</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">hoge</span> <span class="k">where</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="k">from</span> <span class="n">fuga</span> <span class="k">where</span> <span class="n">hage</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">hoge</span> <span class="k">where</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="k">in</span> <span class="p">((</span><span class="s1">&#39;fuga&#39;</span><span class="p">,</span><span class="s1">&#39;hage&#39;</span><span class="p">),(</span><span class="s1">&#39;abc&#39;</span><span class="p">,</span><span class="s1">&#39;def&#39;</span><span class="p">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいに指定すればおk</p>
 </div>
   
   

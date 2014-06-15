@@ -4,7 +4,7 @@
   <title><![CDATA[Category: postgresql | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/postgresql/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-06-09T21:54:13+09:00</updated>
+  <updated>2014-06-15T21:51:43+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -144,6 +144,15 @@ copy tablename (column1,column2) from '/path/to/csv' with csv;
 <p><code>sh
 $ psql db_name -c "SQL" -A -F, -t &gt; filename
 </code></p>
+
+<h2>IN句に複数条件を指定</h2>
+
+<p><code>sql
+select * from hoge where (a,b) in (select a,b from fuga where hage&gt;1);
+select * from hoge where (a,b) in (('fuga','hage'),('abc','def'));
+</code></p>
+
+<p>みたいに指定すればおk</p>
 ]]></content>
   </entry>
   
