@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: なでしこ2 - shigeponが関心のある技術情報など</title>
+  <title>Ubuntu 12.04でDjangoを始める - shigeponが関心のある技術情報など</title>
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Category: なでしこ2">
+  <meta name="description" content="ヘタレなことにRailsに挫折してしまったので、Railsと同様良く名前が出てくるDjangoを試してみることにする。Djangoを使うにはpythonとかpipとか入れておくといいらしい。 どれもとりあえずaptitudeでインストール出来るので、おもむろに 1
+$ sudo aptitude &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.shigepon.comblog/categories/nadesiko2">
+  <link rel="canonical" href="http://blog.shigepon.com/blog/2014/06/18/start-django-on-ubuntu-12-dot-04">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -78,35 +79,109 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: なでしこ2</h1>
+    
+      <h1 class="entry-title">Ubuntu 12.04でDjangoを始める</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-18T08:06:49+09:00" pubdate data-updated="true">Jun 18<span>th</span>, 2014</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>ヘタレなことにRailsに挫折してしまったので、Railsと同様良く名前が出てくるDjangoを試してみることにする。Djangoを使うにはpythonとかpipとか入れておくといいらしい。</p>
 
-  
-  <h2>2014</h2>
+<p>どれもとりあえずaptitudeでインストール出来るので、おもむろに</p>
 
-<article>
-  
-<h1><a href="/blog/2014/01/29/nadesiko2-make-plugin/">なでしこ2のプラグインを作る方法</a></h1>
-<time datetime="2014-01-29T09:49:17+09:00" pubdate><span class='month'>Jan</span> <span class='day'>29</span> <span class='year'>2014</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/c-number/'>C#</a>, <a class='category' href='/blog/categories/nadesiko/'>なでしこ</a>, <a class='category' href='/blog/categories/nadesiko2/'>なでしこ2</a></span>
-</footer>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install python,python-pip
+</span></code></pre></td></tr></table></div></figure>
 
 
-</article>
+<p>でインストール。python2.7がインストール出来た。一応aptitude updateくらいしておいたら良いと思う。</p>
 
+<p>んで、Djangoはpipでインストール</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo pip install <span class="nv">Django</span><span class="o">==</span>1.6.5
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でDjango 1.6.5をインストール出来た。python、pipはもうちょっと違うインストール方法があると思うけど、今回はこうしてみた。簡単。</p>
+
+<p>で、次はチュートリアル進めるんだろうけど、チュートリアルは結構内容が多そうなので、必要な部分だけ取り出しながらやってみる。「データベースにすでに登録してあるデータをDjangoとBootstrapでWebサービスっぽく表示する」という方針で必要な箇所を進めていく。なのでadminとかそこらへんはすっ飛ばす予定。</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">shigepon</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-18T08:06:49+09:00" pubdate data-updated="true">Jun 18<span>th</span>, 2014</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2014/06/18/start-django-on-ubuntu-12-dot-04/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2014/06/18/start-django-on-ubuntu-12-dot-04/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    
+      <div class="related_posts">
+	<h1>Related Posts</h1>
+	<ul>
+		
+	</ul>
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/06/08/ubuntu-aptitude-error-in-initramfs-tools/" title="Previous Post: ubuntuでaptitude installした時にinitramfs-toolsのエラーが出た">&laquo; ubuntuでaptitude installした時にinitramfs-toolsのエラーが出た</a>
+      
+      
+    </p>
+  </footer>
 </article>
 
 </div>

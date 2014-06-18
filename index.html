@@ -9,25 +9,8 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="virtualboxをインストールしようとしたら 1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-以下のパッケージの処理中にエラーが発生しました: initramfs-tools
-E: Sub-process /usr/bin/dpkg returned an &hellip;">
+  <meta name="description" content="ヘタレなことにRailsに挫折してしまったので、Railsと同様良く名前が出てくるDjangoを試してみることにする。Djangoを使うにはpythonとかpipとか入れておくといいらしい。 どれもとりあえずaptitudeでインストール出来るので、おもむろに 1
+$ sudo aptitude &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -97,6 +80,62 @@ E: Sub-process /usr/bin/dpkg returned an &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/18/start-django-on-ubuntu-12-dot-04/">Ubuntu 12.04でDjangoを始める</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-18T08:06:49+09:00" pubdate data-updated="true">Jun 18<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ヘタレなことにRailsに挫折してしまったので、Railsと同様良く名前が出てくるDjangoを試してみることにする。Djangoを使うにはpythonとかpipとか入れておくといいらしい。</p>
+
+<p>どれもとりあえずaptitudeでインストール出来るので、おもむろに</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install python,python-pip
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でインストール。python2.7がインストール出来た。一応aptitude updateくらいしておいたら良いと思う。</p>
+
+<p>んで、Djangoはpipでインストール</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo pip install <span class="nv">Django</span><span class="o">==</span>1.6.5
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でDjango 1.6.5をインストール出来た。python、pipはもうちょっと違うインストール方法があると思うけど、今回はこうしてみた。簡単。</p>
+
+<p>で、次はチュートリアル進めるんだろうけど、チュートリアルは結構内容が多そうなので、必要な部分だけ取り出しながらやってみる。「データベースにすでに登録してあるデータをDjangoとBootstrapでWebサービスっぽく表示する」という方針で必要な箇所を進めていく。なのでadminとかそこらへんはすっ飛ばす予定。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -864,144 +903,6 @@ php-buildのインストールは下のような感じ</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/05/02/use-nginxand-unicorn-on-sakura-vps/">Nginx,unicornをさくらvpsにインストールしてrailsアプリを手動でデプロイしてみる</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-02T15:10:23+09:00" pubdate data-updated="true">May 2<span>nd</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>さくらvpsのUbuntu12.04にnginxとunicornをインストールしてローカル環境に作ったRailsアプリを手動でアップロードして表示させてみた。何となくユニコーンって名前が好きなので、unicornを使うことにした。</p>
-
-<h2>nginxインストール</h2>
-
-<p>nginxは本当は手動でインストールするのがいいんだろうけど、面倒なので</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install nginx
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でインストール</p>
-
-<h2>unicornインストール</h2>
-
-<p>rubyとかbundlerとかが必要なので、無い場合は<a href="http://blog.shigepon.com/blog/2014/02/26/rails-startup/">Ruby on Railsを入れてみた</a>に書いた通りにインストール。unicornはGemfileに</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>gem <span class="s2">&quot;unicorn&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と追記して</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle install -path vendor/bundle
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でインストール出来る。要らないかもしれないけどお約束のようにインストール後はrbenv rehashしておく。</p>
-
-<h2>nginxの設定</h2>
-
-<p>設定ファイルは最低限これくらい書いておけばよさげ</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>upstream unicorn-unix-domain-socket <span class="o">{</span>
-</span><span class='line'>        server unix:/var/run/unicorn/unicorn_<span class="o">[</span>app_name<span class="o">]</span>.sock <span class="nv">fail_timeout</span><span class="o">=</span>0;
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>upstream unicorn-tcp <span class="o">{</span>
-</span><span class='line'>        server 127.0.0.1:8080;
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>server <span class="o">{</span>
-</span><span class='line'>        listen 80;
-</span><span class='line'>        server_name http://hoge;
-</span><span class='line'>
-</span><span class='line'>        root /path/to/app_root/public;
-</span><span class='line'>
-</span><span class='line'>        access_log  /var/log/nginx/access.log;
-</span><span class='line'>        error_log /var/log/nginx/error.log;
-</span><span class='line'>
-</span><span class='line'>        location / <span class="o">{</span>
-</span><span class='line'>                proxy_pass http://unicorn-tcp;
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>/var/run/unicornディレクトリは前もって作っておく。/tmpとかでも良さげなんだけど、どうなんだろう？</p>
-
-<h2>railsアプリのアップロード</h2>
-
-<p>適当にアップロード。rsyncで適当にやった。</p>
-
-<h2>unicorn起動</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle <span class="nb">exec </span>unicorn_rails -D
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>-Dはデーモンとして起動。configファイルを指定する場合は、-c path/to/config.rbを指定する。</p>
-
-<h2>nginx起動</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>service nginx start
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>以上でrailsアプリが見れるようになる。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1027,6 +928,10 @@ php-buildのインストールは下のような感じ</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/06/18/start-django-on-ubuntu-12-dot-04/">Ubuntu 12.04でDjangoを始める</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/06/08/ubuntu-aptitude-error-in-initramfs-tools/">Ubuntuでaptitude Installした時にinitramfs-toolsのエラーが出た</a>
       </li>
     
@@ -1040,10 +945,6 @@ php-buildのインストールは下のような感じ</p>
     
       <li class="post">
         <a href="/blog/2014/05/29/rails-memo/">Rails Memo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/28/use-prepared-statement-in-find-by-sql/">Find by sqlでプリペアードステートメントを使う</a>
       </li>
     
   </ul>
