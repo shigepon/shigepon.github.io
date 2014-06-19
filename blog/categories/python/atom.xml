@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-06-19T17:41:38+09:00</updated>
+  <updated>2014-06-19T17:45:22+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -27,9 +27,9 @@ $ django-admin.py startproject myproject
 <p>とすると、カレントフォルダにmyprojectフォルダが出来る。ファイル構成を見ると、</p>
 
 <p>[[[
-myproject/
+myproject\/
   manage.py
-  myproject/</p>
+  myproject\/</p>
 
 <pre><code>__init__.py
 settings.py
@@ -54,8 +54,7 @@ DATABASES = {</p>
 }
 </code></pre>
 
-<p>}
-]]]</p>
+<p>]]]</p>
 
 <p>あと、psycopg2をインストールしていないので</p>
 
@@ -105,7 +104,7 @@ $ python manage.py startapp bocho
 <p>を実行するとmyappフォルダが出来てその中に</p>
 
 <p>[[[
-bocho/
+bocho\/
   <strong>init</strong>.py
   admin.py
   models.py
