@@ -115,91 +115,127 @@ $ django-admin.py startproject myproject とすると、 &hellip;">
 
 <p>とすると、カレントフォルダにmyprojectフォルダが出来る。ファイル構成を見ると、</p>
 
-<p>[[[
-myproject\/
-  manage.py
-  myproject\/</p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>myproject/
+</span><span class='line'>  manage.py
+</span><span class='line'>  myproject/
+</span><span class='line'>    __init__.py
+</span><span class='line'>    settings.py
+</span><span class='line'>    urls.py
+</span><span class='line'>    wsgi.py
+</span></code></pre></td></tr></table></div></figure>
 
-<pre><code>__init__.py
-settings.py
-urls.py
-wsgi.py
-</code></pre>
-
-<p>]]]</p>
 
 <p>となっている。myprojectフォルダ内のファイルに共通設定を書くという感じになりそうだ。PostgreSQLに接続するので、settings.pyを修正</p>
 
-<p>[[[py
-DATABASES = {</p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="s">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>  <span class="s">&#39;ENGINE&#39;</span><span class="p">:</span> <span class="s">&#39;django.db.backends.postgresql_psycopg2&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&#39;NAME&#39;</span><span class="p">:</span> <span class="s">&#39;hoge&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&#39;USER&#39;</span><span class="p">:</span> <span class="s">&#39;username&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&#39;PASSWORD&#39;</span><span class="p">:</span> <span class="s">&#39;******&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&#39;HOST&#39;</span><span class="p">:</span> <span class="s">&#39;hostname or ip&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&#39;PORT&#39;</span><span class="p">:</span> <span class="s">&#39;5432&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<pre><code>'default': {
-'ENGINE': 'django.db.backends.postgresql_psycopg2',
-'NAME': 'hoge',
-'USER': 'username',
-'PASSWORD': '******',
-'HOST': 'hostname or ip',
-'PORT': '5432',
-}
-</code></pre>
-
-<p>]]]</p>
 
 <p>あと、psycopg2をインストールしていないので</p>
 
-<p>[[[sh
-$ sudo pip install psycopg2
-]]]</p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo pip install psycopg2
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>とやって</p>
 
-<p>[[[sh
-$ cd myproject
-$ python manage.py syncdb
-]]]</p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>myproject
+</span><span class='line'><span class="nv">$ </span>python manage.py syncdb
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>とやると、hogeに色々テーブルが出来る。INSTALLED_APPSに書いてあるアプリに関するテーブルみたい。初期状態では以下のアプリが入るみたい。</p>
 
-<p>[[[
-django.contrib.admin &ndash; 管理用サイト
-django.contrib.auth &ndash; 認証
-django.contrib.contenttypes &ndash; ??
-django.contrib.sessions &ndash; セッション管理
-django.contrib.messages &ndash; ??
-django.contrib.staticfile &ndash; 静的ファイル用アプリ
-]]]</p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>django.contrib.admin - 管理用サイト
+</span><span class='line'>django.contrib.auth - 認証
+</span><span class='line'>django.contrib.contenttypes - ??
+</span><span class='line'>django.contrib.sessions - セッション管理
+</span><span class='line'>django.contrib.messages - ??
+</span><span class='line'>django.contrib.staticfile - 静的ファイル用アプリ
+</span></code></pre></td></tr></table></div></figure>
 
-<p>テーブルは以下のものが作られた
-[[[
-auth_group
-auth_group_permissions
-auth_permission
-auth_user
-auth_user_groups
-auth_user_user_permissions
-django_admin_log
-django_content_type
-django_session
-]]]</p>
+
+<p>テーブルは以下のものが作られた</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>auth_group
+</span><span class='line'>auth_group_permissions
+</span><span class='line'>auth_permission
+</span><span class='line'>auth_user
+</span><span class='line'>auth_user_groups
+</span><span class='line'>auth_user_user_permissions
+</span><span class='line'>django_admin_log
+</span><span class='line'>django_content_type
+</span><span class='line'>django_session
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>あと上のコマンド実行時に、管理者ユーザー作るかどうか聞かれる。とりあえず作った。</p>
 
 <p>DB設定済ませたので、おもむろにアプリ作成。Railsの時と同様に傍聴情報の出力をやってみるか。</p>
 
-<p>[[[sh
-$ python manage.py startapp bocho
-]]]</p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py startapp bocho
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>を実行するとmyappフォルダが出来てその中に</p>
 
-<p>[[[
-bocho\/
-  <strong>init</strong>.py
-  admin.py
-  models.py
-  tests.py
-  views.py
-]]]</p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>bocho<span class="se">\/</span>
+</span><span class='line'>  __init__.py
+</span><span class='line'>  admin.py
+</span><span class='line'>  models.py
+</span><span class='line'>  tests.py
+</span><span class='line'>  views.py
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>が出来た。とりあえずここまで。</p>
 </div>

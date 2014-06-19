@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Django | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/django/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-06-19T17:45:22+09:00</updated>
+  <updated>2014-06-19T17:49:02+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -26,10 +26,10 @@ $ django-admin.py startproject myproject
 
 <p>とすると、カレントフォルダにmyprojectフォルダが出来る。ファイル構成を見ると、</p>
 
-<p>[[[
-myproject\/
+<p>```
+myproject/
   manage.py
-  myproject\/</p>
+  myproject/</p>
 
 <pre><code>__init__.py
 settings.py
@@ -37,11 +37,11 @@ urls.py
 wsgi.py
 </code></pre>
 
-<p>]]]</p>
+<p>```</p>
 
 <p>となっている。myprojectフォルダ内のファイルに共通設定を書くという感じになりそうだ。PostgreSQLに接続するので、settings.pyを修正</p>
 
-<p>[[[py
+<p>```py
 DATABASES = {</p>
 
 <pre><code>'default': {
@@ -54,34 +54,34 @@ DATABASES = {</p>
 }
 </code></pre>
 
-<p>]]]</p>
+<p>```</p>
 
 <p>あと、psycopg2をインストールしていないので</p>
 
-<p>[[[sh
+<p><code>sh
 $ sudo pip install psycopg2
-]]]</p>
+</code></p>
 
 <p>とやって</p>
 
-<p>[[[sh
+<p><code>sh
 $ cd myproject
 $ python manage.py syncdb
-]]]</p>
+</code></p>
 
 <p>とやると、hogeに色々テーブルが出来る。INSTALLED_APPSに書いてあるアプリに関するテーブルみたい。初期状態では以下のアプリが入るみたい。</p>
 
-<p>[[[
-django.contrib.admin &ndash; 管理用サイト
-django.contrib.auth &ndash; 認証
-django.contrib.contenttypes &ndash; ??
-django.contrib.sessions &ndash; セッション管理
-django.contrib.messages &ndash; ??
-django.contrib.staticfile &ndash; 静的ファイル用アプリ
-]]]</p>
+<p><code>
+django.contrib.admin - 管理用サイト
+django.contrib.auth - 認証
+django.contrib.contenttypes - ??
+django.contrib.sessions - セッション管理
+django.contrib.messages - ??
+django.contrib.staticfile - 静的ファイル用アプリ
+</code></p>
 
 <p>テーブルは以下のものが作られた
-[[[
+<code>
 auth_group
 auth_group_permissions
 auth_permission
@@ -91,26 +91,26 @@ auth_user_user_permissions
 django_admin_log
 django_content_type
 django_session
-]]]</p>
+</code></p>
 
 <p>あと上のコマンド実行時に、管理者ユーザー作るかどうか聞かれる。とりあえず作った。</p>
 
 <p>DB設定済ませたので、おもむろにアプリ作成。Railsの時と同様に傍聴情報の出力をやってみるか。</p>
 
-<p>[[[sh
+<p><code>sh
 $ python manage.py startapp bocho
-]]]</p>
+</code></p>
 
 <p>を実行するとmyappフォルダが出来てその中に</p>
 
-<p>[[[
+<p><code>
 bocho\/
-  <strong>init</strong>.py
+  __init__.py
   admin.py
   models.py
   tests.py
   views.py
-]]]</p>
+</code></p>
 
 <p>が出来た。とりあえずここまで。</p>
 ]]></content>
