@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-06-18T12:45:57+09:00</updated>
+  <updated>2014-06-19T17:41:38+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,163 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntu12.04でjenkinsのインストールと設定]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/06/18/jenkins-setting/"/>
+    <updated>2014-06-18T15:08:25+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/06/18/jenkins-setting</id>
+    <content type="html"><![CDATA[<p><a href="http://jnst.hateblo.jp/entry/2013/10/03/123012">Ubuntu 12.04 LTS に Jenkins をインストール &ndash; MELODIC-X</a>を参考にして設定した。
+Jenkins本体でアップグレード可能らしいので、aptitudeでインストール</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install jenkins
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Nginx設定</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>location /jenkins <span class="o">{</span>
+</span><span class='line'>  proxy_pass http://127.0.0.1:8080;
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で、nginxは起動してたので再読み込み</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo service nginx reload
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Jenkins設定ファイル修正</h2>
+
+<p>jenkinsの設定ファイルは/etc/default/jenkinsにあるので編集
+最下行の起動パラメーターに</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>--prefix<span class="o">=</span>/jenkins
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>を追加。jenkins再起動</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo service jenkins restart
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以上</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずDjangoプロジェクトとアプリを作ってみた]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/06/18/start-django-project/"/>
+    <updated>2014-06-18T12:49:29+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/06/18/start-django-project</id>
+    <content type="html"><![CDATA[<p>Djangoはプロジェクトを作っておいて、アプリ毎に細かく機能を分けて、プロジェクトで統合するみたいな形式を取るみたい。なのでまずはDjangoプロジェクトを作成</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>django-admin.py startproject myproject
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とすると、カレントフォルダにmyprojectフォルダが出来る。ファイル構成を見ると、</p>
+
+<p>[[[
+myproject/
+  manage.py
+  myproject/</p>
+
+<pre><code>__init__.py
+settings.py
+urls.py
+wsgi.py
+</code></pre>
+
+<p>]]]</p>
+
+<p>となっている。myprojectフォルダ内のファイルに共通設定を書くという感じになりそうだ。PostgreSQLに接続するので、settings.pyを修正</p>
+
+<p>[[[py
+DATABASES = {</p>
+
+<pre><code>'default': {
+'ENGINE': 'django.db.backends.postgresql_psycopg2',
+'NAME': 'hoge',
+'USER': 'username',
+'PASSWORD': '******',
+'HOST': 'hostname or ip',
+'PORT': '5432',
+}
+</code></pre>
+
+<p>}
+]]]</p>
+
+<p>あと、psycopg2をインストールしていないので</p>
+
+<p>[[[sh
+$ sudo pip install psycopg2
+]]]</p>
+
+<p>とやって</p>
+
+<p>[[[sh
+$ cd myproject
+$ python manage.py syncdb
+]]]</p>
+
+<p>とやると、hogeに色々テーブルが出来る。INSTALLED_APPSに書いてあるアプリに関するテーブルみたい。初期状態では以下のアプリが入るみたい。</p>
+
+<p>[[[
+django.contrib.admin &ndash; 管理用サイト
+django.contrib.auth &ndash; 認証
+django.contrib.contenttypes &ndash; ??
+django.contrib.sessions &ndash; セッション管理
+django.contrib.messages &ndash; ??
+django.contrib.staticfile &ndash; 静的ファイル用アプリ
+]]]</p>
+
+<p>テーブルは以下のものが作られた
+[[[
+auth_group
+auth_group_permissions
+auth_permission
+auth_user
+auth_user_groups
+auth_user_user_permissions
+django_admin_log
+django_content_type
+django_session
+]]]</p>
+
+<p>あと上のコマンド実行時に、管理者ユーザー作るかどうか聞かれる。とりあえず作った。</p>
+
+<p>DB設定済ませたので、おもむろにアプリ作成。Railsの時と同様に傍聴情報の出力をやってみるか。</p>
+
+<p>[[[sh
+$ python manage.py startapp bocho
+]]]</p>
+
+<p>を実行するとmyappフォルダが出来てその中に</p>
+
+<p>[[[
+bocho/
+  <strong>init</strong>.py
+  admin.py
+  models.py
+  tests.py
+  views.py
+]]]</p>
+
+<p>が出来た。とりあえずここまで。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Ubuntu 12.04でDjangoを始める]]></title>
@@ -1284,193 +1441,6 @@ id=1,date=2014/03/01 10:00:00,name=ほげ
 
 
 <p>と表示されたりする。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずRailsアプリを作ってみた]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/03/10/a-way-of-creating-rails-application/"/>
-    <updated>2014-03-10T18:10:41+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/03/10/a-way-of-creating-rails-application</id>
-    <content type="html"><![CDATA[<p>参考にした記事URL一覧</p>
-
-<ul>
-<li><a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a></li>
-<li><a href="http://www.oiax.jp/rails3book/setup_postgresql.html">データベースとの接続（PostgreSQL編） &ndash; Ruby on Rails with OIAX</a></li>
-<li><a href="http://qiita.com/stkn_bb/items/72d06c149d3e6f315f8c">[Rails]既存のMySQLテーブルに接続する方法 &ndash; Qiita</a></li>
-<li><a href="http://ubiqlog.com/archives/8749">Ruby on Rails 4.0正式リリースとBootstrapの正しい設定法 | ユービックログ研究所</a></li>
-<li><a href="http://railscasts.com/episodes/328-twitter-bootstrap-basics?language=ja&amp;view=asciicast">#328 Twitter Bootstrap Basics &ndash; RailsCasts</a></li>
-<li><a href="http://qiita.com/somewhatgood@github/items/9890e75b4c195d47715a">Rails &ndash; link_to の引数と展開の違いまとめ &ndash; Qiita</a></li>
-</ul>
-
-
-<p>基本的なところは<a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a>をなぞってみる。
-ただし、PostgreSQLの既存テーブルを使い、テンプレートにBootstrapを使うので、途中から色々やることが変わっている。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>rails new bocho
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><a href="">Ruby on Railsを入れてみた</a>に注意点であげたようにGemfileからtherubyracerに関する行をコメントアウトしてbundle install
-これをしないとrails g controllerコマンドで</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>autodetect<span class="s1">&#39;: Could not find a Javascript runtime. ...&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>というエラーが出た</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>rails g controller events index show
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と入力してビューとコントローラーを作った。これの意味はeventsというコントローラーとindex、showというビューを作る。ビューはスペース区切りで複数書けるみたい。indexはデータ一覧、showは個別データの表示を意味している
-ファイルとしては</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>app/controllers/events_controller.rb
-</span><span class='line'>app/views/events/index.html.erb
-</span><span class='line'>app/views/events/show.html.erb
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>が出来る。events_controller.rbにはindexとshowメソッドが入っている</p>
-
-<h3>確認</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>rails s
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でサーバを起動させて、[<a href="http://0.0.0.0:3000/events/index">http://0.0.0.0:3000/events/index</a>]と[<a href="http://0.0.0.0:3000/events/show">http://0.0.0.0:3000/events/show</a>]を確認</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>Events##index
-</span><span class='line'>Find me in app/view/events/index.html.erb
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいなメッセージが出てたらおk</p>
-
-<h3>コントローラー、ビューを修正</h3>
-
-<p>ビューって言っていいのかテンプレートなのか良くわからないけどapp/views/events/show.html.erbを修正</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='erb'><span class='line'><span class="x">&lt;h1&gt;</span><span class="cp">&lt;%=</span> <span class="vi">@event</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span> <span class="cp">%&gt;</span><span class="x">&lt;/h1&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これで[<a href="http://0.0.0.0:3000/events/show">http://0.0.0.0:3000/events/show</a>]を確認するとエラーが表示される。</p>
-
-<p>@eventが登録されてないので、コントローラーで登録する</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'>  <span class="k">def</span> <span class="nf">show</span>
-</span><span class='line'>    <span class="vi">@event</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'>          <span class="vi">@event</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;hoge&#39;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これでさっきのURLにアクセスすると</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;h1&gt;</span>hoge<span class="nt">&lt;/h1&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と表示される。なるほど@変数名に値を入れたらテンプレでアクセス出来るようになるのね。</p>
-
-<h3>URLにパラメーターを入れる</h3>
-
-<p>テーブルのidが1のデータを[<a href="http://0.0.0.0:3000/events/show/1">http://0.0.0.0:3000/events/show/1</a>]で表示出来るように考える。
-そのためにはconfig/routes.rbを</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'>  <span class="n">get</span> <span class="s2">&quot;events/show/&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'>  <span class="n">get</span> <span class="s2">&quot;events/show/:eventid&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;events#show&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こうすると上のURLにアクセスするとevents_controller.rbのshowメソッド内でparams[:eventid]に1が入る
-events_controller.rbを次のように変えると</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'>  <span class="k">def</span> <span class="nf">show</span>
-</span><span class='line'>    <span class="vi">@event</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'>          <span class="vi">@event</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span> <span class="o">=</span> <span class="n">params</span><span class="o">[</span><span class="ss">:eventid</span><span class="o">]</span>
-</span><span class='line'>  <span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>[<a href="http://0.0.0.0:3000/events/show/1">http://0.0.0.0:3000/events/show/1</a>]にアクセスすると</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;h1&gt;</span>1<span class="nt">&lt;/h1&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と表示されるようになる。（あくまでこういうコードはテスト用）
-とりあえずここまで</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Google Analyticsからbotアクセスを取り除く]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/03/09/how-to-block-bot-access-from-google-analytics/"/>
-    <updated>2014-03-09T21:53:40+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/03/09/how-to-block-bot-access-from-google-analytics</id>
-    <content type="html"><![CDATA[<p>参考ページ<a href="http://www.lunametrics.com/blog/2013/09/05/filter-bots-google-analytics/#sr=d&amp;m=n&amp;cp=d&amp;ct=-tmc&amp;ts=1394369739">How to Block Bots from Your Google Analytics</a></p>
-
-<p>ここ数日Google Analyticsにアメリカからリファラ無し直帰率100%近くのアクセスを大量に発見。
-どう考えてもbotですどうも(ry
-本当はGoogle Analyticsに自動でフィルタして欲しいけど、どうもフィルタしてないので、自力でフィルタ設定しないといけないみたい。</p>
-
-<p>上のリンクを参考に設定してみる</p>
-
-<ul>
-<li>アナリティクス設定→ ビュー→フィルタと移動</li>
-<li>「新しいボタン」をクリック</li>
-</ul>
-
-
-<h3>設定は以下の通り</h3>
-
-<ul>
-<li>新しいフィルタを作成</li>
-<li>フィルタ名：適当（Smart Bot 除外）とか？</li>
-<li>フィルタの種類：カスタムフィルタ</li>
-<li>除外</li>
-<li>フィルタフィールド：ISPドメインからのトラフィック</li>
-<li>フィルタパターン：<sup>microsoft corp(oration)?|inktomi corporation|yahoo! inc.|google inc.|stumbleupon inc.</sup>$|gomez</li>
-<li><p>大文字小文字を区別：いいえ</p></li>
-<li><p>「保存」をクリック</p></li>
-</ul>
-
-
-<p>これでフィルタできるけど、フィルタをかける以前の情報には反映しない。
-参考ページに設定テンプレートがあったのでここでもリンクしておく
-<a href="https://www.google.com/analytics/web/template?uid=svscm2YdTe6s0yJeGHQM4Q">Smart Botを除外するテンプレート</a></p>
 ]]></content>
   </entry>
   

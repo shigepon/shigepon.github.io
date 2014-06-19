@@ -9,7 +9,10 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="アクセスログのIPアドレスを集計してみる 参考：Linux サーバーでお手軽にログの集計：こっそりと。 &ndash; livedoor Blog（ブログ） Google Analyticsでリファラ無しの変なアクセスが増えたので、アクセスログからIPを集計してみた。 &hellip;">
+  <meta name="description" content="参考にした記事URL一覧 小学生でもわかるRuby on Rails入門 | OpenBook
+データベースとの接続（PostgreSQL編） &ndash; Ruby on Rails with OIAX
+[Rails]既存のMySQLテーブルに接続する方法 &ndash; Qiita
+Ruby &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +82,247 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/10/a-way-of-creating-rails-application/">Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずRailsアプリを作ってみた</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-10T18:10:41+09:00" pubdate data-updated="true">Mar 10<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>参考にした記事URL一覧</p>
+
+<ul>
+<li><a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a></li>
+<li><a href="http://www.oiax.jp/rails3book/setup_postgresql.html">データベースとの接続（PostgreSQL編） &ndash; Ruby on Rails with OIAX</a></li>
+<li><a href="http://qiita.com/stkn_bb/items/72d06c149d3e6f315f8c">[Rails]既存のMySQLテーブルに接続する方法 &ndash; Qiita</a></li>
+<li><a href="http://ubiqlog.com/archives/8749">Ruby on Rails 4.0正式リリースとBootstrapの正しい設定法 | ユービックログ研究所</a></li>
+<li><a href="http://railscasts.com/episodes/328-twitter-bootstrap-basics?language=ja&amp;view=asciicast">#328 Twitter Bootstrap Basics &ndash; RailsCasts</a></li>
+<li><a href="http://qiita.com/somewhatgood@github/items/9890e75b4c195d47715a">Rails &ndash; link_to の引数と展開の違いまとめ &ndash; Qiita</a></li>
+</ul>
+
+
+<p>基本的なところは<a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a>をなぞってみる。
+ただし、PostgreSQLの既存テーブルを使い、テンプレートにBootstrapを使うので、途中から色々やることが変わっている。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>rails new bocho
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><a href="">Ruby on Railsを入れてみた</a>に注意点であげたようにGemfileからtherubyracerに関する行をコメントアウトしてbundle install
+これをしないとrails g controllerコマンドで</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>autodetect<span class="s1">&#39;: Could not find a Javascript runtime. ...&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>というエラーが出た</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>rails g controller events index show
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と入力してビューとコントローラーを作った。これの意味はeventsというコントローラーとindex、showというビューを作る。ビューはスペース区切りで複数書けるみたい。indexはデータ一覧、showは個別データの表示を意味している
+ファイルとしては</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>app/controllers/events_controller.rb
+</span><span class='line'>app/views/events/index.html.erb
+</span><span class='line'>app/views/events/show.html.erb
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>が出来る。events_controller.rbにはindexとshowメソッドが入っている</p>
+
+<h3>確認</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>rails s
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でサーバを起動させて、[<a href="http://0.0.0.0:3000/events/index">http://0.0.0.0:3000/events/index</a>]と[<a href="http://0.0.0.0:3000/events/show">http://0.0.0.0:3000/events/show</a>]を確認</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Events##index
+</span><span class='line'>Find me in app/view/events/index.html.erb
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいなメッセージが出てたらおk</p>
+
+<h3>コントローラー、ビューを修正</h3>
+
+<p>ビューって言っていいのかテンプレートなのか良くわからないけどapp/views/events/show.html.erbを修正</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='erb'><span class='line'><span class="x">&lt;h1&gt;</span><span class="cp">&lt;%=</span> <span class="vi">@event</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span> <span class="cp">%&gt;</span><span class="x">&lt;/h1&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで[<a href="http://0.0.0.0:3000/events/show">http://0.0.0.0:3000/events/show</a>]を確認するとエラーが表示される。</p>
+
+<p>@eventが登録されてないので、コントローラーで登録する</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'>  <span class="k">def</span> <span class="nf">show</span>
+</span><span class='line'>    <span class="vi">@event</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>          <span class="vi">@event</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;hoge&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これでさっきのURLにアクセスすると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;h1&gt;</span>hoge<span class="nt">&lt;/h1&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と表示される。なるほど@変数名に値を入れたらテンプレでアクセス出来るようになるのね。</p>
+
+<h3>URLにパラメーターを入れる</h3>
+
+<p>テーブルのidが1のデータを[<a href="http://0.0.0.0:3000/events/show/1">http://0.0.0.0:3000/events/show/1</a>]で表示出来るように考える。
+そのためにはconfig/routes.rbを</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'>  <span class="n">get</span> <span class="s2">&quot;events/show/&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'>  <span class="n">get</span> <span class="s2">&quot;events/show/:eventid&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;events#show&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こうすると上のURLにアクセスするとevents_controller.rbのshowメソッド内でparams[:eventid]に1が入る
+events_controller.rbを次のように変えると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'>  <span class="k">def</span> <span class="nf">show</span>
+</span><span class='line'>    <span class="vi">@event</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>          <span class="vi">@event</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span> <span class="o">=</span> <span class="n">params</span><span class="o">[</span><span class="ss">:eventid</span><span class="o">]</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>[<a href="http://0.0.0.0:3000/events/show/1">http://0.0.0.0:3000/events/show/1</a>]にアクセスすると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;h1&gt;</span>1<span class="nt">&lt;/h1&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と表示されるようになる。（あくまでこういうコードはテスト用）
+とりあえずここまで</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/09/how-to-block-bot-access-from-google-analytics/">Google Analyticsからbotアクセスを取り除く</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-09T21:53:40+09:00" pubdate data-updated="true">Mar 9<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>参考ページ<a href="http://www.lunametrics.com/blog/2013/09/05/filter-bots-google-analytics/#sr=d&amp;m=n&amp;cp=d&amp;ct=-tmc&amp;ts=1394369739">How to Block Bots from Your Google Analytics</a></p>
+
+<p>ここ数日Google Analyticsにアメリカからリファラ無し直帰率100%近くのアクセスを大量に発見。
+どう考えてもbotですどうも(ry
+本当はGoogle Analyticsに自動でフィルタして欲しいけど、どうもフィルタしてないので、自力でフィルタ設定しないといけないみたい。</p>
+
+<p>上のリンクを参考に設定してみる</p>
+
+<ul>
+<li>アナリティクス設定→ ビュー→フィルタと移動</li>
+<li>「新しいボタン」をクリック</li>
+</ul>
+
+
+<h3>設定は以下の通り</h3>
+
+<ul>
+<li>新しいフィルタを作成</li>
+<li>フィルタ名：適当（Smart Bot 除外）とか？</li>
+<li>フィルタの種類：カスタムフィルタ</li>
+<li>除外</li>
+<li>フィルタフィールド：ISPドメインからのトラフィック</li>
+<li>フィルタパターン：<sup>microsoft corp(oration)?|inktomi corporation|yahoo! inc.|google inc.|stumbleupon inc.</sup>$|gomez</li>
+<li><p>大文字小文字を区別：いいえ</p></li>
+<li><p>「保存」をクリック</p></li>
+</ul>
+
+
+<p>これでフィルタできるけど、フィルタをかける以前の情報には反映しない。
+参考ページに設定テンプレートがあったのでここでもリンクしておく
+<a href="https://www.google.com/analytics/web/template?uid=svscm2YdTe6s0yJeGHQM4Q">Smart Botを除外するテンプレート</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1005,107 +1249,6 @@ base64した値が格納さています。
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/31/octpress-tips/">Octpress Tips</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-31T08:33:56+09:00" pubdate data-updated="true">Jan 31<span>st</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Octpressのインストール後に行ったカスタマイズをまとめておきます。</p>
-
-<h2>外部リンクを別ウィンドウで開く</h2>
-
-<p>下のコードを追加します</p>
-
-<figure class='code'><figcaption><span>:source/_inclides/custom/head.html</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="o">&lt;</span><span class="nx">script</span> <span class="nx">language</span><span class="o">=</span><span class="s2">&quot;JavaScript&quot;</span><span class="o">&gt;</span>
-</span><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>   <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;a[href^=&#39;http&#39;]:not([href*=&#39;&quot;</span> <span class="o">+</span> <span class="nx">location</span><span class="p">.</span><span class="nx">hostname</span> <span class="o">+</span> <span class="s2">&quot;&#39;])&quot;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;target&#39;</span><span class="p">,</span> <span class="s1">&#39;_blank&#39;</span><span class="p">);</span>
-</span><span class='line'><span class="p">})</span>
-</span><span class='line'><span class="o">&lt;</span><span class="err">/script&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>のようにJavascriptで対応します</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/30/nadesiko-make-exe/">なでしこで実行ファイルを作る時のメモ</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-30T09:22:46+09:00" pubdate data-updated="true">Jan 30<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><ul>
-<li>パックファイル作る時はメインになるファイルだけnadesiko.nakoというパック名にして、その他はファイル名自身をパック名とする</li>
-<li>データを埋め込む場合は、そのデータを呼び出す時にフルパスにしない。データが無いと言われる。</li>
-</ul>
-
-
-<p>何となくマニュアル見ても分かりにくかったのでメモ</p>
-
-<p>ついでにリンク</p>
-
-<p><a href="http://nadesi.com">なでしこ</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -1133,6 +1276,14 @@ base64した値が格納さています。
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/06/18/jenkins-setting/">Ubuntu12.04でjenkinsのインストールと設定</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/18/start-django-project/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずDjangoプロジェクトとアプリを作ってみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/06/18/start-django-on-ubuntu-12-dot-04/">Ubuntu 12.04でDjangoを始める</a>
       </li>
     
@@ -1144,14 +1295,6 @@ base64した値が格納さています。
         <a href="/blog/2014/06/07/build-php-with-phpenv/">Phpenvとphp-buildを使って適当なバージョンのphpをビルドする</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/06/06/difficult-to-use-rails/">Railsやりにくいから挫折しそうという話</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/29/rails-memo/">Rails Memo</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -1161,9 +1304,11 @@ base64した値が格納さています。
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (4)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C# (4)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C++ (3)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
-<li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (6)</a></li>
+<li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (7)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (1)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/web/'>Web (1)</a></li>
 <li class='category'><a href='/blog/categories/linux/'>linux (3)</a></li>

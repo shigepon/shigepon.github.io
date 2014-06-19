@@ -5,11 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>nginx,unicornをさくらvpsにインストールしてrailsアプリを手動でデプロイしてみる - shigeponが関心のある技術情報など</title>
+  <title>Ubuntu12.04でjenkinsのインストールと設定 - shigeponが関心のある技術情報など</title>
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="さくらvpsのUbuntu12.04にnginxとunicornをインストールしてローカル環境に作ったRailsアプリを手動でアップロードして表示させてみた。何となくユニコーンって名前が好きなので、unicornを使うことにした。 nginxインストール &hellip;">
+  <meta name="description" content="Ubuntu 12.04 LTS に Jenkins をインストール &ndash; MELODIC-Xを参考にして設定した。
+Jenkins本体でアップグレード可能らしいので、aptitudeでインストール 1
+$ sudo aptitude install jenkins Nginx設定 1 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +20,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.shigepon.com/blog/2014/05/02/use-nginxand-unicorn-on-sakura-vps">
+  <link rel="canonical" href="http://blog.shigepon.com/blog/2014/06/18/jenkins-setting">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -82,7 +84,7 @@
   
   <header>
     
-      <h1 class="entry-title">Nginx,unicornをさくらvpsにインストールしてrailsアプリを手動でデプロイしてみる</h1>
+      <h1 class="entry-title">Ubuntu12.04でjenkinsのインストールと設定</h1>
     
     
       <p class="meta">
@@ -98,116 +100,57 @@
   
 
 
-<time datetime="2014-05-02T15:10:23+09:00" pubdate data-updated="true">May 2<span>nd</span>, 2014</time>
+<time datetime="2014-06-18T15:08:25+09:00" pubdate data-updated="true">Jun 18<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>さくらvpsのUbuntu12.04にnginxとunicornをインストールしてローカル環境に作ったRailsアプリを手動でアップロードして表示させてみた。何となくユニコーンって名前が好きなので、unicornを使うことにした。</p>
-
-<h2>nginxインストール</h2>
-
-<p>nginxは本当は手動でインストールするのがいいんだろうけど、面倒なので</p>
+<div class="entry-content"><p><a href="http://jnst.hateblo.jp/entry/2013/10/03/123012">Ubuntu 12.04 LTS に Jenkins をインストール &ndash; MELODIC-X</a>を参考にして設定した。
+Jenkins本体でアップグレード可能らしいので、aptitudeでインストール</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install nginx
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install jenkins
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>でインストール</p>
-
-<h2>unicornインストール</h2>
-
-<p>rubyとかbundlerとかが必要なので、無い場合は<a href="http://blog.shigepon.com/blog/2014/02/26/rails-startup/">Ruby on Railsを入れてみた</a>に書いた通りにインストール。unicornはGemfileに</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>gem <span class="s2">&quot;unicorn&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と追記して</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle install -path vendor/bundle
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でインストール出来る。要らないかもしれないけどお約束のようにインストール後はrbenv rehashしておく。</p>
-
-<h2>nginxの設定</h2>
-
-<p>設定ファイルは最低限これくらい書いておけばよさげ</p>
+<h2>Nginx設定</h2>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>upstream unicorn-unix-domain-socket <span class="o">{</span>
-</span><span class='line'>        server unix:/var/run/unicorn/unicorn_<span class="o">[</span>app_name<span class="o">]</span>.sock <span class="nv">fail_timeout</span><span class="o">=</span>0;
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>upstream unicorn-tcp <span class="o">{</span>
-</span><span class='line'>        server 127.0.0.1:8080;
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>server <span class="o">{</span>
-</span><span class='line'>        listen 80;
-</span><span class='line'>        server_name http://hoge;
-</span><span class='line'>
-</span><span class='line'>        root /path/to/app_root/public;
-</span><span class='line'>
-</span><span class='line'>        access_log  /var/log/nginx/access.log;
-</span><span class='line'>        error_log /var/log/nginx/error.log;
-</span><span class='line'>
-</span><span class='line'>        location / <span class="o">{</span>
-</span><span class='line'>                proxy_pass http://unicorn-tcp;
-</span><span class='line'>        <span class="o">}</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>location /jenkins <span class="o">{</span>
+</span><span class='line'>  proxy_pass http://127.0.0.1:8080;
 </span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>/var/run/unicornディレクトリは前もって作っておく。/tmpとかでも良さげなんだけど、どうなんだろう？</p>
-
-<h2>railsアプリのアップロード</h2>
-
-<p>適当にアップロード。rsyncで適当にやった。</p>
-
-<h2>unicorn起動</h2>
+<p>で、nginxは起動してたので再読み込み</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle <span class="nb">exec </span>unicorn_rails -D
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo service nginx reload
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>-Dはデーモンとして起動。configファイルを指定する場合は、-c path/to/config.rbを指定する。</p>
+<h2>Jenkins設定ファイル修正</h2>
 
-<h2>nginx起動</h2>
+<p>jenkinsの設定ファイルは/etc/default/jenkinsにあるので編集
+最下行の起動パラメーターに</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>service nginx start
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>--prefix<span class="o">=</span>/jenkins
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>以上でrailsアプリが見れるようになる。</p>
+<p>を追加。jenkins再起動</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo service jenkins restart
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以上</p>
 </div>
 
 
@@ -230,21 +173,15 @@
   
 
 
-<time datetime="2014-05-02T15:10:23+09:00" pubdate data-updated="true">May 2<span>nd</span>, 2014</time>
+<time datetime="2014-06-18T15:08:25+09:00" pubdate data-updated="true">Jun 18<span>th</span>, 2014</time>
       
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/rails/'>Rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
-  
-</span>
 
 
     </p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2014/05/02/use-nginxand-unicorn-on-sakura-vps/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2014/05/02/use-nginxand-unicorn-on-sakura-vps/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2014/06/18/jenkins-setting/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2014/06/18/jenkins-setting/" >Tweet</a>
   
   
   
@@ -264,10 +201,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/04/09/git-memo/" title="Previous Post: git memo">&laquo; git memo</a>
+        <a class="basic-alignment left" href="/blog/2014/06/18/start-django-project/" title="Previous Post: Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずDjangoプロジェクトとアプリを作ってみた">&laquo; Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずDjangoプロジェクトとアプリを作ってみた</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/" title="Next Post: Capistrano3でbitbucketからデプロイしようとしたらハマった話">Capistrano3でbitbucketからデプロイしようとしたらハマった話 &raquo;</a>
       
     </p>
   </footer>
