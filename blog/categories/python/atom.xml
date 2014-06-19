@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-06-19T17:49:02+09:00</updated>
+  <updated>2014-06-19T17:49:44+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -104,7 +104,7 @@ $ python manage.py startapp bocho
 <p>を実行するとmyappフォルダが出来てその中に</p>
 
 <p><code>
-bocho\/
+bocho/
   __init__.py
   admin.py
   models.py
