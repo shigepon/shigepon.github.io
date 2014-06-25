@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-06-19T17:51:07+09:00</updated>
+  <updated>2014-06-25T22:21:43+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,224 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(2):Bootstrapを使ってみる]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/06/25/django-with-bootstrap/"/>
+    <updated>2014-06-25T21:41:23+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/06/25/django-with-bootstrap</id>
+    <content type="html"><![CDATA[<p>テンプレートにBootstrapを当てはめたいので、Bootstrap関連のパッケージを探してみた。ググってみて<a href="https://github.com/dyve/django-bootstrap-toolkit">django-bootstrap-toolkit</a>が良さそうかなと思ったので、使ってみた。</p>
+
+<p>インストール</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install django-bootstrap-toolkit
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>myproject/settings.pyのINSTALLED_APPSに以下を追加</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="s1">&#39;bootstrap-toolkit&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>テンプレートを書く</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>
+</span><span class='line'>{% load bootstrap_toolkit %}} #bootstrap-toolkitを使うページ全てに必要っぽい
+</span><span class='line'>...
+</span><span class='line'><span class="nt">&lt;head&gt;</span>
+</span><span class='line'>{% bootstrap_stylesheet_tag %}  #bootstrapのcssへのタグ(CDNから読み込み)
+</span><span class='line'>{% bootstrap_stylesheet_tag &quot;responsive %} #bootstrapのレスポンシブページ用タグ(CDNから読み込み)
+</span><span class='line'>{% bootstrap_javascript_tag %}  #bootstrapのjavascriptへのタグ(CDNから読み込み)
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;/head&gt;</span>
+</span><span class='line'>あとは普通にbootstrapのタグを書く
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じで最低限使える。フォームに関してはもっと色々出来るみたいだけど、まだやってない。パッケージ使ってみたけど、これだけなら普通にbootstrapのファイルを読み込めば済むんだけど、フォーム関連などフィルタやカスタムタグがあるみたい。便利そうなので、これを使うことにしよう。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[詳細ページを作る：DjangoでPostgreSQLとBootstrapを使ったアプリを作ってみた(2)]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/06/19/make-detail-page-using-django-2/"/>
+    <updated>2014-06-19T17:58:11+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/06/19/make-detail-page-using-django-2</id>
+    <content type="html"><![CDATA[<p>詳細ページを作って表示するには</p>
+
+<ul>
+<li>models.pyでモデルを作る</li>
+<li>urls.pyを作る</li>
+<li>views.pyでビューを作る</li>
+<li>テンプレを作る</li>
+<li>Webサーバーを立ち上げる</li>
+<li>アクセスして確認</li>
+</ul>
+
+
+<p>くらいの手順が必要。</p>
+
+<h2>models.pyでモデルを作る</h2>
+
+<p>とりあえずおもむろにmodels.pyを編集。Railsの時と同様にテーブル名にeventを使う</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># Create your models here.</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">Event</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span class='line'>  <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+</span><span class='line'>      <span class="n">db_table</span> <span class="o">=</span> <span class="s">&#39;event&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>コマンドとか無くて、ソースで定義するのは個人的に性に合っている。Railsではモデルを修正したい時に、db/migrate以下のファイルを修正したり、app/models以下のファイルを修正したりで、情報がまとまってなくて困ったけど、Djangoの場合、models.pyを修正すれば事足りるっぽい。Metaクラスでdb_tableってのにテーブル名を指定してやると、指定したテーブル名を使用出来る。指定しない場合、bocho_eventってテーブルにアクセスするっぽい。</p>
+
+<p>フィールドの種類として何が使えるかとかまだまだ勉強中だけど、CharFieldはとりあえず最大文字数(max_length)を指定する必要があることは分かった。指定したくない場合はTextField使えばいいのかな？</p>
+
+<h2>urls.pyを作る</h2>
+
+<p>Railsでのconfig/routes.rbに当たるのが、urls.py。myproject以下には自動で出来るけど、作ったアプリ（今回はbocho）以下には用意されないので、自分で作って編集する。urlのルーティングは、まずmyproject側で行って、その後、必要な場合にアプリ側のルーティングが行われる。events/show/1でid=1のデータを表示する場合、</p>
+
+<p>myproject/urls.pyは</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="n">url</span><span class="p">(</span><span class="s">r&#39;^events/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s">&#39;bocho.urls&#39;</span><span class="p">,</span><span class="n">namespace</span><span class="o">=</span><span class="s">&#39;bocho&#39;</span><span class="p">)),</span>
+</span><span class='line'><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と書いて、bocho/urls.pyを</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="n">url</span><span class="p">(</span><span class="s">r&#39;^show/(\d+)/$&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">detail</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;detail&quot;</span><span class="p">),</span>
+</span><span class='line'><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と書くと、良さげな感じがする。書き方は色々あると思うけど（myproject側をr&#8217;&lsquo;みたいにして、bocho側にパターンを全て書いておくとかなんとか）。正規表現の()内はメソッドにパラメータとして渡される。rhacoもそうなので取っ付きやすい。</p>
+
+<p>nameとかnamespaceはviews.pyやテンプレートなどでurlを生成する時に用いる。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="p">{</span><span class="o">%</span> <span class="n">url</span> <span class="s">&#39;bocho:detail&#39;</span> <span class="mi">1</span> <span class="o">%</span><span class="p">}</span> <span class="c">#テンプレート内</span>
+</span><span class='line'><span class="n">reverse</span><span class="p">(</span><span class="s">&#39;bocho:detail&#39;</span><span class="p">,</span><span class="n">args</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c">#views内</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Railsだと、こういうのどうしたら良いか分からなくて困った。</p>
+
+<h2>views.pyでビューを作る</h2>
+
+<p>ビューはbocho/views.pyを編集すればおk。詳細表示の場合こんな感じ</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="c"># coding: utf-8</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">bocho.models</span> <span class="kn">import</span> <span class="n">Event</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">detail</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="n">event_id</span><span class="p">):</span>
+</span><span class='line'>  <span class="n">event</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">event_id</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s">&#39;event/detail.html&#39;</span><span class="p">,{</span><span class="s">&#39;object&#39;</span><span class="p">:</span><span class="n">event</span><span class="p">})</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>※　coding: utf-8ってのはpython3では要らないらしい。
+modelは先にインポートする。表示に使うテンプレートと変数はview内で指定する。getとかallとかDBにアクセスするためのメソッドはこれから勉強が要るけど、要はDAOなので、それほど苦にはならないっしょ。</p>
+
+<h2>テンプレを作る</h2>
+
+<p>テンプレを作る前にテンプレのパスに関する設定をする。myproject/settings.pyに次の行を追加</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
+</span><span class='line'><span class="o">....</span>
+</span><span class='line'><span class="s">&#39;bocho&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="p">)</span>
+</span><span class='line'><span class="n">TEMPLATE_DIRS</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">,</span> <span class="s">&#39;templates&#39;</span><span class="p">)]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こうしておくと、bochoアプリのテンプレはbocho/templates/以下を参照し、さらにファイルが無い場合はtemplates/以下も調べる。上のように&#8217;event/detail.html&#8217;と指定した場合は、bocho/templates/event/detail.htmlを参照する。</p>
+
+<p>設定出来たので、bocho/templates/event/detail.htmlを以下のように書く</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;html&gt;</span>
+</span><span class='line'><span class="nt">&lt;body&gt;</span>
+</span><span class='line'><span class="nt">&lt;h1&gt;</span>詳細画面<span class="nt">&lt;/h1&gt;</span>
+</span><span class='line'><span class="nt">&lt;dl&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;dt&gt;</span><span class="nt">&lt;/dt&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;dd&gt;</span><span class="nt">&lt;/dd&gt;</span>
+</span><span class='line'><span class="nt">&lt;/dl&gt;</span>
+</span><span class='line'><span class="nt">&lt;/body&gt;</span>
+</span><span class='line'><span class="nt">&lt;/html&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>フォーマットの方法とか良く分からないので、勉強が必要。dateはこの方法で良さそうだけど、他の場合どうなるんだろ？</p>
+
+<h2>Webサーバーを立ち上げる</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>$ python manage.py runserver xxx.xxx.xx.xx:xxxx
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>xの部分にIPとポートを入れれば指定したIP、ポートで表示出来る。設定しない場合は知らない。どっかググれば書いてあるはず。あとはxxx.xxx.xx.xx:xxxxにブラウザでアクセスするとページを確認出来るようになる</p>
+
+<p>最初に作る時のコード量はRailsより多いけど、大したことはない。それより、フォルダとファイル構成が分かりやすいので、どこ修正したら良いか分からないなんてことも無いし、Railsより修正がやりやすい気がする。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Ubuntu12.04でjenkinsのインストールと設定]]></title>
@@ -1166,316 +1384,6 @@ app/assets/stylesheets/bootstrap_and_overrides.css.lessを修正することで�
 
 
 <p>これでページが隠れなくなる。レイアウト変更にはapp/views/layouts/application.html.erbを編集する必要がある。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データ一覧ページを作って、詳細ページへのリンクを貼る]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/03/10/a-way-of-creating-rails-application3/"/>
-    <updated>2014-03-10T18:10:41+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/03/10/a-way-of-creating-rails-application3</id>
-    <content type="html"><![CDATA[<p>参考にした記事URL一覧</p>
-
-<ul>
-<li><a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a></li>
-<li><a href="http://qiita.com/somewhatgood@github/items/9890e75b4c195d47715a">Rails &ndash; link_to の引数と展開の違いまとめ &ndash; Qiita</a></li>
-</ul>
-
-
-<p>前回に引き続き<a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a>を参考にしているが、色々すっとばして16章から適当に確認しながら適当に実装する。</p>
-
-<h3>一覧表示</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">def</span> <span class="nf">index</span>
-</span><span class='line'>  <span class="vi">@events</span> <span class="o">=</span> <span class="no">Event</span><span class="o">.</span><span class="n">all</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と書くとテーブルにあるデータ全て取ってくるらしい（DAOで良くある書式）。
-ビューでは@eventsに対してループさせる必要があるので次のような書式になる。
-app/views/events/index.html.erbを次のように書き換える</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='erb'><span class='line'><span class="x">&lt;h1&gt;Events&lt;/h1&gt;</span>
-</span><span class='line'><span class="x">&lt;table class=&quot;table&quot;&gt;</span>
-</span><span class='line'><span class="x">  &lt;thead&gt;</span>
-</span><span class='line'><span class="x">      &lt;th&gt;日時&lt;/th&gt;&lt;th&gt;イベント名&lt;/th&gt;</span>
-</span><span class='line'><span class="x">  &lt;/thead&gt;</span>
-</span><span class='line'><span class="x">  </span><span class="cp">&lt;%</span> <span class="vi">@events</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">event</span><span class="o">|</span> <span class="cp">%&gt;</span><span class="x"></span>
-</span><span class='line'><span class="x">      &lt;tr&gt;</span>
-</span><span class='line'><span class="x">          &lt;td&gt;</span><span class="cp">&lt;%=</span> <span class="n">event</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y/%m/%d %H:%m&#39;</span><span class="p">)</span> <span class="cp">%&gt;</span><span class="x">&lt;/td&gt;</span>
-</span><span class='line'><span class="x">          &lt;td&gt;</span><span class="cp">&lt;%=</span> <span class="n">event</span><span class="o">.</span><span class="n">name</span> <span class="cp">%&gt;</span><span class="x">&lt;/td&gt;</span>
-</span><span class='line'><span class="x">      &lt;/tr&gt;</span>
-</span><span class='line'><span class="x">  </span><span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span><span class="x"></span>
-</span><span class='line'><span class="x">&lt;/table&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>[<a href="http://0.0.0.0:3000/events/index">http://0.0.0.0:3000/events/index</a>]にアクセスすれば一覧が表示される。どこかのページでeachでなくeach_with_indexという書き方してるページあったけど、Rails4では動かなかった。
-バージョン違い？</p>
-
-<h3>リンクを貼る</h3>
-
-<p>一覧と詳細を繋げたいので、リンクを貼る。link_toというのを使うらしい。 <a href="http://qiita.com/somewhatgood@github/items/9890e75b4c195d47715a">Rails &ndash; link_to の引数と展開の違いまとめ &ndash; Qiita</a>の「基本」を使えば今回は十分。上のerbを次のように書き換える</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='erb'><span class='line'><span class="x">&lt;h1&gt;Events&lt;/h1&gt;</span>
-</span><span class='line'><span class="x">&lt;table class=&quot;table&quot;&gt;</span>
-</span><span class='line'><span class="x">  &lt;thead&gt;</span>
-</span><span class='line'><span class="x">      &lt;th&gt;日時&lt;/th&gt;&lt;th&gt;イベント名&lt;/th&gt;&lt;th&gt;link&lt;/th&gt;</span>
-</span><span class='line'><span class="x">  &lt;/thead&gt;</span>
-</span><span class='line'><span class="x">  </span><span class="cp">&lt;%</span> <span class="vi">@events</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">event</span><span class="o">|</span> <span class="cp">%&gt;</span><span class="x"></span>
-</span><span class='line'><span class="x">      &lt;tr&gt;</span>
-</span><span class='line'><span class="x">          &lt;td&gt;</span><span class="cp">&lt;%=</span> <span class="n">event</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y/%m/%d %H:%m&#39;</span><span class="p">)</span> <span class="cp">%&gt;</span><span class="x">&lt;/td&gt;</span>
-</span><span class='line'><span class="x">          &lt;td&gt;</span><span class="cp">&lt;%=</span> <span class="n">event</span><span class="o">.</span><span class="n">name</span> <span class="cp">%&gt;</span><span class="x">&lt;/td&gt;</span>
-</span><span class='line'><span class="x">          &lt;td&gt;</span><span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;詳細&quot;</span><span class="p">,</span><span class="ss">:controller</span><span class="o">=&gt;</span><span class="s2">&quot;events&quot;</span><span class="p">,</span><span class="ss">:action</span><span class="o">=&gt;</span><span class="s2">&quot;show&quot;</span><span class="p">,</span><span class="ss">:eventid</span><span class="o">=&gt;</span><span class="n">event</span><span class="o">.</span><span class="n">id</span> <span class="cp">%&gt;</span><span class="x">&lt;/td&gt;</span>
-</span><span class='line'><span class="x">      &lt;/tr&gt;</span>
-</span><span class='line'><span class="x">  </span><span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span><span class="x"></span>
-</span><span class='line'><span class="x">&lt;/table&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>controllerはコントローラー、actionはビュー？かどうか分からないけど、コントローラー内で定義してるメソッド、あとパラメーター名（eventid）はconfig/routes.rbで指定したパラメーター名が使用出来る（と思う）。とりあえずこう作ったけど、最終的にハッシュにした方がいいんだろな。</p>
-
-<h3>一覧の範囲を絞り込む</h3>
-
-<p>テーブルのデータ全部でなく、一部のデータに絞り込んで表示してみる。
-日付のデータがあるので、今月のデータに絞り込んでみる。app/controllers/events_controller.rbを編集</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'>  <span class="k">def</span> <span class="nf">index</span>
-</span><span class='line'>    <span class="n">from</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="o">.</span><span class="n">at_beginning_of_month</span>
-</span><span class='line'>    <span class="n">to</span> <span class="o">=</span> <span class="n">from</span><span class="o">+</span><span class="mi">1</span><span class="o">.</span><span class="n">month</span>
-</span><span class='line'>    <span class="vi">@events</span> <span class="o">=</span> <span class="no">Event</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="ss">:conditions</span><span class="o">=&gt;[</span><span class="s2">&quot;date&gt;=? and date&lt;=?&quot;</span><span class="p">,</span><span class="n">from</span><span class="p">,</span><span class="n">to</span><span class="o">]</span><span class="p">,</span><span class="ss">:order</span><span class="o">=&gt;</span><span class="s1">&#39;date&#39;</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ここらへんは<a href="http://waka.hatenablog.com/entry/2013/04/05/083349">ActiveRecordで日付の範囲指定 &ndash; yo_waka&rsquo;s blog</a>を参考にしながら適当に実装した。ActiveRecordは色んな表現方法があるのでどうしたもんかな。ただ、数字も何でもオブジェクトってのは面白い。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(2):データベースにPostgreSQLを使ってみた]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/03/10/a-way-of-creating-rails-application2/"/>
-    <updated>2014-03-10T18:10:41+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/03/10/a-way-of-creating-rails-application2</id>
-    <content type="html"><![CDATA[<p>参考にした記事URL一覧</p>
-
-<ul>
-<li><a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a></li>
-<li><a href="http://www.oiax.jp/rails3book/setup_postgresql.html">データベースとの接続（PostgreSQL編） &ndash; Ruby on Rails with OIAX</a></li>
-<li><a href="http://qiita.com/stkn_bb/items/72d06c149d3e6f315f8c">[Rails]既存のMySQLテーブルに接続する方法 &ndash; Qiita</a></li>
-</ul>
-
-
-<p>前回に引き続き<a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a>を参考にしているが、色々すっとばしてデータベースを作るところをなぞる。
-どうもモデルを作って、コマンド打ったら自動的にテーブル作ってくれてよしなにしてくれるらしい。</p>
-
-<p>ではモデルを作る。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>rails g model event name:string date:timestamp
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>モデルは単数型の英語で書くのが良いらしい。idは書かなくても自動で設定してくれるらしい。コマンドを実行すると次のようなファイルが出来る</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>app/models/event.rb
-</span><span class='line'>db/migrate/20140310033758_create_events.rb
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>後でテーブルの生成が上手く行かない場合に、変数の型で変なのを設定してる場合とかあるので、migrateフォルダのファイルを修正すると上手くいくことがある。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>rake db:migrate
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と打ったらテーブルが出来た。めでたしめでたし・・・と思ったらそういえばリモートサーバ上のPostgreSQLテーブルにデータ入れてたのを思い出したので、sqliteからPostgreSQLに使用データベースを変更してみる。</p>
-
-<p><a href="http://www.oiax.jp/rails3book/setup_postgresql.html">データベースとの接続（PostgreSQL編） &ndash; Ruby on Rails with OIAX</a>を参考にしたが、PostgreSQLの設定までは終了しているので、その後の部分をやってみた。</p>
-
-<h3>Gemfileを編集</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>gem <span class="s2">&quot;sqlite3&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>を</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>gem <span class="s2">&quot;pg&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>に変更して、bundle installを実行。すると何かエラーが・・・メッセージを見ると<a href="http://qiita.com/youcune/items/5b783f7fde45d0fd4b35">Ruby &ndash; gem install pgしてNo pg_configとなる対処法 &ndash; Qiita</a>が参考になりそうなので、libpq-devを入れてエラーを解消した（Ubuntuの場合)</p>
-
-<h3>config/database.yamlを編集</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">development</span><span class="p-Indicator">:</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">adapter</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">sqlite3</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">database</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">db/development.sqlite3</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">pool</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">5</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">timeout</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">5000</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいな箇所を</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">development</span><span class="p-Indicator">:</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">adapter</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">postgresql</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">host</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">000.000.00.00</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">port</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">5432</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">database</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">bocho</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">username</span><span class="p-Indicator">:</span> <span class="err">****</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">password</span><span class="p-Indicator">:</span> <span class="err">****</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">pool</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">5</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">timeout</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">5000</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>に変更した。development以外にtest, productionと項目があって、それぞれ同じように変更した。これがどう違うのかはまだ勉強してない。localhostの場合はhost,portは要らないみたい。</p>
-
-<h3>テーブル名の変更</h3>
-
-<p>良く考えたら、PostgreSQLに保存してるデータのテーブルはeventsじゃなくてbochoだったので、そういう設定もしないといけない。その方法は<a href="http://qiita.com/stkn_bb/items/72d06c149d3e6f315f8c">[Rails]既存のMySQLテーブルに接続する方法 &ndash; Qiita</a>を参考にした。eventモデル(app/models/event.rb)を次のように変更</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">class</span> <span class="nc">Event</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
-</span><span class='line'>  <span class="nb">self</span><span class="o">.</span><span class="n">table_name</span> <span class="o">=</span> <span class="s1">&#39;bocho&#39;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>なんかググったら他の書式もあったけど、それだとエラー出たので、今はこの書き方なのかな？
-これで準備が出来たので、テーブルからデータを読み込んで表示してみる</p>
-
-<h3>データ読み込み</h3>
-
-<p>app/controllers/events_controller.rbを次のように書き換え</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'>  <span class="k">def</span> <span class="nf">show</span>
-</span><span class='line'>    <span class="vi">@event</span> <span class="o">=</span> <span class="no">Event</span><span class="o">.</span><span class="n">find_by</span><span class="p">(</span><span class="ss">:id</span><span class="o">=&gt;</span><span class="n">params</span><span class="o">[</span><span class="ss">:eventid</span><span class="o">]</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これ多分</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="vi">@event</span> <span class="o">=</span> <span class="no">Event</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:eventid</span><span class="o">]</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でもいける。</p>
-
-<h3>データ表示</h3>
-
-<p>app/views/events/show.html.erbを編集</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='erb'><span class='line'><span class="x">&lt;h1&gt;Event&lt;/h1&gt;</span>
-</span><span class='line'><span class="x">&lt;dl&gt;</span>
-</span><span class='line'><span class="x">  &lt;dt&gt;日時&lt;/dt&gt;</span>
-</span><span class='line'><span class="x">  &lt;dd&gt;</span><span class="cp">&lt;%=</span> <span class="vi">@event</span><span class="o">[</span><span class="ss">:date</span><span class="o">].</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y/%m/%d %H:%m&#39;</span><span class="p">)</span> <span class="cp">%&gt;</span><span class="x">&lt;/dd&gt;</span>
-</span><span class='line'><span class="x">  &lt;dt&gt;イベント名&lt;/dt&gt;</span>
-</span><span class='line'><span class="x">  &lt;dd&gt;</span><span class="cp">&lt;%=</span> <span class="vi">@event</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span> <span class="cp">%&gt;</span><span class="x">&lt;/dd&gt;</span>
-</span><span class='line'><span class="x">&lt;/dl&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='erb'><span class='line'><span class="x">&lt;dd&gt;</span><span class="cp">&lt;%=</span> <span class="vi">@event</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y/%m/%d %H:%m&#39;</span><span class="p">)</span> <span class="cp">%&gt;</span><span class="x">&lt;/dd&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でもおk</p>
-
-<p>以上の作業後に [<a href="http://0.0.0.0:3000/events/show/1">http://0.0.0.0:3000/events/show/1</a>]にアクセスすると
-id=1,date=2014/03/01 10:00:00,name=ほげ
-というデータが入っていた場合、</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;h1&gt;</span>Event<span class="nt">&lt;/h1&gt;</span>
-</span><span class='line'><span class="nt">&lt;dl&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;dt&gt;</span>日時<span class="nt">&lt;/dt&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;dd&gt;</span>2014/03/01 10:00<span class="nt">&lt;/dd&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;dt&gt;</span>イベント名<span class="nt">&lt;/dt&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;dd&gt;</span>ほげ<span class="nt">&lt;/dd&gt;</span>
-</span><span class='line'><span class="nt">&lt;/dl&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と表示されたりする。</p>
 ]]></content>
   </entry>
   

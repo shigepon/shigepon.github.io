@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Bootstrap | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/bootstrap/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-06-25T22:12:17+09:00</updated>
+  <updated>2014-06-25T22:21:43+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,44 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(2):Bootstrapを使ってみる]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/06/25/django-with-bootstrap/"/>
+    <updated>2014-06-25T21:41:23+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/06/25/django-with-bootstrap</id>
+    <content type="html"><![CDATA[<p>テンプレートにBootstrapを当てはめたいので、Bootstrap関連のパッケージを探してみた。ググってみて<a href="https://github.com/dyve/django-bootstrap-toolkit">django-bootstrap-toolkit</a>が良さそうかなと思ったので、使ってみた。</p>
+
+<p>インストール</p>
+
+<p><code>sh
+$ pip install django-bootstrap-toolkit
+</code></p>
+
+<p>myproject/settings.pyのINSTALLED_APPSに以下を追加</p>
+
+<p><code>
+'bootstrap-toolkit'
+</code></p>
+
+<p>テンプレートを書く</p>
+
+<p><code>html
+
+{% load bootstrap_toolkit %}} #bootstrap-toolkitを使うページ全てに必要っぽい
+...
+&lt;head&gt;
+{% bootstrap_stylesheet_tag %}  #bootstrapのcssへのタグ(CDNから読み込み)
+{% bootstrap_stylesheet_tag "responsive %} #bootstrapのレスポンシブページ用タグ(CDNから読み込み)
+{% bootstrap_javascript_tag %}  #bootstrapのjavascriptへのタグ(CDNから読み込み)
+
+&lt;/head&gt;
+あとは普通にbootstrapのタグを書く
+</code></p>
+
+<p>こんな感じで最低限使える。フォームに関してはもっと色々出来るみたいだけど、まだやってない。パッケージ使ってみたけど、これだけなら普通にbootstrapのファイルを読み込めば済むんだけど、フォーム関連などフィルタやカスタムタグがあるみたい。便利そうなので、これを使うことにしよう。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(4):ビューにBootstrapを使う]]></title>

@@ -9,12 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Octpressのインストール後に行ったカスタマイズをまとめておきます。 外部リンクを別ウィンドウで開く 下のコードを追加します :source/_inclides/custom/head.html1
-2
-3
-4
-5
-&lt;script language=&quot;JavaScript& &hellip;">
+  <meta name="description" content="unity使ってこれから何か作っていこうと思うのでめも。 最初にやったこと 【Unity】素人が7日間クソゲーを作り続けてわかったこと – uinyan. comに載っていたUNITY &ndash; Developer &ndash; はじめての Unity &ndash; 第1回 世界の「骨格 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,6 +79,304 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/10/unity-memo/">Unity Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-10T23:25:11+09:00" pubdate data-updated="true">Feb 10<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>unity使ってこれから何か作っていこうと思うのでめも。</p>
+
+<h3>最初にやったこと</h3>
+
+<p><a href="http://uinyan.com/unity_7days_kusoge_challenge/">【Unity】素人が7日間クソゲーを作り続けてわかったこと – uinyan. com</a>に載っていた<a href="http://japan.unity3d.com/developer/document/tutorial/my-first-unity/01.html">UNITY &ndash; Developer &ndash; はじめての Unity &ndash; 第1回 世界の「骨格」をつくろう</a>に沿ってブロックとボールを作ってみた。<br/>
+実際にどう操作するかは<a href="https://www.google.com/url?q=http://dotinstall.com/&amp;usd=2&amp;usg=AFQjCNHZtbpqtTDbVeGhAQfx3_H-UUYI1Q">ドットインストールのUnity講座</a>を参考にした。</p>
+
+<h3>物をバウンドさせる</h3>
+
+<p> physicalMaterialでBouncinessに数値を入れる。1とか。1でバウンド時の力のロスが無い。</p>
+
+<h3>効果音を鳴らす</h3>
+
+<ul>
+<li><a href="http://www.senses-circuit.com/material/se_game.html">フリー効果音素材HP</a>などから音源をダウンロード</li>
+<li>Assetに音源をドラッグアンドドロップして追加</li>
+<li>追加したいオブジェクトでAddComponentボタンからComponent>Audio>Audio Sourceを選択</li>
+<li>Audio ClipにAssetに入れた音源を入れる。</li>
+<li>Audio Sourceコンポーネント内で3D Sound Setting>Min Distanceを10くらいに設定</li>
+</ul>
+
+
+<p>オブジェクトに設定したコードでは次のように書く。例としてスペースを押したら効果音が出るようにしてみた。<br/>
+コードの設定部分でこの例の場合clipに音源を入れる（でないと聞こえなかったような）</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="n">AudioClip</span> <span class="n">clip</span><span class="p">;</span>
+</span><span class='line'><span class="k">public</span> <span class="n">function</span> <span class="nf">Update</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="n">GetButton</span><span class="p">(</span><span class="s">&quot;Jump&quot;</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">audio</span><span class="p">.</span><span class="n">PlayOneShot</span><span class="p">(</span><span class="n">clip</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>BGMをかける</h3>
+
+<p>Assetに追加したBGMをHiearchyに追加して、InspectorのLoopをチェックしたらOK</p>
+
+<h3>位置移動</h3>
+
+<p>transform.positionにVectorオブジェクトを代入すればOK<br/>
+transform.position.xに直接値を入れるとC#では怒られた。</p>
+
+<h3>トリガで衝突判定</h3>
+
+<p>Collider2Dでis Triggerにチェックを入れるとTriggerを用いて衝突判定できる。衝突しないケースと衝突するケースを使い分けられるので便利。
+イベントとして2Dの場合は、</p>
+
+<ul>
+<li>OnTriggerEnter2D</li>
+<li>OnTriggerStay2D</li>
+<li>OntriggerExit2D</li>
+</ul>
+
+
+<p>が使える。2Dで物理エンジン使わない時とか使える。なんか使える条件があるような情報があった。</p>
+
+<h3>時間待ちの作法</h3>
+
+<p>コルーチンを使うらしい。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="n">function</span> <span class="nf">Update</span><span class="p">(){</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'>  <span class="n">StartCoroutine</span><span class="p">(</span><span class="s">&quot;GameOver&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">private</span> <span class="n">IENumerator</span> <span class="nf">GameOver</span><span class="p">(){</span>
+</span><span class='line'>  <span class="k">yield</span> <span class="k">return</span> <span class="k">new</span> <span class="nf">WaitForSeconds</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">Application</span><span class="p">.</span><span class="n">LoadLevel</span><span class="p">(</span><span class="s">&quot;GameOver&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じ。時間待ちとは言え、動きが止まったりするわけじゃない。</p>
+
+<h3>座標変換</h3>
+
+<p>タップやクリックの座標とUnity内での座標の場合は座標変換が必要。カメラのScreenToWorldPointメソッドを使うが2Dの場合直感的に行かなく、次のようにする</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="n">Vector3</span> <span class="n">screenPosition</span> <span class="p">=</span> <span class="n">Camera</span><span class="p">.</span><span class="n">main</span><span class="p">.</span><span class="n">ScreenToWorldPoint</span><span class="p">(</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">);</span>
+</span><span class='line'><span class="n">Vector2</span> <span class="n">clickPosition</span> <span class="p">=</span> <span class="n">Camera</span><span class="p">.</span><span class="n">main</span><span class="p">.</span><span class="n">ScreenToWorldPoint</span><span class="p">(</span><span class="k">new</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="n">mousePosition</span><span class="p">.</span><span class="n">x</span><span class="p">,</span><span class="n">Input</span><span class="p">.</span><span class="n">mousePosition</span><span class="p">.</span><span class="n">y</span><span class="p">,</span><span class="n">screenPosition</span><span class="p">.</span><span class="n">z</span><span class="p">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と2DなのにVector3（３次元座標）で指定する。</p>
+
+<h3>デバッグ</h3>
+
+<p>Unity Remoteを使う。Free Aspectだと上手く表示できないとか上手く行かないケースがあるので注意。かならずアスペクト比？を設定。</p>
+
+<h3>Androidへの実装</h3>
+
+<p>実機に実装する場合はBuild and Runをすれば良い。ただしXperia SO-01Bに実装すると初期の設定ではエラーがポコポコ出たので対処をメモしておく</p>
+
+<h3>iPhoneへの実装</h3>
+
+<p>iPhoneへの実装はios Developer Programへの登録など色々面倒で複数サイトを参考にした。
+ios Developer Programへの登録などUnity関係なくやらないといけない作業は、<a href="http://r-dimension.xsrv.jp/classes_j/ios_test/">iOSデバイス（iPhone・iPad）実機テスト | Yasushi Noguchi Class</a>が参考になった<br/>
+unity側での作業は<a href="http://tech.gmo-media.jp/post/54095871491/running-unity-app-on-iphone">iPhone実機でUnityを動かしてみた &ndash; unity部 | GMOメディア エンジニアブログ</a>を参考にすれば上手くいった。
+バージョンが変わったりすると、また画面構成とか変わるんだろうけど。</p>
+
+<p>あとiPhone初心者だったせいで、マナーモードになっているのに気づかず、音が出ないと１時間くらい悩んでた。（これでハマる人は少ないと思うけど一応メモ）</p>
+
+<h3>iPhoneへのadhocビルドと配布</h3>
+
+<p>やること色々あるので、参考にしたサイトの一覧を紹介する程度。</p>
+
+<ul>
+<li><a href="http://dev.classmethod.jp/smartphone/iphone/ios-app-how-to-release/#toc-xcode-">よく分かる！iOS アプリのリリース手順のまとめ ｜ Developers.IO</a>←App Storeでの配布についてのページだけどこのページが一番参考になった。多分画面が最新のものに対応してるから。</li>
+<li><a href="http://plus.vc/iphone/4357/">iPhoneアプリのAd Hoc配信方法まとめ完全版 [Xcode4対応] | PLUS</a> 上のページで分からないところはこのページを参考にした。Xcodeのビルド設定以降は参考になる。</li>
+</ul>
+
+
+<p>adhocで端末を追加したい場合に、またもハマった</p>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/mswar/20090303/1236087158">iPhone Developper Programingに 新しくデバイス追加する方法(２台目、３台目～) &ndash; mswar的電網日誌</a> adhocじゃないけど、それ以外の部分は参考になった</li>
+<li><a href="http://plus.vc/iphone/7015/">Adhocでデバイスを追加したものの、インストールできない場合のチェック方法 | PLUS</a>これはチェックしておかないといけない感じ</li>
+</ul>
+
+
+<h4>EGL_BAD_MATCH</h4>
+
+<p>まずは<strong>EGL_BAD_MATCH</strong>というエラーが出た。ググっでも答えが出ないので、ddmsを使ってログを取ってみると、どうも32bit Display Bufferとか24bit Display Bufferの処理をした後にエラーが出てたので、Player Setting > Android > Resolution and Presentationにある32bit Dispay Bufferと24bit Display Bufferのチェックをはずした。するとEGL_BAD_MATCHは消えた。</p>
+
+<h4>Profiler is only supported in Unity Pro</h4>
+
+<p>次にProfilerも使ってないのに<br/>
+<strong>Profiler is only supported in Unity Pro</strong><br/>
+というメッセージが出た。結局分からなかった。私が実装した時の問題点は画像が表示されないことだったのでこれは関係ないだろうと考えて無視。</p>
+
+<h4>結局画面が表示されない</h4>
+
+<p>Build Setting画面のTexture CompressionをDon&rsquo;t overrideからETC1 or RGB16に変更すると動いた！
+なんかどっかにこの話があったんだけど、どこか忘れたのでまた思い出したらリンクする。</p>
+
+<h3>その他</h3>
+
+<ul>
+<li>位置のScaleを-1にして反転するとアニメーションもそのまま反転した。すごい。</li>
+<li>StartよりAwakeが先に呼び出される。初期化に使える。</li>
+<li>MonoDevelop-UnityをMacにインストールしてて、C#の通常アプリが作れると思ったら大間違い。C#のアプリ作ろうと思ったらXamarin Studio入れた方がよさげ。NUnitが無いって怒られて散々だった。</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/03/basic-auth/">Basic認証する時に気をつけること</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-03T07:48:33+09:00" pubdate data-updated="true">Feb 3<span>rd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>rhaco3で作ったWebサービス全体にBasic認証をかけた時にちょっとハマったのでメモ。</p>
+
+<h2>症状</h2>
+
+<p>rhaco3の認証が入っているサービスで全体にBasic認証をかけると、</p>
+
+<ol>
+<li>トップページに入る時にBasic認証がかかる</li>
+<li>認証完了</li>
+<li>ログインページに移動</li>
+<li>またBasic認証がかかる</li>
+</ol>
+
+
+<p>というケースが見られました。Webサーバにはnginxを使いました。</p>
+
+<h2>原因</h2>
+
+<p>nginx側の設定が悪いのかなとか色々試行錯誤しましたが、結論としてrhaco3の認証部分が401のレスポンスを吐いてたのが問題でした。</p>
+
+<p><a href="http://www.slogical.co.jp/tech/http_basicauth.html">Basic認証の動作</a>というページで詳しく書かれています（以下に引用します）が</p>
+
+<blockquote><ol>
+<li>ユーザーがクライアント（IE等のWebブラウザ）に目的のURLを入力する。</li>
+<li>クライアントが、Authorization: ヘッダを付加しないで、
+目的のコンテンツにアクセスする。</li>
+<li>サーバーは、401 Authorization Required のレスポンスを返して、
+クライアントに認証が必要である旨を伝える。</li>
+<li>クライアントがユーザーに ID/PW の入力を求める
+（IE等のブラウザが、ポップアップウインドウを出して、
+　ID/PW の入力をユーザーに求めるアレです。）</li>
+<li>ユーザーが ID/PW を入力する。</li>
+<li>クライアントが、Authorization: ヘッダに ID/PW の情報を付加
+して目的のコンテンツに再度アクセスする。</li>
+<li>サーバが ID/PW を解析して、認証OKであればコンテンツをクライ
+アントに返す。</li>
+<li>クライアントがコンテンツを表示して、ユーザーがそれを閲覧する。</li>
+</ol>
+</blockquote>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>    +------+  1---&gt;  +--------+  2---&gt;  +-------+
+</span><span class='line'>    |      |  &lt;---4  |        |  &lt;---3  |       |
+</span><span class='line'>    | User |         | Client |         | httpd |
+</span><span class='line'>    |      |  5---&gt;  |        |  6---&gt;  |       |
+</span><span class='line'>    +------+  &lt;---8  +--------+  &lt;---7  +-------+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>（コンテンツデータを１つ取得するために、リクエスト・レスポンスの
+　やりとりが２回行われています。）</p>
+
+<p>なお、
+Authorization: ヘッダには、
+Basic認証の ID と PW とを :（半角のコロン）でつなげた文字列を、
+base64した値が格納さています。
+（例えば、
+　Authorization: Basic dXNlcjAxOnBhc3N3b3JkCg==　といったようになります。）</p></blockquote>
+
+<p>ように、Basic認証ではサーバが401のレスポンスを返すことで、ブラウザ側にポップアップを出させているようです。その為rhaco3の認証部分で401のレスポンスを出した時に認証の情報がリセットされてしまったのではないかと思われます。</p>
+
+<h2>対処</h2>
+
+<p>rhaco3の認証部分(\org\rhaco\flow\parts\RequestFlow::do_login)で401を送信していた部分で200を送信することで対処できました。</p>
+
+<p>rhaco3で見られた症状でしたが、他のフレームワークでも特に何も考えてなかったら引っかかる可能性があります。というかBasic認証とフレームワークの認証両方掛けるとか普通無いですよねそうですよね。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -900,80 +1193,9 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/28/test-post2/">Test Post2</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-28T14:43:59+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>テスト投稿（2時間ぶり2度目）</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/28/test-post/">Test Post</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-28T12:59:29+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>本文を投稿するテスト
-こんな感じ？</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/5/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -998,6 +1220,14 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/06/25/django-with-bootstrap/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(2):Bootstrapを使ってみる</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/19/make-detail-page-using-django-2/">詳細ページを作る：DjangoでPostgreSQLとBootstrapを使ったアプリを作ってみた(2)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/06/18/jenkins-setting/">Ubuntu12.04でjenkinsのインストールと設定</a>
       </li>
     
@@ -1009,28 +1239,20 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
         <a href="/blog/2014/06/18/start-django-on-ubuntu-12-dot-04/">Ubuntu 12.04でDjangoを始める</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/06/08/ubuntu-aptitude-error-in-initramfs-tools/">Ubuntuでaptitude Installした時にinitramfs-toolsのエラーが出た</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/06/07/build-php-with-phpenv/">Phpenvとphp-buildを使って適当なバージョンのphpをビルドする</a>
-      </li>
-    
   </ul>
 </section>
 <section>
 <h1>Categories</h1>
 <ul id="categories">
 	<li class='category'><a href='/blog/categories/analytics/'>Analytics (1)</a></li>
-<li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (4)</a></li>
+<li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (5)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C# (4)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C++ (3)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (1)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (2)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (7)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (1)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (2)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/web/'>Web (1)</a></li>
 <li class='category'><a href='/blog/categories/linux/'>linux (3)</a></li>
