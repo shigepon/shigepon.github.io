@@ -9,7 +9,8 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="unity使ってこれから何か作っていこうと思うのでめも。 最初にやったこと 【Unity】素人が7日間クソゲーを作り続けてわかったこと – uinyan. comに載っていたUNITY &ndash; Developer &ndash; はじめての Unity &ndash; 第1回 世界の「骨格 &hellip;">
+  <meta name="description" content="SQLiteでたまに使う操作をメモ テーブルの存在チェック 1
+SELECT COUNT(*) FROM sqlite_master WHERE type=&#39;table&#39; AND name=&#39;テーブル名&#39;; ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +80,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/11/sqlite-memo/">Sqlite Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-11T11:48:39+09:00" pubdate data-updated="true">Feb 11<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>SQLiteでたまに使う操作をメモ</p>
+
+<h2>テーブルの存在チェック</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">sqlite_master</span> <span class="k">WHERE</span> <span class="k">type</span><span class="o">=</span><span class="s1">&#39;table&#39;</span> <span class="k">AND</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;テーブル名&#39;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1000,199 +1046,6 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/28/postgresql/">PostgreSQLメモ</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-28T21:24:42+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>rhaco2をPostgreSQL8.3で使えるように色々調べていくうちに学んだメモ。</p>
-
-<h2>insert時に「デフォルト値を入れる」だけの処理をしたい場合</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">insert</span> <span class="k">into</span> <span class="err">テーブル名</span> <span class="k">default</span> <span class="n">value</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でOK</p>
-
-<h2>integerのカラムとかにlikeを適用したい場合</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="err">テーブル名</span> <span class="k">where</span> <span class="n">id</span><span class="p">::</span><span class="nb">text</span> <span class="k">like</span> <span class="o">&amp;#</span><span class="mi">039</span><span class="p">;</span><span class="o">%</span><span class="n">abc</span><span class="o">%&amp;#</span><span class="mi">039</span><span class="p">;;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>のようにカラムをテキストにキャストする。MySQLのvarcharをselectする時はデフォルトignore case。ついでにtrimも勝手にかける？らしい</p>
-
-<h2>show column</h2>
-
-<p>Mysqlで使えるshow columnは無いが、information_schemaの情報をselectすることで同じようなことが出来る。
-ただし、create table時にserialで指定してもinformation_schema.columnsから取得できるカラム情報はinteger(int4)のみ。
-なのでserialと判定するにはカラムがintegerであり、かつデフォルト値としてnextvalが指定されていることなど、複合的にチェックする必要がある。</p>
-
-<h2>cronでsqlを実行</h2>
-
-<p>毎日0時0分に実行する場合</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="mi">0</span> <span class="mi">0</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="k">to</span><span class="o">/</span><span class="n">psql</span> <span class="o">-</span><span class="n">U</span> <span class="n">username</span> <span class="o">-</span><span class="k">c</span> <span class="ss">&quot;sql&quot;</span> <span class="k">database</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="k">null</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>select結果でinsert, update</h2>
-
-<p>insertの場合はinsert文の後でselect文を書く。以下は一例</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">insert</span> <span class="k">into</span> <span class="k">table</span> <span class="k">select</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="k">from</span> <span class="n">table2</span> <span class="k">where</span> <span class="n">a</span> <span class="k">like</span> <span class="s1">&#39;hoge%&#39;</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>別テーブルへの一部データのバックアップ代わりにも使える</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">insert</span> <span class="k">into</span> <span class="n">backup_table</span> <span class="p">(</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="k">table</span> <span class="k">where</span> <span class="n">id</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>updateは次のように行う</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">update</span> <span class="k">table</span> <span class="k">set</span> <span class="n">a</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">a</span> <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">table2</span><span class="p">)</span> <span class="n">t</span> <span class="k">where</span> <span class="k">table</span><span class="p">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">b</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>どの範囲のデータが更新されるかに注意してwhere句を使う。上の場合、tの中でwhere句を使う場合とで異なる結果になる場合がある。</p>
-
-<h2>インデックス一覧を表示</h2>
-
-<p>インデックス一覧を表示。インデックスを2重に登録しようとするとエラーが出るので、チェックに使う</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">SELECT</span> <span class="n">tablename</span><span class="p">,</span> <span class="n">indexname</span> <span class="k">FROM</span> <span class="n">pg_indexes</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>ビューの一覧を表示</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">SELECT</span> <span class="n">viewname</span> <span class="k">FROM</span> <span class="n">pg_views</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">viewname</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>psqlで実行結果を見やすくする</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="n">psql</span> <span class="o">=&gt;</span> <span class="err">\</span><span class="n">x</span>
-</span><span class='line'><span class="n">psql</span> <span class="o">=&gt;</span> <span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="k">table</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>カラムの数が多いと表示が崩れやすいので、これで見やすくなる</p>
-
-<h2>カラム追加時にNOT NULLを指定する手順</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="k">table_name</span> <span class="k">ADD</span> <span class="k">COLUMN</span> <span class="k">column_name</span> <span class="nb">text</span><span class="p">;</span>
-</span><span class='line'><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="k">table_name</span> <span class="k">ALTER</span> <span class="k">COLUMN</span> <span class="k">column_name</span> <span class="k">SET</span> <span class="k">DEFAULT</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
-</span><span class='line'><span class="k">UPDATE</span> <span class="k">table_name</span> <span class="k">SET</span> <span class="k">column_name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
-</span><span class='line'><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="k">table_name</span> <span class="k">ALTER</span> <span class="k">COLUMN</span> <span class="k">column_name</span> <span class="k">SET</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな感じで複数業使ってNOT NULL制約を入れる</p>
-
-<h2>テーブル（ビュー）のスキーマをファイルに書き込む</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pg_dump -s -t table_name db_name &gt; file_name
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これだけ。反映したい時は</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>cat file_name | psql db_name
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でおk</p>
-
-<h2>csvの取り込み</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>1,<span class="s2">&quot;hoge&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいなデータを/path/to/csvに保存して</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">copy</span> <span class="n">tablename</span> <span class="k">from</span> <span class="s1">&#39;/path/to/csv&#39;</span> <span class="k">with</span> <span class="n">csv</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とpsql で実行すると取り込みできる。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">copy</span> <span class="n">tablename</span> <span class="p">(</span><span class="n">column1</span><span class="p">,</span><span class="n">column2</span><span class="p">)</span> <span class="k">from</span> <span class="s1">&#39;/path/to/csv&#39;</span> <span class="k">with</span> <span class="n">csv</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とやれば、カラム名と順序の指定が可能</p>
-
-<h2>SQL結果をcsvに出力</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>psql db_name -c <span class="s2">&quot;SQL&quot;</span> -A -F, -t &gt; filename
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>IN句に複数条件を指定</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">hoge</span> <span class="k">where</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="k">from</span> <span class="n">fuga</span> <span class="k">where</span> <span class="n">hage</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">);</span>
-</span><span class='line'><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">hoge</span> <span class="k">where</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="k">in</span> <span class="p">((</span><span class="s1">&#39;fuga&#39;</span><span class="p">,</span><span class="s1">&#39;hage&#39;</span><span class="p">),(</span><span class="s1">&#39;abc&#39;</span><span class="p">,</span><span class="s1">&#39;def&#39;</span><span class="p">));</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいに指定すればおk</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -1220,6 +1073,10 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/06/28/groonga-study-kobe-2014-06-27/">全文検索エンジンGroongaユーザ勉強会＠神戸に参加しました</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/06/25/django-with-bootstrap/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(2):Bootstrapを使ってみる</a>
       </li>
     
@@ -1235,10 +1092,6 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
         <a href="/blog/2014/06/18/start-django-project/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずDjangoプロジェクトとアプリを作ってみた</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/06/18/start-django-on-ubuntu-12-dot-04/">Ubuntu 12.04でDjangoを始める</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -1249,6 +1102,7 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
 <li class='category'><a href='/blog/categories/c­/'>C# (4)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C++ (3)</a></li>
 <li class='category'><a href='/blog/categories/django/'>Django (2)</a></li>
+<li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (7)</a></li>
