@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-06-28T14:14:12+09:00</updated>
+  <updated>2014-06-30T20:43:03+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,24 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Python memo]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/06/30/python-memo/"/>
+    <updated>2014-06-30T20:38:44+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/06/30/python-memo</id>
+    <content type="html"><![CDATA[<p>Djangoやり始めたので、その過程で記録しておきたいことをメモ。</p>
+
+<h2>pip freezeでWarning: cannot find svn location for distribute==0.6.24dev-r0</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo pip install --upgrade distribute
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でおk</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[全文検索エンジンGroongaユーザ勉強会＠神戸に参加しました]]></title>
@@ -1270,89 +1288,6 @@ php-buildのインストールは下のような感じ</p>
 
 
 <p>path/to/root/error/503.htmlがあれば、メンテナンス画面を表示する。なければ表示しない。一度nginx設定をリロードすればその後はリロードの必要もない。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[rhaco3 memo]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/03/15/rhaco3-memo/"/>
-    <updated>2014-03-15T13:28:55+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/03/15/rhaco3-memo</id>
-    <content type="html"><![CDATA[<p>rhaco3を使ってる人なんて世界で何人居るのかなと思いつつ、あまりに情報が少ないので、メモ書きしていく。
-大きめネタは別記事にまとめるが小さいネタはここに追記する。</p>
-
-<h3>Daoで作ったSQLを確認する方法</h3>
-
-<p>Daoを継承したモデルとして、Hogeモデルがあるとして</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nx">\Hoge</span><span class="o">::</span><span class="na">start_record</span><span class="p">();</span>
-</span><span class='line'><span class="nx">\Hoge</span><span class="o">::</span><span class="na">find_get</span><span class="p">(</span><span class="nx">\org\rhaco\store\db\Q</span><span class="o">::</span><span class="na">eq</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">));</span><span class="c1">//\Hogeモデルからid=1のデータを1件取得する命令</span>
-</span><span class='line'><span class="nv">$queries</span> <span class="o">=</span> <span class="nx">\Hoge</span><span class="o">::</span><span class="na">stop_record</span><span class="p">();</span>
-</span><span class='line'><span class="nb">var_dump</span><span class="p">(</span><span class="nv">$queries</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな感じで使う。出力は</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'>array(1) {
-</span><span class='line'>  [0]=&gt;
-</span><span class='line'>  array(2) {
-</span><span class='line'>    [0]=&gt;
-</span><span class='line'>    string(291) &quot;select t4.&quot;id&quot; as c5,t4.&quot;name&quot; as c10 from hoge t4 where  ( (t4.&quot;id&quot; = ?) )   offset 0 limit 1 &quot;
-</span><span class='line'>    [1]=&gt;
-</span><span class='line'>    array(1) {
-</span><span class='line'>      [0]=&gt;
-</span><span class='line'>      string(1) &quot;1&quot;
-</span><span class='line'>    }
-</span><span class='line'>  }
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいに出る</p>
-
-<h3>あるクラス用に設定したConfを別クラスから参照したい</h3>
-
-<p>\org\rhaco\Confはクラス用に設定値を決めるのに良く使う。
-大体commons/hoge.phpみたいにrhaco3で設定値を書くファイルに書くことが多い。</p>
-
-<p>例としてFlowクラスでルートURLを設定するには</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nx">\org\rhaco\Conf</span><span class="o">::</span><span class="na">set</span><span class="p">(</span><span class="s2">&quot;org.rhaco.Flow&quot;</span><span class="p">,</span><span class="s2">&quot;app_url&quot;</span><span class="p">,</span><span class="s2">&quot;localhost&quot;</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな感じでcommons/hoge.phpに書いたりする。Flowクラス内では</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nv">$app_url</span> <span class="o">=</span> <span class="nx">\org\rhaco\Conf</span><span class="o">::</span><span class="na">get</span><span class="p">(</span><span class="s2">&quot;app_url&quot;</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>で設定した値を読み込める。
-他のクラスで読み込みたい場合にどうするか良く分からなかったがソース読んだら分かったのでメモしておく</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nv">$app_url</span> <span class="o">=</span> <span class="nx">\org\rhaco\Conf</span><span class="o">::</span><span class="na">get</span><span class="p">(</span><span class="s2">&quot;org.rhaco.Flow@app_url&quot;</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これでおk。@で区切ってクラス名と取得したい値のキーを書くと値を取って来れる。</p>
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-06-28T14:14:12+09:00</updated>
+  <updated>2014-06-30T20:43:03+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,23 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Python memo]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/06/30/python-memo/"/>
+    <updated>2014-06-30T20:38:44+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/06/30/python-memo</id>
+    <content type="html"><![CDATA[<p>Djangoやり始めたので、その過程で記録しておきたいことをメモ。</p>
+
+<h2>pip freezeでWarning: cannot find svn location for distribute==0.6.24dev-r0</h2>
+
+<p><code>sh
+$ sudo pip install --upgrade distribute
+</code></p>
+
+<p>でおk</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(2):Bootstrapを使ってみる]]></title>
