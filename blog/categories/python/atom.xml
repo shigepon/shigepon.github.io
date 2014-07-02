@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-07-02T09:55:22+09:00</updated>
+  <updated>2014-07-02T14:27:00+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,145 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/07/02/django-show-list-with-paging/"/>
+    <updated>2014-07-02T11:51:44+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/07/02/django-show-list-with-paging</id>
+    <content type="html"><![CDATA[<h2>データの一覧表示</h2>
+
+<p>あとで参考ページとか追記する予定。
+データの一覧表示には何種類かファイルが必要（モデル、ビュー、テンプレート、URLディスパッチャー）。
+それぞれこんな感じで用意する。</p>
+
+<h3>モデル</h3>
+
+<p>```python models.py
+from django.db import models
+class Bocho(models.Model):</p>
+
+<pre><code>name = models.TextField()
+court = models.TextField()
+date = models.DateField()
+....
+</code></pre>
+
+<p>```</p>
+
+<p>モデルではフィールドとその属性を決める。このコードではクラスの中でMetaクラスを定義すると、モデルのテーブル名とかそういうのを色々定義出来るみたい。定義出来るフィールドの種類はDjangoのマニュアルに書いてあるのですぐ分かる。</p>
+
+<h3>ビュー</h3>
+
+<p>データをテンプレートに設定する部分。リクエストパラメータから、必要なデータを取得する部分。多分。</p>
+
+<p>```python views.py
+from django.shortcuts import render
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from bocho.models import Bocho
+def index(request): #requestはHttpRequestオブジェクト</p>
+
+<pre><code>objects = Bocho.objects.order_by("-date")
+paginator = Paginator(objects,10) #10行毎にページング
+page=request.GET.get('page',1) #GETパラメータからページ番号を取得(初期値は1)
+try:
+    object_list = paginator.page(page) #ここでページング
+except PageNotAnInteger:
+    object_list = paginator.page(1) #変なページ番号なら1ページ目
+except EmptyPage:
+    object_list = paginator.page(paginator.num_pages) #存在しないページ番号なら最後のページ
+return render(request, 'list.html', {'object_list':object_list})
+</code></pre>
+
+<p>```</p>
+
+<p>参考<a href="http://www.djangoproject.jp/doc/ja/1.0/ref/request-response.html">リクエストオブジェクトとレスポンスオブジェクト — Django v1.0 documentation</a></p>
+
+<h3>テンプレート</h3>
+
+<p>bocho/templates/list.htmlを作る。中身は一部だけ。でビューで割り当てた変数を表示する。
+あと、色々テンプレート用のタグがある。これもDjangoマニュアルを見ると分かる。</p>
+
+<p>```html list.html
+</p>
+
+<table class="table">
+    <thead><th class="span2">日付</th><th>名称</th><th>裁判所</th></thead>
+{% for object in object_list %}
+<tr>
+    <td>{{ object.date|date:"Y-m-d" }}</td>
+    <td>{{ object.name }}</td>
+    <td>{{ object.court }}</td>
+</tr>
+{% endfor %}
+</table>
+
+
+<p>
+```</p>
+
+<h3>URLディスパッチャー</h3>
+
+<p><a href="http://%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3%E5%90%8D/bocho/%E3%81%A7%E4%B8%80%E8%A6%A7%E8%A1%A8%E7%A4%BA%E5%87%BA%E6%9D%A5%E3%82%8B%E3%82%88%E3%81%86%E3%81%AB%E6%AD%A3%E8%A6%8F%E8%A1%A8%E7%8F%BE%E4%BD%BF%E3%81%A3%E3%81%A6views%E3%81%AB%E5%89%B2%E3%82%8A%E5%BD%93%E3%81%A6%E3%82%8B%E3%80%82">http://%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3%E5%90%8D/bocho/%E3%81%A7%E4%B8%80%E8%A6%A7%E8%A1%A8%E7%A4%BA%E5%87%BA%E6%9D%A5%E3%82%8B%E3%82%88%E3%81%86%E3%81%AB%E6%AD%A3%E8%A6%8F%E8%A1%A8%E7%8F%BE%E4%BD%BF%E3%81%A3%E3%81%A6views%E3%81%AB%E5%89%B2%E3%82%8A%E5%BD%93%E3%81%A6%E3%82%8B%E3%80%82</a></p>
+
+<p>myproject/urls.py</p>
+
+<p>`&ldquo;python urls.py
+from django.conf.urls import patterns, include, url
+urlpatterns = patterns(&rdquo;,</p>
+
+<pre><code># Examples:
+# url(r'^$', 'pycourt.views.home', name='home'),
+# url(r'^blog/', include('blog.urls')),
+url(r'bocho/^', include('bocho.urls',namespace='bocho')), #url(正規表現, 別のurlsに投げる設定。ここではbocho/urls.pyに投げる)
+</code></pre>
+
+<p>)
+```</p>
+
+<p>bocho/urls.pyは無いので作る。</p>
+
+<p>`&ldquo;python urls.py
+from django.conf.urls import patterns, include, url
+from bocho import views
+urlpatterns = patterns(&rdquo;,</p>
+
+<pre><code>url(r'^$', views.index, name="index"), #url(正規表現, 割り当てるビュー, URL作ったりリダイレクトする時に付けておくと便利な名前)
+</code></pre>
+
+<p>)
+```</p>
+
+<p>一覧はどうせページングするので、views.pyはこの形で覚えておくと良いかも</p>
+
+<h2>ページング</h2>
+
+<p>どうせbootstrapを使うのでdjango-bootstrap-toolkitを使う方法を載せる。
+ページ分けする対象をobject_list、ページ送りのURLにpage=以外に設定するパラメータをreqとすると、</p>
+
+<p><code>html list.html
+
+{% load bootstrap_toolkit %}↲
+{% bootstrap_pagination object_list align="center" extra=req %}
+
+</code></p>
+
+<p>と設定しておけば良い。</p>
+
+<h2>ページングにパラメータを付ける</h2>
+
+<p>ついでにメモ
+例えば"date=2001-01-01"みたいなパラメータを設定したいんだけど、割り当ててる変数？は日付オブジェクトの場合</p>
+
+<p><code>html list.html
+
+{% bootstrap\_pagination object\_list align="center" extra=date|date:"Y-m-d"|s    tringformat:"%date=%s"|slice:"1:" %}
+
+</code></p>
+
+<p>こんな感じで文字列をくっつけてパラメータにすることが出来る。かなり強引<a href="https://www.google.com/url?q=http://d.hatena.ne.jp/feiz/20110414/1302771447&amp;usd=2&amp;usg=AFQjCNFN9kzyrEJj_WZEatK2wIL07eaD0w">参考</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Python memo]]></title>

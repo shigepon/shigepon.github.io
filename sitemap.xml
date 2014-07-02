@@ -187,16 +187,20 @@
         <lastmod>2014-07-01T17:08:12+09:00</lastmod>
     </url>
     <url>
+        <loc>http://blog.shigepon.com/blog/2014/07/02/django-show-list-with-paging/</loc>
+        <lastmod>2014-07-02T14:26:40+09:00</lastmod>
+    </url>
+    <url>
         <loc>http://blog.shigepon.com/blog/archives/</loc>
-        <lastmod>2014-07-02T09:54:50+09:00</lastmod>
+        <lastmod>2014-07-02T14:26:40+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/archives/</loc>
-        <lastmod>2014-07-02T09:54:50+09:00</lastmod>
+        <lastmod>2014-07-02T14:26:40+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/</loc>
-        <lastmod>2014-07-02T09:54:50+09:00</lastmod>
+        <lastmod>2014-07-02T14:26:40+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/robots.txt</loc>

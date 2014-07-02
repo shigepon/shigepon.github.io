@@ -1,0 +1,472 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する - shigeponが関心のある技術情報など</title>
+  <meta name="author" content="shigepon">
+
+  
+  <meta name="description" content="データの一覧表示 あとで参考ページとか追記する予定。
+データの一覧表示には何種類かファイルが必要（モデル、ビュー、テンプレート、URLディスパッチャー）。
+それぞれこんな感じで用意する。 モデル models.py1
+2
+3
+4
+5
+6
+from django.db import models &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.shigepon.com/blog/2014/07/02/django-show-list-with-paging">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<script language="JavaScript">
+	$(document).ready( function () {
+	   $("a[href^='http']:not([href*='" + location.hostname + "'])").attr('target', '_blank');
+	})
+</script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-6001470-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+</hgroup>
+
+</header>
+  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.shigepon.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav> -->
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-02T11:51:44+09:00" pubdate data-updated="true">Jul 2<span>nd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>データの一覧表示</h2>
+
+<p>あとで参考ページとか追記する予定。
+データの一覧表示には何種類かファイルが必要（モデル、ビュー、テンプレート、URLディスパッチャー）。
+それぞれこんな感じで用意する。</p>
+
+<h3>モデル</h3>
+
+<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">Bocho</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">court</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
+</span><span class='line'>    <span class="o">....</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>モデルではフィールドとその属性を決める。このコードではクラスの中でMetaクラスを定義すると、モデルのテーブル名とかそういうのを色々定義出来るみたい。定義出来るフィールドの種類はDjangoのマニュアルに書いてあるのですぐ分かる。</p>
+
+<h3>ビュー</h3>
+
+<p>データをテンプレートに設定する部分。リクエストパラメータから、必要なデータを取得する部分。多分。</p>
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">django.core.paginator</span> <span class="kn">import</span> <span class="n">Paginator</span><span class="p">,</span> <span class="n">PageNotAnInteger</span><span class="p">,</span> <span class="n">EmptyPage</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">bocho.models</span> <span class="kn">import</span> <span class="n">Bocho</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span> <span class="c">#requestはHttpRequestオブジェクト</span>
+</span><span class='line'>    <span class="n">objects</span> <span class="o">=</span> <span class="n">Bocho</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&quot;-date&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">paginator</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">objects</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span> <span class="c">#10行毎にページング</span>
+</span><span class='line'>    <span class="n">page</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;page&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="c">#GETパラメータからページ番号を取得(初期値は1)</span>
+</span><span class='line'>    <span class="k">try</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">object_list</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="n">page</span><span class="p">)</span> <span class="c">#ここでページング</span>
+</span><span class='line'>    <span class="k">except</span> <span class="n">PageNotAnInteger</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">object_list</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c">#変なページ番号なら1ページ目</span>
+</span><span class='line'>    <span class="k">except</span> <span class="n">EmptyPage</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">object_list</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="n">paginator</span><span class="o">.</span><span class="n">num_pages</span><span class="p">)</span> <span class="c">#存在しないページ番号なら最後のページ</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&#39;list.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;object_list&#39;</span><span class="p">:</span><span class="n">object_list</span><span class="p">})</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考<a href="http://www.djangoproject.jp/doc/ja/1.0/ref/request-response.html">リクエストオブジェクトとレスポンスオブジェクト — Django v1.0 documentation</a></p>
+
+<h3>テンプレート</h3>
+
+<p>bocho/templates/list.htmlを作る。中身は一部だけ。でビューで割り当てた変数を表示する。
+あと、色々テンプレート用のタグがある。これもDjangoマニュアルを見ると分かる。</p>
+
+<figure class='code'><figcaption><span>list.html</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>
+</span><span class='line'><span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">&quot;table&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;thead&gt;&lt;th</span> <span class="na">class=</span><span class="s">&quot;span2&quot;</span><span class="nt">&gt;</span>日付<span class="nt">&lt;/th&gt;&lt;th&gt;</span>名称<span class="nt">&lt;/th&gt;&lt;th&gt;</span>裁判所<span class="nt">&lt;/th&gt;&lt;/thead&gt;</span>
+</span><span class='line'>{% for object in object_list %}
+</span><span class='line'><span class="nt">&lt;tr&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;td&gt;</span>{{ object.date|date:&quot;Y-m-d&quot; }}<span class="nt">&lt;/td&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;td&gt;</span>{{ object.name }}<span class="nt">&lt;/td&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;td&gt;</span>{{ object.court }}<span class="nt">&lt;/td&gt;</span>
+</span><span class='line'><span class="nt">&lt;/tr&gt;</span>
+</span><span class='line'>{% endfor %}
+</span><span class='line'><span class="nt">&lt;/table&gt;</span>
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>URLディスパッチャー</h3>
+
+<p><a href="http://%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3%E5%90%8D/bocho/%E3%81%A7%E4%B8%80%E8%A6%A7%E8%A1%A8%E7%A4%BA%E5%87%BA%E6%9D%A5%E3%82%8B%E3%82%88%E3%81%86%E3%81%AB%E6%AD%A3%E8%A6%8F%E8%A1%A8%E7%8F%BE%E4%BD%BF%E3%81%A3%E3%81%A6views%E3%81%AB%E5%89%B2%E3%82%8A%E5%BD%93%E3%81%A6%E3%82%8B%E3%80%82">http://%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3%E5%90%8D/bocho/%E3%81%A7%E4%B8%80%E8%A6%A7%E8%A1%A8%E7%A4%BA%E5%87%BA%E6%9D%A5%E3%82%8B%E3%82%88%E3%81%86%E3%81%AB%E6%AD%A3%E8%A6%8F%E8%A1%A8%E7%8F%BE%E4%BD%BF%E3%81%A3%E3%81%A6views%E3%81%AB%E5%89%B2%E3%82%8A%E5%BD%93%E3%81%A6%E3%82%8B%E3%80%82</a></p>
+
+<p>myproject/urls.py</p>
+
+<figure class='code'><figcaption><span>urls.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">from</span> <span class="nn">django.conf.urls</span> <span class="kn">import</span> <span class="n">patterns</span><span class="p">,</span> <span class="n">include</span><span class="p">,</span> <span class="n">url</span>
+</span><span class='line'><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="c"># Examples:</span>
+</span><span class='line'>    <span class="c"># url(r&#39;^$&#39;, &#39;pycourt.views.home&#39;, name=&#39;home&#39;),</span>
+</span><span class='line'>    <span class="c"># url(r&#39;^blog/&#39;, include(&#39;blog.urls&#39;)),</span>
+</span><span class='line'>    <span class="n">url</span><span class="p">(</span><span class="s">r&#39;bocho/^&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s">&#39;bocho.urls&#39;</span><span class="p">,</span><span class="n">namespace</span><span class="o">=</span><span class="s">&#39;bocho&#39;</span><span class="p">)),</span> <span class="c">#url(正規表現, 別のurlsに投げる設定。ここではbocho/urls.pyに投げる)</span>
+</span><span class='line'><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>bocho/urls.pyは無いので作る。</p>
+
+<figure class='code'><figcaption><span>urls.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">from</span> <span class="nn">django.conf.urls</span> <span class="kn">import</span> <span class="n">patterns</span><span class="p">,</span> <span class="n">include</span><span class="p">,</span> <span class="n">url</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">bocho</span> <span class="kn">import</span> <span class="n">views</span>
+</span><span class='line'><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="n">url</span><span class="p">(</span><span class="s">r&#39;^$&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;index&quot;</span><span class="p">),</span> <span class="c">#url(正規表現, 割り当てるビュー, URL作ったりリダイレクトする時に付けておくと便利な名前)</span>
+</span><span class='line'><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>一覧はどうせページングするので、views.pyはこの形で覚えておくと良いかも</p>
+
+<h2>ページング</h2>
+
+<p>どうせbootstrapを使うのでdjango-bootstrap-toolkitを使う方法を載せる。
+ページ分けする対象をobject_list、ページ送りのURLにpage=以外に設定するパラメータをreqとすると、</p>
+
+<figure class='code'><figcaption><span>list.html</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>
+</span><span class='line'>{% load bootstrap_toolkit %}↲
+</span><span class='line'>{% bootstrap_pagination object_list align=&quot;center&quot; extra=req %}
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と設定しておけば良い。</p>
+
+<h2>ページングにパラメータを付ける</h2>
+
+<p>ついでにメモ
+例えば&#8221;date=2001-01-01&#8221;みたいなパラメータを設定したいんだけど、割り当ててる変数？は日付オブジェクトの場合</p>
+
+<figure class='code'><figcaption><span>list.html</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>
+</span><span class='line'>{% bootstrap\_pagination object\_list align=&quot;center&quot; extra=date|date:&quot;Y-m-d&quot;|s    tringformat:&quot;%date=%s&quot;|slice:&quot;1:&quot; %}
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じで文字列をくっつけてパラメータにすることが出来る。かなり強引<a href="https://www.google.com/url?q=http://d.hatena.ne.jp/feiz/20110414/1302771447&amp;usd=2&amp;usg=AFQjCNFN9kzyrEJj_WZEatK2wIL07eaD0w">参考</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">shigepon</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-02T11:51:44+09:00" pubdate data-updated="true">Jul 2<span>nd</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/bootstrap/'>Bootstrap</a>, <a class='category' href='/blog/categories/django/'>Django</a>, <a class='category' href='/blog/categories/python/'>Python</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2014/07/02/django-show-list-with-paging/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2014/07/02/django-show-list-with-paging/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    
+      <div class="related_posts">
+	<h1>Related Posts</h1>
+	<ul>
+		
+	</ul>
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/07/01/ansible-memo/" title="Previous Post: ansible memo">&laquo; ansible memo</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <ul id="recent_posts">
+      <li class="post">
+      <a href="http://blog.shigepon.com" alt="Home"><img src="/images/Home.png"></a>
+      <a href="http://blog.shigepon.com/archives/" alt="Archives"><img src="/images/Calendar.png"></a>
+      <a href="mailto:" alt="E-Mail"><img src="/images/Envelope.png"></a>
+      <a href="http://blog.shigepon.com/atom.xml" alt="subscribe feed"><img src="/images/rss_big.png"></a>
+      </li>
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/07/02/django-show-list-with-paging/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/07/01/ansible-memo/">Ansible Memo</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/30/python-memo/">Python Memo</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/28/groonga-study-kobe-2014-06-27/">全文検索エンジンGroongaユーザ勉強会＠神戸に参加しました</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/25/django-with-bootstrap/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(2):Bootstrapを使ってみる</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+<h1>Categories</h1>
+<ul id="categories">
+	<li class='category'><a href='/blog/categories/analytics/'>Analytics (1)</a></li>
+<li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (6)</a></li>
+<li class='category'><a href='/blog/categories/c­/'>C# (4)</a></li>
+<li class='category'><a href='/blog/categories/c­/'>C++ (3)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (3)</a></li>
+<li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
+<li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
+<li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
+<li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (7)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (4)</a></li>
+<li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
+<li class='category'><a href='/blog/categories/web/'>Web (1)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (3)</a></li>
+<li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
+<li class='category'><a href='/blog/categories/lynux/'>lynux (1)</a></li>
+<li class='category'><a href='/blog/categories/memo/'>memo (7)</a></li>
+<li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (1)</a></li>
+<li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
+<li class='category'><a href='/blog/categories/postgresql/'>postgresql (1)</a></li>
+<li class='category'><a href='/blog/categories/rhaco/'>rhaco (2)</a></li>
+<li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>
+<li class='category'><a href='/blog/categories/ruby/'>ruby (9)</a></li>
+<li class='category'><a href='/blog/categories/sqlite/'>sqlite (1)</a></li>
+<li class='category'><a href='/blog/categories/svn/'>svn (1)</a></li>
+<li class='category'><a href='/blog/categories/test1/'>test1 (2)</a></li>
+<li class='category'><a href='/blog/categories/test2/'>test2 (2)</a></li>
+<li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>
+<li class='category'><a href='/blog/categories/vim/'>vim (2)</a></li>
+<li class='category'><a href='/blog/categories/なでしこ/'>なでしこ (6)</a></li>
+<li class='category'><a href='/blog/categories/なでしこ2/'>なでしこ2 (1)</a></li>
+<li class='category'><a href='/blog/categories/ネタ/'>ネタ (1)</a></li>
+
+</ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - shigepon -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
