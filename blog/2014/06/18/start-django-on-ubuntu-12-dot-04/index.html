@@ -127,6 +127,35 @@ $ sudo aptitude &hellip;">
 <p>でDjango 1.6.5をインストール出来た。python、pipはもうちょっと違うインストール方法があると思うけど、今回はこうしてみた。簡単。</p>
 
 <p>で、次はチュートリアル進めるんだろうけど、チュートリアルは結構内容が多そうなので、必要な部分だけ取り出しながらやってみる。「データベースにすでに登録してあるデータをDjangoとBootstrapでWebサービスっぽく表示する」という方針で必要な箇所を進めていく。なのでadminとかそこらへんはすっ飛ばす予定。</p>
+
+<p>&mdash; 7/2追記</p>
+
+<p>Djangoのインストール前にvirtualenvという仮想環境を入れて、その中でDjango入れた方がいいみたい。</p>
+
+<h3>virtualenvのインストール</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo pip install virtualenv
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>virtualenvで仮想環境構築</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>virtualenv hoge
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とすると、カレントディレクトリにhogeというディレクトリが出来て、その中に仮想環境が入る。オプションでpythonのバージョン指定とかも出来るみたいだけど、今回はしない。</p>
+
+<h3>virtualenvで作った仮想環境を使う</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">source </span>hoge/bin/activate
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で使うことが出来る。ここでDjangoのインストールとかやっておくと良いみたい</p>
 </div>
 
 
@@ -205,6 +234,10 @@ $ sudo aptitude &hellip;">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/07/01/ansible-memo/">Ansible Memo</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/06/30/python-memo/">Python Memo</a>
       </li>
     
@@ -218,10 +251,6 @@ $ sudo aptitude &hellip;">
     
       <li class="post">
         <a href="/blog/2014/06/19/make-detail-page-using-django-2/">詳細ページを作る：DjangoでPostgreSQLとBootstrapを使ったアプリを作ってみた(2)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/06/18/jenkins-setting/">Ubuntu12.04でjenkinsのインストールと設定</a>
       </li>
     
   </ul>

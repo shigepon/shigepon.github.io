@@ -9,7 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Rails関係でいつでも確認出来るようにメモ。 ルーティングでのパラメータの使い方 config/route.rbを編集する 1 get &quot;main/index/:hoge&quot; =&gt; &quot;main#index&quot; app/controllers/ &hellip;">
+  <meta name="description" content="今までphpのrhacoというドマイナーなフレームワークを使ってきてたので、メジャーなフレームワークでも使ってみるかー。ついでにrubyの練習にもなるかーと思ってRails4をはじめたんだけど、なんかこー色々自分の開発方法に合ってないような気がするので挫折する。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,62 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/06/difficult-to-use-rails/">Railsやりにくいから挫折しそうという話</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-06T10:38:10+09:00" pubdate data-updated="true">Jun 6<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>今までphpの<a href="http://rhaco.org">rhaco</a>というドマイナーなフレームワークを使ってきてたので、メジャーなフレームワークでも使ってみるかー。ついでにrubyの練習にもなるかーと思ってRails4をはじめたんだけど、なんかこー色々自分の開発方法に合ってないような気がするので挫折する。</p>
+
+<p>使いにくいなと思った点はメリットとの二律背反の部分もあるんだけど、次のような感じ</p>
+
+<ul>
+<li>モデルをコマンドで作ると、テーブル名が勝手に複数形になる</li>
+<li>viewでurl表示させたりするのが面倒。きっとやり方知らないだけだろうけど。</li>
+<li>コマンドありきで作っていくので、手作業でどこまで修正して良いか分からない</li>
+<li>どんな流れで処理が進むのかさっぱり分からない（フレームワークが大きすぎるから？）。本読めって話だろうけど・・・なー(めんどい)。</li>
+<li>分からない時に聞く相手が居ない</li>
+<li>バージョンによってやり方が結構変わるみたいで、ググってもそれが正しい手法か分からない時がある（これはrhacoも同じだからrhacoにも何とかして欲しいとこではある）</li>
+<li>Capistrano+nginx+unicornで結構ハマってそれだけで挫折しそうになった。未だにちゃんとunicornをリロード出来ない。</li>
+<li>メジャーなフレームワークのはずなのに、ちょこちょこバッドノウハウない？違う？</li>
+<li>SassやCoffeeScriptがデフォみたいなのがやだ</li>
+<li>いちいちgemファイルでほにゃららしないと上手く動かない？Bootstrapとか。そしてgemがあるかどうかをいちいちググって探さないといけない。</li>
+</ul>
+
+
+<p>なんとなくだけどRailsって先に設計とかかっちりやってから作るってやり方な感じがして、「大雑把に作って、そこから細部をつめていく」みたいなやり方には合ってないんじゃないかと思った。個人でサクサクっとWebサービス作りたい場合には大雑把にまず作りたいんだよなー。</p>
+
+<p>見当違いかもしれないけどね。とりあえず他を当たってみる？メジャーどころでDjango？同じように挫折するかもしれないけどとりあえず試してみよう。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -875,101 +931,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/20/nginx-memo/">Nginx Memo</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-20T16:04:53+09:00" pubdate data-updated="true">Mar 20<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>Nginxで503コードのページをカスタマイズする</h2>
-
-<p>なるべく手軽にメンテナンスページを出すための手順</p>
-
-<ul>
-<li>path/to/root/error/503.htmlにページを用意する。</li>
-<li>path/to/root/error/以下に画像やcss、javascriptなど必要なものを用意する。</li>
-<li>nginxの設定を変更する。必要な部分だけ抜粋</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>server {
-</span><span class='line'>  server_name xxx.xxx;
-</span><span class='line'>        set $maintenance false;
-</span><span class='line'>        if (-f $document_root/error/503.html ){
-</span><span class='line'>                set $maintenance true;
-</span><span class='line'>        }
-</span><span class='line'>        if ($uri ~ "^/error/") {
-</span><span class='line'>            set $maintenance false;
-</span><span class='line'>        }
-</span><span class='line'>        if ($remote_addr = XXX.XXX.XXX.XXX ){
-</span><span class='line'>                set $maintenance false;#指定したIPからのアクセスは普通に見れるようにする
-</span><span class='line'>        }
-</span><span class='line'>        if ($maintenance = true) {
-</span><span class='line'>                return 503;
-</span><span class='line'>        }
-</span><span class='line'>        error_page 503 @maintenance;
-</span><span class='line'>        location @maintenance {
-</span><span class='line'>                rewrite ^(.*)$ /error/503.html break;
-</span><span class='line'>                expires 0;
-</span><span class='line'>        }
-</span><span class='line'>        location /error/ {}
-</span><span class='line'>
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>path/to/root/error/503.htmlがあれば、メンテナンス画面を表示する。なければ表示しない。一度nginx設定をリロードすればその後はリロードの必要もない。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -997,6 +958,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/07/01/ansible-memo/">Ansible Memo</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/06/30/python-memo/">Python Memo</a>
       </li>
     
@@ -1010,10 +975,6 @@
     
       <li class="post">
         <a href="/blog/2014/06/19/make-detail-page-using-django-2/">詳細ページを作る：DjangoでPostgreSQLとBootstrapを使ったアプリを作ってみた(2)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/06/18/jenkins-setting/">Ubuntu12.04でjenkinsのインストールと設定</a>
       </li>
     
   </ul>

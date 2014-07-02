@@ -156,7 +156,7 @@
     </url>
     <url>
         <loc>http://blog.shigepon.com/blog/2014/06/18/start-django-on-ubuntu-12-dot-04/</loc>
-        <lastmod>2014-06-18T08:24:20+09:00</lastmod>
+        <lastmod>2014-07-02T09:54:50+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/blog/2014/06/18/start-django-project/</loc>
@@ -183,16 +183,20 @@
         <lastmod>2014-06-30T20:42:09+09:00</lastmod>
     </url>
     <url>
+        <loc>http://blog.shigepon.com/blog/2014/07/01/ansible-memo/</loc>
+        <lastmod>2014-07-01T17:08:12+09:00</lastmod>
+    </url>
+    <url>
         <loc>http://blog.shigepon.com/blog/archives/</loc>
-        <lastmod>2014-06-30T20:42:09+09:00</lastmod>
+        <lastmod>2014-07-02T09:54:50+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/archives/</loc>
-        <lastmod>2014-06-30T20:42:09+09:00</lastmod>
+        <lastmod>2014-07-02T09:54:50+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/</loc>
-        <lastmod>2014-06-30T20:42:09+09:00</lastmod>
+        <lastmod>2014-07-02T09:54:50+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/robots.txt</loc>

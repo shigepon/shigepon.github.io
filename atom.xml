@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-06-30T20:43:03+09:00</updated>
+  <updated>2014-07-02T09:55:22+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,27 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[ansible memo]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/07/01/ansible-memo/"/>
+    <updated>2014-07-01T16:56:06+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/07/01/ansible-memo</id>
+    <content type="html"><![CDATA[<p>ansibleで自分が欲しい情報が色んなページに散らばっていたので、メモ</p>
+
+<h3>ansible-playbookのオプション</h3>
+
+<ul>
+<li>-K: sudoのパスワード入力</li>
+<li>-C (&mdash;check): 実際に実行しないでチェックしてくれる</li>
+<li>-l name: hostsファイルに[name]と書かれたホストにのみ実行</li>
+<li>-i hostsfile: 初期状態では/etc/ansible/hostsを見に行くので、自分で指定したい場合に</li>
+<li>&mdash;syntax-check: playbookの書式チェック。書いて最初にやるといい</li>
+<li>&mdash;list-tasks: playbookで行う内容をリストアップ</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Python memo]]></title>
@@ -514,6 +535,35 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 <p>でDjango 1.6.5をインストール出来た。python、pipはもうちょっと違うインストール方法があると思うけど、今回はこうしてみた。簡単。</p>
 
 <p>で、次はチュートリアル進めるんだろうけど、チュートリアルは結構内容が多そうなので、必要な部分だけ取り出しながらやってみる。「データベースにすでに登録してあるデータをDjangoとBootstrapでWebサービスっぽく表示する」という方針で必要な箇所を進めていく。なのでadminとかそこらへんはすっ飛ばす予定。</p>
+
+<p>&mdash; 7/2追記</p>
+
+<p>Djangoのインストール前にvirtualenvという仮想環境を入れて、その中でDjango入れた方がいいみたい。</p>
+
+<h3>virtualenvのインストール</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo pip install virtualenv
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>virtualenvで仮想環境構築</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>virtualenv hoge
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とすると、カレントディレクトリにhogeというディレクトリが出来て、その中に仮想環境が入る。オプションでpythonのバージョン指定とかも出来るみたいだけど、今回はしない。</p>
+
+<h3>virtualenvで作った仮想環境を使う</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">source </span>hoge/bin/activate
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で使うことが出来る。ここでDjangoのインストールとかやっておくと良いみたい</p>
 ]]></content>
   </entry>
   
@@ -1220,74 +1270,6 @@ php-buildのインストールは下のような感じ</p>
 
 
 <p>と出ればおk。確認してないけど、Ubuntu 13.10なら1.0.1e-3ubuntu1.2、Ubuntu 12.10なら1.0.1c-3ubuntu2.7と出ていればおk。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[nginx memo]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/03/20/nginx-memo/"/>
-    <updated>2014-03-20T16:04:53+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/03/20/nginx-memo</id>
-    <content type="html"><![CDATA[<h2>Nginxで503コードのページをカスタマイズする</h2>
-
-<p>なるべく手軽にメンテナンスページを出すための手順</p>
-
-<ul>
-<li>path/to/root/error/503.htmlにページを用意する。</li>
-<li>path/to/root/error/以下に画像やcss、javascriptなど必要なものを用意する。</li>
-<li>nginxの設定を変更する。必要な部分だけ抜粋</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>server {
-</span><span class='line'>  server_name xxx.xxx;
-</span><span class='line'>        set $maintenance false;
-</span><span class='line'>        if (-f $document_root/error/503.html ){
-</span><span class='line'>                set $maintenance true;
-</span><span class='line'>        }
-</span><span class='line'>        if ($uri ~ "^/error/") {
-</span><span class='line'>            set $maintenance false;
-</span><span class='line'>        }
-</span><span class='line'>        if ($remote_addr = XXX.XXX.XXX.XXX ){
-</span><span class='line'>                set $maintenance false;#指定したIPからのアクセスは普通に見れるようにする
-</span><span class='line'>        }
-</span><span class='line'>        if ($maintenance = true) {
-</span><span class='line'>                return 503;
-</span><span class='line'>        }
-</span><span class='line'>        error_page 503 @maintenance;
-</span><span class='line'>        location @maintenance {
-</span><span class='line'>                rewrite ^(.*)$ /error/503.html break;
-</span><span class='line'>                expires 0;
-</span><span class='line'>        }
-</span><span class='line'>        location /error/ {}
-</span><span class='line'>
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>path/to/root/error/503.htmlがあれば、メンテナンス画面を表示する。なければ表示しない。一度nginx設定をリロードすればその後はリロードの必要もない。</p>
 ]]></content>
   </entry>
   
