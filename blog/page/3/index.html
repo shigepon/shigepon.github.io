@@ -9,7 +9,10 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="本日、OpenSSLの重大バグが発覚。インターネットの大部分に影響の可能性 | TechCrunch Japanというニュースで 過去2年以内のあらゆるバージョンのOpenSSLが走るシステムで、システムメモリー上にある大量のデータを暴露することが可能 と書いてあった、これはまずいので、 &hellip;">
+  <meta name="description" content="git関連のメモ 変更履歴を見る 1
+$ git log -p で全体の変更履歴 1
+$ git log -p filename でfilenameの変更履歴を表示する
+">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +82,58 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/04/09/git-memo/">Git Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-09T12:36:49+09:00" pubdate data-updated="true">Apr 9<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>git関連のメモ</p>
+
+<h3>変更履歴を見る</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git log -p
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で全体の変更履歴</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git log -p filename
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でfilenameの変更履歴を表示する</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1129,96 +1184,6 @@ events_controller.rbを次のように変えると</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/01/vim-memo/">Vim Memo</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-01T14:14:10+09:00" pubdate data-updated="true">Mar 1<span>st</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>vimでsnippet</h2>
-
-<p>色々方法があるみたいだけど、neocomplecacheを入れているので、それと相性が良さそうな（作者が同じ）プラグインを入れた</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>NeoBundle 'Shougo/neosnippet'
-</span><span class='line'>NeoBundle 'Shougo/neosnippet-snippets'
-</span><span class='line'>
-</span><span class='line'>" Plugin key-mappings.
-</span><span class='line'>imap &lt;C-k&gt;     &lt;Plug&gt;(neosnippet_expand_or_jump)
-</span><span class='line'>smap &lt;C-k&gt;     &lt;Plug&gt;(neosnippet_expand_or_jump)
-</span><span class='line'>xmap &lt;C-k&gt;     &lt;Plug&gt;(neosnippet_expand_target)
-</span><span class='line'>" " SuperTab like snippets behavior.
-</span><span class='line'>imap &lt;expr&gt;&lt;TAB&gt; neosnippet#expandable_or_jumpable() ?
-</span><span class='line'>\ "\&lt;Plug&gt;(neosnippet_expand_or_jump)"
-</span><span class='line'>\: pumvisible() ? "\&lt;C-n&gt;" : "\&lt;TAB&gt;"
-</span><span class='line'>smap &lt;expr&gt;&lt;TAB&gt; neosnippet#expandable_or_jumpable() ?
-</span><span class='line'>\ "\&lt;Plug&gt;(neosnippet_expand_or_jump)"
-</span><span class='line'>\: "\&lt;TAB&gt;"
-</span><span class='line'>"
-</span><span class='line'>" " For snippet_complete marker.
-</span><span class='line'>if has('conceal')
-</span><span class='line'>  set conceallevel=2 concealcursor=i
-</span><span class='line'>endif</span></code></pre></td></tr></table></div></figure>
-
-
-<p>を.vimrcに追記して、vimを再起動後、</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>:NeoBundleInstall</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でインストール完了。もう一度vimを再起動して、phpファイルを空けて
-おもむろにインサートモードで「for」とか打ったらちゃんとsnippetが表示された。&lt;C-n>などで選択してからtab押したらちゃんと入力された。
-いいね〜！！</p>
-
-<p>現在、デフォルトのsnippetとしてneosnippet-snippetsをインストールしないとデフォルトのsnippetを出してくれないことに注意。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -1246,6 +1211,10 @@ events_controller.rbを次のように変えると</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/07/05/groonga-qa/">Groongaアンケート？</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/07/02/django-show-list-with-paging/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する</a>
       </li>
     
@@ -1259,10 +1228,6 @@ events_controller.rbを次のように変えると</p>
     
       <li class="post">
         <a href="/blog/2014/06/28/groonga-study-kobe-2014-06-27/">全文検索エンジンGroongaユーザ勉強会＠神戸に参加しました</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/06/25/django-with-bootstrap/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(2):Bootstrapを使ってみる</a>
       </li>
     
   </ul>

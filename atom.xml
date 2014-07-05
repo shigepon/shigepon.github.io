@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-07-02T14:29:27+09:00</updated>
+  <updated>2014-07-06T01:38:25+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,71 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Groongaアンケート？]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/07/05/groonga-qa/"/>
+    <updated>2014-07-05T13:52:55+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/07/05/groonga-qa</id>
+    <content type="html"><![CDATA[<p>今回は他の人からの話があるので丁寧語で。
+@ktouさんからGroongaについて「Groongaについてのいくつかの質問について答えて欲しい」との話がありましたので、ブログに載せておきます。</p>
+
+<p>質問は以下の3点</p>
+
+<ul>
+<li>Groongaを選んだ決め手</li>
+<li>実際にGroongaを使っていてよいと思っているところ</li>
+<li>Groongaがこうなるともっとうれしいと思うところ</li>
+</ul>
+
+
+<h3>Groongaを選んだ決め手</h3>
+
+<p>現在運営しているサービス<a href="http://thoz.org">とある法律判例の全文検索</a>を作り始める時に、全文検索をサービスに入れるのを前提に考えてましたので、全文検索エンジンについて調べました。DBとしてはPostgreSQLをメインで使っているので、当時は選択肢として次のようなものがありました。</p>
+
+<ul>
+<li>Groonga（まだバージョン1になってなかったような）</li>
+<li>Senna</li>
+<li>tsvector</li>
+<li>namazu</li>
+<li>Hyper Estraier</li>
+</ul>
+
+
+<p>最初は何もアプリを入れなくていいのでtsvectorを使った全文検索を試してみたんですが、bigramで日本語が使えない。使うならソースからコンパイルというのが当時面倒だったので辞めました（当時からVagrantとかDockerとかあって、色々試せたらbigramでいってたかも）。</p>
+
+<p>なので、他4つを比較した訳なんですが、作るサービスは個人サービスだし、なるべく新しいもので、かつ日本人が作っているものを利用してみようと思い、Groongaを選択しました。あと、Groongaが「Sennaの後継」という立場だったのも大きかったと思います。Sennaの後継なら新しいアプリだとしても、それなりに信用があるだろう。すぐにメンテされなくなるようなものでも無いだろうという判断をしました。</p>
+
+<h3>実際にGroongaを使っていてよいと思っているところ</h3>
+
+<p>まずサーバ1個でかなり無茶な使い方してもちゃんと動いてくれるところです。Groonga勉強会では「データ量がメモリを超えだしたら分散を考えて」みたいな話が出たのですが、結構超えてても何の問題もなく動いてくれます。</p>
+
+<p>次は言語バインディングとかあまり考えなくてもHTTPでアクセス出来る方法を用意してくれているので、HTTPアクセスさえ出来ればどんな言語からでも利用出来る点が良いと思います。Mroongaは全く使っていませんし、Rroongaもデータのバックアップ用途以外は全く使ってません。HTTPアクセス出来る場合は、管理もHTTPで出来ます。これも便利だと思います。</p>
+
+<p>ドリルダウン、タグ検索、補完補正など、全文検索以外にも使える機能が沢山あります。沢山ありすぎて利用できていない機能が多々ありますがorz。</p>
+
+<p>機能とは関係ありませんが、TwitterでGroongaについてボヤくと@ktouさんがフォローしてくれるのがいつもとても助かっています＞＜。そういう人が居ると、使う時にとても心強いです。</p>
+
+<p>名前が好きです。Elasticなんたらは何かエラそうですが、Groongaはグルグルしてるっぽいのがいいです。</p>
+
+<h3>Groongaがこうなるともっとうれしいと思うところ</h3>
+
+<p>現在もとてもありがたいのですが、こうなると嬉しい点を箇条書きします。</p>
+
+<ul>
+<li>現在使っている機能以外でもっと色々出来るようなのですが、情報が少ない気がします。ドキュメントが充実してくるととても嬉しいです。ドキュメントが充実すればきっとTwitterでボヤく率も減る・・・かも。</li>
+<li>Rroonga使わないでGroonga単体の機能として、大容量データのバックアップを取れると嬉しいです。</li>
+<li>難しいと思いますが、複数カラム（カラムA,B)での全文検索で、CとDを検索したい時、カラムAにCが、カラムBにDが入ってる時に、検索結果として出力出来るフラグみたいなのを入れて欲しいです。</li>
+<li>もしかしたら出来るのかもしれませんが、ソースからビルドした場合にgroonga-server系の機能が使えるようにしてもらえるとHTTPから使っている身としては嬉しいです。</li>
+<li>cliでのヒストリーは特に何もアプリ入れなくても出来るようにしてくれるとまた嬉しいです。</li>
+<li>sqlのinsert文みたいな形でloadが出来ると、RDBで使っていたテーブルを丸々移動とか手軽に出来そうなので、そういうのが出来ると嬉しいです。もしくはcsvでloadが出来るとか。まぁsql使うならMroonga使えって話ですが・・・単体でも特にloadについてRDBから書き出せる形式のものを読み込めると嬉しいなーなんて思いました。</li>
+<li>勉強会の時に「ぐるーんが」なのか「むるーんが」なのか「るるーんが」なのかが発音でハッキリしませんでしたが、私の耳が悪いんですねきっと。</li>
+</ul>
+
+
+<p>以上追記するかもしれませんが、こんな感じで〜</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する]]></title>
@@ -1373,31 +1438,6 @@ php-buildのインストールは下のような感じ</p>
 
 
 <p>以上でrailsアプリが見れるようになる。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[git memo]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/04/09/git-memo/"/>
-    <updated>2014-04-09T12:36:49+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/04/09/git-memo</id>
-    <content type="html"><![CDATA[<p>git関連のメモ</p>
-
-<h3>変更履歴を見る</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git log -p
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>で全体の変更履歴</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git log -p filename
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でfilenameの変更履歴を表示する</p>
 ]]></content>
   </entry>
   
