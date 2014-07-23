@@ -9,10 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="git関連のメモ 変更履歴を見る 1
-$ git log -p で全体の変更履歴 1
-$ git log -p filename でfilenameの変更履歴を表示する
-">
+  <meta name="description" content="さくらvpsのUbuntu12.04にnginxとunicornをインストールしてローカル環境に作ったRailsアプリを手動でアップロードして表示させてみた。何となくユニコーンって名前が好きなので、unicornを使うことにした。 nginxインストール &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +79,144 @@ $ git log -p filename でfilenameの変更履歴を表示する
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/02/use-nginxand-unicorn-on-sakura-vps/">Nginx,unicornをさくらvpsにインストールしてrailsアプリを手動でデプロイしてみる</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-02T15:10:23+09:00" pubdate data-updated="true">May 2<span>nd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>さくらvpsのUbuntu12.04にnginxとunicornをインストールしてローカル環境に作ったRailsアプリを手動でアップロードして表示させてみた。何となくユニコーンって名前が好きなので、unicornを使うことにした。</p>
+
+<h2>nginxインストール</h2>
+
+<p>nginxは本当は手動でインストールするのがいいんだろうけど、面倒なので</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install nginx
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でインストール</p>
+
+<h2>unicornインストール</h2>
+
+<p>rubyとかbundlerとかが必要なので、無い場合は<a href="http://blog.shigepon.com/blog/2014/02/26/rails-startup/">Ruby on Railsを入れてみた</a>に書いた通りにインストール。unicornはGemfileに</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>gem <span class="s2">&quot;unicorn&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と追記して</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle install -path vendor/bundle
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でインストール出来る。要らないかもしれないけどお約束のようにインストール後はrbenv rehashしておく。</p>
+
+<h2>nginxの設定</h2>
+
+<p>設定ファイルは最低限これくらい書いておけばよさげ</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>upstream unicorn-unix-domain-socket <span class="o">{</span>
+</span><span class='line'>        server unix:/var/run/unicorn/unicorn_<span class="o">[</span>app_name<span class="o">]</span>.sock <span class="nv">fail_timeout</span><span class="o">=</span>0;
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>upstream unicorn-tcp <span class="o">{</span>
+</span><span class='line'>        server 127.0.0.1:8080;
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>server <span class="o">{</span>
+</span><span class='line'>        listen 80;
+</span><span class='line'>        server_name http://hoge;
+</span><span class='line'>
+</span><span class='line'>        root /path/to/app_root/public;
+</span><span class='line'>
+</span><span class='line'>        access_log  /var/log/nginx/access.log;
+</span><span class='line'>        error_log /var/log/nginx/error.log;
+</span><span class='line'>
+</span><span class='line'>        location / <span class="o">{</span>
+</span><span class='line'>                proxy_pass http://unicorn-tcp;
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>/var/run/unicornディレクトリは前もって作っておく。/tmpとかでも良さげなんだけど、どうなんだろう？</p>
+
+<h2>railsアプリのアップロード</h2>
+
+<p>適当にアップロード。rsyncで適当にやった。</p>
+
+<h2>unicorn起動</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle <span class="nb">exec </span>unicorn_rails -D
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>-Dはデーモンとして起動。configファイルを指定する場合は、-c path/to/config.rbを指定する。</p>
+
+<h2>nginx起動</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>service nginx start
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以上でrailsアプリが見れるようになる。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1124,66 +1259,6 @@ events_controller.rbを次のように変えると</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/07/linux-command-memo/">Linux Command Memo</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-07T08:50:21+09:00" pubdate data-updated="true">Mar 7<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>アクセスログのIPアドレスを集計してみる</h2>
-
-<p>参考：<a href="http://blog.livedoor.jp/stock_value/archives/51443839.html">Linux サーバーでお手軽にログの集計：こっそりと。 &ndash; livedoor Blog（ブログ）</a></p>
-
-<p>Google Analyticsでリファラ無しの変なアクセスが増えたので、アクセスログからIPを集計してみた。
-アクセスログの書式はLTSVでこんな感じ</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>time:07/Mar/2014:06:25:22 +0900       host::11.22.33.46       forwardedfor:-  req:GET / HTTP/1.1   status:200      size:1       referer:-ua:Mozilla/5.0 (***)      reqtime:0.777   cache:- runtime:-       vhost:hoge.fuga</span></code></pre></td></tr></table></div></figure>
-
-
-<p>なんか色々ソフト使うのとか面倒だったのでgrepとかawkでほげほげした。要はhost:11.22.33.44に当たる箇所を取り出して表示回数をまとめれば良い。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ cat access.log | grep -v -i "bot" | grep "referer:-" | grep "status:200" | awk '{print $3}' | sort | uniq -c</span></code></pre></td></tr></table></div></figure>
-
-
-<p>軽くbot避けを入れてるけど、crawlerとかspiderとかを避けておくとより正確になるかも。
-これだけだと一杯出てくるので100回以上アクセスあったIPだけ取り出してみた。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ cat access.log | grep -v -i "bot" | grep "referer:-" | grep "status:200" | awk '{print $3}' | sort | uniq -c | grep "[0-9]\{3,\}\s"</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ただ、最初の目的には最初の集計の方が役に立った。結局Bingのボットだったみたい。Analyticsではじけなかったアクセスがあったのかな。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -1211,6 +1286,10 @@ events_controller.rbを次のように変えると</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/07/23/use-python-social-auth-in-django/">Djangoでpython-social-authを使うための最低限の設定</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/07/05/groonga-qa/">Groongaアンケート？</a>
       </li>
     
@@ -1224,10 +1303,6 @@ events_controller.rbを次のように変えると</p>
     
       <li class="post">
         <a href="/blog/2014/06/30/python-memo/">Python Memo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/06/28/groonga-study-kobe-2014-06-27/">全文検索エンジンGroongaユーザ勉強会＠神戸に参加しました</a>
       </li>
     
   </ul>

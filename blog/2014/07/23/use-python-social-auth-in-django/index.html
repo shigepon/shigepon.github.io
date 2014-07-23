@@ -5,12 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Python memo - shigeponが関心のある技術情報など</title>
+  <title>Djangoでpython-social-authを使うための最低限の設定 - shigeponが関心のある技術情報など</title>
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Djangoやり始めたので、その過程で記録しておきたいことをメモ。 pip freezeでWarning: cannot find svn location for distribute==0.6.24dev-r0 1
-$ sudo pip install --upgrade distribute &hellip;">
+  <meta name="description" content="「djangoでfacebook, twitter, mixiでの認証使うにはどうしたらいいんだろ？」URLと質問したら、@key3さんから「@shigepon python-social-authおすすめ https://t.co/uWqOX8Xh94%E3%80% &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +18,7 @@ $ sudo pip install --upgrade distribute &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.shigepon.com/blog/2014/06/30/python-memo">
+  <link rel="canonical" href="http://blog.shigepon.com/blog/2014/07/23/use-python-social-auth-in-django">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -83,7 +82,7 @@ $ sudo pip install --upgrade distribute &hellip;">
   
   <header>
     
-      <h1 class="entry-title">Python Memo</h1>
+      <h1 class="entry-title">Djangoでpython-social-authを使うための最低限の設定</h1>
     
     
       <p class="meta">
@@ -99,23 +98,93 @@ $ sudo pip install --upgrade distribute &hellip;">
   
 
 
-<time datetime="2014-06-30T20:38:44+09:00" pubdate data-updated="true">Jun 30<span>th</span>, 2014</time>
+<time datetime="2014-07-23T09:40:36+09:00" pubdate data-updated="true">Jul 23<span>rd</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Djangoやり始めたので、その過程で記録しておきたいことをメモ。</p>
+<div class="entry-content"><p>「djangoでfacebook, twitter, mixiでの認証使うにはどうしたらいいんだろ？」<a href="http://twitter.com/shigepon/status/491397829215006720">URL</a>と質問したら、@key3さんから「@shigepon python-social-authおすすめ <a href="https://t.co/uWqOX8Xh94%E3%80%8D">https://t.co/uWqOX8Xh94%E3%80%8D</a><a href="http://twitter.com/key3/status/491404335335477248">URL</a>と教えて貰ったので試してみた。</p>
 
-<h2>pip freezeでWarning: cannot find svn location for distribute==0.6.24dev-r0</h2>
+<p>一日試してみて、認証出来たんだけど、<a href="http://psa.matiasaguirre.net/docs/index.html">ドキュメント</a>見ても、どれが最低限必要な設定なのか良く分からなかったのでブログに残しておく。</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo pip install --upgrade distribute
+<h2>python-social-authをインストール</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ pip install python-social-auth</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>設定</h2>
+
+<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'>      <span class="s">&#39;social.apps.django_app.default&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="p">)</span>
+</span><span class='line'><span class="n">AUTHENTICATION_BACKENDS</span> <span class="o">=</span> <span class="p">(</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'>      <span class="s">&#39;social.backends.twitter.TwitterOAuth&#39;</span><span class="p">,</span><span class="c">#Twitterでの認証をする場合。他の認証がある場合は該当するバックエンドを追加</span>
+</span><span class='line'>      <span class="s">&#39;django.contrib.auth.backends.ModelBackend&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'>      <span class="p">)</span>
+</span><span class='line'><span class="n">SOCIAL_AUTH_TWITTER_KEY</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="c">#これと次の行はTwitter認証用。別の認証を用いる場合は別の設定が必要</span>
+</span><span class='line'><span class="n">SOCIAL_AUTH_TWITTER_SECRET</span><span class="o">=</span><span class="s">&#39;&#39;</span>
+</span><span class='line'><span class="n">SOCIAL_AUTH_LOGIN_REDIRECT_URL</span> <span class="o">=</span> <span class="s">&#39;/&#39;</span>
+</span><span class='line'><span class="n">SOCIAL_AUTH_LOGIN_URL</span> <span class="o">=</span> <span class="s">&#39;/login/&#39;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>でおk</p>
+<p>注意：
+AUTH_USER_MODEL
+を加えるとエラー出たので注意(Django 1.6)</p>
+
+<figure class='code'><figcaption><span>urls.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">url</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s">&#39;social.apps.django_app.urls&#39;</span><span class="p">,</span><span class="n">namespace</span><span class="o">=</span><span class="s">&#39;social&#39;</span><span class="p">)),</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>設定後</h2>
+
+<p>syncdbしておく</p>
+
+<figure class='code'><figcaption><span>urls.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">$</span> <span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">syncdb</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで例えばtwitter認証の場合に</p>
+
+<figure class='code'><figcaption><span>urls.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">host</span><span class="o">/</span><span class="n">login</span><span class="o">/</span><span class="n">twitter</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>にアクセスすると認証を行ってくれるようになった。
+テンプレートにリンクを作りたい場合は</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;\{\% url &#39;social:base&#39; &#39;twitter&#39; \%\}&quot;</span><span class="nt">&gt;</span>login<span class="nt">&lt;/a&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とかやると作れる。
+「twitter」の部分は認証の種類によって変えるが、どういうルールで名前を決めるのかイマイチ分かってない。試行錯誤が要るかも。</p>
 </div>
 
 
@@ -138,21 +207,15 @@ $ sudo pip install --upgrade distribute &hellip;">
   
 
 
-<time datetime="2014-06-30T20:38:44+09:00" pubdate data-updated="true">Jun 30<span>th</span>, 2014</time>
+<time datetime="2014-07-23T09:40:36+09:00" pubdate data-updated="true">Jul 23<span>rd</span>, 2014</time>
       
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/python/'>Python</a>
-  
-</span>
 
 
     </p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2014/06/30/python-memo/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2014/06/30/python-memo/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2014/07/23/use-python-social-auth-in-django/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2014/07/23/use-python-social-auth-in-django/" >Tweet</a>
   
   
   
@@ -172,10 +235,8 @@ $ sudo pip install --upgrade distribute &hellip;">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/06/28/groonga-study-kobe-2014-06-27/" title="Previous Post: 全文検索エンジンGroongaユーザ勉強会＠神戸に参加しました">&laquo; 全文検索エンジンGroongaユーザ勉強会＠神戸に参加しました</a>
+        <a class="basic-alignment left" href="/blog/2014/07/05/groonga-qa/" title="Previous Post: Groongaアンケート？">&laquo; Groongaアンケート？</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/07/01/ansible-memo/" title="Next Post: ansible memo">ansible memo &raquo;</a>
       
     </p>
   </footer>
