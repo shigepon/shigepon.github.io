@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-07-23T09:51:10+09:00</updated>
+  <updated>2014-07-23T09:53:24+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -18,7 +18,7 @@
     <link href="http://blog.shigepon.com/blog/2014/07/23/use-python-social-auth-in-django/"/>
     <updated>2014-07-23T09:40:36+09:00</updated>
     <id>http://blog.shigepon.com/blog/2014/07/23/use-python-social-auth-in-django</id>
-    <content type="html"><![CDATA[<p>「djangoでfacebook, twitter, mixiでの認証使うにはどうしたらいいんだろ？」<a href="http://twitter.com/shigepon/status/491397829215006720">URL</a>と質問したら、@key3さんから「@shigepon python-social-authおすすめ <a href="https://t.co/uWqOX8Xh94%E3%80%8D">https://t.co/uWqOX8Xh94%E3%80%8D</a><a href="http://twitter.com/key3/status/491404335335477248">URL</a>と教えて貰ったので試してみた。</p>
+    <content type="html"><![CDATA[<p>「djangoでfacebook, twitter, mixiでの認証使うにはどうしたらいいんだろ？」<a href="http://twitter.com/shigepon/status/491397829215006720">URL</a>と質問したら、@key3さんから「@shigepon python-social-authおすすめ <a href="https://t.co/uWqOX8Xh94">https://t.co/uWqOX8Xh94</a>」<a href="http://twitter.com/key3/status/491404335335477248">URL</a>と教えて貰ったので試してみた。</p>
 
 <p>一日試してみて、認証出来たんだけど、<a href="http://psa.matiasaguirre.net/docs/index.html">ドキュメント</a>見ても、どれが最低限必要な設定なのか良く分からなかったのでブログに残しておく。</p>
 
