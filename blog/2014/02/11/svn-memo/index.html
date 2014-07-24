@@ -123,6 +123,24 @@ Password for ‘(null)’ GNOME keyring: というメッセージが表示され
 
 
 <p>でいける。</p>
+
+<h2>コミットするファイルを、ファイルで指定する</h2>
+
+<p>fuga.htmlとhage.htmlを変更しててfuga.htmlだけコミットしたい場合</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>fuga.html
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>というファイル(hoge.txt)を作っておいて、</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>svn commit -m <span class="s2">&quot;コメント&quot;</span> --targets hoge.txt
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でおk</p>
 </div>
 
 
