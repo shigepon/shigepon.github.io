@@ -9,8 +9,8 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="ヘタレなことにRailsに挫折してしまったので、Railsと同様良く名前が出てくるDjangoを試してみることにする。Djangoを使うにはpythonとかpipとか入れておくといいらしい。 どれもとりあえずaptitudeでインストール出来るので、おもむろに 1
-$ sudo aptitude &hellip;">
+  <meta name="description" content="Djangoはプロジェクトを作っておいて、アプリ毎に細かく機能を分けて、プロジェクトで統合するみたいな形式を取るみたい。なのでまずはDjangoプロジェクトを作成 1
+$ django-admin.py startproject myproject とすると、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +80,173 @@ $ sudo aptitude &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/18/start-django-project/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずDjangoプロジェクトとアプリを作ってみた</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-18T12:49:29+09:00" pubdate data-updated="true">Jun 18<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Djangoはプロジェクトを作っておいて、アプリ毎に細かく機能を分けて、プロジェクトで統合するみたいな形式を取るみたい。なのでまずはDjangoプロジェクトを作成</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>django-admin.py startproject myproject
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とすると、カレントフォルダにmyprojectフォルダが出来る。ファイル構成を見ると、</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>myproject/
+</span><span class='line'>  manage.py
+</span><span class='line'>  myproject/
+</span><span class='line'>    __init__.py
+</span><span class='line'>    settings.py
+</span><span class='line'>    urls.py
+</span><span class='line'>    wsgi.py
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>となっている。myprojectフォルダ内のファイルに共通設定を書くという感じになりそうだ。PostgreSQLに接続するので、settings.pyを修正</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="s">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>  <span class="s">&#39;ENGINE&#39;</span><span class="p">:</span> <span class="s">&#39;django.db.backends.postgresql_psycopg2&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&#39;NAME&#39;</span><span class="p">:</span> <span class="s">&#39;hoge&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&#39;USER&#39;</span><span class="p">:</span> <span class="s">&#39;username&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&#39;PASSWORD&#39;</span><span class="p">:</span> <span class="s">&#39;******&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&#39;HOST&#39;</span><span class="p">:</span> <span class="s">&#39;hostname or ip&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s">&#39;PORT&#39;</span><span class="p">:</span> <span class="s">&#39;5432&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>あと、psycopg2をインストールしていないので</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo pip install psycopg2
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とやって</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>myproject
+</span><span class='line'><span class="nv">$ </span>python manage.py syncdb
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とやると、hogeに色々テーブルが出来る。INSTALLED_APPSに書いてあるアプリに関するテーブルみたい。初期状態では以下のアプリが入るみたい。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>django.contrib.admin - 管理用サイト
+</span><span class='line'>django.contrib.auth - 認証
+</span><span class='line'>django.contrib.contenttypes - ??
+</span><span class='line'>django.contrib.sessions - セッション管理
+</span><span class='line'>django.contrib.messages - ??
+</span><span class='line'>django.contrib.staticfile - 静的ファイル用アプリ
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>テーブルは以下のものが作られた</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>auth_group
+</span><span class='line'>auth_group_permissions
+</span><span class='line'>auth_permission
+</span><span class='line'>auth_user
+</span><span class='line'>auth_user_groups
+</span><span class='line'>auth_user_user_permissions
+</span><span class='line'>django_admin_log
+</span><span class='line'>django_content_type
+</span><span class='line'>django_session
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>あと上のコマンド実行時に、管理者ユーザー作るかどうか聞かれる。とりあえず作った。</p>
+
+<p>DB設定済ませたので、おもむろにアプリ作成。Railsの時と同様に傍聴情報の出力をやってみるか。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py startapp bocho
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>を実行するとbochoフォルダが出来てその中に</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>bocho/
+</span><span class='line'>  __init__.py
+</span><span class='line'>  admin.py
+</span><span class='line'>  models.py
+</span><span class='line'>  tests.py
+</span><span class='line'>  views.py
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>が出来た。とりあえずここまで。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -752,186 +919,6 @@ php-buildのインストールは下のような感じ</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/">Capistrano3でbitbucketからデプロイしようとしたらハマった話</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-04T10:04:00+09:00" pubdate data-updated="true">May 4<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>まだデプロイ作業を途中までしか確認していないので、とりあえずハマったポイントを書いておく。
- デプロイ作業をテストしてみたらこんなエラーが出た</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle <span class="nb">exec </span>cap production deploy:check
-</span><span class='line'> INFO <span class="o">[</span>5f874a7e<span class="o">]</span> Running /usr/bin/env mkdir -p /tmp/hoge/ on fuga
-</span><span class='line'>DEBUG <span class="o">[</span>5f874a7e<span class="o">]</span> Command: /usr/bin/env mkdir -p /tmp/hoge/
-</span><span class='line'> INFO <span class="o">[</span>5f874a7e<span class="o">]</span> Finished in 0.321 seconds with <span class="nb">exit </span>status 0 <span class="o">(</span>successful<span class="o">)</span>.
-</span><span class='line'>DEBUG Uploading /tmp/hoge/git-ssh.sh 0.0%
-</span><span class='line'> INFO Uploading /tmp/hoge/git-ssh.sh 100.0%
-</span><span class='line'> INFO <span class="o">[</span>c2bf6ab8<span class="o">]</span> Running /usr/bin/env chmod +x /tmp/hoge/git-ssh.sh on fuga
-</span><span class='line'>DEBUG <span class="o">[</span>c2bf6ab8<span class="o">]</span> Command: /usr/bin/env chmod +x /tmp/hoge/git-ssh.sh
-</span><span class='line'> INFO <span class="o">[</span>c2bf6ab8<span class="o">]</span> Finished in 0.031 seconds with <span class="nb">exit </span>status 0 <span class="o">(</span>successful<span class="o">)</span>.
-</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span> Running /usr/bin/env git ls-remote -h git@bitbucket.org:fuga/hoge.git on fuga
-</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span> Command: <span class="o">(</span> <span class="nv">GIT_ASKPASS</span><span class="o">=</span>/bin/echo <span class="nv">GIT_SSH</span><span class="o">=</span>/tmp/hoge/git-ssh.sh /usr/bin/env git ls-remote -h git@bitbucket.org:fuga/hoge.git <span class="o">)</span>
-</span><span class='line'>DEBUG <span class="o">[</span>cb27da31<span class="o">]</span>    Error reading response length from authentication socket
-</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span>    Permission denied <span class="o">(</span>publickey<span class="o">)</span>.
-</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span>    
-</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span>    fatal: The remote end hung up unexpectedly
-</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span>    
-</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span> Finished in 2.287 seconds with <span class="nb">exit </span>status 128 <span class="o">(</span>failed<span class="o">)</span>.
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>うげげ。gitで鍵認証のエラー出てるわ。とりあえずbitbucketに公開鍵を登録してみた。
- <a href="http://morizyun.github.io/blog/ssh-key-bitbucket-github/">SSH認証キーをBitbucket/GitHubに設定しよう！ [Mac簡単手順] &ndash; 酒と泪とRubyとRailsと</a>の通りに登録したら出来た。~/.ssh/configに秘密鍵を追加して</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>Host bitbucket.org
-</span><span class='line'>  HostName bitbucket.org
-</span><span class='line'>  IdentityFile ~/.ssh/id_rsa
-</span><span class='line'>  User git
-</span><span class='line'>  TCPKeepAlive yes
-</span><span class='line'>  IdentitiesOnly yes
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p> じゃあ再度デプロイをテストしてみたら・・・同じエラーが出た。
-色々試行錯誤して、「Error reading response length from authentication socket」でググった結果、ssh_agentが動いてないことが判明したので</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">eval</span> <span class="sb">`</span>ssh-agent -s<span class="sb">`</span>
-</span><span class='line'><span class="nv">$ </span>ssh-add ~/.ssh/id_rsa
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>としてデプロイをテストしたら無事動いた。めでたしめでたし。でも一旦ログアウトしたりするとssh-agentに接続しないとまた同じエラーが出た。ssh-agentへの接続方法は<a href="http://tipspc.blogspot.jp/2010/02/ssh-agent.html">PC便利帳: ssh-agentを使用したパスワードなしの接続</a>を参考にして</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ps ax | grep ssh-agent
-</span><span class='line'><span class="nv">$ </span>ls /tmp | grep ssh
-</span><span class='line'><span class="nv">$ SSH_AUTH_SOCK</span><span class="o">=</span>/tmp/ssh-XXXXX1111/agent.1111; <span class="nb">export </span>SSH_AUTH_SOCK;
-</span><span class='line'><span class="nv">$ SSH_AGENT_PID</span><span class="o">=</span>2222; <span class="nb">export </span>SSH_AGENT_PID;
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>`</p>
-
-<p>とやれば接続できて、デプロイできた。
- さらに実際にデプロイすると下のようにエラーでまくった。</p>
-
-<h2>capistrano3でbundle exec cap production deloyしようとしたらエラーが出まくる</h2>
-
-<p>Gemfileから色々省いてたらエラーが出まくる</p>
-
-<ul>
-<li>rubyが指定されてない（rbenvが足りない）</li>
-<li>uglifierが無いとかsassが足りないとか</li>
-<li>いちいちGemfile.lockをアップデートしないとエラー出る</li>
-</ul>
-
-
-<p>rbenvはcapistrano-rbenvをGemfileに追加して、Capfileにcapistrano/rbenvを指定して、config/deploy.rbに</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="n">set</span> <span class="ss">:rbenv_ruby</span><span class="p">,</span> <span class="s1">&#39;2.1.0&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とか何とか設定するとおk。</p>
-
-<p>uglifierとかsassとかproductionを指定した場合に使うような設定になってるみたいい（config/environments/production.rb）。とりあえずuglifierとかsassとかcofee-railsとか色々Gemfileに入れておけばエラーでなかった。</p>
-
-<h2>デプロイした後でcss関連でエラーが出た</h2>
-
-<p>sassが足らないと言われた。sass使わないので、sassが関わるファイル（app/assets/stylesheets内のscssファイル）を消すとエラーは消えた</p>
-
-<h2>productionモードでデプロイすると、cssやjsを読み込んでくれない</h2>
-
-<p>config/environments/production.rbに次の行を追記</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="n">config</span><span class="o">.</span><span class="n">assets</span><span class="o">.</span><span class="n">compile</span> <span class="o">=</span> <span class="kp">true</span>
-</span><span class='line'> <span class="n">config</span><span class="o">.</span><span class="n">assets</span><span class="o">.</span><span class="n">precompile</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;*.js&#39;</span><span class="p">,</span><span class="s1">&#39;*.css&#39;</span><span class="p">,</span><span class="s1">&#39;*.css.erb&#39;</span><span class="o">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>参考<a href="http://stackoverflow.com/questions/18700219/rails-4-assets-not-loading-in-production">ruby &ndash; Rails 4: assets not loading in production &ndash; Stack Overflow</a>
-すると解決した。なんかバッドノウハウみたいでやだ。</p>
-
-<h2>productionモードでunicornが起動してくれない</h2>
-
-<p>capistranoとは関係なかったけどcapistrano関連と思い込んでたのでメモ。capistranoの設定にミスがあると思って苦しんでたけど、単にunicornのオプションを指定してなかったのが悪かった。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle <span class="nb">exec </span>unicorn_rails -E production
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でおkだった。</p>
-
-<p>Capistranoは確かに便利なんだけど、なんかハマりポイントが多いような印象。
-バージョン変わって設定方法も変わったみたいだし。最初のハードルが高い感じがする。慣れたら楽になるのかな。</p>
-
-<h2>capistrano3でunicornの再起動に失敗する</h2>
-
-<p><a href="http://qiita.com/satococoa/items/9b0cc416ffc042680b9b">unicorn + rails 用 Capistrano 3 の設定ファイル &ndash; Qiita</a>と<a href="http://blog.dealforest.net/2014/02/failed_restart_unicorn_with_capistrano3/">Capistrano3 で Unicorn の再起動に失敗したのを対応したメモ | Supernova</a>が参考になった。</p>
-
-<p>でもrestartでちゃんと再起動して修正箇所が反映しない。stopしてstartしないと。うーん。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -959,6 +946,10 @@ php-buildのインストールは下のような感じ</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/07/29/matcha-139/">まっちゃ139勉強会に参加しました</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/07/23/use-python-social-auth-in-django/">Djangoでpython-social-authを使うための最低限の設定</a>
       </li>
     
@@ -972,10 +963,6 @@ php-buildのインストールは下のような感じ</p>
     
       <li class="post">
         <a href="/blog/2014/07/01/ansible-memo/">Ansible Memo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/06/30/python-memo/">Python Memo</a>
       </li>
     
   </ul>
