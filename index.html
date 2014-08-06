@@ -9,8 +9,9 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="まっちゃ勉強会はITカレンダーで結構気になってたんですが、なかなか日が合わずに参加出来なかったのですが、あまりに面白そうな内容だったので初参加してきました。 ネット違法有害情報規制の最新状況－児童ポルノ法改正を中心に 会場に着いた時にはもうすでに始まっていました。
-とても楽しい？怖い？濃い？ &hellip;">
+  <meta name="description" content="Djangoでエラーメッセージが出た時に、どこから当たりを付けていくか
+イチイチググってるので、まとめておく。逐次追記。 other_dict must be a mapping (dictionary-like) object returnで返す時のdictionaryが 1
+{'a','b &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +81,90 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/08/06/django-error/">Djangoで出てくるエラーメッセージメモ</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-08-06T15:42:43+09:00" pubdate data-updated="true">Aug 6<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Djangoでエラーメッセージが出た時に、どこから当たりを付けていくか
+イチイチググってるので、まとめておく。逐次追記。</p>
+
+<h2>other_dict must be a mapping (dictionary-like) object</h2>
+
+<p>returnで返す時のdictionaryが</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{'a','b'}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>となってないかチェック。正しくは</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{'a':'b'}</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Django ImportError when importing xxx</h2>
+
+<p>ライブラリをインストールしていない場合、</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install xxx
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ライブラリ入れてる場合、xxxと同じファイル名のpythonファイル（とキャッシュ）が無いかチェックして、名前を変更するか、消す</p>
+
+<h2>locale.Error: unsupported locale setting</h2>
+
+<p>localeの設定名がおかしい。例えばこんな風だとエラー</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">locale</span>
+</span><span class='line'><span class="n">locale</span><span class="o">.</span><span class="n">setlocale</span><span class="p">(</span><span class="n">locale</span><span class="o">.</span><span class="n">LC_ALL</span><span class="p">,</span><span class="s">&#39;ja_JP&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こうするとオッケー</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">locale</span>
+</span><span class='line'><span class="n">locale</span><span class="o">.</span><span class="n">setlocale</span><span class="p">(</span><span class="n">locale</span><span class="o">.</span><span class="n">LC_ALL</span><span class="p">,</span><span class="s">&#39;ja_JP.utf8&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1000,85 +1085,6 @@ modelは先にインポートする。表示に使うテンプレートと変数
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/06/18/jenkins-setting/">Ubuntu12.04でjenkinsのインストールと設定</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-06-18T15:08:25+09:00" pubdate data-updated="true">Jun 18<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://jnst.hateblo.jp/entry/2013/10/03/123012">Ubuntu 12.04 LTS に Jenkins をインストール &ndash; MELODIC-X</a>を参考にして設定した。
-Jenkins本体でアップグレード可能らしいので、aptitudeでインストール</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install jenkins
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Nginx設定</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>location /jenkins <span class="o">{</span>
-</span><span class='line'>  proxy_pass http://127.0.0.1:8080;
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>で、nginxは起動してたので再読み込み</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo service nginx reload
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Jenkins設定ファイル修正</h2>
-
-<p>jenkinsの設定ファイルは/etc/default/jenkinsにあるので編集
-最下行の起動パラメーターに</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>--prefix<span class="o">=</span>/jenkins
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>を追加。jenkins再起動</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo service jenkins restart
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>以上</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1104,6 +1110,10 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/08/06/django-error/">Djangoで出てくるエラーメッセージメモ</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/07/29/matcha-139/">まっちゃ139勉強会に参加しました</a>
       </li>
     
@@ -1117,10 +1127,6 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
     
       <li class="post">
         <a href="/blog/2014/07/02/django-show-list-with-paging/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/07/01/ansible-memo/">Ansible Memo</a>
       </li>
     
   </ul>

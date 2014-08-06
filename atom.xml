@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-07-29T01:14:36+09:00</updated>
+  <updated>2014-08-06T23:41:36+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,63 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[djangoで出てくるエラーメッセージメモ]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/08/06/django-error/"/>
+    <updated>2014-08-06T15:42:43+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/08/06/django-error</id>
+    <content type="html"><![CDATA[<p>Djangoでエラーメッセージが出た時に、どこから当たりを付けていくか
+イチイチググってるので、まとめておく。逐次追記。</p>
+
+<h2>other_dict must be a mapping (dictionary-like) object</h2>
+
+<p>returnで返す時のdictionaryが</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{'a','b'}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>となってないかチェック。正しくは</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{'a':'b'}</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Django ImportError when importing xxx</h2>
+
+<p>ライブラリをインストールしていない場合、</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install xxx
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ライブラリ入れてる場合、xxxと同じファイル名のpythonファイル（とキャッシュ）が無いかチェックして、名前を変更するか、消す</p>
+
+<h2>locale.Error: unsupported locale setting</h2>
+
+<p>localeの設定名がおかしい。例えばこんな風だとエラー</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">locale</span>
+</span><span class='line'><span class="n">locale</span><span class="o">.</span><span class="n">setlocale</span><span class="p">(</span><span class="n">locale</span><span class="o">.</span><span class="n">LC_ALL</span><span class="p">,</span><span class="s">&#39;ja_JP&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こうするとオッケー</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">locale</span>
+</span><span class='line'><span class="n">locale</span><span class="o">.</span><span class="n">setlocale</span><span class="p">(</span><span class="n">locale</span><span class="o">.</span><span class="n">LC_ALL</span><span class="p">,</span><span class="s">&#39;ja_JP.utf8&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[まっちゃ139勉強会に参加しました]]></title>
@@ -1257,55 +1314,6 @@ php-buildのインストールは下のような感じ</p>
 
 
 <p>を追記したら上手く動いた。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rails4でJSONを出力する]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/05/05/output-json-by-rails4/"/>
-    <updated>2014-05-05T10:33:26+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/05/05/output-json-by-rails4</id>
-    <content type="html"><![CDATA[<p>Rails4にはjbuilderが標準で入っていて、viewを設定するだけでJSON出力が可能ならしい。
- 例えば<a href="http://blog.shigepon.com/blog/2014/03/10/a-way-of-creating-rails-application3/">Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データ一覧ページを作って、詳細ページへのリンクを貼る &ndash; shigeponが関心のある技術情報など</a>のページをとりあえずjsonで出力するにはapp/views/events/index.json.jbuilderを用意するだけでOK。<a href="http://0.0.0.0:3000/events/index.json">http://0.0.0.0:3000/events/index.json</a> にアクセスするとJSONで表示してくれる。なんと楽チンな！
- JSONの出力形式を変更する場合はindex.json.jbuilderを編集する</p>
-
-<p>例えばこんな感じ</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="n">json</span><span class="o">.</span><span class="n">array!</span><span class="p">(</span><span class="vi">@events</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">json</span><span class="o">.</span><span class="n">name</span>  <span class="n">item</span><span class="o">.</span><span class="n">name</span>
-</span><span class='line'>  <span class="n">json</span><span class="o">.</span><span class="n">date</span>  <span class="n">item</span><span class="o">.</span><span class="n">date</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>例えばこうしておくと一覧を配列出力しつつ、出力したいフィールドを指定出来る。viewだけで操作出来るのは楽チンだわ。
- 詳しい書式はブログ等の記事を見るよりも、英語だけど<a href="https://github.com/rails/jbuilder">rails/jbuilder · GitHub</a>を見るとよさげ。</p>
-
-<h2>jbuilderでネストした配列を出力する</h2>
-
-<p>大抵の説明では一番外側が配列で、中身はハッシュというものばかりで、配列の中が配列という形での出力方法の説明が無かったのでメモ</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">]]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいなjsonを出力する場合</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="n">json</span><span class="o">.</span><span class="n">array!</span><span class="p">(</span><span class="vi">@events</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">json</span><span class="o">.</span><span class="n">array!</span><span class="p">(</span><span class="o">[</span><span class="n">item</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">to_i</span><span class="p">,</span><span class="n">item</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">to_i</span><span class="o">]</span><span class="p">)</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>という指定をする。</p>
 ]]></content>
   </entry>
   

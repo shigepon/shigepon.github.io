@@ -5,13 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>ansible memo - shigeponが関心のある技術情報など</title>
+  <title>djangoで出てくるエラーメッセージメモ - shigeponが関心のある技術情報など</title>
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="ansibleで自分が欲しい情報が色んなページに散らばっていたので、メモ ansible-playbookのオプション -K: sudoのパスワード入力
--C (&mdash;check): 実際に実行しないでチェックしてくれる
--l name: hostsファイルに[name] &hellip;">
+  <meta name="description" content="Djangoでエラーメッセージが出た時に、どこから当たりを付けていくか
+イチイチググってるので、まとめておく。逐次追記。 other_dict must be a mapping (dictionary-like) object returnで返す時のdictionaryが 1
+{'a','b &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +20,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.shigepon.com/blog/2014/07/01/ansible-memo">
+  <link rel="canonical" href="http://blog.shigepon.com/blog/2014/08/06/django-error">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -84,7 +84,7 @@
   
   <header>
     
-      <h1 class="entry-title">Ansible Memo</h1>
+      <h1 class="entry-title">Djangoで出てくるエラーメッセージメモ</h1>
     
     
       <p class="meta">
@@ -100,25 +100,61 @@
   
 
 
-<time datetime="2014-07-01T16:56:06+09:00" pubdate data-updated="true">Jul 1<span>st</span>, 2014</time>
+<time datetime="2014-08-06T15:42:43+09:00" pubdate data-updated="true">Aug 6<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>ansibleで自分が欲しい情報が色んなページに散らばっていたので、メモ</p>
+<div class="entry-content"><p>Djangoでエラーメッセージが出た時に、どこから当たりを付けていくか
+イチイチググってるので、まとめておく。逐次追記。</p>
 
-<h3>ansible-playbookのオプション</h3>
+<h2>other_dict must be a mapping (dictionary-like) object</h2>
 
-<ul>
-<li>-K: sudoのパスワード入力</li>
-<li>-C (&mdash;check): 実際に実行しないでチェックしてくれる</li>
-<li>-l name: hostsファイルに[name]と書かれたホストにのみ実行</li>
-<li>-i hostsfile: 初期状態では/etc/ansible/hostsを見に行くので、自分で指定したい場合に</li>
-<li>&mdash;syntax-check: playbookの書式チェック。書いて最初にやるといい</li>
-<li>&mdash;list-tasks: playbookで行う内容をリストアップ</li>
-</ul>
+<p>returnで返す時のdictionaryが</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{'a','b'}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>となってないかチェック。正しくは</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{'a':'b'}</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Django ImportError when importing xxx</h2>
+
+<p>ライブラリをインストールしていない場合、</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install xxx
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ライブラリ入れてる場合、xxxと同じファイル名のpythonファイル（とキャッシュ）が無いかチェックして、名前を変更するか、消す</p>
+
+<h2>locale.Error: unsupported locale setting</h2>
+
+<p>localeの設定名がおかしい。例えばこんな風だとエラー</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">locale</span>
+</span><span class='line'><span class="n">locale</span><span class="o">.</span><span class="n">setlocale</span><span class="p">(</span><span class="n">locale</span><span class="o">.</span><span class="n">LC_ALL</span><span class="p">,</span><span class="s">&#39;ja_JP&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こうするとオッケー</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">locale</span>
+</span><span class='line'><span class="n">locale</span><span class="o">.</span><span class="n">setlocale</span><span class="p">(</span><span class="n">locale</span><span class="o">.</span><span class="n">LC_ALL</span><span class="p">,</span><span class="s">&#39;ja_JP.utf8&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
 
 </div>
 
@@ -142,7 +178,7 @@
   
 
 
-<time datetime="2014-07-01T16:56:06+09:00" pubdate data-updated="true">Jul 1<span>st</span>, 2014</time>
+<time datetime="2014-08-06T15:42:43+09:00" pubdate data-updated="true">Aug 6<span>th</span>, 2014</time>
       
 
 
@@ -150,7 +186,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2014/07/01/ansible-memo/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2014/07/01/ansible-memo/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2014/08/06/django-error/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2014/08/06/django-error/" >Tweet</a>
   
   
   
@@ -170,10 +206,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/06/30/python-memo/" title="Previous Post: Python memo">&laquo; Python memo</a>
+        <a class="basic-alignment left" href="/blog/2014/07/29/matcha-139/" title="Previous Post: まっちゃ139勉強会に参加しました">&laquo; まっちゃ139勉強会に参加しました</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/07/02/django-show-list-with-paging/" title="Next Post: Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する &raquo;</a>
       
     </p>
   </footer>

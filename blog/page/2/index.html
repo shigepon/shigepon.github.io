@@ -9,8 +9,9 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Djangoはプロジェクトを作っておいて、アプリ毎に細かく機能を分けて、プロジェクトで統合するみたいな形式を取るみたい。なのでまずはDjangoプロジェクトを作成 1
-$ django-admin.py startproject myproject とすると、 &hellip;">
+  <meta name="description" content="Ubuntu 12.04 LTS に Jenkins をインストール &ndash; MELODIC-Xを参考にして設定した。
+Jenkins本体でアップグレード可能らしいので、aptitudeでインストール 1
+$ sudo aptitude install jenkins Nginx設定 1 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +81,85 @@ $ django-admin.py startproject myproject とすると、 &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/18/jenkins-setting/">Ubuntu12.04でjenkinsのインストールと設定</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-18T15:08:25+09:00" pubdate data-updated="true">Jun 18<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://jnst.hateblo.jp/entry/2013/10/03/123012">Ubuntu 12.04 LTS に Jenkins をインストール &ndash; MELODIC-X</a>を参考にして設定した。
+Jenkins本体でアップグレード可能らしいので、aptitudeでインストール</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install jenkins
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Nginx設定</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>location /jenkins <span class="o">{</span>
+</span><span class='line'>  proxy_pass http://127.0.0.1:8080;
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で、nginxは起動してたので再読み込み</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo service nginx reload
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Jenkins設定ファイル修正</h2>
+
+<p>jenkinsの設定ファイルは/etc/default/jenkinsにあるので編集
+最下行の起動パラメーターに</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>--prefix<span class="o">=</span>/jenkins
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>を追加。jenkins再起動</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo service jenkins restart
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以上</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -843,82 +923,6 @@ php-buildのインストールは下のような感じ</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/05/05/output-json-by-rails4/">Rails4でJSONを出力する</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-05T10:33:26+09:00" pubdate data-updated="true">May 5<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Rails4にはjbuilderが標準で入っていて、viewを設定するだけでJSON出力が可能ならしい。
- 例えば<a href="http://blog.shigepon.com/blog/2014/03/10/a-way-of-creating-rails-application3/">Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データ一覧ページを作って、詳細ページへのリンクを貼る &ndash; shigeponが関心のある技術情報など</a>のページをとりあえずjsonで出力するにはapp/views/events/index.json.jbuilderを用意するだけでOK。<a href="http://0.0.0.0:3000/events/index.json">http://0.0.0.0:3000/events/index.json</a> にアクセスするとJSONで表示してくれる。なんと楽チンな！
- JSONの出力形式を変更する場合はindex.json.jbuilderを編集する</p>
-
-<p>例えばこんな感じ</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="n">json</span><span class="o">.</span><span class="n">array!</span><span class="p">(</span><span class="vi">@events</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">json</span><span class="o">.</span><span class="n">name</span>  <span class="n">item</span><span class="o">.</span><span class="n">name</span>
-</span><span class='line'>  <span class="n">json</span><span class="o">.</span><span class="n">date</span>  <span class="n">item</span><span class="o">.</span><span class="n">date</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>例えばこうしておくと一覧を配列出力しつつ、出力したいフィールドを指定出来る。viewだけで操作出来るのは楽チンだわ。
- 詳しい書式はブログ等の記事を見るよりも、英語だけど<a href="https://github.com/rails/jbuilder">rails/jbuilder · GitHub</a>を見るとよさげ。</p>
-
-<h2>jbuilderでネストした配列を出力する</h2>
-
-<p>大抵の説明では一番外側が配列で、中身はハッシュというものばかりで、配列の中が配列という形での出力方法の説明が無かったのでメモ</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">]]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいなjsonを出力する場合</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="n">json</span><span class="o">.</span><span class="n">array!</span><span class="p">(</span><span class="vi">@events</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">json</span><span class="o">.</span><span class="n">array!</span><span class="p">(</span><span class="o">[</span><span class="n">item</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">to_i</span><span class="p">,</span><span class="n">item</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">to_i</span><span class="o">]</span><span class="p">)</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>という指定をする。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -946,6 +950,10 @@ php-buildのインストールは下のような感じ</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/08/06/django-error/">Djangoで出てくるエラーメッセージメモ</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/07/29/matcha-139/">まっちゃ139勉強会に参加しました</a>
       </li>
     
@@ -959,10 +967,6 @@ php-buildのインストールは下のような感じ</p>
     
       <li class="post">
         <a href="/blog/2014/07/02/django-show-list-with-paging/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/07/01/ansible-memo/">Ansible Memo</a>
       </li>
     
   </ul>
