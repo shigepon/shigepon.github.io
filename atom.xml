@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-08-06T23:41:36+09:00</updated>
+  <updated>2014-08-09T21:08:47+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -66,7 +66,9 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
+<h2>IndexError: list index out of range</h2>
 
+<p>リストのインデックスが範囲外なので、該当する箇所のリストの添字をチェック。そもそもリストになっているかどうかもチェック。</p>
 ]]></content>
   </entry>
   
