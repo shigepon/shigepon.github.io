@@ -9,7 +9,11 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Rails4にはjbuilderが標準で入っていて、viewを設定するだけでJSON出力が可能ならしい。 例えばRails4でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データ一覧ページを作って、詳細ページへのリンクを貼る &ndash; &hellip;">
+  <meta name="description" content="Nginx, Unicorn, Rails4でurl_forを使ったら変なURLになってしまったので対処法を書いておく Ninxで 1
+2
+server hoge.com;
+proxy_pass http://upstream; のような設定をしているとurl_forで 1
+http://hoge &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +83,72 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/05/rails-url-for-shows-proxy-pass/">Railsでurl forを使ったらshows proxy passで設定したURLになってしまう件</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-05T14:00:54+09:00" pubdate data-updated="true">May 5<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Nginx, Unicorn, Rails4でurl_forを使ったら変なURLになってしまったので対処法を書いておく</p>
+
+<p>Ninxで</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>server hoge.com;
+</span><span class='line'>proxy_pass http://upstream;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>のような設定をしているとurl_forで</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>http://hoge.com</span></code></pre></td></tr></table></div></figure>
+
+
+<p>となってほしいところが</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>http://upstream</span></code></pre></td></tr></table></div></figure>
+
+
+<p>となってしまうので、ググって対処を調べた。</p>
+
+<p><a href="http://stackoverflow.com/questions/5834025/how-to-preserve-request-url-with-nginx-proxy-pass">ruby &ndash; How to preserve request url with nginx proxy_pass &ndash; Stack Overflow</a>を参考にして</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>proxy_set_header Host http://hoge.com</span></code></pre></td></tr></table></div></figure>
+
+
+<p>を追記したら上手く動いた。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1054,226 +1124,6 @@ app/views/events/index.html.erbを次のように書き換える</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/10/a-way-of-creating-rails-application2/">Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(2):データベースにPostgreSQLを使ってみた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-10T18:10:41+09:00" pubdate data-updated="true">Mar 10<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>参考にした記事URL一覧</p>
-
-<ul>
-<li><a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a></li>
-<li><a href="http://www.oiax.jp/rails3book/setup_postgresql.html">データベースとの接続（PostgreSQL編） &ndash; Ruby on Rails with OIAX</a></li>
-<li><a href="http://qiita.com/stkn_bb/items/72d06c149d3e6f315f8c">[Rails]既存のMySQLテーブルに接続する方法 &ndash; Qiita</a></li>
-</ul>
-
-
-<p>前回に引き続き<a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a>を参考にしているが、色々すっとばしてデータベースを作るところをなぞる。
-どうもモデルを作って、コマンド打ったら自動的にテーブル作ってくれてよしなにしてくれるらしい。</p>
-
-<p>ではモデルを作る。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>rails g model event name:string date:timestamp
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>モデルは単数型の英語で書くのが良いらしい。idは書かなくても自動で設定してくれるらしい。コマンドを実行すると次のようなファイルが出来る</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>app/models/event.rb
-</span><span class='line'>db/migrate/20140310033758_create_events.rb
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>後でテーブルの生成が上手く行かない場合に、変数の型で変なのを設定してる場合とかあるので、migrateフォルダのファイルを修正すると上手くいくことがある。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>rake db:migrate
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と打ったらテーブルが出来た。めでたしめでたし・・・と思ったらそういえばリモートサーバ上のPostgreSQLテーブルにデータ入れてたのを思い出したので、sqliteからPostgreSQLに使用データベースを変更してみる。</p>
-
-<p><a href="http://www.oiax.jp/rails3book/setup_postgresql.html">データベースとの接続（PostgreSQL編） &ndash; Ruby on Rails with OIAX</a>を参考にしたが、PostgreSQLの設定までは終了しているので、その後の部分をやってみた。</p>
-
-<h3>Gemfileを編集</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>gem <span class="s2">&quot;sqlite3&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>を</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>gem <span class="s2">&quot;pg&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>に変更して、bundle installを実行。すると何かエラーが・・・メッセージを見ると<a href="http://qiita.com/youcune/items/5b783f7fde45d0fd4b35">Ruby &ndash; gem install pgしてNo pg_configとなる対処法 &ndash; Qiita</a>が参考になりそうなので、libpq-devを入れてエラーを解消した（Ubuntuの場合)</p>
-
-<h3>config/database.yamlを編集</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">development</span><span class="p-Indicator">:</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">adapter</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">sqlite3</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">database</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">db/development.sqlite3</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">pool</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">5</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">timeout</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">5000</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいな箇所を</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">development</span><span class="p-Indicator">:</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">adapter</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">postgresql</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">host</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">000.000.00.00</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">port</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">5432</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">database</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">bocho</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">username</span><span class="p-Indicator">:</span> <span class="err">****</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">password</span><span class="p-Indicator">:</span> <span class="err">****</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">pool</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">5</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">timeout</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">5000</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>に変更した。development以外にtest, productionと項目があって、それぞれ同じように変更した。これがどう違うのかはまだ勉強してない。localhostの場合はhost,portは要らないみたい。</p>
-
-<h3>テーブル名の変更</h3>
-
-<p>良く考えたら、PostgreSQLに保存してるデータのテーブルはeventsじゃなくてbochoだったので、そういう設定もしないといけない。その方法は<a href="http://qiita.com/stkn_bb/items/72d06c149d3e6f315f8c">[Rails]既存のMySQLテーブルに接続する方法 &ndash; Qiita</a>を参考にした。eventモデル(app/models/event.rb)を次のように変更</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">class</span> <span class="nc">Event</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
-</span><span class='line'>  <span class="nb">self</span><span class="o">.</span><span class="n">table_name</span> <span class="o">=</span> <span class="s1">&#39;bocho&#39;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>なんかググったら他の書式もあったけど、それだとエラー出たので、今はこの書き方なのかな？
-これで準備が出来たので、テーブルからデータを読み込んで表示してみる</p>
-
-<h3>データ読み込み</h3>
-
-<p>app/controllers/events_controller.rbを次のように書き換え</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'>  <span class="k">def</span> <span class="nf">show</span>
-</span><span class='line'>    <span class="vi">@event</span> <span class="o">=</span> <span class="no">Event</span><span class="o">.</span><span class="n">find_by</span><span class="p">(</span><span class="ss">:id</span><span class="o">=&gt;</span><span class="n">params</span><span class="o">[</span><span class="ss">:eventid</span><span class="o">]</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これ多分</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="vi">@event</span> <span class="o">=</span> <span class="no">Event</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:eventid</span><span class="o">]</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でもいける。</p>
-
-<h3>データ表示</h3>
-
-<p>app/views/events/show.html.erbを編集</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='erb'><span class='line'><span class="x">&lt;h1&gt;Event&lt;/h1&gt;</span>
-</span><span class='line'><span class="x">&lt;dl&gt;</span>
-</span><span class='line'><span class="x">  &lt;dt&gt;日時&lt;/dt&gt;</span>
-</span><span class='line'><span class="x">  &lt;dd&gt;</span><span class="cp">&lt;%=</span> <span class="vi">@event</span><span class="o">[</span><span class="ss">:date</span><span class="o">].</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y/%m/%d %H:%m&#39;</span><span class="p">)</span> <span class="cp">%&gt;</span><span class="x">&lt;/dd&gt;</span>
-</span><span class='line'><span class="x">  &lt;dt&gt;イベント名&lt;/dt&gt;</span>
-</span><span class='line'><span class="x">  &lt;dd&gt;</span><span class="cp">&lt;%=</span> <span class="vi">@event</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span> <span class="cp">%&gt;</span><span class="x">&lt;/dd&gt;</span>
-</span><span class='line'><span class="x">&lt;/dl&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='erb'><span class='line'><span class="x">&lt;dd&gt;</span><span class="cp">&lt;%=</span> <span class="vi">@event</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y/%m/%d %H:%m&#39;</span><span class="p">)</span> <span class="cp">%&gt;</span><span class="x">&lt;/dd&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でもおk</p>
-
-<p>以上の作業後に [<a href="http://0.0.0.0:3000/events/show/1">http://0.0.0.0:3000/events/show/1</a>]にアクセスすると
-id=1,date=2014/03/01 10:00:00,name=ほげ
-というデータが入っていた場合、</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;h1&gt;</span>Event<span class="nt">&lt;/h1&gt;</span>
-</span><span class='line'><span class="nt">&lt;dl&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;dt&gt;</span>日時<span class="nt">&lt;/dt&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;dd&gt;</span>2014/03/01 10:00<span class="nt">&lt;/dd&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;dt&gt;</span>イベント名<span class="nt">&lt;/dt&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;dd&gt;</span>ほげ<span class="nt">&lt;/dd&gt;</span>
-</span><span class='line'><span class="nt">&lt;/dl&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と表示されたりする。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -1301,6 +1151,10 @@ id=1,date=2014/03/01 10:00:00,name=ほげ
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/08/20/vb-not-work-on-ubuntu/">ubuntuのmonoでMicrosoft.VisualBasicが動かない件</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/08/06/django-error/">Djangoで出てくるエラーメッセージメモ</a>
       </li>
     
@@ -1314,10 +1168,6 @@ id=1,date=2014/03/01 10:00:00,name=ほげ
     
       <li class="post">
         <a href="/blog/2014/07/05/groonga-qa/">Groongaアンケート？</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/07/02/django-show-list-with-paging/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する</a>
       </li>
     
   </ul>
@@ -1337,11 +1187,12 @@ id=1,date=2014/03/01 10:00:00,name=ほげ
 <li class='category'><a href='/blog/categories/python/'>Python (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/web/'>Web (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (3)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (4)</a></li>
 <li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
 <li class='category'><a href='/blog/categories/lynux/'>lynux (1)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (1)</a></li>
+<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (1)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>postgresql (1)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (2)</a></li>

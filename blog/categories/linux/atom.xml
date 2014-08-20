@@ -4,7 +4,7 @@
   <title><![CDATA[Category: linux | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-08-09T21:08:47+09:00</updated>
+  <updated>2014-08-20T13:49:10+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,31 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[ubuntuのmonoでMicrosoft.VisualBasicが動かない件]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/08/20/vb-not-work-on-ubuntu/"/>
+    <updated>2014-08-20T13:38:34+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/08/20/vb-not-work-on-ubuntu</id>
+    <content type="html"><![CDATA[<p>なでしこ2にコミットしたりしつつ、実際にUbuntu 12.04で使ってみたりしているが、vb系のインポートが出来ないとか何とか言われたのでメモ</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/10071836/vb-net-not-working-on-ubuntu-10-04-with-mono">.net &ndash; VB.NET Not working on Ubuntu 10.04 With Mono &ndash; Stack Overflow</a></p>
+
+<p>要は普通にmonoをインストールしただけ</p>
+
+<p><code>sh
+$ sudo aptitude install mono-devel
+</code></p>
+
+<p>だとVB系のライブラリはインストールされないらしい。</p>
+
+<p><code>sh
+$ sudo aptitude install mono-vbnc
+</code></p>
+
+<p>を追加インストールしておこうということだった。情報無かったので結構はまった。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ubuntuでodbcを用いてpostgresqlにアクセスする]]></title>

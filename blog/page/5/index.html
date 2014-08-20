@@ -9,12 +9,10 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Octpressのインストール後に行ったカスタマイズをまとめておきます。 外部リンクを別ウィンドウで開く 下のコードを追加します :source/_inclides/custom/head.html1
-2
-3
-4
-5
-&lt;script language=&quot;JavaScript& &hellip;">
+  <meta name="description" content="rhaco3で作ったWebサービス全体にBasic認証をかけた時にちょっとハマったのでメモ。 症状 rhaco3の認証が入っているサービスで全体にBasic認証をかけると、 トップページに入る時にBasic認証がかかる
+認証完了
+ログインページに移動
+またBasic認証がかかる &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,6 +82,110 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/03/basic-auth/">Basic認証する時に気をつけること</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-03T07:48:33+09:00" pubdate data-updated="true">Feb 3<span>rd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>rhaco3で作ったWebサービス全体にBasic認証をかけた時にちょっとハマったのでメモ。</p>
+
+<h2>症状</h2>
+
+<p>rhaco3の認証が入っているサービスで全体にBasic認証をかけると、</p>
+
+<ol>
+<li>トップページに入る時にBasic認証がかかる</li>
+<li>認証完了</li>
+<li>ログインページに移動</li>
+<li>またBasic認証がかかる</li>
+</ol>
+
+
+<p>というケースが見られました。Webサーバにはnginxを使いました。</p>
+
+<h2>原因</h2>
+
+<p>nginx側の設定が悪いのかなとか色々試行錯誤しましたが、結論としてrhaco3の認証部分が401のレスポンスを吐いてたのが問題でした。</p>
+
+<p><a href="http://www.slogical.co.jp/tech/http_basicauth.html">Basic認証の動作</a>というページで詳しく書かれています（以下に引用します）が</p>
+
+<blockquote><ol>
+<li>ユーザーがクライアント（IE等のWebブラウザ）に目的のURLを入力する。</li>
+<li>クライアントが、Authorization: ヘッダを付加しないで、
+目的のコンテンツにアクセスする。</li>
+<li>サーバーは、401 Authorization Required のレスポンスを返して、
+クライアントに認証が必要である旨を伝える。</li>
+<li>クライアントがユーザーに ID/PW の入力を求める
+（IE等のブラウザが、ポップアップウインドウを出して、
+　ID/PW の入力をユーザーに求めるアレです。）</li>
+<li>ユーザーが ID/PW を入力する。</li>
+<li>クライアントが、Authorization: ヘッダに ID/PW の情報を付加
+して目的のコンテンツに再度アクセスする。</li>
+<li>サーバが ID/PW を解析して、認証OKであればコンテンツをクライ
+アントに返す。</li>
+<li>クライアントがコンテンツを表示して、ユーザーがそれを閲覧する。</li>
+</ol>
+</blockquote>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>    +------+  1---&gt;  +--------+  2---&gt;  +-------+
+</span><span class='line'>    |      |  &lt;---4  |        |  &lt;---3  |       |
+</span><span class='line'>    | User |         | Client |         | httpd |
+</span><span class='line'>    |      |  5---&gt;  |        |  6---&gt;  |       |
+</span><span class='line'>    +------+  &lt;---8  +--------+  &lt;---7  +-------+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>（コンテンツデータを１つ取得するために、リクエスト・レスポンスの
+　やりとりが２回行われています。）</p>
+
+<p>なお、
+Authorization: ヘッダには、
+Basic認証の ID と PW とを :（半角のコロン）でつなげた文字列を、
+base64した値が格納さています。
+（例えば、
+　Authorization: Basic dXNlcjAxOnBhc3N3b3JkCg==　といったようになります。）</p></blockquote>
+
+<p>ように、Basic認証ではサーバが401のレスポンスを返すことで、ブラウザ側にポップアップを出させているようです。その為rhaco3の認証部分で401のレスポンスを出した時に認証の情報がリセットされてしまったのではないかと思われます。</p>
+
+<h2>対処</h2>
+
+<p>rhaco3の認証部分(\org\rhaco\flow\parts\RequestFlow::do_login)で401を送信していた部分で200を送信することで対処できました。</p>
+
+<p>rhaco3で見られた症状でしたが、他のフレームワークでも特に何も考えてなかったら引っかかる可能性があります。というかBasic認証とフレームワークの認証両方掛けるとか普通無いですよねそうですよね。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -936,44 +1038,9 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/28/test-post/">Test Post</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-28T12:59:29+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>本文を投稿するテスト
-こんな感じ？</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/6/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -998,6 +1065,10 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/08/20/vb-not-work-on-ubuntu/">ubuntuのmonoでMicrosoft.VisualBasicが動かない件</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/08/06/django-error/">Djangoで出てくるエラーメッセージメモ</a>
       </li>
     
@@ -1011,10 +1082,6 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
     
       <li class="post">
         <a href="/blog/2014/07/05/groonga-qa/">Groongaアンケート？</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/07/02/django-show-list-with-paging/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する</a>
       </li>
     
   </ul>
@@ -1034,11 +1101,12 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
 <li class='category'><a href='/blog/categories/python/'>Python (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/web/'>Web (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (3)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (4)</a></li>
 <li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
 <li class='category'><a href='/blog/categories/lynux/'>lynux (1)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (1)</a></li>
+<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (1)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>postgresql (1)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (2)</a></li>
