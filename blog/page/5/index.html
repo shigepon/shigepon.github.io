@@ -995,6 +995,15 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
 
 
 <p>みたいに指定すればおk</p>
+
+<h2>ユーザー定義関数の定義内容を表示</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="n">procsrc</span> <span class="k">from</span> <span class="n">pg_proc</span> <span class="k">where</span> <span class="n">proname</span><span class="o">=</span><span class="s1">&#39;関数名&#39;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>結構こんな感じでシステム用テーブルとかカラムとか色々あるので大変。</p>
 </div>
   
   

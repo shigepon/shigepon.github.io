@@ -4,7 +4,7 @@
   <title><![CDATA[Category: postgresql | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/postgresql/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-08-20T13:49:10+09:00</updated>
+  <updated>2014-08-29T09:07:48+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -153,6 +153,14 @@ select * from hoge where (a,b) in (('fuga','hage'),('abc','def'));
 </code></p>
 
 <p>みたいに指定すればおk</p>
+
+<h2>ユーザー定義関数の定義内容を表示</h2>
+
+<p><code>sql
+select procsrc from pg_proc where proname='関数名';
+</code></p>
+
+<p>結構こんな感じでシステム用テーブルとかカラムとか色々あるので大変。</p>
 ]]></content>
   </entry>
   
