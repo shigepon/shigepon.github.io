@@ -273,6 +273,20 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 
 
 <p>結構こんな感じでシステム用テーブルとかカラムとか色々あるので大変。</p>
+
+<h2>実行中のsql確認</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">pg_stat_activity</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>実行中sqlをストップ</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="n">pg_cancel_backend</span><span class="p">(</span><span class="err">プロセス</span><span class="n">ID</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
 </div>
 
 
