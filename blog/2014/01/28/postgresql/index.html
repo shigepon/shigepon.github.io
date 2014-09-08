@@ -182,6 +182,13 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 </span></code></pre></td></tr></table></div></figure>
 
 
+<h2>ビューの定義を調べる</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="n">definition</span> <span class="k">from</span> <span class="n">pg_views</span> <span class="k">WHERE</span> <span class="n">viewname</span> <span class="o">=</span> <span class="s1">&#39;ビュー名&#39;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
 <h2>psqlで実行結果を見やすくする</h2>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>

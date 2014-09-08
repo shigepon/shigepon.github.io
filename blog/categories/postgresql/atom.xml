@@ -4,7 +4,7 @@
   <title><![CDATA[Category: postgresql | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/postgresql/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-09-07T20:59:10+09:00</updated>
+  <updated>2014-09-08T21:47:38+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -84,6 +84,12 @@ SELECT tablename, indexname FROM pg_indexes;
 
 <p><code>sql
 SELECT viewname FROM pg_views ORDER BY viewname;
+</code></p>
+
+<h2>ビューの定義を調べる</h2>
+
+<p><code>sql
+select definition from pg_views WHERE viewname = 'ビュー名';
 </code></p>
 
 <h2>psqlで実行結果を見やすくする</h2>
