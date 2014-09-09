@@ -11,8 +11,8 @@
   
   <meta name="description" content="git関連のメモ 変更履歴を見る 1
 $ git log -p で全体の変更履歴 1
-$ git log -p filename でfilenameの変更履歴を表示する
-">
+$ git log -p filename でfilenameの変更履歴を表示する ブランチ間の変更ファイル一覧を取得 1
+$ git diff --name-only -b parent_branch -b &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -125,6 +125,15 @@ $ git log -p filename でfilenameの変更履歴を表示する
 
 
 <p>でfilenameの変更履歴を表示する</p>
+
+<h3>ブランチ間の変更ファイル一覧を取得</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git diff --name-only -b parent_branch -b child_branch
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考：<a href="http://qa.atmarkit.co.jp/q/2047">gitの指定ブランチで変更されたファイルの一覧を取得したい &ndash; QA@IT</a></p>
 </div>
 
 
