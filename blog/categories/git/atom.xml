@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: git | shigeponが関心のある技術情報など]]></title>
+  <link href="http://blog.shigepon.com/blog/categories/git/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.com/"/>
+  <updated>2014-09-11T08:51:01+09:00</updated>
+  <id>http://blog.shigepon.com/</id>
+  <author>
+    <name><![CDATA[shigepon]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[git memo]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/04/09/git-memo/"/>
+    <updated>2014-04-09T12:36:49+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/04/09/git-memo</id>
+    <content type="html"><![CDATA[<p>git関連のメモ</p>
+
+<h3>変更履歴を見る</h3>
+
+<p><code>sh
+$ git log -p
+</code></p>
+
+<p>で全体の変更履歴</p>
+
+<p><code>sh
+$ git log -p filename
+</code></p>
+
+<p>でfilenameの変更履歴を表示する</p>
+
+<h3>ブランチ間の変更ファイル一覧を取得</h3>
+
+<p><code>sh
+$ git diff --name-only -b parent_branch -b child_branch
+</code></p>
+
+<p>参考：<a href="http://qa.atmarkit.co.jp/q/2047">gitの指定ブランチで変更されたファイルの一覧を取得したい &ndash; QA@IT</a></p>
+]]></content>
+  </entry>
+  
+</feed>

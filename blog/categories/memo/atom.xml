@@ -4,7 +4,7 @@
   <title><![CDATA[Category: memo | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/memo/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-09-10T22:30:55+09:00</updated>
+  <updated>2014-09-11T08:51:01+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,37 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[git memo]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/04/09/git-memo/"/>
+    <updated>2014-04-09T12:36:49+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/04/09/git-memo</id>
+    <content type="html"><![CDATA[<p>git関連のメモ</p>
+
+<h3>変更履歴を見る</h3>
+
+<p><code>sh
+$ git log -p
+</code></p>
+
+<p>で全体の変更履歴</p>
+
+<p><code>sh
+$ git log -p filename
+</code></p>
+
+<p>でfilenameの変更履歴を表示する</p>
+
+<h3>ブランチ間の変更ファイル一覧を取得</h3>
+
+<p><code>sh
+$ git diff --name-only -b parent_branch -b child_branch
+</code></p>
+
+<p>参考：<a href="http://qa.atmarkit.co.jp/q/2047">gitの指定ブランチで変更されたファイルの一覧を取得したい &ndash; QA@IT</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[nginx memo]]></title>
@@ -222,45 +253,6 @@ endif
 いいね〜！！</p>
 
 <p>現在、デフォルトのsnippetとしてneosnippet-snippetsをインストールしないとデフォルトのsnippetを出してくれないことに注意。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[svn memo]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/02/11/svn-memo/"/>
-    <updated>2014-02-11T11:53:32+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/02/11/svn-memo</id>
-    <content type="html"><![CDATA[<p>svn使っててはまることが結構あるのでメモ</p>
-
-<h2>ubuntuでsvnコマンドすると認証失敗する場合</h2>
-
-<p><code>sh
-Password for ‘(null)’ GNOME keyring:
-</code></p>
-
-<p>というメッセージが表示される場合、gnome-keyringというやつが邪魔をしているらしい。ログイン情報を削除すれば解決。</p>
-
-<p><code>sh
-rm ~/.gnome2/keyrings/login.keyring
-</code></p>
-
-<p>でいける。</p>
-
-<h2>コミットするファイルを、ファイルで指定する</h2>
-
-<p>fuga.htmlとhage.htmlを変更しててfuga.htmlだけコミットしたい場合</p>
-
-<p><code>
-fuga.html
-</code></p>
-
-<p>というファイル(hoge.txt)を作っておいて、</p>
-
-<p><code>sh
-$ svn commit -m "コメント" --targets hoge.txt
-</code></p>
-
-<p>でおk</p>
 ]]></content>
   </entry>
   
