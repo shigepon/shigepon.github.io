@@ -4,7 +4,7 @@
   <title><![CDATA[Category: linux | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-09-10T12:07:32+09:00</updated>
+  <updated>2014-09-10T22:30:55+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -148,6 +148,16 @@ $ cat access.log | grep -v -i "bot" | grep "referer:-" | grep "status:200" | awk
 
 <p><code>sh
 $ find path -size 100M
+</code></p>
+
+<h2>Windows共有フォルダをマウント</h2>
+
+<p>参考：<a href="http://qiita.com/mdstoy/items/54925cdcbca6d558b666">Ubuntu から Windows の共有フォルダをマウントして利用する &ndash; Qiita</a>というかほぼそのまま</p>
+
+<p><code>sh
+$ sudo aptitude install cifs-utils
+$ sudo mkdir -p /mnt/windows
+$ sudo mount -t cifs -o username=WindowsUsername,password=WindowsPassword //ServerNameOrIp/path/to/share /mnt/windows
 </code></p>
 ]]></content>
   </entry>

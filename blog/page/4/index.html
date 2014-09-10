@@ -605,6 +605,21 @@ events_controller.rbを次のように変えると</p>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>find path -size 100M
 </span></code></pre></td></tr></table></div></figure>
 
+
+<h2>Windows共有フォルダをマウント</h2>
+
+<p>参考：<a href="http://qiita.com/mdstoy/items/54925cdcbca6d558b666">Ubuntu から Windows の共有フォルダをマウントして利用する &ndash; Qiita</a>というかほぼそのまま</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install cifs-utils
+</span><span class='line'><span class="nv">$ </span>sudo mkdir -p /mnt/windows
+</span><span class='line'><span class="nv">$ </span>sudo mount -t cifs -o <span class="nv">username</span><span class="o">=</span>WindowsUsername,password<span class="o">=</span>WindowsPassword //ServerNameOrIp/path/to/share /mnt/windows
+</span></code></pre></td></tr></table></div></figure>
+
+
+
 </div>
   
   
