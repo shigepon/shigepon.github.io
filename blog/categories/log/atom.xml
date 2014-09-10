@@ -4,7 +4,7 @@
   <title><![CDATA[Category: log | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/log/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-09-09T11:25:19+09:00</updated>
+  <updated>2014-09-10T12:07:32+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -43,6 +43,14 @@ $ cat access.log | grep -v -i "bot" | grep "referer:-" | grep "status:200" | awk
 </code></p>
 
 <p>ただ、最初の目的には最初の集計の方が役に立った。結局Bingのボットだったみたい。Analyticsではじけなかったアクセスがあったのかな。</p>
+
+<h2>大きなファイルを探す</h2>
+
+<p>例：100MB以上のファイルを探す</p>
+
+<p><code>sh
+$ find path -size 100M
+</code></p>
 ]]></content>
   </entry>
   
