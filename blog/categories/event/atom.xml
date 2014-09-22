@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: event | shigeponが関心のある技術情報など]]></title>
+  <link href="http://blog.shigepon.com/blog/categories/event/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.com/"/>
+  <updated>2014-09-22T21:14:29+09:00</updated>
+  <id>http://blog.shigepon.com/</id>
+  <author>
+    <name><![CDATA[shigepon]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Kobe.R #9に参加しました]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/09/22/kobe-dot-r-number-9/"/>
+    <updated>2014-09-22T20:42:57+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/09/22/kobe-dot-r-number-9</id>
+    <content type="html"><![CDATA[<p>勉強会の話なので丁寧語で。9/20に<a href="http://kobexr.doorkeeper.jp/events/14808">Kobe.R #9</a>があったので参加してきました。大阪で定期的に開催されているRの勉強会です。内容はRに限らず、統計処理をやる上で大事なことを扱うという感じでした。発表は誰がされたか名前を記憶していなかったりするので、とりあえず内容だけ照会します。</p>
+
+<h2>Statistical Disclosure Controlの紹介</h2>
+
+<p>Twitter ID @Wakamatzさん</p>
+
+<p>個人情報を含むデータや、他の情報と組み合わせると個人情報になるデータをどのように匿名化するかという話でした。どうしても匿名化すると、実際に欲しいデータの精度とのトレードオフになるので、それをどう評価するかが重要なようです。
+オォっと思った点を羅列します。</p>
+
+<ul>
+<li>開示リスク（どの程度特定されやすいデータになっているか?）を評価出来るライブラリがRにある。Rすげー。</li>
+<li>匿名化には適当なデータを混ぜたりクラスタリングする手法があるのかー。なるほどー。確かに適当なデータを混ぜると集計精度が落ちそう</li>
+<li>評価手法は何種類かあるけど、とりあえずIL1sという評価法を紹介してもらった。実際計算してみないとなんともいえないかな。</li>
+</ul>
+
+
+<h2>カードで説明する統計的独立</h2>
+
+<p>@florets1さん</p>
+
+<p>トランプのカードを例にして、独立とは何かを説明してくれました。なんとなくで済ませてたところを例を入れて分かりやすく説明してくれました。
+どっかの書籍で「○○が独立な場合に△△」とか書かれてイメージはしにくいのが、ざっくりですが、「計算しやすいので△△」くらいに読み替えてよさそうというのが分かった感じです。</p>
+
+<h2>Powershellいいよって話（タイトル忘れた）</h2>
+
+<p>Windows8から、常にインストールされているPowershellを使いこなすと、スクリプトで.Net使えたりして便利って話</p>
+
+<h2>他</h2>
+
+<p>Rでパイプ使う時はpipe Rが便利とかsql使ってdbアクセスするライブラリとかforループを速く便利にする方法とか教えてもらいました。まだ実際に試してないので、試してみないといかんす。</p>
+
+<p>次回参加は無理ですが、ちょこちょこ参加したいなと思いました（小並感）。</p>
+]]></content>
+  </entry>
+  
+</feed>

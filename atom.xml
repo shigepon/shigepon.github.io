@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-09-11T08:51:01+09:00</updated>
+  <updated>2014-09-22T21:14:29+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,46 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Kobe.R #9に参加しました]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/09/22/kobe-dot-r-number-9/"/>
+    <updated>2014-09-22T20:42:57+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/09/22/kobe-dot-r-number-9</id>
+    <content type="html"><![CDATA[<p>勉強会の話なので丁寧語で。9/20に<a href="http://kobexr.doorkeeper.jp/events/14808">Kobe.R #9</a>があったので参加してきました。大阪で定期的に開催されているRの勉強会です。内容はRに限らず、統計処理をやる上で大事なことを扱うという感じでした。発表は誰がされたか名前を記憶していなかったりするので、とりあえず内容だけ照会します。</p>
+
+<h2>Statistical Disclosure Controlの紹介</h2>
+
+<p>Twitter ID @Wakamatzさん</p>
+
+<p>個人情報を含むデータや、他の情報と組み合わせると個人情報になるデータをどのように匿名化するかという話でした。どうしても匿名化すると、実際に欲しいデータの精度とのトレードオフになるので、それをどう評価するかが重要なようです。
+オォっと思った点を羅列します。</p>
+
+<ul>
+<li>開示リスク（どの程度特定されやすいデータになっているか?）を評価出来るライブラリがRにある。Rすげー。</li>
+<li>匿名化には適当なデータを混ぜたりクラスタリングする手法があるのかー。なるほどー。確かに適当なデータを混ぜると集計精度が落ちそう</li>
+<li>評価手法は何種類かあるけど、とりあえずIL1sという評価法を紹介してもらった。実際計算してみないとなんともいえないかな。</li>
+</ul>
+
+
+<h2>カードで説明する統計的独立</h2>
+
+<p>@florets1さん</p>
+
+<p>トランプのカードを例にして、独立とは何かを説明してくれました。なんとなくで済ませてたところを例を入れて分かりやすく説明してくれました。
+どっかの書籍で「○○が独立な場合に△△」とか書かれてイメージはしにくいのが、ざっくりですが、「計算しやすいので△△」くらいに読み替えてよさそうというのが分かった感じです。</p>
+
+<h2>Powershellいいよって話（タイトル忘れた）</h2>
+
+<p>Windows8から、常にインストールされているPowershellを使いこなすと、スクリプトで.Net使えたりして便利って話</p>
+
+<h2>他</h2>
+
+<p>Rでパイプ使う時はpipe Rが便利とかsql使ってdbアクセスするライブラリとかforループを速く便利にする方法とか教えてもらいました。まだ実際に試してないので、試してみないといかんす。</p>
+
+<p>次回参加は無理ですが、ちょこちょこ参加したいなと思いました（小並感）。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ubuntuのmonoでMicrosoft.VisualBasicが動かない件]]></title>
@@ -1267,43 +1307,6 @@ php-buildのインストールは下のような感じ</p>
 
 
 <p>こんな書き方も出来るらしい。ActiveRecord::Base.connectionでは無理らしい。うーむ。むか〜しからRailsはちょっとレールからはずれるととたんに難しくなるんだなー。やる気が減って来た＞＜。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ubuntuでodbcを用いてpostgresqlにアクセスする]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/05/12/access-postgresql-through-odbc-ubuntu/"/>
-    <updated>2014-05-12T22:11:33+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/05/12/access-postgresql-through-odbc-ubuntu</id>
-    <content type="html"><![CDATA[<p>なでしこ2のテストのためにubuntuにodbcドライバをインストールしたりしたのでメモ</p>
-
-<h2>odbcドライバのインストール</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install unixodbc, odbc-postgresql
-</span><span class='line'><span class="nv">$ </span>sudo odbcinst -i -d -f /usr/share/psqlodbc/odbcinst.ini.template
-</span><span class='line'><span class="nv">$ </span>sudo odbcinst -i -s -l  -n adyoung-pg -f /usr/share/doc/odbc-postgresql/examples/odbc.ini.template
-</span><span class='line'><span class="nv">$ </span>vim /etc/odbc.ini
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>odbc.iniにはサンプルの設定が入っているので、それを参考にしながら設定</p>
-
-<h2>odbcアクセスしてみる</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>isql -v DSN <span class="o">(</span>UID <span class="o">(</span>PWD<span class="o">))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でアクセスできる。あとはSQLを入力すれば結果を見たりできる。</p>
-
-<h2>monoを使ってアクセスする場合</h2>
-
-<p>monoというかなでしこ2でアクセスする場合に必要だった。libodbc.soが必要というエラーが出るのでunixodbc-devの追加インストールが必要。インストールすればエラー出ずに動くようになる。</p>
 ]]></content>
   </entry>
   
