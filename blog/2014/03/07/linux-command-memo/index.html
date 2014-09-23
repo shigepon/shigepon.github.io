@@ -153,6 +153,17 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
+<h2>ファイルのフルパス一覧を取得</h2>
+
+<p>参考：<a href="http://linux.just4fun.biz/%E9%80%86%E5%BC%95%E3%81%8DUNIX%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%81%AE%E3%83%95%E3%83%AB%E3%83%91%E3%82%B9%E5%90%8D%E3%82%92%E5%8F%96%E5%BE%97%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95.html">逆引きUNIXコマンド/ファイルのフルパス名を取得する方法 &ndash; Linuxと過ごす</a></p>
+
+<p>単純なlsだとファイル名だけが一覧になるので、フルパスの一覧が欲しい場合は一工夫必要</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ls -dF /path/to/dir/*
+</span><span class='line'><span class="nv">$ </span>find <span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span> -maxdepth 1 -mindepth 1
+</span></code></pre></td></tr></table></div></figure>
 
 </div>
 

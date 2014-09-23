@@ -4,7 +4,7 @@
   <title><![CDATA[Category: memo | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/memo/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-09-22T21:14:29+09:00</updated>
+  <updated>2014-09-24T08:29:16+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -207,6 +207,17 @@ $ find path -size 100M
 $ sudo aptitude install cifs-utils
 $ sudo mkdir -p /mnt/windows
 $ sudo mount -t cifs -o username=WindowsUsername,password=WindowsPassword //ServerNameOrIp/path/to/share /mnt/windows
+</code></p>
+
+<h2>ファイルのフルパス一覧を取得</h2>
+
+<p>参考：<a href="http://linux.just4fun.biz/%E9%80%86%E5%BC%95%E3%81%8DUNIX%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%81%AE%E3%83%95%E3%83%AB%E3%83%91%E3%82%B9%E5%90%8D%E3%82%92%E5%8F%96%E5%BE%97%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95.html">逆引きUNIXコマンド/ファイルのフルパス名を取得する方法 &ndash; Linuxと過ごす</a></p>
+
+<p>単純なlsだとファイル名だけが一覧になるので、フルパスの一覧が欲しい場合は一工夫必要</p>
+
+<p><code>sh
+$ ls -dF /path/to/dir/*
+$ find `pwd` -maxdepth 1 -mindepth 1
 </code></p>
 ]]></content>
   </entry>
