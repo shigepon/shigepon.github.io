@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-09-24T08:29:16+09:00</updated>
+  <updated>2014-10-10T13:28:42+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -166,6 +166,34 @@ $ sudo pip install --upgrade distribute
 </code></p>
 
 <p>でおk</p>
+
+<h2>for文でループカウント取得</h2>
+
+<p>参考<a href="http://fujishinko.exblog.jp/7669024">Python 配列をfor文でまわしているときのループカウント取得 : fujishinko 雑記帳</a></p>
+
+<p><code>py
+for i,item in enumerate(['a','b','c']):
+  print i,item
+</code></p>
+
+<h2>日本語のコマンドライン引数取得</h2>
+
+<p>参考<a href="http://www.yukun.info/blog/2008/07/python-command-line-arguments.html">Python: コマンドライン引数の取得 – sys.argv変数</a></p>
+
+<p>```py :hoge.py</p>
+
+<h1>&ndash;*&ndash; encoding: utf-8 &ndash;*&ndash;</h1>
+
+<p>import sys
+argv = sys.argv
+print argv[1].decode(&ldquo;utf-8&rdquo;)
+```</p>
+
+<p><code>sh
+$ python hoge.py あいうえお
+あいうえお
+$
+</code></p>
 ]]></content>
   </entry>
   
