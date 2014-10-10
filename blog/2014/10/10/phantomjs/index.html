@@ -5,12 +5,16 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>svn memo - shigeponが関心のある技術情報など</title>
+  <title>PhantomJSとSeleniumをpythonから使ってみる - shigeponが関心のある技術情報など</title>
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="svn使っててはまることが結構あるのでメモ ubuntuでsvnコマンドすると認証失敗する場合 1
-Password for ‘(null)’ GNOME keyring: というメッセージが表示される場合、gnome-keyringというやつが邪魔をしているらしい。ログイン情報を削除すれば解決 &hellip;">
+  <meta name="description" content="スクレーピングするのに便利な方法を調べてる内に、PhantomJSが良さげだなと思ったので、軽く使ってみた。参考Python+Selenium+PhantomJSが快適すぎる PhantomJSのインストール Ubuntuを使ってるのでPhantomJSのページを参考に 1
+2
+3
+4
+5
+6 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +23,7 @@ Password for ‘(null)’ GNOME keyring: というメッセージが表示され
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.shigepon.com/blog/2014/02/11/svn-memo">
+  <link rel="canonical" href="http://blog.shigepon.com/blog/2014/10/10/phantomjs">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -83,7 +87,7 @@ Password for ‘(null)’ GNOME keyring: というメッセージが表示され
   
   <header>
     
-      <h1 class="entry-title">Svn Memo</h1>
+      <h1 class="entry-title">PhantomJSとSeleniumをpythonから使ってみる</h1>
     
     
       <p class="meta">
@@ -99,48 +103,63 @@ Password for ‘(null)’ GNOME keyring: というメッセージが表示され
   
 
 
-<time datetime="2014-02-11T11:53:32+09:00" pubdate data-updated="true">Feb 11<span>th</span>, 2014</time>
+<time datetime="2014-10-10T13:33:48+09:00" pubdate data-updated="true">Oct 10<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>svn使っててはまることが結構あるのでメモ</p>
+<div class="entry-content"><p>スクレーピングするのに便利な方法を調べてる内に、PhantomJSが良さげだなと思ったので、軽く使ってみた。参考<a href="http://blog.kzfmix.com/entry/1379417397">Python+Selenium+PhantomJSが快適すぎる</a></p>
 
-<h2>ubuntuでsvnコマンドすると認証失敗する場合</h2>
+<h2>PhantomJSのインストール</h2>
+
+<p>Ubuntuを使ってるので<a href="http://phantomjs.org/build.html">PhantomJSのページ</a>を参考に</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>Password <span class="k">for</span> ‘<span class="o">(</span>null<span class="o">)</span>’ GNOME keyring:
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude update
+</span><span class='line'><span class="nv">$ </span>sudo aptitude install build-essential chrpath git-core libssl-dev libfontconfig1-dev libxft-dev
+</span><span class='line'><span class="nv">$ </span>git clone git://github.com/ariya/phantomjs.git
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>phantomjs
+</span><span class='line'><span class="nv">$ </span>git checkout 1.9
+</span><span class='line'><span class="nv">$ </span>./build.sh
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>というメッセージが表示される場合、gnome-keyringというやつが邪魔をしているらしい。ログイン情報を削除すれば解決。</p>
+<p>あとは./bin/にphantomjsが入っているので、./bin/にパスを通しておしまい</p>
+
+<h2>Seleniumをpythonから使えるようにする</h2>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>rm ~/.gnome2/keyrings/login.keyring
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install selenium
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>でいける。</p>
+<p>これだけでおk</p>
 
-<h2>コミットするファイルを、ファイルで指定する</h2>
-
-<p>fuga.htmlとhage.htmlを変更しててfuga.htmlだけコミットしたい場合</p>
+<h2>SeleniumでPhantomJSのドライバを使う</h2>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>fuga.html
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">selenium</span> <span class="nn">import</span> <span class="nn">webdriver</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">PhantomJS</span><span class="p">()</span>
+</span><span class='line'><span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;http://www.yahoo.co.jp&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="k">print</span> <span class="n">driver</span><span class="o">.</span><span class="n">current_url</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>というファイル(hoge.txt)を作っておいて、</p>
+<p>こんな感じ。何が出来るかは<a href="http://selenium-python.readthedocs.org/en/latest/api.html">Selenium Python BindingsのWebDriver API</a>を見ると良い。</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>svn commit -m <span class="s2">&quot;コメント&quot;</span> --targets hoge.txt
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でおk</p>
+<p>Javascriptをちゃんと評価してくれるので、すんげーやりやすい。昔ながらのフレームや、新規ウィンドウが出るようなものも上手く再現してくれる。すげーすげー</p>
 </div>
 
 
@@ -163,12 +182,12 @@ Password for ‘(null)’ GNOME keyring: というメッセージが表示され
   
 
 
-<time datetime="2014-02-11T11:53:32+09:00" pubdate data-updated="true">Feb 11<span>th</span>, 2014</time>
+<time datetime="2014-10-10T13:33:48+09:00" pubdate data-updated="true">Oct 10<span>th</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/linux/'>linux</a>, <a class='category' href='/blog/categories/memo/'>memo</a>, <a class='category' href='/blog/categories/svn/'>svn</a>
+    <a class='category' href='/blog/categories/python/'>Python</a>
   
 </span>
 
@@ -177,7 +196,7 @@ Password for ‘(null)’ GNOME keyring: というメッセージが表示され
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2014/02/11/svn-memo/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2014/02/11/svn-memo/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2014/10/10/phantomjs/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2014/10/10/phantomjs/" >Tweet</a>
   
   
   
@@ -197,10 +216,8 @@ Password for ‘(null)’ GNOME keyring: というメッセージが表示され
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/02/11/sqlite-memo/" title="Previous Post: sqlite memo">&laquo; sqlite memo</a>
+        <a class="basic-alignment left" href="/blog/2014/09/22/kobe-dot-r-number-9/" title="Previous Post: Kobe.R #9に参加しました">&laquo; Kobe.R #9に参加しました</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/02/26/rails-startup/" title="Next Post: Ruby on Railsを入れてみた">Ruby on Railsを入れてみた &raquo;</a>
       
     </p>
   </footer>

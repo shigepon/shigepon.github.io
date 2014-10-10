@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-10-10T13:28:42+09:00</updated>
+  <updated>2014-10-10T17:20:14+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,64 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[PhantomJSとSeleniumをpythonから使ってみる]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/10/10/phantomjs/"/>
+    <updated>2014-10-10T13:33:48+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/10/10/phantomjs</id>
+    <content type="html"><![CDATA[<p>スクレーピングするのに便利な方法を調べてる内に、PhantomJSが良さげだなと思ったので、軽く使ってみた。参考<a href="http://blog.kzfmix.com/entry/1379417397">Python+Selenium+PhantomJSが快適すぎる</a></p>
+
+<h2>PhantomJSのインストール</h2>
+
+<p>Ubuntuを使ってるので<a href="http://phantomjs.org/build.html">PhantomJSのページ</a>を参考に</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude update
+</span><span class='line'><span class="nv">$ </span>sudo aptitude install build-essential chrpath git-core libssl-dev libfontconfig1-dev libxft-dev
+</span><span class='line'><span class="nv">$ </span>git clone git://github.com/ariya/phantomjs.git
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>phantomjs
+</span><span class='line'><span class="nv">$ </span>git checkout 1.9
+</span><span class='line'><span class="nv">$ </span>./build.sh
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>あとは./bin/にphantomjsが入っているので、./bin/にパスを通しておしまい</p>
+
+<h2>Seleniumをpythonから使えるようにする</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install selenium
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これだけでおk</p>
+
+<h2>SeleniumでPhantomJSのドライバを使う</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">selenium</span> <span class="nn">import</span> <span class="nn">webdriver</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">PhantomJS</span><span class="p">()</span>
+</span><span class='line'><span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;http://www.yahoo.co.jp&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="k">print</span> <span class="n">driver</span><span class="o">.</span><span class="n">current_url</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じ。何が出来るかは<a href="http://selenium-python.readthedocs.org/en/latest/api.html">Selenium Python BindingsのWebDriver API</a>を見ると良い。</p>
+
+<p>Javascriptをちゃんと評価してくれるので、すんげーやりやすい。昔ながらのフレームや、新規ウィンドウが出るようなものも上手く再現してくれる。すげーすげー</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Kobe.R #9に参加しました]]></title>
@@ -582,6 +640,24 @@ AUTH_USER_MODEL
 </pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python hoge.py あいうえお
 </span><span class='line'>あいうえお
 </span><span class='line'><span class="err">$</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>コマンド実行して実行結果を取得</h2>
+
+<p>参考<a href="http://qiita.com/mokemokechicken/items/a84b0aa96b94d1931f08">Python の subprocess で出力を受け取るときは communicate() を使おう &ndash; Qiita</a>
+subprocessを使う。何か昔は別の手法だったらしい。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">subprocess</span>
+</span><span class='line'><span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="s">&quot;echo &#39;hoge&#39;&quot;</span><span class="p">,</span><span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span><span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+</span><span class='line'><span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</span><span class='line'><span class="n">stdout_data</span><span class="p">,</span><span class="n">stderr_data</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+</span><span class='line'><span class="k">print</span> <span class="n">stdout_data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 </span></code></pre></td></tr></table></div></figure>
 
 ]]></content>
@@ -1319,31 +1395,6 @@ php-buildのインストールは下のような感じ</p>
 </pre></td><td class='code'><pre><code class='rb'><span class='line'>  <span class="n">d</span> <span class="o">=</span> <span class="no">Date</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot;2014-05-24&quot;</span><span class="p">,</span><span class="s2">&quot;%Y-%m-%d&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">prev_year</span> <span class="c1">#1年前に指定</span>
 </span></code></pre></td></tr></table></div></figure>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[find by sqlでプリペアードステートメントを使う]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/05/28/use-prepared-statement-in-find-by-sql/"/>
-    <updated>2014-05-28T08:19:12+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/05/28/use-prepared-statement-in-find-by-sql</id>
-    <content type="html"><![CDATA[<p>ActiveRecordは便利なのかどうか知らないけど、allなどのメソッドで:conditionとかで?を使うことが出来る。だけど、sqlを直接打ちたいケースは必ず出てくるので、その時に?使いたいなと思ったけど、なかなか例文が無かった。</p>
-
-<p>んで結局こうするといいみたい。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="vi">@results</span> <span class="o">=</span> <span class="no">Model</span><span class="o">.</span><span class="n">find_by_sql</span><span class="p">(</span><span class="o">[</span><span class="s2">&quot;select * from hoge where fuga=?&quot;</span><span class="p">,</span><span class="s2">&quot;hage&quot;</span><span class="o">]</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>しかし他にも直接sqlを実行する方法があって、</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">raw_connection</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;select * from hoge where fuga = :1&quot;</span><span class="p">,</span> <span class="s1">&#39;hage&#39;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな書き方も出来るらしい。ActiveRecord::Base.connectionでは無理らしい。うーむ。むか〜しからRailsはちょっとレールからはずれるととたんに難しくなるんだなー。やる気が減って来た＞＜。</p>
 ]]></content>
   </entry>
   

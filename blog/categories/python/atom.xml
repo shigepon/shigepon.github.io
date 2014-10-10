@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-10-10T13:28:42+09:00</updated>
+  <updated>2014-10-10T17:20:14+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,52 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[PhantomJSとSeleniumをpythonから使ってみる]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/10/10/phantomjs/"/>
+    <updated>2014-10-10T13:33:48+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/10/10/phantomjs</id>
+    <content type="html"><![CDATA[<p>スクレーピングするのに便利な方法を調べてる内に、PhantomJSが良さげだなと思ったので、軽く使ってみた。参考<a href="http://blog.kzfmix.com/entry/1379417397">Python+Selenium+PhantomJSが快適すぎる</a></p>
+
+<h2>PhantomJSのインストール</h2>
+
+<p>Ubuntuを使ってるので<a href="http://phantomjs.org/build.html">PhantomJSのページ</a>を参考に</p>
+
+<p><code>sh
+$ sudo aptitude update
+$ sudo aptitude install build-essential chrpath git-core libssl-dev libfontconfig1-dev libxft-dev
+$ git clone git://github.com/ariya/phantomjs.git
+$ cd phantomjs
+$ git checkout 1.9
+$ ./build.sh
+</code></p>
+
+<p>あとは./bin/にphantomjsが入っているので、./bin/にパスを通しておしまい</p>
+
+<h2>Seleniumをpythonから使えるようにする</h2>
+
+<p><code>sh
+$ pip install selenium
+</code></p>
+
+<p>これだけでおk</p>
+
+<h2>SeleniumでPhantomJSのドライバを使う</h2>
+
+<p>```py
+import selenium import webdriver</p>
+
+<p>driver = webdriver.PhantomJS()
+driver.get(&ldquo;<a href="http://www.yahoo.co.jp">http://www.yahoo.co.jp</a>&rdquo;)
+print driver.current_url
+```</p>
+
+<p>こんな感じ。何が出来るかは<a href="http://selenium-python.readthedocs.org/en/latest/api.html">Selenium Python BindingsのWebDriver API</a>を見ると良い。</p>
+
+<p>Javascriptをちゃんと評価してくれるので、すんげーやりやすい。昔ながらのフレームや、新規ウィンドウが出るようなものも上手く再現してくれる。すげーすげー</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する]]></title>
@@ -193,6 +239,19 @@ print argv[1].decode(&ldquo;utf-8&rdquo;)
 $ python hoge.py あいうえお
 あいうえお
 $
+</code></p>
+
+<h2>コマンド実行して実行結果を取得</h2>
+
+<p>参考<a href="http://qiita.com/mokemokechicken/items/a84b0aa96b94d1931f08">Python の subprocess で出力を受け取るときは communicate() を使おう &ndash; Qiita</a>
+subprocessを使う。何か昔は別の手法だったらしい。</p>
+
+<p><code>py
+import subprocess
+p = subprocess.Popen("echo 'hoge'",shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+p.wait()
+stdout_data,stderr_data = p.communicate()
+print stdout_data.decode("utf-8").strip()
 </code></p>
 ]]></content>
   </entry>

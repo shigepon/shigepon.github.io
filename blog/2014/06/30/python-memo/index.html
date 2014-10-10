@@ -153,6 +153,24 @@ $ sudo pip install --upgrade distribute &hellip;">
 </span><span class='line'><span class="err">$</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<h2>コマンド実行して実行結果を取得</h2>
+
+<p>参考<a href="http://qiita.com/mokemokechicken/items/a84b0aa96b94d1931f08">Python の subprocess で出力を受け取るときは communicate() を使おう &ndash; Qiita</a>
+subprocessを使う。何か昔は別の手法だったらしい。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">subprocess</span>
+</span><span class='line'><span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="s">&quot;echo &#39;hoge&#39;&quot;</span><span class="p">,</span><span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span><span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+</span><span class='line'><span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</span><span class='line'><span class="n">stdout_data</span><span class="p">,</span><span class="n">stderr_data</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+</span><span class='line'><span class="k">print</span> <span class="n">stdout_data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
 </div>
 
 
@@ -237,6 +255,10 @@ $ sudo pip install --upgrade distribute &hellip;">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/10/10/phantomjs/">PhantomJSとSeleniumをpythonから使ってみる</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/09/22/kobe-dot-r-number-9/">Kobe.R #9に参加しました</a>
       </li>
     
@@ -250,10 +272,6 @@ $ sudo pip install --upgrade distribute &hellip;">
     
       <li class="post">
         <a href="/blog/2014/07/29/matcha-139/">まっちゃ139勉強会に参加しました</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/07/23/use-python-social-auth-in-django/">Djangoでpython-social-authを使うための最低限の設定</a>
       </li>
     
   </ul>
@@ -270,7 +288,7 @@ $ sudo pip install --upgrade distribute &hellip;">
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (7)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (4)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (5)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (1)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/web/'>Web (1)</a></li>
