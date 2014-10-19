@@ -294,6 +294,22 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 </pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="n">pg_cancel_backend</span><span class="p">(</span><span class="err">プロセス</span><span class="n">ID</span><span class="p">);</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<h2>データベースやテーブルのサイズ取得</h2>
+
+<p>データベース</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="n">pg_database_size</span><span class="p">(</span><span class="s1">&#39;dbname&#39;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>テーブル</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="n">pg_relation_size</span><span class="p">(</span><span class="s1">&#39;tablename&#39;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
 </div>
 
 
@@ -321,7 +337,7 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/postgresql/'>postgresql</a>
+    <a class='category' href='/blog/categories/memo/'>memo</a>, <a class='category' href='/blog/categories/postgresql/'>postgresql</a>
   
 </span>
 
@@ -419,7 +435,7 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/linux/'>linux (5)</a></li>
 <li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
-<li class='category'><a href='/blog/categories/memo/'>memo (8)</a></li>
+<li class='category'><a href='/blog/categories/memo/'>memo (9)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (1)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (1)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
