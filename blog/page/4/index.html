@@ -879,6 +879,22 @@ events_controller.rbを次のように変えると</p>
 </span><span class='line'><span class="nv">$ </span>find <span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span> -maxdepth 1 -mindepth 1
 </span></code></pre></td></tr></table></div></figure>
 
+
+<h2>SSHを使ってリモートでコマンド実行する</h2>
+
+<p>単純なコマンド実行</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ssh username@hostname options... <span class="s2">&quot;command&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ローカルのファイルをリダイレクトしてリモートコマンドに使用する。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ssh username@hostname options... <span class="s2">&quot;command&quot;</span> &lt; localfile
+</span></code></pre></td></tr></table></div></figure>
+
 </div>
   
   

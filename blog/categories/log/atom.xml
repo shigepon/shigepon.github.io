@@ -4,7 +4,7 @@
   <title><![CDATA[Category: log | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/log/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-10-10T17:20:14+09:00</updated>
+  <updated>2014-10-19T11:17:34+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -71,6 +71,20 @@ $ sudo mount -t cifs -o username=WindowsUsername,password=WindowsPassword //Serv
 <p><code>sh
 $ ls -dF /path/to/dir/*
 $ find `pwd` -maxdepth 1 -mindepth 1
+</code></p>
+
+<h2>SSHを使ってリモートでコマンド実行する</h2>
+
+<p>単純なコマンド実行</p>
+
+<p><code>sh
+$ ssh username@hostname options... "command"
+</code></p>
+
+<p>ローカルのファイルをリダイレクトしてリモートコマンドに使用する。</p>
+
+<p><code>sh
+$ ssh username@hostname options... "command" &lt; localfile
 </code></p>
 ]]></content>
   </entry>
