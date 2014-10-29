@@ -9,8 +9,8 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="SQLiteでたまに使う操作をメモ テーブルの存在チェック 1
-SELECT COUNT(*) FROM sqlite_master WHERE type=&#39;table&#39; AND name=&#39;テーブル名&#39;; ">
+  <meta name="description" content="svn使っててはまることが結構あるのでメモ ubuntuでsvnコマンドすると認証失敗する場合 1
+Password for ‘(null)’ GNOME keyring: というメッセージが表示される場合、gnome-keyringというやつが邪魔をしているらしい。ログイン情報を削除すれば解決 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +80,76 @@ SELECT COUNT(*) FROM sqlite_master WHERE type=&#39;table&#39; AND name=&#39;テ�
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/11/svn-memo/">Svn Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-11T11:53:32+09:00" pubdate data-updated="true">Feb 11<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>svn使っててはまることが結構あるのでメモ</p>
+
+<h2>ubuntuでsvnコマンドすると認証失敗する場合</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Password <span class="k">for</span> ‘<span class="o">(</span>null<span class="o">)</span>’ GNOME keyring:
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>というメッセージが表示される場合、gnome-keyringというやつが邪魔をしているらしい。ログイン情報を削除すれば解決。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rm ~/.gnome2/keyrings/login.keyring
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でいける。</p>
+
+<h2>コミットするファイルを、ファイルで指定する</h2>
+
+<p>fuga.htmlとhage.htmlを変更しててfuga.htmlだけコミットしたい場合</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>fuga.html
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>というファイル(hoge.txt)を作っておいて、</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>svn commit -m <span class="s2">&quot;コメント&quot;</span> --targets hoge.txt
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でおk</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -924,128 +994,6 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/28/nadesiko-lua/">なでしこでLuaエディタ？を作る（ネタ）</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-28T21:37:03+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>なでしこではLuaを使えるので、なでしこのGUIと組み合わせたら簡単にLuaエディタ作れるんじゃね？ということで作ってみました。（ただのネタです）</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>母艦は「メインフォーム」
-</span><span class='line'>そのクライアントW=640#数値
-</span><span class='line'>そのクライアントH=400#数値
-</span><span class='line'>そのタイトル=「なでしこ」#文字列
-</span><span class='line'>※ ---
-</span><span class='line'>LuaエディタとはTエディタ##生成
-</span><span class='line'>そのX=8#数値
-</span><span class='line'>そのY=8#数値
-</span><span class='line'>そのW=616#数値
-</span><span class='line'>そのH=344#数値
-</span><span class='line'>そのテキスト=「」#文字列
-</span><span class='line'>そのスクロールバー=「」#文字列
-</span><span class='line'>※ ---
-</span><span class='line'>Luaボタンとはボタン##生成
-</span><span class='line'>そのX=280#数値
-</span><span class='line'>そのY=360#数値
-</span><span class='line'>そのW=64#数値
-</span><span class='line'>そのH=32#数値
-</span><span class='line'>そのテキスト=「luaする」#文字列
-</span><span class='line'>そのクリックした時は～Luaボタン__クリックした時#イベント
-</span><span class='line'>※※※積み木デザイナ:ここまで※
-</span><span class='line'>●Luaボタン__クリックした時　　# ここにイベントを書きます。
-</span><span class='line'># 字下げした部分がイベント範囲です。
-</span><span class='line'>  エラー監視
-</span><span class='line'>      ソース=Luaエディタのテキスト
-</span><span class='line'>      A=50
-</span><span class='line'>      結果とは変数
-</span><span class='line'>      LUA(&quot;---
-</span><span class='line'>      {ソース}
-</span><span class='line'>      ---&quot;)
-</span><span class='line'>  エラーならば
-</span><span class='line'>      「エラー」と言う。</span></code></pre></td></tr></table></div></figure>
-
-
-<p>セーブやロードなどは全て省いてますが実装は簡単です。</p>
-
-<p>あとLUA(&quot;<del>&hellip;</del>&quot;)の箇所を変更すれば、返り値を得ることも簡単にできます。例えばこんな感じ</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>LUA(&quot;---ret=0{ソース}nako_set(&#039;結果&#039;&cedil;ret)---&quot;)結果を言う。</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Luaをちょっといじってみたいなと思う時に使えるんじゃないかと思います。</p>
-
-<p>※なぜか「LUAする」命令だとieとかexcelを立ち上げた時にvisible=trueに出来ませんでした。何かやり方が悪かったのかな。（なでしこのバージョンはデラックス版1.5322です）</p>
-
-<p>※LuaComではUTF-8を扱うので、日本語をまぜる場合はソースをUTF-8に変換しておく必要があります</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>LUA(UTF8N変換(&quot;...&quot;))</span></code></pre></td></tr></table></div></figure>
-
-
-<p>結果もnako_setでセットした値もUTF8で返ってきますのでSJIS変換命令で変換する必要があります。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -1073,6 +1021,10 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/10/28/kobe-dot-r-no-12/">Kobe.R #12に参加しました</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/10/10/phantomjs/">PhantomJSとSeleniumをpythonから使ってみる</a>
       </li>
     
@@ -1086,10 +1038,6 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
     
       <li class="post">
         <a href="/blog/2014/08/06/django-error/">Djangoで出てくるエラーメッセージメモ</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/07/29/matcha-139/">まっちゃ139勉強会に参加しました</a>
       </li>
     
   </ul>
@@ -1107,10 +1055,10 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (7)</a></li>
 <li class='category'><a href='/blog/categories/python/'>Python (5)</a></li>
-<li class='category'><a href='/blog/categories/r/'>R (1)</a></li>
+<li class='category'><a href='/blog/categories/r/'>R (2)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/web/'>Web (1)</a></li>
-<li class='category'><a href='/blog/categories/event/'>event (1)</a></li>
+<li class='category'><a href='/blog/categories/event/'>event (2)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/linux/'>linux (5)</a></li>
 <li class='category'><a href='/blog/categories/log/'>log (1)</a></li>

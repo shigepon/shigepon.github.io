@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-10-19T11:24:50+09:00</updated>
+  <updated>2014-10-29T16:18:34+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,47 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Kobe.R #12に参加しました]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/10/28/kobe-dot-r-no-12/"/>
+    <updated>2014-10-28T08:13:51+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/10/28/kobe-dot-r-no-12</id>
+    <content type="html"><![CDATA[<p>勉強会の話なので丁寧語で。10/26に<a href="http://kobexr.doorkeeper.jp/events/16101">Kobe.R #12</a>があったので参加してきました。神戸で定期的に開催されているRの勉強会です。今回はたまたま大阪で開かれました。前回と同様誰がされたか名前を記憶していなかったりするので、とりあえず内容だけ紹介します。</p>
+
+<h2>回帰分析の基礎</h2>
+
+<p>@florets1さん</p>
+
+<p>Rのコマンドを叩いて結果を確認しながら回帰分析の基礎を学べる発表でした。回帰分析はある程度知っていても、Rで実際にやるとこんな感じというのが分かって面白かったです。あと、基礎の部分も何となくで素通りしていた部分を改めて説明してもらえたりするので、とても為になる発表でした。</p>
+
+<p>Rは結果をプロットなどで確認しやすかったり、要約を出してくれたりするのがとても便利です。評価はRで行って、定期的な処理になったらPythonで実装するというやりかたもアリかなと妄想しました。</p>
+
+<h2>クラスタリングについて</h2>
+
+<p>Twitter ID @Wakamatzさん</p>
+
+<p>色んなデータをどうやってグループ分け（クラスタリング）するかという手法についての発表でした。基本は何グループに分けるかを指定して、その数に収束するまでクラスタリングするみたいですが、グループ数を決められない場合には自動的に決定する手法もあるそうです。が、なかなか難しい手法みたいです。</p>
+
+<h2>Rのこれから</h2>
+
+<p>不明(別のR勉強会を主催されていた方)</p>
+
+<p>スマホでもサーバクライアント型のサービスが増えてくるだろうから、サーバ内での解析にRが使えるんじゃないかという話でした。RDBやNOSQLとの接続が楽に出来るようになるとそうなるかも。Rをスマホにインストールするのは難しいとお話があったのですが、インストールはやろうと思えば出来るのでしょうか？脱獄したら出来るでしょうが。</p>
+
+<h2>カフェをなんとか盛り上げたい</h2>
+
+<p>不明(神戸で英会話カフェを主催されている方)</p>
+
+<p>神戸で毎週土曜日AM11:00〜PM2:00まで英会話の機会に使えるカフェを運営しているというお話と、カフェの問題点を紹介してくれました。今後何かRで分析する話になるかも？？？</p>
+
+<h2>Rで時系列データを取り扱う</h2>
+
+<p>Rで時系列データを扱い、時間に対して周期性があるデータから未来予測したりというライブラリの紹介とデモを見せて頂きました。Rのライブラリ紹介と実際に使った結果を見ることが出来ると理解が深まってとてもありがたいです。</p>
+
+<p>前回今回と大阪で参加しているのですが、今度は神戸で開催される時も参加してみようかと思います。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[PhantomJSとSeleniumをpythonから使ってみる]]></title>
@@ -1329,72 +1370,6 @@ php-buildのインストールは下のような感じ</p>
 <p>なんとなくだけどRailsって先に設計とかかっちりやってから作るってやり方な感じがして、「大雑把に作って、そこから細部をつめていく」みたいなやり方には合ってないんじゃないかと思った。個人でサクサクっとWebサービス作りたい場合には大雑把にまず作りたいんだよなー。</p>
 
 <p>見当違いかもしれないけどね。とりあえず他を当たってみる？メジャーどころでDjango？同じように挫折するかもしれないけどとりあえず試してみよう。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rails memo]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/05/29/rails-memo/"/>
-    <updated>2014-05-29T08:54:12+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/05/29/rails-memo</id>
-    <content type="html"><![CDATA[<p>Rails関係でいつでも確認出来るようにメモ。</p>
-
-<h2>ルーティングでのパラメータの使い方</h2>
-
-<p>config/route.rbを編集する</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="n">get</span> <span class="s2">&quot;main/index/:hoge&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;main#index&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>app/controllers/main_controller.rbを編集</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">class</span> <span class="nc">MainController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">index</span>
-</span><span class='line'>    <span class="vi">@hoge</span> <span class="o">=</span> <span class="n">params</span><span class="o">[</span><span class="ss">:hoge</span><span class="o">]</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と書いておくとrouteで設定したパラメーターにアクセス出来る。</p>
-
-<h2>ルーティング中でURLの一部を省略可能にする</h2>
-
-<p>config/route.rbを編集する</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="n">get</span> <span class="s2">&quot;main/index/:hoge(/fuga/:hage)&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;main#index&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とやっておくと、main/index/1/fuga/2でもアクセス出来るし、main/index/1でもアクセス出来るようになる</p>
-
-<h2>ルーティング時にパラメーターの初期値を設定する</h2>
-
-<p>config/route.rbを編集する</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="n">get</span> <span class="s2">&quot;main/index/:hoge(/fuga/:hage)&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;main#index&quot;</span><span class="p">,</span><span class="ss">:defaults</span><span class="o">=&gt;</span><span class="p">{</span><span class="ss">:hage</span><span class="o">=&gt;</span><span class="mi">3</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と設定しておくと、app/controllers/main_controller.rb中のparams[:hage]の初期値として3を入れることが出来る。</p>
-
-<h2>Dateクラスの使い方メモ</h2>
-
-<p>個人的に文字列からDateクラスにして、1年前にするとか1ヶ月前にするとかそういう作業をすることが多いのでメモ</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'>  <span class="n">d</span> <span class="o">=</span> <span class="no">Date</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot;2014-05-24&quot;</span><span class="p">,</span><span class="s2">&quot;%Y-%m-%d&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">prev_year</span> <span class="c1">#1年前に指定</span>
-</span></code></pre></td></tr></table></div></figure>
-
 ]]></content>
   </entry>
   

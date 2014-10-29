@@ -9,12 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="スクレーピングするのに便利な方法を調べてる内に、PhantomJSが良さげだなと思ったので、軽く使ってみた。参考Python+Selenium+PhantomJSが快適すぎる PhantomJSのインストール Ubuntuを使ってるのでPhantomJSのページを参考に 1
-2
-3
-4
-5
-6 &hellip;">
+  <meta name="description" content="勉強会の話なので丁寧語で。10/26にKobe.R #12があったので参加してきました。神戸で定期的に開催されているRの勉強会です。今回はたまたま大阪で開かれました。前回と同様誰がされたか名前を記憶していなかったりするので、とりあえず内容だけ紹介します。 回帰分析の基礎 @florets1さん &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,6 +79,74 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/10/28/kobe-dot-r-no-12/">Kobe.R #12に参加しました</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-10-28T08:13:51+09:00" pubdate data-updated="true">Oct 28<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>勉強会の話なので丁寧語で。10/26に<a href="http://kobexr.doorkeeper.jp/events/16101">Kobe.R #12</a>があったので参加してきました。神戸で定期的に開催されているRの勉強会です。今回はたまたま大阪で開かれました。前回と同様誰がされたか名前を記憶していなかったりするので、とりあえず内容だけ紹介します。</p>
+
+<h2>回帰分析の基礎</h2>
+
+<p>@florets1さん</p>
+
+<p>Rのコマンドを叩いて結果を確認しながら回帰分析の基礎を学べる発表でした。回帰分析はある程度知っていても、Rで実際にやるとこんな感じというのが分かって面白かったです。あと、基礎の部分も何となくで素通りしていた部分を改めて説明してもらえたりするので、とても為になる発表でした。</p>
+
+<p>Rは結果をプロットなどで確認しやすかったり、要約を出してくれたりするのがとても便利です。評価はRで行って、定期的な処理になったらPythonで実装するというやりかたもアリかなと妄想しました。</p>
+
+<h2>クラスタリングについて</h2>
+
+<p>Twitter ID @Wakamatzさん</p>
+
+<p>色んなデータをどうやってグループ分け（クラスタリング）するかという手法についての発表でした。基本は何グループに分けるかを指定して、その数に収束するまでクラスタリングするみたいですが、グループ数を決められない場合には自動的に決定する手法もあるそうです。が、なかなか難しい手法みたいです。</p>
+
+<h2>Rのこれから</h2>
+
+<p>不明(別のR勉強会を主催されていた方)</p>
+
+<p>スマホでもサーバクライアント型のサービスが増えてくるだろうから、サーバ内での解析にRが使えるんじゃないかという話でした。RDBやNOSQLとの接続が楽に出来るようになるとそうなるかも。Rをスマホにインストールするのは難しいとお話があったのですが、インストールはやろうと思えば出来るのでしょうか？脱獄したら出来るでしょうが。</p>
+
+<h2>カフェをなんとか盛り上げたい</h2>
+
+<p>不明(神戸で英会話カフェを主催されている方)</p>
+
+<p>神戸で毎週土曜日AM11:00〜PM2:00まで英会話の機会に使えるカフェを運営しているというお話と、カフェの問題点を紹介してくれました。今後何かRで分析する話になるかも？？？</p>
+
+<h2>Rで時系列データを取り扱う</h2>
+
+<p>Rで時系列データを扱い、時間に対して周期性があるデータから未来予測したりというライブラリの紹介とデモを見せて頂きました。Rのライブラリ紹介と実際に使った結果を見ることが出来ると理解が深まってとてもありがたいです。</p>
+
+<p>前回今回と大阪で参加しているのですが、今度は神戸で開催される時も参加してみようかと思います。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -905,106 +968,6 @@ AUTH_USER_MODEL
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/06/30/python-memo/">Python Memo</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-06-30T20:38:44+09:00" pubdate data-updated="true">Jun 30<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Djangoやり始めたので、その過程で記録しておきたいことをメモ。</p>
-
-<h2>pip freezeでWarning: cannot find svn location for distribute==0.6.24dev-r0</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo pip install --upgrade distribute
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でおk</p>
-
-<h2>for文でループカウント取得</h2>
-
-<p>参考<a href="http://fujishinko.exblog.jp/7669024">Python 配列をfor文でまわしているときのループカウント取得 : fujishinko 雑記帳</a></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">,</span><span class="s">&#39;c&#39;</span><span class="p">]):</span>
-</span><span class='line'>  <span class="k">print</span> <span class="n">i</span><span class="p">,</span><span class="n">item</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>日本語のコマンドライン引数取得</h2>
-
-<p>参考<a href="http://www.yukun.info/blog/2008/07/python-command-line-arguments.html">Python: コマンドライン引数の取得 – sys.argv変数</a></p>
-
-<figure class='code'><figcaption><span>:hoge.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="c"># -\*- encoding: utf-8 -\*-</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">sys</span>
-</span><span class='line'><span class="n">argv</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span>
-</span><span class='line'><span class="k">print</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python hoge.py あいうえお
-</span><span class='line'>あいうえお
-</span><span class='line'><span class="err">$</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>コマンド実行して実行結果を取得</h2>
-
-<p>参考<a href="http://qiita.com/mokemokechicken/items/a84b0aa96b94d1931f08">Python の subprocess で出力を受け取るときは communicate() を使おう &ndash; Qiita</a>
-subprocessを使う。何か昔は別の手法だったらしい。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">subprocess</span>
-</span><span class='line'><span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="s">&quot;echo &#39;hoge&#39;&quot;</span><span class="p">,</span><span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span><span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
-</span><span class='line'><span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-</span><span class='line'><span class="n">stdout_data</span><span class="p">,</span><span class="n">stderr_data</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-</span><span class='line'><span class="k">print</span> <span class="n">stdout_data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-</span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1030,6 +993,10 @@ subprocessを使う。何か昔は別の手法だったらしい。</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/10/28/kobe-dot-r-no-12/">Kobe.R #12に参加しました</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/10/10/phantomjs/">PhantomJSとSeleniumをpythonから使ってみる</a>
       </li>
     
@@ -1043,10 +1010,6 @@ subprocessを使う。何か昔は別の手法だったらしい。</p>
     
       <li class="post">
         <a href="/blog/2014/08/06/django-error/">Djangoで出てくるエラーメッセージメモ</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/07/29/matcha-139/">まっちゃ139勉強会に参加しました</a>
       </li>
     
   </ul>
@@ -1064,10 +1027,10 @@ subprocessを使う。何か昔は別の手法だったらしい。</p>
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (7)</a></li>
 <li class='category'><a href='/blog/categories/python/'>Python (5)</a></li>
-<li class='category'><a href='/blog/categories/r/'>R (1)</a></li>
+<li class='category'><a href='/blog/categories/r/'>R (2)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/web/'>Web (1)</a></li>
-<li class='category'><a href='/blog/categories/event/'>event (1)</a></li>
+<li class='category'><a href='/blog/categories/event/'>event (2)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/linux/'>linux (5)</a></li>
 <li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
