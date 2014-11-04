@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Django | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/django/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-10-29T16:18:34+09:00</updated>
+  <updated>2014-11-04T22:16:43+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,168 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(4):djangoで作ったプロジェクトをnginx+uwsgiで使って公開する]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/11/04/use-django-with-uwsgi/"/>
+    <updated>2014-11-04T21:33:54+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/11/04/use-django-with-uwsgi</id>
+    <content type="html"><![CDATA[<p>nginxのインストールは省略。ubuntuならaptitudeでインストールすればいい。デフォルトはちょっと古いけど。
+djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いているという前提。</p>
+
+<h2>uwsgiをインストール</h2>
+
+<p>全てvirtualenv上で行うとよさげ。
+<a href="http://docs.djangoproject.jp/en/latest/howto/deployment/wsgi/uwsgi.html">uWSGI で Django を使う方法 — Django 1.4 documentation</a>ほぼそのまま</p>
+
+<p><code>sh
+$ source path/to/virtualenv/bin/activate
+$(virtualenv) pip install uwsgi
+</code></p>
+
+<h2>uwsgi.iniを作る</h2>
+
+<p>djangoのプロジェクトを/path/to/mysiteに置いた場合の設定。pidfile,daemonizeはプロジェクト毎に適当に設定。</p>
+
+<p><code>ini uwsgi.ini
+[uwsgi]
+chdir=/path/to/mysite
+module='mysite.wsgi:application'
+master=True
+pidfile=/tmp/project-master.pid
+vacuum=True
+max-requests=5000
+daemonize=/var/log/uwsgi/mysite.log
+socket=127.0.0.1:1234 #適当なポート
+env= DJANGO_SETTINGS_MODULE=mysite.settings
+</code></p>
+
+<p>virtualenvで使う場合、sudoを使わないでuwsgiを起動するので、/var/log/uwsgi/yourproject.logの権限に注意する。
+uwsgiの起動や終了のコマンドは以下の通り</p>
+
+<p><code>sh
+起動
+$ uwsgi --ini uwsgi.ini
+再起動
+$ uwsgi --reload /tmp/project-master.pid
+終了
+$ uwsgi --stop /tmp/project-master.pid
+</code></p>
+
+<h2>nginxの設定</h2>
+
+<p><a href="http://uwsgi-docs.readthedocs.org/en/latest/tutorials/Django_and_nginx.html">Setting up Django and your web server with uWSGI and nginx — uWSGI 2.0 documentation</a>を参考にした。</p>
+
+<h3>uwsgi_params</h3>
+
+<p>uwsgi_paramsは/etc/nginx/uwsgi_paramsに入ってるけど、修正する可能性もあるので、/path/to/mysite/uwsgi_paramsにコピーして、それを修正する。</p>
+
+<h3>nginx.conf</h3>
+
+<p>```
+upstream django {</p>
+
+<pre><code>server 127.0.0.1:1234; #uwsgi.iniで設定したポート番号
+</code></pre>
+
+<p>}</p>
+
+<p>server {</p>
+
+<pre><code>server_name hoge.example.com; # substitute your machine's IP address or FQDN
+    charset     utf-8;
+</code></pre>
+
+<h1>max upload size</h1>
+
+<pre><code>client_max_body_size 75M;   # adjust to taste
+</code></pre>
+
+<h1>Django media</h1>
+
+<h1>Finally, send all non-media requests to the Django server.</h1>
+
+<pre><code>location / {
+    uwsgi_pass  django;
+    include     /path/to/mysite/uwsgi_params; # the uwsgi_params file you installed
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>これを作成して、/etc/nginx/sites-enabledへシンボリックリンクを貼っておけば良い</p>
+
+<p><code>sh
+$ service nginx restart #reloadでもいい？
+</code></p>
+
+<p>でWebアクセスできるようになる。はず。</p>
+
+<h2>静的ファイルの設定手順</h2>
+
+<p>nginx+uwsgiでプロジェクトを公開した場合、manage.py runserverの場合と違い、静的ファイルの置場を設定しないといけないっぽい</p>
+
+<p><code>
+location ~ ^/static/ {
+root /path/to/mysite;
+break;
+}
+</code></p>
+
+<p>settings.pyにSTATIC_URL, STATIC_ROOTを追加</p>
+
+<p><code>py settings.py
+STATIC_URL = '/static/'
+STATIC_ROOT = "/path/to/mysite/static"
+</code></p>
+
+<p>テンプレでは次のように静的ファイルにアクセスする</p>
+
+<p>```html</p>
+
+<script type="text/javascript" src="js/hoge.js"></script>
+
+
+<p>```</p>
+
+<p>この設定だけでは静的ファイルが/path/to/mysite/staticに入ってないので、collectstaticコマンドを使ってファイルを集める</p>
+
+<p><code>sh
+$ python manage.py collectstatic
+</code></p>
+
+<p>これで各アプリに入ってる静的ファイルとadmin関連の静的ファイル全て持って来てくれる</p>
+
+<h2>設定反映</h2>
+
+<p><code>sh
+$ sudo service nginx reload #ubuntuの場合
+</code></p>
+
+<h2>deploy時に良く使うメモ</h2>
+
+<p>mysite/settings.pyを以外を設定ファイルとして読み込む場合はmanage.pyに以下のオプションを付ける
+uwsgi.iniのenvも変更しておく</p>
+
+<p><code>sh
+--settings=mysite.settings_deploy
+</code></p>
+
+<p>設定ファイルは例えばこんな感じで書いて、元のsettings.pyを上書きする</p>
+
+<p>```py
+from pystock.settings import *
+DATABASES = {</p>
+
+<pre><code>.......
+</code></pre>
+
+<p>}</p>
+
+<p>```</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する]]></title>
