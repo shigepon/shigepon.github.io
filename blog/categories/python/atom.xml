@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-11-20T10:17:32+09:00</updated>
+  <updated>2014-11-20T10:21:13+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -20,7 +20,7 @@
     <id>http://blog.shigepon.com/blog/2014/11/20/titanium-ajax-post-to-django</id>
     <content type="html"><![CDATA[<p>最近Titanium Mobile使ってスマホアプリを作ろうかなと思って色々試してるんだけど、ログイン認証する時にはまったので、メモ</p>
 
-<p>参考[In Appcelerator Titanium, how can I get Django&rsquo;s CSRF token?(Stack Overflow):<a href="http://stackoverflow.com/questions/26022797/in-appcelerator-titanium-how-can-i-get-djangos-csrf-token">http://stackoverflow.com/questions/26022797/in-appcelerator-titanium-how-can-i-get-djangos-csrf-token</a>]</p>
+<p>参考<a href="http://stackoverflow.com/questions/26022797/in-appcelerator-titanium-how-can-i-get-djangos-csrf-token">In Appcelerator Titanium, how can I get Django&rsquo;s CSRF token?(Stack Overflow)</a></p>
 
 <h2>Titanium MobileでのPOST</h2>
 
@@ -51,7 +51,7 @@ client.send({username:'hoge',password:'fuga'});
 <h2>Djangoでのユーザー認証</h2>
 
 <p>Djangoでユーザー認証しようとすると例えばこんな感じ(viewだけ)
-REST API作るために、[Django REST framework:<a href="http://www.django-rest-framework.org/">http://www.django-rest-framework.org/</a>]を使ってるので、そのままコピペしても使えないけど、@部分を消して、Responseとなっている箇所を自力でJSON出力すれば良いと思う。Django REST frameworkについてはどっかで書く。</p>
+REST API作るために、<a href="http://www.django-rest-framework.org/">Django REST framework</a>を使ってるので、そのままコピペしても使えないけど、@部分を消して、Responseとなっている箇所を自力でJSON出力すれば良いと思う。Django REST frameworkについてはどっかで書く。</p>
 
 <p>```py views.py
 from rest_framework import viewsets↲
@@ -108,7 +108,7 @@ MIDDLEWARE_CLASSES = (
 )
 ```</p>
 
-<p>ajaxでやり取りする部分だけ、MIDDLEWARE_CLASSESから削除するって手もあるけど、[Django APIリファレンス:<a href="http://docs.djangoproject.jp/en/latest/ref/contrib/csrf.html">http://docs.djangoproject.jp/en/latest/ref/contrib/csrf.html</a>]に書いてあるようにX-CSRFToken という独自ヘッダーに CSRF トークンの 値を設定するという対処をやってみた。</p>
+<p>ajaxでやり取りする部分だけ、MIDDLEWARE_CLASSESから削除するって手もあるけど、<a href="http://docs.djangoproject.jp/en/latest/ref/contrib/csrf.html">Django APIリファレンス</a>に書いてあるようにX-CSRFToken という独自ヘッダーに CSRF トークンの 値を設定するという対処をやってみた。</p>
 
 <p>```js
 function getCRSF(){</p>
