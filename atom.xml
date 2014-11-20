@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-11-18T09:46:33+09:00</updated>
+  <updated>2014-11-20T10:17:32+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,191 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Titanium MobileとDjangoでAjax認証を行う]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/11/20/titanium-ajax-post-to-django/"/>
+    <updated>2014-11-20T09:42:26+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/11/20/titanium-ajax-post-to-django</id>
+    <content type="html"><![CDATA[<p>最近Titanium Mobile使ってスマホアプリを作ろうかなと思って色々試してるんだけど、ログイン認証する時にはまったので、メモ</p>
+
+<p>参考[In Appcelerator Titanium, how can I get Django&rsquo;s CSRF token?(Stack Overflow):<a href="http://stackoverflow.com/questions/26022797/in-appcelerator-titanium-how-can-i-get-djangos-csrf-token">http://stackoverflow.com/questions/26022797/in-appcelerator-titanium-how-can-i-get-djangos-csrf-token</a>]</p>
+
+<h2>Titanium MobileでのPOST</h2>
+
+<p>HTTPClientを使って、例えば次のように書く。UIの設計部分とかそんなのは省略。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>var <span class="nv">client</span> <span class="o">=</span> Ti.Network.createHTTPClient<span class="o">({</span>
+</span><span class='line'>    onerror: <span class="k">function</span><span class="o">(</span>e<span class="o">){</span>
+</span><span class='line'>        Ti.API.debug<span class="o">(</span>e.error<span class="o">)</span>;
+</span><span class='line'>        alert<span class="o">(</span><span class="s1">&#39;error&#39;</span><span class="o">)</span>;
+</span><span class='line'>    <span class="o">}</span>,
+</span><span class='line'>    onload: <span class="k">function</span><span class="o">(</span>e<span class="o">){</span>
+</span><span class='line'>        var <span class="nv">item</span> <span class="o">=</span> JSON.parse<span class="o">(</span>this.responseText<span class="o">)</span>;
+</span><span class='line'>        <span class="k">if</span><span class="o">(</span>item.status<span class="o">==</span>1<span class="o">){</span>//例としてstatusを返すという設定にしているのでこんな感じにしてる
+</span><span class='line'>            alert<span class="o">(</span><span class="s1">&#39;ログインしました&#39;</span><span class="o">)</span>;
+</span><span class='line'>        <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+</span><span class='line'>            alert<span class="o">(</span><span class="s1">&#39;ログイン失敗しました&#39;</span><span class="o">)</span>;
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">})</span>;
+</span><span class='line'>client.open<span class="o">(</span><span class="s1">&#39;POST&#39;</span>,<span class="s1">&#39;http://url/to/login&#39;</span><span class="o">)</span>;
+</span><span class='line'>client.send<span class="o">({</span>username:<span class="s1">&#39;hoge&#39;</span>,password:<span class="s1">&#39;fuga&#39;</span><span class="o">})</span>;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Djangoでのユーザー認証</h2>
+
+<p>Djangoでユーザー認証しようとすると例えばこんな感じ(viewだけ)
+REST API作るために、[Django REST framework:<a href="http://www.django-rest-framework.org/">http://www.django-rest-framework.org/</a>]を使ってるので、そのままコピペしても使えないけど、@部分を消して、Responseとなっている箇所を自力でJSON出力すれば良いと思う。Django REST frameworkについてはどっかで書く。</p>
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">viewsets</span><span class="err">↲</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">rest_framework.response</span> <span class="kn">import</span> <span class="n">Response</span><span class="err">↲</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">rest_framework.decorators</span> <span class="kn">import</span> <span class="n">api_view</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">login</span><span class="p">,</span><span class="n">authenticate</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@api_view</span><span class="p">([</span><span class="s">&#39;GET&#39;</span><span class="p">,</span><span class="s">&#39;POST&#39;</span><span class="p">])</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">do_login</span><span class="p">(</span><span class="n">request</span><span class="p">):</span><span class="err">↲</span>
+</span><span class='line'> <span class="n">status</span> <span class="o">=</span> <span class="mi">0</span><span class="err">↲</span>
+</span><span class='line'> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">():</span><span class="err">↲</span>
+</span><span class='line'>     <span class="n">status</span> <span class="o">=</span> <span class="mi">1</span><span class="err">↲</span>
+</span><span class='line'> <span class="k">else</span><span class="p">:</span><span class="err">↲</span>
+</span><span class='line'>     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&#39;POST&#39;</span><span class="p">:</span><span class="err">↲</span>
+</span><span class='line'>         <span class="n">username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">]</span><span class="err">↲</span>
+</span><span class='line'>         <span class="n">password</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s">&#39;password&#39;</span><span class="p">]</span><span class="err">↲</span>
+</span><span class='line'>         <span class="n">user</span> <span class="o">=</span> <span class="n">authenticate</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span><span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span><span class="err">↲</span>
+</span><span class='line'>         <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span><span class="err">↲</span>
+</span><span class='line'>             <span class="n">status</span> <span class="o">=</span> <span class="mi">1</span><span class="err">↲</span>
+</span><span class='line'>             <span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="n">user</span><span class="p">)</span><span class="err">↲</span>
+</span><span class='line'>     <span class="k">else</span><span class="p">:</span><span class="err">↲</span>
+</span><span class='line'>         <span class="k">return</span> <span class="n">Response</span><span class="p">({</span><span class="s">&quot;status&quot;</span><span class="p">:</span><span class="n">status</span><span class="p">})</span><span class="err">↲</span>
+</span><span class='line'> <span class="k">return</span> <span class="n">Response</span><span class="p">({</span><span class="s">&quot;status&quot;</span><span class="p">:</span><span class="n">status</span><span class="p">})</span><span class="err">↲</span>
+</span><span class='line'><span class="err">↲</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="err">で、実際やってみるとレスポンスはこんな感じになる</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>js
+{</p>
+
+<pre><code>"detail": "CSRF Failed: CSRF token missing or incorrect."
+</code></pre>
+
+<p>}</p>
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">そういえば</span><span class="n">Django</span><span class="err">で</span><span class="n">CSRF</span><span class="err">対策してるんだった。</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>py settings.py</p>
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">MIDDLEWARE_CLASSES</span> <span class="o">=</span> <span class="p">(</span>
+</span><span class='line'><span class="o">....</span>
+</span><span class='line'>    <span class="s">&#39;django.middleware.csrf.CsrfViewMiddleware&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="o">....</span>
+</span><span class='line'><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ajaxでやり取りする部分だけ、MIDDLEWARE_CLASSESから削除するって手もあるけど、[Django APIリファレンス:<a href="http://docs.djangoproject.jp/en/latest/ref/contrib/csrf.html">http://docs.djangoproject.jp/en/latest/ref/contrib/csrf.html</a>]に書いてあるようにX-CSRFToken という独自ヘッダーに CSRF トークンの 値を設定するという対処をやってみた。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">function</span> <span class="nx">getCRSF</span><span class="p">(){</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">xhr</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">Network</span><span class="p">.</span><span class="nx">createHTTPClient</span><span class="p">({</span>
+</span><span class='line'>        <span class="nx">onload</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+</span><span class='line'>            <span class="kd">var</span> <span class="nx">item</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">responseText</span><span class="p">);</span>
+</span><span class='line'>            <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">Properties</span><span class="p">.</span><span class="nx">setString</span><span class="p">(</span><span class="s2">&quot;csrf&quot;</span><span class="p">,</span> <span class="nx">item</span><span class="p">.</span><span class="nx">csrf</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'>    <span class="nx">xhr</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span><span class="s1">&#39;http://url/to/login&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="nx">xhr</span><span class="p">.</span><span class="nx">send</span><span class="p">();</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これを書いて、getCRSFを先にどこかで実行しておいて
+実際のリクエストはさっきのコードをこんな感じで修正する</p>
+
+<p> &#8220;`js</p>
+
+<pre><code>client.open('POST','http://url/to/login');
+client.setRequestHeader('X-CSRFToken', Ti.App.Properties.getString("csrf"));//これを追加
+
+client.send({username:'hoge',password:'fuga'});
+</code></pre>
+
+<p>&#8220;`</p>
+
+<p>Django側のコードはGETの時にcsrfのトークンを戻すように書き換える</p>
+
+<p> &#8220;`py views.py
+from django.core.context_processors import csrf #を追加</p>
+
+<h1>上のviews.pyの14行目をこんな感じで修正</h1>
+
+<p>return Response({&ldquo;status&rdquo;:status,&ldquo;csrf&rdquo;:csrf(request)[&lsquo;csrf_token&rsquo;]})↲</p>
+
+<p>これでいけたみたい。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(4):djangoで作ったプロジェクトをnginx+uwsgiで使って公開する]]></title>
@@ -1467,71 +1652,6 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 
 
 <p>とすると、上手く消すことが出来た</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[phpenvとphp-buildを使って適当なバージョンのphpをビルドする]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/06/07/build-php-with-phpenv/"/>
-    <updated>2014-06-07T00:42:03+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/06/07/build-php-with-phpenv</id>
-    <content type="html"><![CDATA[<p>基本は<a href="http://d.hatena.ne.jp/hnw/20130626">php-buildで複数バージョンのPHP-FPMを用意する &ndash; hnwの日記</a>を参考にして進める</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>curl https://raw.github.com/CHH/phpenv/master/bin/phpenv-install.sh | bash
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これが何故か上手くいかなかったので</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>wget https://raw.github.com/CHH/phpenv/master/bin/phpenv-install.sh
-</span><span class='line'><span class="nv">$ </span>chmod +x phpenv-install.sh
-</span><span class='line'><span class="nv">$ </span>./phpenv-install.sh
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こうやった。コマンド終了時のメッセージに従って.zshrcを変更して反映。
-php-buildのインストールは下のような感じ</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone git://github.com/CHH/php-build.git ~/.phpenv/plugins/php-build
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>で、おもむろにphpをインストール</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>phpenv install 5.5.5
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とかやると出るわ出るわエラーが出るわ。どうもビルド用のライブラリやヘッダファイルみたいなのが何かと足りないみたいで色々出て来た。出るメッセージは人によって違うと思うので、入れるライブラリの一覧より、ライブラリが無い場合の対処法を書いておく。ubuntuにはapt-fileというアプリ？があって、これを使うとライブラリをインストールした時にインストールされるファイル名で検索することが出来る。</p>
-
-<p>例えば「configure: error: mcrypt.h not found. Please reinstall libmcrypt.」みたいなエラーが出た場合、</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>apt-file search mcrypt.h
-</span><span class='line'>libmcrypt-dev: /usr/include/mcrypt.h
-</span><span class='line'>libmcrypt-dev: /usr/include/mutils/mcrypt.h
-</span><span class='line'>libtomcrypt-dev: /usr/include/tomcrypt.h
-</span><span class='line'>php-doc: /usr/share/doc/php-doc/html/book.mcrypt.html
-</span><span class='line'>php-doc: /usr/share/doc/php-doc/html/intro.mcrypt.html
-</span><span class='line'>php-doc: /usr/share/doc/php-doc/html/ref.mcrypt.html
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいにすると、mcrypt.hを含むライブラリとインストール箇所が表示されるので、これを見ながらインストールするライブラリを選んだ（この場合だとlibmcrypt-devをインストールした）</p>
-
-<p>これを地道に何度か繰り返して何とかビルド出来た。rbenvに比べると面倒だった。</p>
 ]]></content>
   </entry>
   

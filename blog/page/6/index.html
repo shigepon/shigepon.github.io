@@ -9,7 +9,19 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="なでしこでプラグインを作る時にC#を使いたかったので、その前段階としてC++/CLIでプラグインを作る方法を探ってみました。 C++/CLIが使えると、.Netを使えるようになり、C#で作ったdllもVC++の参照設定から読み込んで使えるようになります。 なでしこにはC++ &hellip;">
+  <meta name="description" content="画像やファイルが無くなっていますがご了承下さい なでしこでプラグインを作る時にC#を使いたかったので、本格的にdllを作る前に、C++/CLIからMessageBoxを表示する程度のC#のdllを呼び出してみました。 C#のdllコード 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +91,99 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/28/nadesiko-plugin-cs/">C#で作ったdllをC++/CLIで使う</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-28T22:27:58+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong>画像やファイルが無くなっていますがご了承下さい</strong></p>
+
+<p>なでしこでプラグインを作る時にC#を使いたかったので、本格的にdllを作る前に、C++/CLIからMessageBoxを表示する程度のC#のdllを呼び出してみました。</p>
+
+<p>C#のdllコード</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>using System;
+</span><span class='line'>using System.Collections.Generic;
+</span><span class='line'>using System.Windows.Forms;
+</span><span class='line'>using System.Text;
+</span><span class='line'>namespace ClassLibrary1{
+</span><span class='line'>    public class Class1
+</span><span class='line'>    {
+</span><span class='line'>        public static void Method1()
+</span><span class='line'>        {
+</span><span class='line'>            MessageBox.Show(&quot;method1&quot;);
+</span><span class='line'>        }
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>C++フォームアプリケーション</p>
+
+<p>C#で作ったdllの参照とかフォームの構成とか画像が消えちゃったので適当に想像してください。
+用はC++のアプリケーションでC#のdllを参照します。</p>
+
+<p>ボタンクリック時のコード</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>private: System::Void button1_Click(System::Object^  sender&cedil; System::EventArgs^  e) {
+</span><span class='line'>   try{
+</span><span class='line'>      ClassLibrary1::Class1::Method1();
+</span><span class='line'>   }catch(Exception^ e){
+</span><span class='line'>      System::Windows::Forms::MessageBox::Show(e-&gt;Message);
+</span><span class='line'>   }
+</span><span class='line'> }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で動かしてみるときちんと動かせました。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -622,6 +727,10 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/20/titanium-ajax-post-to-django/">Titanium MobileとDjangoでAjax認証を行う</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/04/use-django-with-uwsgi/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(4):djangoで作ったプロジェクトをnginx+uwsgiで使って公開する</a>
       </li>
     
@@ -637,10 +746,6 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
         <a href="/blog/2014/09/22/kobe-dot-r-number-9/">Kobe.R #9に参加しました</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/08/20/vb-not-work-on-ubuntu/">ubuntuのmonoでMicrosoft.VisualBasicが動かない件</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -650,14 +755,15 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (6)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C# (4)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C++ (3)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (4)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (5)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (7)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (6)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (7)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (2)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
+<li class='category'><a href='/blog/categories/titanium/'>Titanium (1)</a></li>
 <li class='category'><a href='/blog/categories/web/'>Web (1)</a></li>
 <li class='category'><a href='/blog/categories/event/'>event (2)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>

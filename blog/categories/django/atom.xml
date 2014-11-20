@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Django | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/django/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-11-18T09:46:33+09:00</updated>
+  <updated>2014-11-20T10:17:32+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,145 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Titanium MobileとDjangoでAjax認証を行う]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/11/20/titanium-ajax-post-to-django/"/>
+    <updated>2014-11-20T09:42:26+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/11/20/titanium-ajax-post-to-django</id>
+    <content type="html"><![CDATA[<p>最近Titanium Mobile使ってスマホアプリを作ろうかなと思って色々試してるんだけど、ログイン認証する時にはまったので、メモ</p>
+
+<p>参考[In Appcelerator Titanium, how can I get Django&rsquo;s CSRF token?(Stack Overflow):<a href="http://stackoverflow.com/questions/26022797/in-appcelerator-titanium-how-can-i-get-djangos-csrf-token">http://stackoverflow.com/questions/26022797/in-appcelerator-titanium-how-can-i-get-djangos-csrf-token</a>]</p>
+
+<h2>Titanium MobileでのPOST</h2>
+
+<p>HTTPClientを使って、例えば次のように書く。UIの設計部分とかそんなのは省略。</p>
+
+<p>```sh</p>
+
+<pre><code>var client = Ti.Network.createHTTPClient({
+    onerror: function(e){
+        Ti.API.debug(e.error);
+        alert('error');
+    },
+    onload: function(e){
+        var item = JSON.parse(this.responseText);
+        if(item.status==1){//例としてstatusを返すという設定にしているのでこんな感じにしてる
+            alert('ログインしました');
+        }else{
+            alert('ログイン失敗しました');
+        }
+    }
+});
+client.open('POST','http://url/to/login');
+client.send({username:'hoge',password:'fuga'});
+</code></pre>
+
+<p>```</p>
+
+<h2>Djangoでのユーザー認証</h2>
+
+<p>Djangoでユーザー認証しようとすると例えばこんな感じ(viewだけ)
+REST API作るために、[Django REST framework:<a href="http://www.django-rest-framework.org/">http://www.django-rest-framework.org/</a>]を使ってるので、そのままコピペしても使えないけど、@部分を消して、Responseとなっている箇所を自力でJSON出力すれば良いと思う。Django REST frameworkについてはどっかで書く。</p>
+
+<p>```py views.py
+from rest_framework import viewsets↲
+from rest_framework.response import Response↲
+from rest_framework.decorators import api_view
+from django.contrib.auth import login,authenticate</p>
+
+<p>@api_view([&lsquo;GET&rsquo;,&lsquo;POST&rsquo;])
+def do_login(request):↲                                               <br/>
+ status = 0↲                                  <br/>
+ if request.user.is_authenticated():↲</p>
+
+<pre><code> status = 1↲                                                  
+</code></pre>
+
+<p> else:↲</p>
+
+<pre><code> if request.method == 'POST':↲                                 
+     username = request.POST['username']↲                          
+     password = request.POST['password']↲                      
+     user = authenticate(username=username,password=password)↲     
+     if user is not None:↲                                     
+         status = 1↲                                      
+         login(request,user)↲                       
+ else:↲                                                      
+     return Response({"status":status})↲                 
+</code></pre>
+
+<p> return Response({&ldquo;status&rdquo;:status})↲                               <br/>
+↲</p>
+
+<p>で、実際やってみるとレスポンスはこんな感じになる</p>
+
+<p>```js
+{</p>
+
+<pre><code>"detail": "CSRF Failed: CSRF token missing or incorrect."
+</code></pre>
+
+<p>}
+```</p>
+
+<p>そういえばDjangoでCSRF対策してるんだった。</p>
+
+<p><code>py settings.py
+</code>
+MIDDLEWARE_CLASSES = (
+&hellip;.</p>
+
+<pre><code>'django.middleware.csrf.CsrfViewMiddleware',
+</code></pre>
+
+<p>&hellip;.
+)
+```</p>
+
+<p>ajaxでやり取りする部分だけ、MIDDLEWARE_CLASSESから削除するって手もあるけど、[Django APIリファレンス:<a href="http://docs.djangoproject.jp/en/latest/ref/contrib/csrf.html">http://docs.djangoproject.jp/en/latest/ref/contrib/csrf.html</a>]に書いてあるようにX-CSRFToken という独自ヘッダーに CSRF トークンの 値を設定するという対処をやってみた。</p>
+
+<p>```js
+function getCRSF(){</p>
+
+<pre><code>var xhr = Ti.Network.createHTTPClient({
+    onload: function(e){
+        var item = JSON.parse(this.responseText);
+        Ti.App.Properties.setString("csrf", item.csrf);
+    }
+});
+xhr.open('GET','http://url/to/login');
+xhr.send();
+</code></pre>
+
+<p>}
+```</p>
+
+<p>これを書いて、getCRSFを先にどこかで実行しておいて
+実際のリクエストはさっきのコードをこんな感じで修正する</p>
+
+<p> ```js</p>
+
+<pre><code>client.open('POST','http://url/to/login');
+client.setRequestHeader('X-CSRFToken', Ti.App.Properties.getString("csrf"));//これを追加
+
+client.send({username:'hoge',password:'fuga'});
+</code></pre>
+
+<p>```</p>
+
+<p>Django側のコードはGETの時にcsrfのトークンを戻すように書き換える</p>
+
+<p> ```py views.py
+from django.core.context_processors import csrf #を追加</p>
+
+<h1>上のviews.pyの14行目をこんな感じで修正</h1>
+
+<p>return Response({&ldquo;status&rdquo;:status,&ldquo;csrf&rdquo;:csrf(request)[&lsquo;csrf_token&rsquo;]})↲</p>
+
+<p>これでいけたみたい。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(4):djangoで作ったプロジェクトをnginx+uwsgiで使って公開する]]></title>
