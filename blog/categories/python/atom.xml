@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-11-20T10:21:13+09:00</updated>
+  <updated>2014-11-22T16:22:38+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,27 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[DjangoでDateTimeField received a naive datetimeってWarningが出たで]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/11/22/django-datetimefield-received-a-naive-datetime/"/>
+    <updated>2014-11-22T16:19:11+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/11/22/django-datetimefield-received-a-naive-datetime</id>
+    <content type="html"><![CDATA[<p><code>sh
+RuntimeWarning: DateTimeField received a naive datetime
+</code></p>
+
+<p>ってWarningが出るのに対する対処</p>
+
+<p><code>py settings.py
+USE_TZ = False
+</code></p>
+
+<p>を書けばおk。要はタイムゾーン入れてくれってエラーなので、そんなものはない！と指定すればいいっぽい</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/18622007/runtimewarning-datetimefield-received-a-naive-datetime">django &ndash; RuntimeWarning: DateTimeField received a naive datetime &ndash; Stack Overflow</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Titanium MobileとDjangoでAjax認証を行う]]></title>
@@ -496,64 +517,6 @@ urlpatterns = patterns(&rdquo;,</p>
 </code></p>
 
 <p>こんな感じで文字列をくっつけてパラメータにすることが出来る。かなり強引<a href="https://www.google.com/url?q=http://d.hatena.ne.jp/feiz/20110414/1302771447&amp;usd=2&amp;usg=AFQjCNFN9kzyrEJj_WZEatK2wIL07eaD0w">参考</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Python memo]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/06/30/python-memo/"/>
-    <updated>2014-06-30T20:38:44+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/06/30/python-memo</id>
-    <content type="html"><![CDATA[<p>Djangoやり始めたので、その過程で記録しておきたいことをメモ。</p>
-
-<h2>pip freezeでWarning: cannot find svn location for distribute==0.6.24dev-r0</h2>
-
-<p><code>sh
-$ sudo pip install --upgrade distribute
-</code></p>
-
-<p>でおk</p>
-
-<h2>for文でループカウント取得</h2>
-
-<p>参考<a href="http://fujishinko.exblog.jp/7669024">Python 配列をfor文でまわしているときのループカウント取得 : fujishinko 雑記帳</a></p>
-
-<p><code>py
-for i,item in enumerate(['a','b','c']):
-  print i,item
-</code></p>
-
-<h2>日本語のコマンドライン引数取得</h2>
-
-<p>参考<a href="http://www.yukun.info/blog/2008/07/python-command-line-arguments.html">Python: コマンドライン引数の取得 – sys.argv変数</a></p>
-
-<p>```py :hoge.py</p>
-
-<h1>&ndash;*&ndash; encoding: utf-8 &ndash;*&ndash;</h1>
-
-<p>import sys
-argv = sys.argv
-print argv[1].decode(&ldquo;utf-8&rdquo;)
-```</p>
-
-<p><code>sh
-$ python hoge.py あいうえお
-あいうえお
-$
-</code></p>
-
-<h2>コマンド実行して実行結果を取得</h2>
-
-<p>参考<a href="http://qiita.com/mokemokechicken/items/a84b0aa96b94d1931f08">Python の subprocess で出力を受け取るときは communicate() を使おう &ndash; Qiita</a>
-subprocessを使う。何か昔は別の手法だったらしい。</p>
-
-<p><code>py
-import subprocess
-p = subprocess.Popen("echo 'hoge'",shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-p.wait()
-stdout_data,stderr_data = p.communicate()
-print stdout_data.decode("utf-8").strip()
-</code></p>
 ]]></content>
   </entry>
   

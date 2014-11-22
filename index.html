@@ -9,7 +9,9 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="最近Titanium Mobile使ってスマホアプリを作ろうかなと思って色々試してるんだけど、ログイン認証する時にはまったので、メモ 参考In Appcelerator Titanium, how can I get Django&rsquo;s CSRF token?(Stack &hellip;">
+  <meta name="description" content="1
+RuntimeWarning: DateTimeField received a naive datetime ってWarningが出るのに対する対処 settings.py1
+USE_TZ = False を書けばおk。要はタイムゾーン入れてくれってエラーなので、そんなものはない！ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +81,56 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/22/django-datetimefield-received-a-naive-datetime/">DjangoでDateTimeField Received a Naive datetimeってWarningが出たで</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-11-22T16:19:11+09:00" pubdate data-updated="true">Nov 22<span>nd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>RuntimeWarning: DateTimeField received a naive datetime
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ってWarningが出るのに対する対処</p>
+
+<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">USE_TZ</span> <span class="o">=</span> <span class="bp">False</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>を書けばおk。要はタイムゾーン入れてくれってエラーなので、そんなものはない！と指定すればいいっぽい</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/18622007/runtimewarning-datetimefield-received-a-naive-datetime">django &ndash; RuntimeWarning: DateTimeField received a naive datetime &ndash; Stack Overflow</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1056,98 +1108,6 @@ AUTH_USER_MODEL
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/07/05/groonga-qa/">Groongaアンケート？</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-07-05T13:52:55+09:00" pubdate data-updated="true">Jul 5<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>今回は他の人からの話があるので丁寧語で。
-@ktouさんからGroongaについて「Groongaについてのいくつかの質問について答えて欲しい」との話がありましたので、ブログに載せておきます。</p>
-
-<p>質問は以下の3点</p>
-
-<ul>
-<li>Groongaを選んだ決め手</li>
-<li>実際にGroongaを使っていてよいと思っているところ</li>
-<li>Groongaがこうなるともっとうれしいと思うところ</li>
-</ul>
-
-
-<h2>Groongaを選んだ決め手</h2>
-
-<p>現在運営しているサービス<a href="http://thoz.org">とある法律判例の全文検索</a>を作り始める時に、全文検索をサービスに入れるのを前提に考えてましたので、全文検索エンジンについて調べました。DBとしてはPostgreSQLをメインで使っているので、当時は選択肢として次のようなものがありました。</p>
-
-<ul>
-<li>Groonga（まだバージョン1になってなかったような）</li>
-<li>Senna</li>
-<li>tsvector</li>
-<li>namazu</li>
-<li>Hyper Estraier</li>
-</ul>
-
-
-<p>最初は何もアプリを入れなくていいのでtsvectorを使った全文検索を試してみたんですが、bigramで日本語が使えない。使うならソースからコンパイルというのが当時面倒だったので辞めました（当時からVagrantとかDockerとかあって、色々試せたらbigramでいってたかも）。</p>
-
-<p>なので、他4つを比較した訳なんですが、作るサービスは個人サービスだし、なるべく新しいもので、かつ日本人が作っているものを利用してみようと思い、Groongaを選択しました。あと、Groongaが「Sennaの後継」という立場だったのも大きかったと思います。Sennaの後継なら新しいアプリだとしても、それなりに信用があるだろう。すぐにメンテされなくなるようなものでも無いだろうという判断をしました。</p>
-
-<h2>実際にGroongaを使っていてよいと思っているところ</h2>
-
-<p>まずサーバ1個でかなり無茶な使い方してもちゃんと動いてくれるところです。Groonga勉強会では「データ量がメモリを超えだしたら分散を考えて」みたいな話が出たのですが、結構超えてても何の問題もなく動いてくれます。</p>
-
-<p>次は言語バインディングとかあまり考えなくてもHTTPでアクセス出来る方法を用意してくれているので、HTTPアクセスさえ出来ればどんな言語からでも利用出来る点が良いと思います。Mroongaは全く使っていませんし、Rroongaもデータのバックアップ用途以外は全く使ってません。HTTPアクセス出来る場合は、管理もHTTPで出来ます。これも便利だと思います。</p>
-
-<p>ドリルダウン、タグ検索、補完補正など、全文検索以外にも使える機能が沢山あります。沢山ありすぎて利用できていない機能が多々ありますがorz。</p>
-
-<p>機能とは関係ありませんが、TwitterでGroongaについてボヤくと@ktouさんがフォローしてくれるのがいつもとても助かっています＞＜。そういう人が居ると、使う時にとても心強いです。</p>
-
-<p>名前が好きです。Elasticなんたらは何かエラそうですが、Groongaはグルグルしてるっぽいのがいいです。</p>
-
-<h2>Groongaがこうなるともっとうれしいと思うところ</h2>
-
-<p>現在もとてもありがたいのですが、こうなると嬉しい点を箇条書きします。</p>
-
-<ul>
-<li>現在使っている機能以外でもっと色々出来るようなのですが、情報が少ない気がします。ドキュメントが充実してくるととても嬉しいです。ドキュメントが充実すればきっとTwitterでボヤく率も減る・・・かも。</li>
-<li>Rroonga使わないでGroonga単体の機能として、大容量データのバックアップを取れると嬉しいです。</li>
-<li>難しいと思いますが、複数カラム（カラムA,B)での全文検索で、CとDを検索したい時、カラムAにCが、カラムBにDが入ってる時に、検索結果として出力出来るフラグみたいなのを入れて欲しいです。</li>
-<li>もしかしたら出来るのかもしれませんが、ソースからビルドした場合にgroonga-server系の機能が使えるようにしてもらえるとHTTPから使っている身としては嬉しいです。</li>
-<li>cliでのヒストリーは特に何もアプリ入れなくても出来るようにしてくれるとまた嬉しいです。</li>
-<li>sqlのinsert文みたいな形でloadが出来ると、RDBで使っていたテーブルを丸々移動とか手軽に出来そうなので、そういうのが出来ると嬉しいです。もしくはcsvでloadが出来るとか。まぁsql使うならMroonga使えって話ですが・・・単体でも特にloadについてRDBから書き出せる形式のものを読み込めると嬉しいなーなんて思いました。</li>
-<li>勉強会の時に「ぐるーんが」なのか「むるーんが」なのか「るるーんが」なのかが発音でハッキリしませんでしたが、私の耳が悪いんですねきっと。</li>
-</ul>
-
-
-<p>以上追記するかもしれませんが、こんな感じで〜</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1173,6 +1133,10 @@ AUTH_USER_MODEL
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/22/django-datetimefield-received-a-naive-datetime/">DjangoでDateTimeField Received a Naive datetimeってWarningが出たで</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/20/titanium-ajax-post-to-django/">Titanium MobileとDjangoでAjax認証を行う</a>
       </li>
     
@@ -1188,10 +1152,6 @@ AUTH_USER_MODEL
         <a href="/blog/2014/10/10/phantomjs/">PhantomJSとSeleniumをpythonから使ってみる</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/09/22/kobe-dot-r-number-9/">Kobe.R #9に参加しました</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -1201,12 +1161,12 @@ AUTH_USER_MODEL
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (6)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C# (4)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C++ (3)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (5)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (6)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (7)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (7)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (8)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (2)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (1)</a></li>

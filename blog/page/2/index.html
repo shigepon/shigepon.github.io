@@ -9,15 +9,9 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="データの一覧表示 あとで参考ページとか追記する予定。
-データの一覧表示には何種類かファイルが必要（モデル、ビュー、テンプレート、URLディスパッチャー）。
-それぞれこんな感じで用意する。 モデル models.py1
-2
-3
-4
-5
-6
-from django.db import models &hellip;">
+  <meta name="description" content="今回は他の人からの話があるので丁寧語で。
+@ktouさんからGroongaについて「Groongaについてのいくつかの質問について答えて欲しい」との話がありましたので、ブログに載せておきます。 質問は以下の3点 Groongaを選んだ決め手
+実際にGroongaを使っていてよいと思っているところ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +81,98 @@ from django.db import models &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/05/groonga-qa/">Groongaアンケート？</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-05T13:52:55+09:00" pubdate data-updated="true">Jul 5<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>今回は他の人からの話があるので丁寧語で。
+@ktouさんからGroongaについて「Groongaについてのいくつかの質問について答えて欲しい」との話がありましたので、ブログに載せておきます。</p>
+
+<p>質問は以下の3点</p>
+
+<ul>
+<li>Groongaを選んだ決め手</li>
+<li>実際にGroongaを使っていてよいと思っているところ</li>
+<li>Groongaがこうなるともっとうれしいと思うところ</li>
+</ul>
+
+
+<h2>Groongaを選んだ決め手</h2>
+
+<p>現在運営しているサービス<a href="http://thoz.org">とある法律判例の全文検索</a>を作り始める時に、全文検索をサービスに入れるのを前提に考えてましたので、全文検索エンジンについて調べました。DBとしてはPostgreSQLをメインで使っているので、当時は選択肢として次のようなものがありました。</p>
+
+<ul>
+<li>Groonga（まだバージョン1になってなかったような）</li>
+<li>Senna</li>
+<li>tsvector</li>
+<li>namazu</li>
+<li>Hyper Estraier</li>
+</ul>
+
+
+<p>最初は何もアプリを入れなくていいのでtsvectorを使った全文検索を試してみたんですが、bigramで日本語が使えない。使うならソースからコンパイルというのが当時面倒だったので辞めました（当時からVagrantとかDockerとかあって、色々試せたらbigramでいってたかも）。</p>
+
+<p>なので、他4つを比較した訳なんですが、作るサービスは個人サービスだし、なるべく新しいもので、かつ日本人が作っているものを利用してみようと思い、Groongaを選択しました。あと、Groongaが「Sennaの後継」という立場だったのも大きかったと思います。Sennaの後継なら新しいアプリだとしても、それなりに信用があるだろう。すぐにメンテされなくなるようなものでも無いだろうという判断をしました。</p>
+
+<h2>実際にGroongaを使っていてよいと思っているところ</h2>
+
+<p>まずサーバ1個でかなり無茶な使い方してもちゃんと動いてくれるところです。Groonga勉強会では「データ量がメモリを超えだしたら分散を考えて」みたいな話が出たのですが、結構超えてても何の問題もなく動いてくれます。</p>
+
+<p>次は言語バインディングとかあまり考えなくてもHTTPでアクセス出来る方法を用意してくれているので、HTTPアクセスさえ出来ればどんな言語からでも利用出来る点が良いと思います。Mroongaは全く使っていませんし、Rroongaもデータのバックアップ用途以外は全く使ってません。HTTPアクセス出来る場合は、管理もHTTPで出来ます。これも便利だと思います。</p>
+
+<p>ドリルダウン、タグ検索、補完補正など、全文検索以外にも使える機能が沢山あります。沢山ありすぎて利用できていない機能が多々ありますがorz。</p>
+
+<p>機能とは関係ありませんが、TwitterでGroongaについてボヤくと@ktouさんがフォローしてくれるのがいつもとても助かっています＞＜。そういう人が居ると、使う時にとても心強いです。</p>
+
+<p>名前が好きです。Elasticなんたらは何かエラそうですが、Groongaはグルグルしてるっぽいのがいいです。</p>
+
+<h2>Groongaがこうなるともっとうれしいと思うところ</h2>
+
+<p>現在もとてもありがたいのですが、こうなると嬉しい点を箇条書きします。</p>
+
+<ul>
+<li>現在使っている機能以外でもっと色々出来るようなのですが、情報が少ない気がします。ドキュメントが充実してくるととても嬉しいです。ドキュメントが充実すればきっとTwitterでボヤく率も減る・・・かも。</li>
+<li>Rroonga使わないでGroonga単体の機能として、大容量データのバックアップを取れると嬉しいです。</li>
+<li>難しいと思いますが、複数カラム（カラムA,B)での全文検索で、CとDを検索したい時、カラムAにCが、カラムBにDが入ってる時に、検索結果として出力出来るフラグみたいなのを入れて欲しいです。</li>
+<li>もしかしたら出来るのかもしれませんが、ソースからビルドした場合にgroonga-server系の機能が使えるようにしてもらえるとHTTPから使っている身としては嬉しいです。</li>
+<li>cliでのヒストリーは特に何もアプリ入れなくても出来るようにしてくれるとまた嬉しいです。</li>
+<li>sqlのinsert文みたいな形でloadが出来ると、RDBで使っていたテーブルを丸々移動とか手軽に出来そうなので、そういうのが出来ると嬉しいです。もしくはcsvでloadが出来るとか。まぁsql使うならMroonga使えって話ですが・・・単体でも特にloadについてRDBから書き出せる形式のものを読み込めると嬉しいなーなんて思いました。</li>
+<li>勉強会の時に「ぐるーんが」なのか「むるーんが」なのか「るるーんが」なのかが発音でハッキリしませんでしたが、私の耳が悪いんですねきっと。</li>
+</ul>
+
+
+<p>以上追記するかもしれませんが、こんな感じで〜</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1115,93 +1201,6 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/06/08/ubuntu-aptitude-error-in-initramfs-tools/">Ubuntuでaptitude Installした時にinitramfs-toolsのエラーが出た</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-06-08T21:41:18+09:00" pubdate data-updated="true">Jun 8<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>virtualboxをインストールしようとしたら</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>以下のパッケージの処理中にエラーが発生しました:
-</span><span class='line'> initramfs-tools
-</span><span class='line'>E: Sub-process /usr/bin/dpkg returned an error code <span class="o">(</span>1<span class="o">)</span>
-</span><span class='line'>パッケージをインストールできませんでした。復旧を試みています:
-</span><span class='line'>initramfs-tools <span class="o">(</span>0.99ubuntu13.5<span class="o">)</span> を設定しています ...
-</span><span class='line'>update-initramfs: deferring update <span class="o">(</span>trigger activated<span class="o">)</span>
-</span><span class='line'>initramfs-tools のトリガを処理しています ...
-</span><span class='line'>update-initramfs: Generating /boot/initrd.img-3.2.0-53-generic
-</span><span class='line'>
-</span><span class='line'>gzip: stdout: No space left on device
-</span><span class='line'>cpio: 書き込みエラー: Broken pipe
-</span><span class='line'>E: mkinitramfs failure cpio 1 gzip 1
-</span><span class='line'>update-initramfs: failed <span class="k">for</span> /boot/initrd.img-3.2.0-53-generic with 1.
-</span><span class='line'>dpkg: initramfs-tools の処理中にエラーが発生しました <span class="o">(</span>--configure<span class="o">)</span>:
-</span><span class='line'> サブプロセス インストール済みの post-installation スクリプト はエラー終了ステータス 1 を返しました
-</span><span class='line'>以下のパッケージの処理中にエラーが発生しました:
-</span><span class='line'> initramfs-tools
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいなエラーが出た。どうも/bootが一杯になってると出るらしい。
-<a href="http://www.cagylogic.com/archives/2012/11/04150426.php">/bootがあふれてapt-get upgradeが失敗したでござる | cagylogic</a>を参考にして削除することにした。ただ、普通にapt-get purgeとかapt-get removeしても結局エラーメッセージはなぜか出たまま。</p>
-
-<p>で、さらにググって<a href="http://tatuas.hatenablog.com/entry/2013/08/22/015141">Ubuntuでboot容量不足という警告の対処法 &ndash; Tatuas Blog</a>のように</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo apt-get remove linux-image-xxxx
-</span><span class='line'><span class="nv">$ </span>sudo apt-get autoremove
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とすると、上手く消すことが出来た</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1229,6 +1228,10 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/22/django-datetimefield-received-a-naive-datetime/">DjangoでDateTimeField Received a Naive datetimeってWarningが出たで</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/20/titanium-ajax-post-to-django/">Titanium MobileとDjangoでAjax認証を行う</a>
       </li>
     
@@ -1244,10 +1247,6 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
         <a href="/blog/2014/10/10/phantomjs/">PhantomJSとSeleniumをpythonから使ってみる</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/09/22/kobe-dot-r-number-9/">Kobe.R #9に参加しました</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -1257,12 +1256,12 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (6)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C# (4)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C++ (3)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (5)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (6)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (7)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (7)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (8)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (2)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (1)</a></li>

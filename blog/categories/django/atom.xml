@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Django | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/django/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-11-20T10:21:13+09:00</updated>
+  <updated>2014-11-22T16:22:38+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,27 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[DjangoでDateTimeField received a naive datetimeってWarningが出たで]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/11/22/django-datetimefield-received-a-naive-datetime/"/>
+    <updated>2014-11-22T16:19:11+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/11/22/django-datetimefield-received-a-naive-datetime</id>
+    <content type="html"><![CDATA[<p><code>sh
+RuntimeWarning: DateTimeField received a naive datetime
+</code></p>
+
+<p>ってWarningが出るのに対する対処</p>
+
+<p><code>py settings.py
+USE_TZ = False
+</code></p>
+
+<p>を書けばおk。要はタイムゾーン入れてくれってエラーなので、そんなものはない！と指定すればいいっぽい</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/18622007/runtimewarning-datetimefield-received-a-naive-datetime">django &ndash; RuntimeWarning: DateTimeField received a naive datetime &ndash; Stack Overflow</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Titanium MobileとDjangoでAjax認証を行う]]></title>
@@ -488,109 +509,6 @@ $ pip install django-bootstrap-toolkit
 </code></p>
 
 <p>こんな感じで最低限使える。フォームに関してはもっと色々出来るみたいだけど、まだやってない。パッケージ使ってみたけど、これだけなら普通にbootstrapのファイルを読み込めば済むんだけど、フォーム関連などフィルタやカスタムタグがあるみたい。便利そうなので、これを使うことにしよう。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずDjangoプロジェクトとアプリを作ってみた]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/06/18/start-django-project/"/>
-    <updated>2014-06-18T12:49:29+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/06/18/start-django-project</id>
-    <content type="html"><![CDATA[<p>Djangoはプロジェクトを作っておいて、アプリ毎に細かく機能を分けて、プロジェクトで統合するみたいな形式を取るみたい。なのでまずはDjangoプロジェクトを作成</p>
-
-<p><code>sh
-$ django-admin.py startproject myproject
-</code></p>
-
-<p>とすると、カレントフォルダにmyprojectフォルダが出来る。ファイル構成を見ると、</p>
-
-<p>```
-myproject/
-  manage.py
-  myproject/</p>
-
-<pre><code>__init__.py
-settings.py
-urls.py
-wsgi.py
-</code></pre>
-
-<p>```</p>
-
-<p>となっている。myprojectフォルダ内のファイルに共通設定を書くという感じになりそうだ。PostgreSQLに接続するので、settings.pyを修正</p>
-
-<p>```py
-DATABASES = {</p>
-
-<pre><code>'default': {
-'ENGINE': 'django.db.backends.postgresql_psycopg2',
-'NAME': 'hoge',
-'USER': 'username',
-'PASSWORD': '******',
-'HOST': 'hostname or ip',
-'PORT': '5432',
-}
-</code></pre>
-
-<p>```</p>
-
-<p>あと、psycopg2をインストールしていないので</p>
-
-<p><code>sh
-$ sudo pip install psycopg2
-</code></p>
-
-<p>とやって</p>
-
-<p><code>sh
-$ cd myproject
-$ python manage.py syncdb
-</code></p>
-
-<p>とやると、hogeに色々テーブルが出来る。INSTALLED_APPSに書いてあるアプリに関するテーブルみたい。初期状態では以下のアプリが入るみたい。</p>
-
-<p><code>
-django.contrib.admin - 管理用サイト
-django.contrib.auth - 認証
-django.contrib.contenttypes - ??
-django.contrib.sessions - セッション管理
-django.contrib.messages - ??
-django.contrib.staticfile - 静的ファイル用アプリ
-</code></p>
-
-<p>テーブルは以下のものが作られた
-<code>
-auth_group
-auth_group_permissions
-auth_permission
-auth_user
-auth_user_groups
-auth_user_user_permissions
-django_admin_log
-django_content_type
-django_session
-</code></p>
-
-<p>あと上のコマンド実行時に、管理者ユーザー作るかどうか聞かれる。とりあえず作った。</p>
-
-<p>DB設定済ませたので、おもむろにアプリ作成。Railsの時と同様に傍聴情報の出力をやってみるか。</p>
-
-<p><code>sh
-$ python manage.py startapp bocho
-</code></p>
-
-<p>を実行するとbochoフォルダが出来てその中に</p>
-
-<p><code>
-bocho/
-  __init__.py
-  admin.py
-  models.py
-  tests.py
-  views.py
-</code></p>
-
-<p>が出来た。とりあえずここまで。</p>
 ]]></content>
   </entry>
   
