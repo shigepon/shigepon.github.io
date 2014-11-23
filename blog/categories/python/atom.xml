@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-11-23T23:37:20+09:00</updated>
+  <updated>2014-11-23T23:39:04+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -57,7 +57,9 @@ hoge = forms.CharField(max_length=100,widget=TextInput(attrs={"required":"true"}
 <p>こんな感じで定義したフィールドの属性取ってきたい場合、</p>
 
 <p><code>html
-
+\{% for field in form %\}
+  \{% if field.field.required %\}&lt;p&gt;必須&lt;/p&gt;\{% endif %\}
+\{% endfor %\}
 </code></p>
 
 <p>適当だけど、こんな感じでアクセスできる。</p>
@@ -357,7 +359,7 @@ STATIC_ROOT = "/path/to/mysite/static"
 
 <p>```html</p>
 
-<script type="text/javascript" src="js/hoge.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/hoge.js"></script>
 
 
 <p>```</p>
