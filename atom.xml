@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-11-23T09:52:24+09:00</updated>
+  <updated>2014-11-23T09:55:19+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -32,6 +32,10 @@
 
 
 <p>stringを例にしてるが、ListとかObjectとかBoolとか色々入れられる。</p>
+
+<h2>Titanium MobileのUIで本家以外に参考にしてるサイト</h2>
+
+<p><a href="https://code.google.com/p/titanium-mobile-doc-ja/w/list">Wiki Pages &ndash; titanium-mobile-doc-ja &ndash; Appcelerator Titanium Mobileに関するドキュメントを日本語でまとめていくプロジェクト &ndash; Google Project Hosting</a></p>
 ]]></content>
   </entry>
   
