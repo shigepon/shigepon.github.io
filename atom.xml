@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-11-22T16:23:43+09:00</updated>
+  <updated>2014-11-23T09:52:24+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,28 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Titanium Mobileメモ]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/11/23/titanium-mobile-memo/"/>
+    <updated>2014-11-23T09:48:44+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/11/23/titanium-mobile-memo</id>
+    <content type="html"><![CDATA[<p>Titanium Mobileに関するメモ</p>
+
+<h2>アプリ固有の設定を登録する</h2>
+
+<p>アプリを終了して、再起動させた時も保存される設定をしたい時はTitanium.App.Propertiesを使う</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">Properties</span><span class="p">.</span><span class="nx">setString</span><span class="p">(</span><span class="s2">&quot;hoge&quot;</span><span class="p">,</span><span class="s2">&quot;fuga&quot;</span><span class="p">);</span><span class="c1">//設定</span>
+</span><span class='line'><span class="nx">hoge</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">Properties</span><span class="p">.</span><span class="nx">getString</span><span class="p">(</span><span class="s2">&quot;hoge&quot;</span><span class="p">);</span><span class="c1">//取得</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>stringを例にしてるが、ListとかObjectとかBoolとか色々入れられる。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[DjangoでDateTimeField received a naive datetimeってWarningが出た]]></title>
@@ -1557,64 +1579,6 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 
 
 <p>が出来た。とりあえずここまで。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Ubuntu 12.04でDjangoを始める]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/06/18/start-django-on-ubuntu-12-dot-04/"/>
-    <updated>2014-06-18T08:06:49+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/06/18/start-django-on-ubuntu-12-dot-04</id>
-    <content type="html"><![CDATA[<p>ヘタレなことにRailsに挫折してしまったので、Railsと同様良く名前が出てくるDjangoを試してみることにする。Djangoを使うにはpythonとかpipとか入れておくといいらしい。</p>
-
-<p>どれもとりあえずaptitudeでインストール出来るので、おもむろに</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install python,python-pip
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でインストール。python2.7がインストール出来た。一応aptitude updateくらいしておいたら良いと思う。</p>
-
-<p>んで、Djangoはpipでインストール</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo pip install <span class="nv">Django</span><span class="o">==</span>1.6.5
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でDjango 1.6.5をインストール出来た。python、pipはもうちょっと違うインストール方法があると思うけど、今回はこうしてみた。簡単。</p>
-
-<p>で、次はチュートリアル進めるんだろうけど、チュートリアルは結構内容が多そうなので、必要な部分だけ取り出しながらやってみる。「データベースにすでに登録してあるデータをDjangoとBootstrapでWebサービスっぽく表示する」という方針で必要な箇所を進めていく。なのでadminとかそこらへんはすっ飛ばす予定。</p>
-
-<p>&mdash; 7/2追記</p>
-
-<p>Djangoのインストール前にvirtualenvという仮想環境を入れて、その中でDjango入れた方がいいみたい。</p>
-
-<h3>virtualenvのインストール</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo pip install virtualenv
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>virtualenvで仮想環境構築</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>virtualenv hoge
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とすると、カレントディレクトリにhogeというディレクトリが出来て、その中に仮想環境が入る。オプションでpythonのバージョン指定とかも出来るみたいだけど、今回はしない。</p>
-
-<h3>virtualenvで作った仮想環境を使う</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">source </span>hoge/bin/activate
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>で使うことが出来る。ここでDjangoのインストールとかやっておくと良いみたい</p>
 ]]></content>
   </entry>
   

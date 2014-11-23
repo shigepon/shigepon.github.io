@@ -9,26 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="vimでsnippet 色々方法があるみたいだけど、neocomplecacheを入れているので、それと相性が良さそうな（作者が同じ）プラグインを入れた 1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-NeoBundle 'Shougo/ &hellip;">
+  <meta name="description" content="アクセスログのIPアドレスを集計してみる 参考：Linux サーバーでお手軽にログの集計：こっそりと。 &ndash; livedoor Blog（ブログ） Google Analyticsでリファラ無しの変なアクセスが増えたので、アクセスログからIPを集計してみた。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -98,6 +79,117 @@ NeoBundle 'Shougo/ &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/07/linux-command-memo/">Linux Command Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-07T08:50:21+09:00" pubdate data-updated="true">Mar 7<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>アクセスログのIPアドレスを集計してみる</h2>
+
+<p>参考：<a href="http://blog.livedoor.jp/stock_value/archives/51443839.html">Linux サーバーでお手軽にログの集計：こっそりと。 &ndash; livedoor Blog（ブログ）</a></p>
+
+<p>Google Analyticsでリファラ無しの変なアクセスが増えたので、アクセスログからIPを集計してみた。
+アクセスログの書式はLTSVでこんな感じ</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>time:07/Mar/2014:06:25:22 +0900       host::11.22.33.46       forwardedfor:-  req:GET / HTTP/1.1   status:200      size:1       referer:-ua:Mozilla/5.0 (***)      reqtime:0.777   cache:- runtime:-       vhost:hoge.fuga</span></code></pre></td></tr></table></div></figure>
+
+
+<p>なんか色々ソフト使うのとか面倒だったのでgrepとかawkでほげほげした。要はhost:11.22.33.44に当たる箇所を取り出して表示回数をまとめれば良い。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ cat access.log | grep -v -i "bot" | grep "referer:-" | grep "status:200" | awk '{print $3}' | sort | uniq -c</span></code></pre></td></tr></table></div></figure>
+
+
+<p>軽くbot避けを入れてるけど、crawlerとかspiderとかを避けておくとより正確になるかも。
+これだけだと一杯出てくるので100回以上アクセスあったIPだけ取り出してみた。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ cat access.log | grep -v -i "bot" | grep "referer:-" | grep "status:200" | awk '{print $3}' | sort | uniq -c | grep "[0-9]\{3,\}\s"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ただ、最初の目的には最初の集計の方が役に立った。結局Bingのボットだったみたい。Analyticsではじけなかったアクセスがあったのかな。</p>
+
+<h2>大きなファイルを探す</h2>
+
+<p>例：100MB以上のファイルを探す</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>find path -size 100M
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Windows共有フォルダをマウント</h2>
+
+<p>参考：<a href="http://qiita.com/mdstoy/items/54925cdcbca6d558b666">Ubuntu から Windows の共有フォルダをマウントして利用する &ndash; Qiita</a>というかほぼそのまま</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install cifs-utils
+</span><span class='line'><span class="nv">$ </span>sudo mkdir -p /mnt/windows
+</span><span class='line'><span class="nv">$ </span>sudo mount -t cifs -o <span class="nv">username</span><span class="o">=</span>WindowsUsername,password<span class="o">=</span>WindowsPassword //ServerNameOrIp/path/to/share /mnt/windows
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>ファイルのフルパス一覧を取得</h2>
+
+<p>参考：<a href="http://linux.just4fun.biz/%E9%80%86%E5%BC%95%E3%81%8DUNIX%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%81%AE%E3%83%95%E3%83%AB%E3%83%91%E3%82%B9%E5%90%8D%E3%82%92%E5%8F%96%E5%BE%97%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95.html">逆引きUNIXコマンド/ファイルのフルパス名を取得する方法 &ndash; Linuxと過ごす</a></p>
+
+<p>単純なlsだとファイル名だけが一覧になるので、フルパスの一覧が欲しい場合は一工夫必要</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ls -dF /path/to/dir/*
+</span><span class='line'><span class="nv">$ </span>find <span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span> -maxdepth 1 -mindepth 1
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>SSHを使ってリモートでコマンド実行する</h2>
+
+<p>単純なコマンド実行</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ssh username@hostname options... <span class="s2">&quot;command&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ローカルのファイルをリダイレクトしてリモートコマンドに使用する。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ssh username@hostname options... <span class="s2">&quot;command&quot;</span> &lt; localfile
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1083,151 +1175,6 @@ base64した値が格納さています。
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/29/nadesiko2-make-plugin/">なでしこ2のプラグインを作る方法</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-29T09:49:17+09:00" pubdate data-updated="true">Jan 29<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>なでしこ2でプラグインを作りたい人向けというニッチすぎるネタです。現在なでしこの時期バージョンなでしこ2が開発中です(えらい長いこと開発中です)が、構文の実装がある程度終わっているので、プラグインを開発することが出来ます。try catchの実装どうするかなーとか考えて進んでないですが、それはそれ。</p>
-
-<p>なでしこ2はC#で組まれているので、プラグインもC#で組むことができます。</p>
-
-<p>まずは準備として、なでしこ2のソースをsvnでチェックアウトします。 <a href="http://code.google.com/p/nadesiko2/source/checkout">URL</a></p>
-
-<p>SharpDevelopで開発中なので、SharpDevelopでソリューションを開きます。で、中にNakoPluginXXXというプロジェクトがあるので、それを参考にすれば良いわけですが、軽く説明しておきます。</p>
-
-<p>プラグインのソースは下のようになります。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>/*
-</span><span class='line'> * Created by SharpDevelop.
-</span><span class='line'> * User: shigepon
-</span><span class='line'> * Date: 2011/04/04
-</span><span class='line'> * Time: 9:42
-</span><span class='line'> *
-</span><span class='line'> * To change this template use Tools | Options | Coding | Edit Standard Headers.
-</span><span class='line'> */
-</span><span class='line'>using System;
-</span><span class='line'>using System.Collections.Generic;
-</span><span class='line'>using System.Text;
-</span><span class='line'>using Libnako.JPNCompiler;
-</span><span class='line'>using NakoPlugin;
-</span><span class='line'>namespace NakoPluginSample{
-</span><span class='line'>    public class NakoPluginSample : INakoPlugin    {
-</span><span class='line'>  string _description = &quot;サンプルプラグイン&quot;;
-</span><span class='line'>        double _version = 1.0;
-</span><span class='line'>        //&lt;del&gt; プラグイン共通の部分 &lt;/del&gt;
-</span><span class='line'>        public double TargetNakoVersion { get { return 2.0; } }
-</span><span class='line'>        public bool Used { get; set; }
-</span><span class='line'>        public string Name { get { return this.GetType().FullName; } }
-</span><span class='line'>        public double PluginVersion { get { return _version; } }
-</span><span class='line'>        public string Description { get { return _description; } }
-</span><span class='line'>        //&lt;del&gt; 関数の定義 &lt;/del&gt;
-</span><span class='line'>        public void DefineFunction(INakoPluginBank bank)        {
-</span><span class='line'>            bank.AddFunc({関数名}&cedil; {なでしこ形式の引数}&cedil; {戻り値の形式}&cedil; {実際の呼び出し先}&cedil;{関数の説明}&cedil; {関数のよみかた});
-</span><span class='line'>        }
-</span><span class='line'>  // プラグインの初期化処理
-</span><span class='line'>        public void PluginInit(INakoInterpreter runner)        {
-</span><span class='line'>        }
-</span><span class='line'>        // プラグインの終了処理
-</span><span class='line'>        public void PluginFin(INakoInterpreter runner)        {
-</span><span class='line'>        }
-</span><span class='line'>       public Object {実際の処理}(INakoFuncCallInfo info){
-</span><span class='line'>            ...
-</span><span class='line'>        }
-</span><span class='line'>    }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>実装時に大事なとこを説明します。</p>
-
-<p>+まずプラグイン共通部分とPluginInit、PluginFinはコピペでもかまわないと思います。私もまだ初期処理、終了処理の必要なプラグインは作っていません。
-+なでしこ上での関数呼び出し方法の定義はDefineFunctionで行います。bank.AddFuncメソッドで関数を追加できます。メソッド内の引数は下のように設定します。
-++関数名はなでしこで呼び出す名前になります。（例：文字検索）なでしこで使う助詞を使わないとか、他の命令の名称とかぶらないなどの制限があります。
-++なでしこ形式の引数は「SでAを」のようになでしこで一般的に使う形式で指定します。引数を参照渡しにしたい場合は「{参照渡し}SでAを」のように指定します。助詞を複数指定したい場合は「SでAを|Sが」という形式で指定します。参照渡しを使う場合は実装が少々複雑になります。後日やり方を書こうと思います。
-++戻り値の形式はenum NakoVarTypeで指定します。(Void&cedil; Int&cedil; Double&cedil; String&cedil; Array)
-++実際の呼び出し先はそのままメソッド名を指定します。(_hogeとか)
-++関数の説明と関数のよみかたは分かりやすさの為に必要です。個人用なら適当でも良いと思います。（多分今後エディタとかそういうのにつかわれると思います）
-+実際の処理は必ずINakoFuncCallInfo型のインスタンスを引数に取ります。なでしこで渡された引数はこのインスタンスから取得します。取得方法は以下</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>long l = info.StackPopAsInt();
-</span><span class='line'>double d = info.StackPopAsDouble();
-</span><span class='line'>String s = info.StackPopAsString();
-</span><span class='line'>Object o = info.StackPop();//配列の場合はこれを使う</span></code></pre></td></tr></table></div></figure>
-
-
-<p>StackPopメソッドで得られる値はNakoVariable型なので、ちょっと扱いが難しくなります。実際の処理の実装方法はまた今度</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -1255,6 +1202,10 @@ base64した値が格納さています。
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/23/titanium-mobile-memo/">Titanium Mobileメモ</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/22/django-datetimefield-received-a-naive-datetime/">DjangoでDateTimeField Received a Naive datetimeってWarningが出た</a>
       </li>
     
@@ -1268,10 +1219,6 @@ base64した値が格納さています。
     
       <li class="post">
         <a href="/blog/2014/10/28/kobe-dot-r-no-12/">Kobe.R #12に参加しました</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/10/phantomjs/">PhantomJSとSeleniumをpythonから使ってみる</a>
       </li>
     
   </ul>

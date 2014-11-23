@@ -9,9 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="今回は他の人からの話があるので丁寧語で。
-@ktouさんからGroongaについて「Groongaについてのいくつかの質問について答えて欲しい」との話がありましたので、ブログに載せておきます。 質問は以下の3点 Groongaを選んだ決め手
-実際にGroongaを使っていてよいと思っているところ &hellip;">
+  <meta name="description" content="「djangoでfacebook, twitter, mixiでの認証使うにはどうしたらいいんだろ？」URLと質問したら、@key3さんから「@shigepon python-social-authおすすめ https://t.co/uWqOX8Xh94」URLと教えて貰ったので試してみた。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +79,121 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/23/use-python-social-auth-in-django/">Djangoでpython-social-authを使うための最低限の設定</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-23T09:40:36+09:00" pubdate data-updated="true">Jul 23<span>rd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>「djangoでfacebook, twitter, mixiでの認証使うにはどうしたらいいんだろ？」<a href="http://twitter.com/shigepon/status/491397829215006720">URL</a>と質問したら、@key3さんから「@shigepon python-social-authおすすめ <a href="https://t.co/uWqOX8Xh94">https://t.co/uWqOX8Xh94</a>」<a href="http://twitter.com/key3/status/491404335335477248">URL</a>と教えて貰ったので試してみた。</p>
+
+<p>一日試してみて、認証出来たんだけど、<a href="http://psa.matiasaguirre.net/docs/index.html">ドキュメント</a>見ても、どれが最低限必要な設定なのか良く分からなかったのでブログに残しておく。</p>
+
+<h2>python-social-authをインストール</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ pip install python-social-auth</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>設定</h2>
+
+<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'>      <span class="s">&#39;social.apps.django_app.default&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="p">)</span>
+</span><span class='line'><span class="n">AUTHENTICATION_BACKENDS</span> <span class="o">=</span> <span class="p">(</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'>      <span class="s">&#39;social.backends.twitter.TwitterOAuth&#39;</span><span class="p">,</span><span class="c">#Twitterでの認証をする場合。他の認証がある場合は該当するバックエンドを追加</span>
+</span><span class='line'>      <span class="s">&#39;django.contrib.auth.backends.ModelBackend&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'>      <span class="p">)</span>
+</span><span class='line'><span class="n">SOCIAL_AUTH_TWITTER_KEY</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="c">#これと次の行はTwitter認証用。別の認証を用いる場合は別の設定が必要</span>
+</span><span class='line'><span class="n">SOCIAL_AUTH_TWITTER_SECRET</span><span class="o">=</span><span class="s">&#39;&#39;</span>
+</span><span class='line'><span class="n">SOCIAL_AUTH_LOGIN_REDIRECT_URL</span> <span class="o">=</span> <span class="s">&#39;/&#39;</span>
+</span><span class='line'><span class="n">SOCIAL_AUTH_LOGIN_URL</span> <span class="o">=</span> <span class="s">&#39;/login/&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>注意：
+AUTH_USER_MODEL
+を加えるとエラー出たので注意(Django 1.6)</p>
+
+<figure class='code'><figcaption><span>urls.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">url</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s">&#39;social.apps.django_app.urls&#39;</span><span class="p">,</span><span class="n">namespace</span><span class="o">=</span><span class="s">&#39;social&#39;</span><span class="p">)),</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>設定後</h2>
+
+<p>syncdbしておく</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py syncdb
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで例えばtwitter認証の場合に</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>http://host/login/twitter
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>にアクセスすると認証を行ってくれるようになった。
+テンプレートにリンクを作りたい場合は</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;\{\% url &#39;social:base&#39; &#39;twitter&#39; \%\}&quot;</span><span class="nt">&gt;</span>login<span class="nt">&lt;/a&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とかやると作れる。
+「twitter」の部分は認証の種類によって変えるが、どういうルールで名前を決めるのかイマイチ分かってない。試行錯誤が要るかも。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1116,91 +1229,6 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/06/18/start-django-on-ubuntu-12-dot-04/">Ubuntu 12.04でDjangoを始める</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-06-18T08:06:49+09:00" pubdate data-updated="true">Jun 18<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>ヘタレなことにRailsに挫折してしまったので、Railsと同様良く名前が出てくるDjangoを試してみることにする。Djangoを使うにはpythonとかpipとか入れておくといいらしい。</p>
-
-<p>どれもとりあえずaptitudeでインストール出来るので、おもむろに</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install python,python-pip
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でインストール。python2.7がインストール出来た。一応aptitude updateくらいしておいたら良いと思う。</p>
-
-<p>んで、Djangoはpipでインストール</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo pip install <span class="nv">Django</span><span class="o">==</span>1.6.5
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でDjango 1.6.5をインストール出来た。python、pipはもうちょっと違うインストール方法があると思うけど、今回はこうしてみた。簡単。</p>
-
-<p>で、次はチュートリアル進めるんだろうけど、チュートリアルは結構内容が多そうなので、必要な部分だけ取り出しながらやってみる。「データベースにすでに登録してあるデータをDjangoとBootstrapでWebサービスっぽく表示する」という方針で必要な箇所を進めていく。なのでadminとかそこらへんはすっ飛ばす予定。</p>
-
-<p>&mdash; 7/2追記</p>
-
-<p>Djangoのインストール前にvirtualenvという仮想環境を入れて、その中でDjango入れた方がいいみたい。</p>
-
-<h3>virtualenvのインストール</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo pip install virtualenv
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>virtualenvで仮想環境構築</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>virtualenv hoge
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とすると、カレントディレクトリにhogeというディレクトリが出来て、その中に仮想環境が入る。オプションでpythonのバージョン指定とかも出来るみたいだけど、今回はしない。</p>
-
-<h3>virtualenvで作った仮想環境を使う</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">source </span>hoge/bin/activate
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>で使うことが出来る。ここでDjangoのインストールとかやっておくと良いみたい</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1228,6 +1256,10 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/23/titanium-mobile-memo/">Titanium Mobileメモ</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/22/django-datetimefield-received-a-naive-datetime/">DjangoでDateTimeField Received a Naive datetimeってWarningが出た</a>
       </li>
     
@@ -1241,10 +1273,6 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
     
       <li class="post">
         <a href="/blog/2014/10/28/kobe-dot-r-no-12/">Kobe.R #12に参加しました</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/10/10/phantomjs/">PhantomJSとSeleniumをpythonから使ってみる</a>
       </li>
     
   </ul>
