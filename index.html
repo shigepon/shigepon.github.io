@@ -156,7 +156,9 @@ def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>\{\% for field in form \%\}
+</span><span class='line'>  \{\% if field.field.required \%\}<span class="nt">&lt;p&gt;</span>必須<span class="nt">&lt;/p&gt;</span>\{\% endif \%\}
+</span><span class='line'>\{\% endfor \%\}
 </span></code></pre></td></tr></table></div></figure>
 
 
