@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-11-23T23:35:50+09:00</updated>
+  <updated>2014-11-23T23:37:20+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -26,83 +26,72 @@
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">a_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">hoge</span> <span class="o">=</span> <span class="n">Fuga</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">)</span> <span class="c">#新たにインスタンス作る場合</span>
+</span><span class='line'>    <span class="n">fuga</span> <span class="o">=</span> <span class="n">Fuga</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">hage</span> <span class="o">=</span> <span class="n">Fuga</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span><span class="n">instance</span><span class="o">=</span><span class="n">fuga</span><span class="p">)</span> <span class="c">#既にあるインスタンスに入れる場合</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>instance=xxxとやるのを何度か忘れた＞＜</p>
+
+<h2>forms.DateFieldでISO-8601フォーマットの入力を受入れる</h2>
+
+<p>html5でdatetime-localとか扱おうとすると、入力値がISO-8601形式になって、そのままだとDateFieldが入力をdatetimeの正しい形式として認識してくれない。</p>
+
+<p>で、input_formatsを設定するといけるらしいんだけど、あまりマニュアルでちゃんと説明してない。Stack Overflowの情報とかをググると設定方法が間違ってるコードとかあって、正しいのが良く分からない。で、結局色々調べたら</p>
+
+<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">date</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">DateField</span><span class="p">(</span><span class="n">input_formats</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;%Y-%m-</span><span class="si">%d</span><span class="s">T%H:%M:%S&#39;</span><span class="p">,))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とタプルで渡す必要があるらしい</p>
+
+<p>参考：<a href="http://labs.uechoco.com/blog/2011/08/django-dateform-inputs_format-wrong.html">うえちょこ＠ぼろぐ» [Django]forms.DateFieldのinputs_formatではまった</a></p>
+
+<h2>ModelForm使ってフォーム出力する時にrequeied属性をテンプレートで参照するとか</h2>
+
+<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">hoge</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">widget</span><span class="o">=</span><span class="n">TextInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;required&quot;</span><span class="p">:</span><span class="s">&quot;true&quot;</span><span class="p">}))</span><span class="err">↲</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じで定義したフィールドの属性取ってきたい場合、</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>適当だけど、こんな感じでアクセスできる。</p>
+
+<h2>DjangoでGroup By</h2>
+
+<p>DjangoでGroup Byして何個かのフィールドのデータで例えば、日付とその日に登録したデータの件数だけ欲しい時</p>
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">a_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-</span><span class='line'>    <span class="n">hoge</span> <span class="o">=</span> <span class="n">Fuga</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">)</span> <span class="c">#新たにインスタンス作る場合</span>
-</span><span class='line'>    <span class="n">fuga</span> <span class="o">=</span> <span class="n">Fuga</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">hage</span> <span class="o">=</span> <span class="n">Fuga</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span><span class="n">instance</span><span class="o">=</span><span class="n">fuga</span><span class="p">)</span> <span class="c">#既にあるインスタンスに入れる場合```</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">instance</span><span class="o">=</span><span class="n">xxx</span><span class="err">とやるのを何度か忘れた＞＜</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">q</span> <span class="o">=</span> <span class="n">Hoge</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span> <span class="o">=</span> <span class="n">date</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__lt</span> <span class="o">=</span> <span class="n">dto</span><span class="p">)</span><span class="o">.</span><span class="n">extra</span><span class="p">({</span><span class="s">&#39;date&#39;</span><span class="p">:</span><span class="s">&quot;date_trunc(&#39;day&#39;,date)&quot;</span><span class="p">})</span>
+</span><span class='line'><span class="n">q</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">group_by</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">]</span>
+</span><span class='line'><span class="n">values</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s">&#39;date&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">()</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">c</span> <span class="o">=</span> <span class="n">Count</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">))</span>
 </span><span class='line'>
 </span><span class='line'>
-</span><span class='line'><span class="c">## forms.DateFieldでISO-8601フォーマットの入力を受入れる</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">html5</span><span class="err">で</span><span class="n">datetime</span><span class="o">-</span><span class="n">local</span><span class="err">とか扱おうとすると、入力値が</span><span class="n">ISO</span><span class="o">-</span><span class="mi">8601</span><span class="err">形式になって、そのままだと</span><span class="n">DateField</span><span class="err">が入力を</span><span class="n">datetime</span><span class="err">の正しい形式として認識してくれない。</span>
-</span><span class='line'>
-</span><span class='line'><span class="err">で、</span><span class="n">input_formats</span><span class="err">を設定するといけるらしいんだけど、あまりマニュアルでちゃんと説明してない。</span><span class="n">Stack</span> <span class="n">Overflow</span><span class="err">の情報とかをググると設定方法が間違ってるコードとかあって、正しいのが良く分からない。で、結局色々調べたら</span>
+</span><span class='line'><span class="err">こんな感じでいける。ちなみに</span><span class="n">PostgreSQL</span><span class="err">。</span><span class="n">date</span><span class="err">が時間の情報も持っているので</span><span class="n">PostgreSQL</span><span class="err">の</span><span class="n">date_trunc</span><span class="err">関数を使って</span><span class="n">date</span><span class="err">を日付の情報だけにしてから、</span><span class="n">group_by</span><span class="err">する。</span>
+</span><span class='line'><span class="n">annotate</span><span class="err">は集計した値を新しいフィールド（ここだと</span><span class="n">c</span><span class="err">）に入れる。</span>
+</span><span class='line'><span class="err">例えば</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">c</span><span class="err">でアクセスできる。このコードで、日付とその日に登録したデータ件数が入った辞書のリストを得ることが出来る</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>py models.py
-date = forms.DateField(input_formats=(&lsquo;%Y-%m-%dT%H:%M:%S&rsquo;,))</p>
 
-<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">とタプルで渡す必要があるらしい</span>
-</span><span class='line'>
-</span><span class='line'><span class="err">参考：</span><span class="p">[</span><span class="err">うえちょこ＠ぼろぐ»</span> <span class="p">[</span><span class="n">Django</span><span class="p">]</span><span class="n">forms</span><span class="o">.</span><span class="n">DateField</span><span class="err">の</span><span class="n">inputs_format</span><span class="err">ではまった</span><span class="p">](</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">labs</span><span class="o">.</span><span class="n">uechoco</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">blog</span><span class="o">/</span><span class="mi">2011</span><span class="o">/</span><span class="mi">08</span><span class="o">/</span><span class="n">django</span><span class="o">-</span><span class="n">dateform</span><span class="o">-</span><span class="n">inputs_format</span><span class="o">-</span><span class="n">wrong</span><span class="o">.</span><span class="n">html</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="c">## ModelForm使ってフォーム出力する時にrequeied属性をテンプレートで参照するとか</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>py models.py
-hoge = forms.CharField(max_length=100,widget=TextInput(attrs={&ldquo;required&rdquo;:&ldquo;true&rdquo;}))↲</p>
-
-<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">こんな感じで定義したフィールドの属性取ってきたい場合、</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>html</p>
-
-<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">適当だけど、こんな感じでアクセスできる。</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="c">## DjangoでGroup By</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">Django</span><span class="err">で</span><span class="n">Group</span> <span class="n">By</span><span class="err">して何個かのフィールドのデータで例えば、日付とその日に登録したデータの件数だけ欲しい時</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>py views.py
-q = Hoge.objects.filter(date<strong>gte = date).filter(date</strong>lt = dto).extra({&lsquo;date&rsquo;:&ldquo;date_trunc(&lsquo;day&rsquo;,date)&rdquo;})
-q.query.group_by = [&lsquo;date&rsquo;]
-values = q.values(&lsquo;date&rsquo;).order_by().annotate(c = Count(&lsquo;id&rsquo;))</p>
-
-<p>こんな感じでいける。ちなみにPostgreSQL。dateが時間の情報も持っているのでPostgreSQLのdate_trunc関数を使ってdateを日付の情報だけにしてから、group_byする。
-annotateは集計した値を新しいフィールド（ここだとc）に入れる。
-例えばvalues[0].cでアクセスできる。このコードで、日付とその日に登録したデータ件数が入った辞書のリストを得ることが出来る
-&#8220;`</p>
 ]]></content>
   </entry>
   

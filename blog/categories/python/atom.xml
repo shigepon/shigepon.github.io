@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-11-23T23:35:50+09:00</updated>
+  <updated>2014-11-23T23:37:20+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -27,8 +27,10 @@ def a_view(request):</p>
 
 <pre><code>hoge = Fuga(request.GET) #新たにインスタンス作る場合
 fuga = Fuga.objects.get(pk=1)
-hage = Fuga(request.GET,instance=fuga) #既にあるインスタンスに入れる場合```
+hage = Fuga(request.GET,instance=fuga) #既にあるインスタンスに入れる場合
 </code></pre>
+
+<p>```</p>
 
 <p>instance=xxxとやるのを何度か忘れた＞＜</p>
 
