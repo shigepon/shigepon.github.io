@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Django | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/django/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-11-23T09:55:19+09:00</updated>
+  <updated>2014-11-23T23:35:50+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,69 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Django Memo]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/11/23/django-memo/"/>
+    <updated>2014-11-23T22:35:38+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/11/23/django-memo</id>
+    <content type="html"><![CDATA[<p>Djangoやってて忘れっぽいところとかをメモ</p>
+
+<h2>リクエストパラメーターをモデルに入れる</h2>
+
+<p>```py views.py
+def a_view(request):</p>
+
+<pre><code>hoge = Fuga(request.GET) #新たにインスタンス作る場合
+fuga = Fuga.objects.get(pk=1)
+hage = Fuga(request.GET,instance=fuga) #既にあるインスタンスに入れる場合```
+</code></pre>
+
+<p>instance=xxxとやるのを何度か忘れた＞＜</p>
+
+<h2>forms.DateFieldでISO-8601フォーマットの入力を受入れる</h2>
+
+<p>html5でdatetime-localとか扱おうとすると、入力値がISO-8601形式になって、そのままだとDateFieldが入力をdatetimeの正しい形式として認識してくれない。</p>
+
+<p>で、input_formatsを設定するといけるらしいんだけど、あまりマニュアルでちゃんと説明してない。Stack Overflowの情報とかをググると設定方法が間違ってるコードとかあって、正しいのが良く分からない。で、結局色々調べたら</p>
+
+<p><code>py models.py
+date = forms.DateField(input_formats=('%Y-%m-%dT%H:%M:%S',))
+</code></p>
+
+<p>とタプルで渡す必要があるらしい</p>
+
+<p>参考：<a href="http://labs.uechoco.com/blog/2011/08/django-dateform-inputs_format-wrong.html">うえちょこ＠ぼろぐ» [Django]forms.DateFieldのinputs_formatではまった</a></p>
+
+<h2>ModelForm使ってフォーム出力する時にrequeied属性をテンプレートで参照するとか</h2>
+
+<p><code>py models.py
+hoge = forms.CharField(max_length=100,widget=TextInput(attrs={"required":"true"}))↲
+</code></p>
+
+<p>こんな感じで定義したフィールドの属性取ってきたい場合、</p>
+
+<p><code>html
+
+</code></p>
+
+<p>適当だけど、こんな感じでアクセスできる。</p>
+
+<h2>DjangoでGroup By</h2>
+
+<p>DjangoでGroup Byして何個かのフィールドのデータで例えば、日付とその日に登録したデータの件数だけ欲しい時</p>
+
+<p>```py views.py
+q = Hoge.objects.filter(date<strong>gte = date).filter(date</strong>lt = dto).extra({&lsquo;date&rsquo;:&ldquo;date_trunc(&lsquo;day&rsquo;,date)&rdquo;})
+q.query.group_by = [&lsquo;date&rsquo;]
+values = q.values(&lsquo;date&rsquo;).order_by().annotate(c = Count(&lsquo;id&rsquo;))</p>
+
+<p>こんな感じでいける。ちなみにPostgreSQL。dateが時間の情報も持っているのでPostgreSQLのdate_trunc関数を使ってdateを日付の情報だけにしてから、group_byする。
+annotateは集計した値を新しいフィールド（ここだとc）に入れる。
+例えばvalues[0].cでアクセスできる。このコードで、日付とその日に登録したデータ件数が入った辞書のリストを得ることが出来る
+```</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[DjangoでDateTimeField received a naive datetimeってWarningが出た]]></title>
@@ -471,44 +534,6 @@ urlpatterns = patterns(&rdquo;,</p>
 </code></p>
 
 <p>こんな感じで文字列をくっつけてパラメータにすることが出来る。かなり強引<a href="https://www.google.com/url?q=http://d.hatena.ne.jp/feiz/20110414/1302771447&amp;usd=2&amp;usg=AFQjCNFN9kzyrEJj_WZEatK2wIL07eaD0w">参考</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(2):Bootstrapを使ってみる]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/06/25/django-with-bootstrap/"/>
-    <updated>2014-06-25T21:41:23+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/06/25/django-with-bootstrap</id>
-    <content type="html"><![CDATA[<p>テンプレートにBootstrapを当てはめたいので、Bootstrap関連のパッケージを探してみた。ググってみて<a href="https://github.com/dyve/django-bootstrap-toolkit">django-bootstrap-toolkit</a>が良さそうかなと思ったので、使ってみた。</p>
-
-<p>インストール</p>
-
-<p><code>sh
-$ pip install django-bootstrap-toolkit
-</code></p>
-
-<p>myproject/settings.pyのINSTALLED_APPSに以下を追加</p>
-
-<p><code>
-'bootstrap-toolkit'
-</code></p>
-
-<p>テンプレートを書く</p>
-
-<p><code>html
-
-{% load bootstrap_toolkit %}} #bootstrap-toolkitを使うページ全てに必要っぽい
-...
-&lt;head&gt;
-{% bootstrap_stylesheet_tag %}  #bootstrapのcssへのタグ(CDNから読み込み)
-{% bootstrap_stylesheet_tag "responsive %} #bootstrapのレスポンシブページ用タグ(CDNから読み込み)
-{% bootstrap_javascript_tag %}  #bootstrapのjavascriptへのタグ(CDNから読み込み)
-
-&lt;/head&gt;
-あとは普通にbootstrapのタグを書く
-</code></p>
-
-<p>こんな感じで最低限使える。フォームに関してはもっと色々出来るみたいだけど、まだやってない。パッケージ使ってみたけど、これだけなら普通にbootstrapのファイルを読み込めば済むんだけど、フォーム関連などフィルタやカスタムタグがあるみたい。便利そうなので、これを使うことにしよう。</p>
 ]]></content>
   </entry>
   

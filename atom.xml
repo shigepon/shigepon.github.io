@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-11-23T09:55:19+09:00</updated>
+  <updated>2014-11-23T23:35:50+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,99 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Django Memo]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/11/23/django-memo/"/>
+    <updated>2014-11-23T22:35:38+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/11/23/django-memo</id>
+    <content type="html"><![CDATA[<p>Djangoやってて忘れっぽいところとかをメモ</p>
+
+<h2>リクエストパラメーターをモデルに入れる</h2>
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">a_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">hoge</span> <span class="o">=</span> <span class="n">Fuga</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">)</span> <span class="c">#新たにインスタンス作る場合</span>
+</span><span class='line'>    <span class="n">fuga</span> <span class="o">=</span> <span class="n">Fuga</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">hage</span> <span class="o">=</span> <span class="n">Fuga</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span><span class="n">instance</span><span class="o">=</span><span class="n">fuga</span><span class="p">)</span> <span class="c">#既にあるインスタンスに入れる場合```</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">instance</span><span class="o">=</span><span class="n">xxx</span><span class="err">とやるのを何度か忘れた＞＜</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="c">## forms.DateFieldでISO-8601フォーマットの入力を受入れる</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">html5</span><span class="err">で</span><span class="n">datetime</span><span class="o">-</span><span class="n">local</span><span class="err">とか扱おうとすると、入力値が</span><span class="n">ISO</span><span class="o">-</span><span class="mi">8601</span><span class="err">形式になって、そのままだと</span><span class="n">DateField</span><span class="err">が入力を</span><span class="n">datetime</span><span class="err">の正しい形式として認識してくれない。</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">で、</span><span class="n">input_formats</span><span class="err">を設定するといけるらしいんだけど、あまりマニュアルでちゃんと説明してない。</span><span class="n">Stack</span> <span class="n">Overflow</span><span class="err">の情報とかをググると設定方法が間違ってるコードとかあって、正しいのが良く分からない。で、結局色々調べたら</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>py models.py
+date = forms.DateField(input_formats=(&lsquo;%Y-%m-%dT%H:%M:%S&rsquo;,))</p>
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">とタプルで渡す必要があるらしい</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">参考：</span><span class="p">[</span><span class="err">うえちょこ＠ぼろぐ»</span> <span class="p">[</span><span class="n">Django</span><span class="p">]</span><span class="n">forms</span><span class="o">.</span><span class="n">DateField</span><span class="err">の</span><span class="n">inputs_format</span><span class="err">ではまった</span><span class="p">](</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">labs</span><span class="o">.</span><span class="n">uechoco</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">blog</span><span class="o">/</span><span class="mi">2011</span><span class="o">/</span><span class="mi">08</span><span class="o">/</span><span class="n">django</span><span class="o">-</span><span class="n">dateform</span><span class="o">-</span><span class="n">inputs_format</span><span class="o">-</span><span class="n">wrong</span><span class="o">.</span><span class="n">html</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="c">## ModelForm使ってフォーム出力する時にrequeied属性をテンプレートで参照するとか</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>py models.py
+hoge = forms.CharField(max_length=100,widget=TextInput(attrs={&ldquo;required&rdquo;:&ldquo;true&rdquo;}))↲</p>
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">こんな感じで定義したフィールドの属性取ってきたい場合、</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>html</p>
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">適当だけど、こんな感じでアクセスできる。</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="c">## DjangoでGroup By</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">Django</span><span class="err">で</span><span class="n">Group</span> <span class="n">By</span><span class="err">して何個かのフィールドのデータで例えば、日付とその日に登録したデータの件数だけ欲しい時</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>py views.py
+q = Hoge.objects.filter(date<strong>gte = date).filter(date</strong>lt = dto).extra({&lsquo;date&rsquo;:&ldquo;date_trunc(&lsquo;day&rsquo;,date)&rdquo;})
+q.query.group_by = [&lsquo;date&rsquo;]
+values = q.values(&lsquo;date&rsquo;).order_by().annotate(c = Count(&lsquo;id&rsquo;))</p>
+
+<p>こんな感じでいける。ちなみにPostgreSQL。dateが時間の情報も持っているのでPostgreSQLのdate_trunc関数を使ってdateを日付の情報だけにしてから、group_byする。
+annotateは集計した値を新しいフィールド（ここだとc）に入れる。
+例えばvalues[0].cでアクセスできる。このコードで、日付とその日に登録したデータ件数が入った辞書のリストを得ることが出来る
+&#8220;`</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Titanium Mobileメモ]]></title>
@@ -1126,6 +1219,33 @@ subprocessを使う。何か昔は別の手法だったらしい。</p>
 </span><span class='line'><span class="k">print</span> <span class="n">stdout_data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<h2>親クラスのメソッド呼び出し</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">class</span> <span class="nc">Hoge</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">aaa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">param</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">print</span> <span class="n">param</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Fuga</span><span class="p">(</span><span class="n">Hoge</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">bbb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">param</span><span class="p">):</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">hage</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Fuga</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">aaa</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">f</span> <span class="o">=</span> <span class="n">Fuga</span><span class="p">()</span>
+</span><span class='line'><span class="n">f</span><span class="o">.</span><span class="n">bbb</span><span class="p">(</span><span class="s">&#39;test&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じ。お作法を忘れがち。</p>
 ]]></content>
   </entry>
   
@@ -1443,146 +1563,6 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 
 
 <p>以上</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずDjangoプロジェクトとアプリを作ってみた]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/06/18/start-django-project/"/>
-    <updated>2014-06-18T12:49:29+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/06/18/start-django-project</id>
-    <content type="html"><![CDATA[<p>Djangoはプロジェクトを作っておいて、アプリ毎に細かく機能を分けて、プロジェクトで統合するみたいな形式を取るみたい。なのでまずはDjangoプロジェクトを作成</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>django-admin.py startproject myproject
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とすると、カレントフォルダにmyprojectフォルダが出来る。ファイル構成を見ると、</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>myproject/
-</span><span class='line'>  manage.py
-</span><span class='line'>  myproject/
-</span><span class='line'>    __init__.py
-</span><span class='line'>    settings.py
-</span><span class='line'>    urls.py
-</span><span class='line'>    wsgi.py
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>となっている。myprojectフォルダ内のファイルに共通設定を書くという感じになりそうだ。PostgreSQLに接続するので、settings.pyを修正</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>    <span class="s">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span class='line'>  <span class="s">&#39;ENGINE&#39;</span><span class="p">:</span> <span class="s">&#39;django.db.backends.postgresql_psycopg2&#39;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&#39;NAME&#39;</span><span class="p">:</span> <span class="s">&#39;hoge&#39;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&#39;USER&#39;</span><span class="p">:</span> <span class="s">&#39;username&#39;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&#39;PASSWORD&#39;</span><span class="p">:</span> <span class="s">&#39;******&#39;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&#39;HOST&#39;</span><span class="p">:</span> <span class="s">&#39;hostname or ip&#39;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s">&#39;PORT&#39;</span><span class="p">:</span> <span class="s">&#39;5432&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>あと、psycopg2をインストールしていないので</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo pip install psycopg2
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とやって</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>myproject
-</span><span class='line'><span class="nv">$ </span>python manage.py syncdb
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とやると、hogeに色々テーブルが出来る。INSTALLED_APPSに書いてあるアプリに関するテーブルみたい。初期状態では以下のアプリが入るみたい。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>django.contrib.admin - 管理用サイト
-</span><span class='line'>django.contrib.auth - 認証
-</span><span class='line'>django.contrib.contenttypes - ??
-</span><span class='line'>django.contrib.sessions - セッション管理
-</span><span class='line'>django.contrib.messages - ??
-</span><span class='line'>django.contrib.staticfile - 静的ファイル用アプリ
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>テーブルは以下のものが作られた</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>auth_group
-</span><span class='line'>auth_group_permissions
-</span><span class='line'>auth_permission
-</span><span class='line'>auth_user
-</span><span class='line'>auth_user_groups
-</span><span class='line'>auth_user_user_permissions
-</span><span class='line'>django_admin_log
-</span><span class='line'>django_content_type
-</span><span class='line'>django_session
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>あと上のコマンド実行時に、管理者ユーザー作るかどうか聞かれる。とりあえず作った。</p>
-
-<p>DB設定済ませたので、おもむろにアプリ作成。Railsの時と同様に傍聴情報の出力をやってみるか。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py startapp bocho
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>を実行するとbochoフォルダが出来てその中に</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>bocho/
-</span><span class='line'>  __init__.py
-</span><span class='line'>  admin.py
-</span><span class='line'>  models.py
-</span><span class='line'>  tests.py
-</span><span class='line'>  views.py
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>が出来た。とりあえずここまで。</p>
 ]]></content>
   </entry>
   

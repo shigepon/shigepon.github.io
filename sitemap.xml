@@ -180,7 +180,7 @@
     </url>
     <url>
         <loc>http://blog.shigepon.com/blog/2014/06/30/python-memo/</loc>
-        <lastmod>2014-10-10T13:49:44+09:00</lastmod>
+        <lastmod>2014-11-23T22:49:12+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/blog/2014/07/01/ansible-memo/</loc>
@@ -241,16 +241,20 @@
         <lastmod>2014-11-23T09:55:12+09:00</lastmod>
     </url>
     <url>
+        <loc>http://blog.shigepon.com/blog/2014/11/23/django-memo/</loc>
+        <lastmod>2014-11-23T23:35:16+09:00</lastmod>
+    </url>
+    <url>
         <loc>http://blog.shigepon.com/blog/archives/</loc>
-        <lastmod>2014-11-23T09:55:12+09:00</lastmod>
+        <lastmod>2014-11-23T23:35:16+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/archives/</loc>
-        <lastmod>2014-11-23T09:55:12+09:00</lastmod>
+        <lastmod>2014-11-23T23:35:16+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/</loc>
-        <lastmod>2014-11-23T09:55:12+09:00</lastmod>
+        <lastmod>2014-11-23T23:35:16+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/robots.txt</loc>

@@ -9,7 +9,9 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="アクセスログのIPアドレスを集計してみる 参考：Linux サーバーでお手軽にログの集計：こっそりと。 &ndash; livedoor Blog（ブログ） Google Analyticsでリファラ無しの変なアクセスが増えたので、アクセスログからIPを集計してみた。 &hellip;">
+  <meta name="description" content="参考ページHow to Block Bots from Your Google Analytics ここ数日Google Analyticsにアメリカからリファラ無し直帰率100%近くのアクセスを大量に発見。
+どう考えてもbotですどうも(ry
+本当はGoogle &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +81,72 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/09/how-to-block-bot-access-from-google-analytics/">Google Analyticsからbotアクセスを取り除く</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-09T21:53:40+09:00" pubdate data-updated="true">Mar 9<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>参考ページ<a href="http://www.lunametrics.com/blog/2013/09/05/filter-bots-google-analytics/#sr=d&amp;m=n&amp;cp=d&amp;ct=-tmc&amp;ts=1394369739">How to Block Bots from Your Google Analytics</a></p>
+
+<p>ここ数日Google Analyticsにアメリカからリファラ無し直帰率100%近くのアクセスを大量に発見。
+どう考えてもbotですどうも(ry
+本当はGoogle Analyticsに自動でフィルタして欲しいけど、どうもフィルタしてないので、自力でフィルタ設定しないといけないみたい。</p>
+
+<p>上のリンクを参考に設定してみる</p>
+
+<ul>
+<li>アナリティクス設定→ ビュー→フィルタと移動</li>
+<li>「新しいボタン」をクリック</li>
+</ul>
+
+
+<h3>設定は以下の通り</h3>
+
+<ul>
+<li>新しいフィルタを作成</li>
+<li>フィルタ名：適当（Smart Bot 除外）とか？</li>
+<li>フィルタの種類：カスタムフィルタ</li>
+<li>除外</li>
+<li>フィルタフィールド：ISPドメインからのトラフィック</li>
+<li>フィルタパターン：<sup>microsoft corp(oration)?|inktomi corporation|yahoo! inc.|google inc.|stumbleupon inc.</sup>$|gomez</li>
+<li><p>大文字小文字を区別：いいえ</p></li>
+<li><p>「保存」をクリック</p></li>
+</ul>
+
+
+<p>これでフィルタできるけど、フィルタをかける以前の情報には反映しない。
+参考ページに設定テンプレートがあったのでここでもリンクしておく
+<a href="https://www.google.com/analytics/web/template?uid=svscm2YdTe6s0yJeGHQM4Q">Smart Botを除外するテンプレート</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1129,52 +1197,6 @@ base64した値が格納さています。
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/30/nadesiko-make-exe/">なでしこで実行ファイルを作る時のメモ</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-30T09:22:46+09:00" pubdate data-updated="true">Jan 30<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><ul>
-<li>パックファイル作る時はメインになるファイルだけnadesiko.nakoというパック名にして、その他はファイル名自身をパック名とする</li>
-<li>データを埋め込む場合は、そのデータを呼び出す時にフルパスにしない。データが無いと言われる。</li>
-</ul>
-
-
-<p>何となくマニュアル見ても分かりにくかったのでメモ</p>
-
-<p>ついでにリンク</p>
-
-<p><a href="http://nadesi.com">なでしこ</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -1202,6 +1224,10 @@ base64した値が格納さています。
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/23/django-memo/">Django Memo</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/23/titanium-mobile-memo/">Titanium Mobileメモ</a>
       </li>
     
@@ -1217,10 +1243,6 @@ base64した値が格納さています。
         <a href="/blog/2014/11/04/use-django-with-uwsgi/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(4):djangoで作ったプロジェクトをnginx+uwsgiで使って公開する</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/10/28/kobe-dot-r-no-12/">Kobe.R #12に参加しました</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -1230,12 +1252,12 @@ base64した値が格納さています。
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (6)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C# (4)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C++ (3)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (6)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (7)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (7)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (8)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (9)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (2)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (1)</a></li>

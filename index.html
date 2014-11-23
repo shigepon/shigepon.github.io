@@ -9,9 +9,20 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Titanium Mobileに関するメモ アプリ固有の設定を登録する アプリを終了して、再起動させた時も保存される設定をしたい時はTitanium.App.Propertiesを使う 1
+  <meta name="description" content="Djangoやってて忘れっぽいところとかをメモ リクエストパラメーターをモデルに入れる views.py1
 2
-Ti.App.Properties.setString(&quot;hoge&quot;,&quot; &hellip;">
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る場合 fuga &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +92,126 @@ Ti.App.Properties.setString(&quot;hoge&quot;,&quot; &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/23/django-memo/">Django Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-11-23T22:35:38+09:00" pubdate data-updated="true">Nov 23<span>rd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Djangoやってて忘れっぽいところとかをメモ</p>
+
+<h2>リクエストパラメーターをモデルに入れる</h2>
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">a_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">hoge</span> <span class="o">=</span> <span class="n">Fuga</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">)</span> <span class="c">#新たにインスタンス作る場合</span>
+</span><span class='line'>    <span class="n">fuga</span> <span class="o">=</span> <span class="n">Fuga</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">hage</span> <span class="o">=</span> <span class="n">Fuga</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span><span class="n">instance</span><span class="o">=</span><span class="n">fuga</span><span class="p">)</span> <span class="c">#既にあるインスタンスに入れる場合```</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">instance</span><span class="o">=</span><span class="n">xxx</span><span class="err">とやるのを何度か忘れた＞＜</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="c">## forms.DateFieldでISO-8601フォーマットの入力を受入れる</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">html5</span><span class="err">で</span><span class="n">datetime</span><span class="o">-</span><span class="n">local</span><span class="err">とか扱おうとすると、入力値が</span><span class="n">ISO</span><span class="o">-</span><span class="mi">8601</span><span class="err">形式になって、そのままだと</span><span class="n">DateField</span><span class="err">が入力を</span><span class="n">datetime</span><span class="err">の正しい形式として認識してくれない。</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">で、</span><span class="n">input_formats</span><span class="err">を設定するといけるらしいんだけど、あまりマニュアルでちゃんと説明してない。</span><span class="n">Stack</span> <span class="n">Overflow</span><span class="err">の情報とかをググると設定方法が間違ってるコードとかあって、正しいのが良く分からない。で、結局色々調べたら</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>py models.py
+date = forms.DateField(input_formats=(&lsquo;%Y-%m-%dT%H:%M:%S&rsquo;,))</p>
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">とタプルで渡す必要があるらしい</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">参考：</span><span class="p">[</span><span class="err">うえちょこ＠ぼろぐ»</span> <span class="p">[</span><span class="n">Django</span><span class="p">]</span><span class="n">forms</span><span class="o">.</span><span class="n">DateField</span><span class="err">の</span><span class="n">inputs_format</span><span class="err">ではまった</span><span class="p">](</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">labs</span><span class="o">.</span><span class="n">uechoco</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">blog</span><span class="o">/</span><span class="mi">2011</span><span class="o">/</span><span class="mi">08</span><span class="o">/</span><span class="n">django</span><span class="o">-</span><span class="n">dateform</span><span class="o">-</span><span class="n">inputs_format</span><span class="o">-</span><span class="n">wrong</span><span class="o">.</span><span class="n">html</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="c">## ModelForm使ってフォーム出力する時にrequeied属性をテンプレートで参照するとか</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>py models.py
+hoge = forms.CharField(max_length=100,widget=TextInput(attrs={&ldquo;required&rdquo;:&ldquo;true&rdquo;}))↲</p>
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">こんな感じで定義したフィールドの属性取ってきたい場合、</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>html</p>
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">適当だけど、こんな感じでアクセスできる。</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="c">## DjangoでGroup By</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">Django</span><span class="err">で</span><span class="n">Group</span> <span class="n">By</span><span class="err">して何個かのフィールドのデータで例えば、日付とその日に登録したデータの件数だけ欲しい時</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>py views.py
+q = Hoge.objects.filter(date<strong>gte = date).filter(date</strong>lt = dto).extra({&lsquo;date&rsquo;:&ldquo;date_trunc(&lsquo;day&rsquo;,date)&rdquo;})
+q.query.group_by = [&lsquo;date&rsquo;]
+values = q.values(&lsquo;date&rsquo;).order_by().annotate(c = Count(&lsquo;id&rsquo;))</p>
+
+<p>こんな感じでいける。ちなみにPostgreSQL。dateが時間の情報も持っているのでPostgreSQLのdate_trunc関数を使ってdateを日付の情報だけにしてから、group_byする。
+annotateは集計した値を新しいフィールド（ここだとc）に入れる。
+例えばvalues[0].cでアクセスできる。このコードで、日付とその日に登録したデータ件数が入った辞書のリストを得ることが出来る
+&#8220;`</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -975,77 +1106,6 @@ uwsgi.iniのenvも変更しておく</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/07/29/matcha-139/">まっちゃ139勉強会に参加しました</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-07-29T00:36:54+09:00" pubdate data-updated="true">Jul 29<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>まっちゃ勉強会はITカレンダーで結構気になってたんですが、なかなか日が合わずに参加出来なかったのですが、<a href="http://www.matcha139.jp/workshop/28thworkshop">あまりに面白そうな内容</a>だったので初参加してきました。</p>
-
-<h2>ネット違法有害情報規制の最新状況－児童ポルノ法改正を中心に</h2>
-
-<p>会場に着いた時にはもうすでに始まっていました。
-とても楽しい？怖い？濃い？話ばかりだったんですが、セッション内容は公開できないそうなので、一言だけ。</p>
-
-<p>奥村弁護士、園田弁護士は<em>児童ポルノに詳しい人</em>ではなくて<em>児童ポルノ法に詳しい人</em>なのでTVで紹介されても勘違いしないで下さい。</p>
-
-<p>もう一言だけ、セッションとは関係ないですが、岡村先生、JPCERT/CC理事就任おめでとうございます！</p>
-
-<h2>ライトニングトーク</h2>
-
-<p>メモとってないので、うろ覚えみたいになって申し訳ないですが、ざっくりこんな感じでした。抜けてるLTがあったら申し訳ありません。鳥頭です＞＜。</p>
-
-<h3>はなずきん♪さん</h3>
-
-<p>利用規約読んでる？って話でした。私はどうしても使わないといけないもの以外は読んでます。変な規約載せてるサイト時々ありますしね。</p>
-
-<h3>dragon_TAさん</h3>
-
-<p>和服い〜よって話からセキュリティに持っていくという力技のLT？でした。和服はインパクトあります。</p>
-
-<h3>黒林檎さん</h3>
-
-<p><a href="https://atnd.org/events/52714">私立プログラミングキャンプ2014</a>参加者募集の話でした。参加出来る人はぜひ！</p>
-
-<h3>ここから名前覚えてない＞＜申し訳ないです　の人</h3>
-
-<p>LibreOfficeの話がありました。オープンソースだし、コミュニティに参加しよう！って感じでした。LibreOfficeは使ってます。</p>
-
-<p>もう一つ急いでプレゼン資料作ってた方（確かすがわらさん）、今後のセキュリティ関連のイベントについてお話していました。色々あるということしか頭に残ってない・・・申し訳ないです。</p>
-
-<p>また、この勉強会は休憩時間にお菓子が食べれるとか、学生の方に交通費をカンパするとか色々凄いなと思いました（小並感）。これからも時間が合えば参加したいな〜と思えるイベントでした。</p>
-
-<p>ちなみに懇親会で渡した名刺とメインで使ってるtwitterアカウントが違ってたりします。メインは<a href="https://twitter.com/shigepon">@shigepon</a>です。以後よろしくです。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1071,6 +1131,10 @@ uwsgi.iniのenvも変更しておく</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/23/django-memo/">Django Memo</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/23/titanium-mobile-memo/">Titanium Mobileメモ</a>
       </li>
     
@@ -1086,10 +1150,6 @@ uwsgi.iniのenvも変更しておく</p>
         <a href="/blog/2014/11/04/use-django-with-uwsgi/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(4):djangoで作ったプロジェクトをnginx+uwsgiで使って公開する</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/10/28/kobe-dot-r-no-12/">Kobe.R #12に参加しました</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -1099,12 +1159,12 @@ uwsgi.iniのenvも変更しておく</p>
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (6)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C# (4)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C++ (3)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (6)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (7)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (7)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (8)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (9)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (2)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (1)</a></li>

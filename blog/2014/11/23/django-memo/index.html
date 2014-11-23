@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>C#で作ったdllをC++/CLIで使う - shigeponが関心のある技術情報など</title>
+  <title>Django Memo - shigeponが関心のある技術情報など</title>
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="画像やファイルが無くなっていますがご了承下さい なでしこでプラグインを作る時にC#を使いたかったので、本格的にdllを作る前に、C++/CLIからMessageBoxを表示する程度のC#のdllを呼び出してみました。 C#のdllコード 1
+  <meta name="description" content="Djangoやってて忘れっぽいところとかをメモ リクエストパラメーターをモデルに入れる views.py1
 2
 3
 4
@@ -21,7 +21,8 @@
 10
 11
 12
-13 &hellip;">
+13
+def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る場合 fuga &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -30,7 +31,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin-cs">
+  <link rel="canonical" href="http://blog.shigepon.com/blog/2014/11/23/django-memo">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -94,7 +95,7 @@
   
   <header>
     
-      <h1 class="entry-title">C#で作ったdllをC++/CLIで使う</h1>
+      <h1 class="entry-title">Django Memo</h1>
     
     
       <p class="meta">
@@ -110,20 +111,18 @@
   
 
 
-<time datetime="2014-01-28T22:27:58+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
+<time datetime="2014-11-23T22:35:38+09:00" pubdate data-updated="true">Nov 23<span>rd</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p><strong>画像やファイルが無くなっていますがご了承下さい</strong></p>
+<div class="entry-content"><p>Djangoやってて忘れっぽいところとかをメモ</p>
 
-<p>なでしこでプラグインを作る時にC#を使いたかったので、本格的にdllを作る前に、C++/CLIからMessageBoxを表示する程度のC#のdllを呼び出してみました。</p>
+<h2>リクエストパラメーターをモデルに入れる</h2>
 
-<p>C#のdllコード</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -136,45 +135,74 @@
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>using System;
-</span><span class='line'>using System.Collections.Generic;
-</span><span class='line'>using System.Windows.Forms;
-</span><span class='line'>using System.Text;
-</span><span class='line'>namespace ClassLibrary1{
-</span><span class='line'>    public class Class1
-</span><span class='line'>    {
-</span><span class='line'>        public static void Method1()
-</span><span class='line'>        {
-</span><span class='line'>            MessageBox.Show(&quot;method1&quot;);
-</span><span class='line'>        }
-</span><span class='line'>    }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">a_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">hoge</span> <span class="o">=</span> <span class="n">Fuga</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">)</span> <span class="c">#新たにインスタンス作る場合</span>
+</span><span class='line'>    <span class="n">fuga</span> <span class="o">=</span> <span class="n">Fuga</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">hage</span> <span class="o">=</span> <span class="n">Fuga</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span><span class="n">instance</span><span class="o">=</span><span class="n">fuga</span><span class="p">)</span> <span class="c">#既にあるインスタンスに入れる場合```</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">instance</span><span class="o">=</span><span class="n">xxx</span><span class="err">とやるのを何度か忘れた＞＜</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="c">## forms.DateFieldでISO-8601フォーマットの入力を受入れる</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">html5</span><span class="err">で</span><span class="n">datetime</span><span class="o">-</span><span class="n">local</span><span class="err">とか扱おうとすると、入力値が</span><span class="n">ISO</span><span class="o">-</span><span class="mi">8601</span><span class="err">形式になって、そのままだと</span><span class="n">DateField</span><span class="err">が入力を</span><span class="n">datetime</span><span class="err">の正しい形式として認識してくれない。</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">で、</span><span class="n">input_formats</span><span class="err">を設定するといけるらしいんだけど、あまりマニュアルでちゃんと説明してない。</span><span class="n">Stack</span> <span class="n">Overflow</span><span class="err">の情報とかをググると設定方法が間違ってるコードとかあって、正しいのが良く分からない。で、結局色々調べたら</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<p>C++フォームアプリケーション</p>
+<p>py models.py
+date = forms.DateField(input_formats=(&lsquo;%Y-%m-%dT%H:%M:%S&rsquo;,))</p>
 
-<p>C#で作ったdllの参照とかフォームの構成とか画像が消えちゃったので適当に想像してください。
-用はC++のアプリケーションでC#のdllを参照します。</p>
-
-<p>ボタンクリック時のコード</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>private: System::Void button1_Click(System::Object^  sender&cedil; System::EventArgs^  e) {
-</span><span class='line'>   try{
-</span><span class='line'>      ClassLibrary1::Class1::Method1();
-</span><span class='line'>   }catch(Exception^ e){
-</span><span class='line'>      System::Windows::Forms::MessageBox::Show(e-&gt;Message);
-</span><span class='line'>   }
-</span><span class='line'> }</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">とタプルで渡す必要があるらしい</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">参考：</span><span class="p">[</span><span class="err">うえちょこ＠ぼろぐ»</span> <span class="p">[</span><span class="n">Django</span><span class="p">]</span><span class="n">forms</span><span class="o">.</span><span class="n">DateField</span><span class="err">の</span><span class="n">inputs_format</span><span class="err">ではまった</span><span class="p">](</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">labs</span><span class="o">.</span><span class="n">uechoco</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">blog</span><span class="o">/</span><span class="mi">2011</span><span class="o">/</span><span class="mi">08</span><span class="o">/</span><span class="n">django</span><span class="o">-</span><span class="n">dateform</span><span class="o">-</span><span class="n">inputs_format</span><span class="o">-</span><span class="n">wrong</span><span class="o">.</span><span class="n">html</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="c">## ModelForm使ってフォーム出力する時にrequeied属性をテンプレートで参照するとか</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<p>で動かしてみるときちんと動かせました。</p>
+<p>py models.py
+hoge = forms.CharField(max_length=100,widget=TextInput(attrs={&ldquo;required&rdquo;:&ldquo;true&rdquo;}))↲</p>
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">こんな感じで定義したフィールドの属性取ってきたい場合、</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>html</p>
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">適当だけど、こんな感じでアクセスできる。</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="c">## DjangoでGroup By</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">Django</span><span class="err">で</span><span class="n">Group</span> <span class="n">By</span><span class="err">して何個かのフィールドのデータで例えば、日付とその日に登録したデータの件数だけ欲しい時</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>py views.py
+q = Hoge.objects.filter(date<strong>gte = date).filter(date</strong>lt = dto).extra({&lsquo;date&rsquo;:&ldquo;date_trunc(&lsquo;day&rsquo;,date)&rdquo;})
+q.query.group_by = [&lsquo;date&rsquo;]
+values = q.values(&lsquo;date&rsquo;).order_by().annotate(c = Count(&lsquo;id&rsquo;))</p>
+
+<p>こんな感じでいける。ちなみにPostgreSQL。dateが時間の情報も持っているのでPostgreSQLのdate_trunc関数を使ってdateを日付の情報だけにしてから、group_byする。
+annotateは集計した値を新しいフィールド（ここだとc）に入れる。
+例えばvalues[0].cでアクセスできる。このコードで、日付とその日に登録したデータ件数が入った辞書のリストを得ることが出来る
+&#8220;`</p>
 </div>
 
 
@@ -197,12 +225,12 @@
   
 
 
-<time datetime="2014-01-28T22:27:58+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
+<time datetime="2014-11-23T22:35:38+09:00" pubdate data-updated="true">Nov 23<span>rd</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/c-number/'>C#</a>, <a class='category' href='/blog/categories/c-plus-plus/'>C++</a>, <a class='category' href='/blog/categories/nadesiko/'>なでしこ</a>
+    <a class='category' href='/blog/categories/django/'>Django</a>, <a class='category' href='/blog/categories/python/'>Python</a>
   
 </span>
 
@@ -211,7 +239,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin-cs/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin-cs/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2014/11/23/django-memo/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2014/11/23/django-memo/" >Tweet</a>
   
   
   
@@ -231,10 +259,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/01/28/nadesiko-plugin/" title="Previous Post: C++/CLIでなでしこのプラグインを作る方法(Visual C++ Express Edition)">&laquo; C++/CLIでなでしこのプラグインを作る方法(Visual C++ Express Edition)</a>
+        <a class="basic-alignment left" href="/blog/2014/11/23/titanium-mobile-memo/" title="Previous Post: Titanium Mobileメモ">&laquo; Titanium Mobileメモ</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/01/28/nadesiko-plugin-cs2/" title="Next Post: C#で作ったdllをなでしこで使う">C#で作ったdllをなでしこで使う &raquo;</a>
       
     </p>
   </footer>
