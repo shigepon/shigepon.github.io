@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Django | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/django/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-11-23T23:41:34+09:00</updated>
+  <updated>2014-11-24T11:18:06+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -77,6 +77,17 @@ values = q.values(&lsquo;date&rsquo;).order_by().annotate(c = Count(&lsquo;id&rs
 annotateは集計した値を新しいフィールド（ここだとc）に入れる。
 例えばvalues[0].cでアクセスできる。このコードで、日付とその日に登録したデータ件数が入った辞書のリストを得ることが出来る
 ```</p>
+
+<h2>QuerySetで吐いたクエリを出力</h2>
+
+<p><code>py views.py
+h = Hoge.objects.all()
+print h.query
+</code></p>
+
+<p>でおk。でもクエリが例外出す時には出せないような・・・</p>
+
+<p>参考：<a href="http://programmer-jobs.blogspot.jp/2013/01/djangosql.html">Djangoで、デバック用のSQLクエリの表示 一言多いプログラマーの独り言</a></p>
 ]]></content>
   </entry>
   

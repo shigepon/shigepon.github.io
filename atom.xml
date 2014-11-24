@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-11-23T23:41:34+09:00</updated>
+  <updated>2014-11-24T11:18:06+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -93,7 +93,18 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
+<h2>QuerySetで吐いたクエリを出力</h2>
 
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">h</span> <span class="o">=</span> <span class="n">Hoge</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</span><span class='line'><span class="k">print</span> <span class="n">h</span><span class="o">.</span><span class="n">query</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でおk。でもクエリが例外出す時には出せないような・・・</p>
+
+<p>参考：<a href="http://programmer-jobs.blogspot.jp/2013/01/djangosql.html">Djangoで、デバック用のSQLクエリの表示 一言多いプログラマーの独り言</a></p>
 ]]></content>
   </entry>
   
