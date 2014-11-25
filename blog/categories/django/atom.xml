@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Django | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/django/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-11-25T15:51:50+09:00</updated>
+  <updated>2014-11-25T15:52:56+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,89 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[django-allauthを使ってみた]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/11/25/use-django-allauth/"/>
+    <updated>2014-11-25T14:55:16+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/11/25/use-django-allauth</id>
+    <content type="html"><![CDATA[<p>ソーシャルログインだけでなく、通常のログインもやりたかったので、django-allauthを試してみた。</p>
+
+<h2>インストール</h2>
+
+<p>pipで</p>
+
+<p><code>sh
+pip install django-allauth
+</code></p>
+
+<h2>ファイルでの設定</h2>
+
+<p>settings.pyとurls.pyを設定</p>
+
+<p>```py settings.py
+INSTALLED_APPS = (
+&hellip;</p>
+
+<pre><code>'allauth',
+'allauth.account',
+'allauth.socialaccount',
+'allauth.socialaccount.providers.twitter', #例としてTwitter
+</code></pre>
+
+<p>)
+AUTHENTICATION_BACKENDS = (
+&hellip;</p>
+
+<pre><code>'allauth.account.auth_backends.AuthenticationBackend',
+</code></pre>
+
+<p>)
+TEMPLATE_CONTEXT_PROCESSORS = (
+&hellip;</p>
+
+<pre><code>"django.core.context_processors.request",
+"django.contrib.auth.context_processors.auth",
+"allauth.account.context_processors.account",
+"allauth.socialaccount.context_processors.socialaccount",
+</code></pre>
+
+<p>)
+SITE_ID = 1
+```</p>
+
+<p>`&ldquo;py urls.py
+urlpatterns = patterns(&rdquo;,</p>
+
+<pre><code>...
+url('^accounts/', include('allauth.urls')),
+url('^accounts/profile/?', include('profile.urls',namespace='profile')), #ログイン後のリダイレクト先
+</code></pre>
+
+<p>)
+```</p>
+
+<h2>adminページでの設定</h2>
+
+<p>ソーシャルログインする場合のみ必要。 <a href="http://domain/admin/">http://domain/admin/</a> にアクセスして管理者ログインしてSocial applicationを追加する。
+フォーム内では名前を適当に付けて、Twitterの場合Client idにConsumer keyを登録して、Secret keyにConsumer secretを登録すればおk
+最後に、利用可能サイトから一番上のサイト(SITE_ID=1と指定してるので)を選択するとおk</p>
+
+<p><a href="http://domain/accounts">http://domain/accounts</a> にアクセスすればログインフォームが出てくる。出来た。</p>
+
+<h2>テンプレートを上書きする</h2>
+
+<p>プロジェクトディレクトリ/templates/account以下にファイルを設定すればおk
+例えばログインのテンプレートなら、login.htmlを設置すればおk</p>
+
+<p>元のファイルはgithubを見れば分かる</p>
+
+<h2>使える機能</h2>
+
+<p><a href="https://github.com/pennersr/django-allauth/blob/master/allauth/account/urls.py">githubのコード</a>
+見れば大体分かる感じ</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Django Memo]]></title>
@@ -410,145 +493,6 @@ DATABASES = {</p>
 <p>}</p>
 
 <p>```</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/07/02/django-show-list-with-paging/"/>
-    <updated>2014-07-02T11:51:44+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/07/02/django-show-list-with-paging</id>
-    <content type="html"><![CDATA[<h2>データの一覧表示</h2>
-
-<p>あとで参考ページとか追記する予定。
-データの一覧表示には何種類かファイルが必要（モデル、ビュー、テンプレート、URLディスパッチャー）。
-それぞれこんな感じで用意する。</p>
-
-<h3>モデル</h3>
-
-<p>```python models.py
-from django.db import models
-class Bocho(models.Model):</p>
-
-<pre><code>name = models.TextField()
-court = models.TextField()
-date = models.DateField()
-....
-</code></pre>
-
-<p>```</p>
-
-<p>モデルではフィールドとその属性を決める。このコードではクラスの中でMetaクラスを定義すると、モデルのテーブル名とかそういうのを色々定義出来るみたい。定義出来るフィールドの種類はDjangoのマニュアルに書いてあるのですぐ分かる。</p>
-
-<h3>ビュー</h3>
-
-<p>データをテンプレートに設定する部分。リクエストパラメータから、必要なデータを取得する部分。多分。</p>
-
-<p>```python views.py
-from django.shortcuts import render
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from bocho.models import Bocho
-def index(request): #requestはHttpRequestオブジェクト</p>
-
-<pre><code>objects = Bocho.objects.order_by("-date")
-paginator = Paginator(objects,10) #10行毎にページング
-page=request.GET.get('page',1) #GETパラメータからページ番号を取得(初期値は1)
-try:
-    object_list = paginator.page(page) #ここでページング
-except PageNotAnInteger:
-    object_list = paginator.page(1) #変なページ番号なら1ページ目
-except EmptyPage:
-    object_list = paginator.page(paginator.num_pages) #存在しないページ番号なら最後のページ
-return render(request, 'list.html', {'object_list':object_list})
-</code></pre>
-
-<p>```</p>
-
-<p>参考<a href="http://www.djangoproject.jp/doc/ja/1.0/ref/request-response.html">リクエストオブジェクトとレスポンスオブジェクト — Django v1.0 documentation</a></p>
-
-<h3>テンプレート</h3>
-
-<p>bocho/templates/list.htmlを作る。中身は一部だけ。でビューで割り当てた変数を表示する。
-あと、色々テンプレート用のタグがある。これもDjangoマニュアルを見ると分かる。</p>
-
-<p>```html list.html
-</p>
-
-<table class="table">
-    <thead><th class="span2">日付</th><th>名称</th><th>裁判所</th></thead>
-{% for object in object_list %}
-<tr>
-    <td>{{ object.date|date:"Y-m-d" }}</td>
-    <td>{{ object.name }}</td>
-    <td>{{ object.court }}</td>
-</tr>
-{% endfor %}
-</table>
-
-
-<p>
-```</p>
-
-<h3>URLディスパッチャー</h3>
-
-<p>ドメイン名/bocho/で一覧表示出来るように正規表現使ってviewsに割り当てる。</p>
-
-<p>myproject/urls.py</p>
-
-<p>`&ldquo;python urls.py
-from django.conf.urls import patterns, include, url
-urlpatterns = patterns(&rdquo;,</p>
-
-<pre><code># Examples:
-# url(r'^$', 'pycourt.views.home', name='home'),
-# url(r'^blog/', include('blog.urls')),
-url(r'bocho/^', include('bocho.urls',namespace='bocho')), #url(正規表現, 別のurlsに投げる設定。ここではbocho/urls.pyに投げる)
-</code></pre>
-
-<p>)
-```</p>
-
-<p>bocho/urls.pyは無いので作る。</p>
-
-<p>`&ldquo;python urls.py
-from django.conf.urls import patterns, include, url
-from bocho import views
-urlpatterns = patterns(&rdquo;,</p>
-
-<pre><code>url(r'^$', views.index, name="index"), #url(正規表現, 割り当てるビュー, URL作ったりリダイレクトする時に付けておくと便利な名前)
-</code></pre>
-
-<p>)
-```</p>
-
-<p>一覧はどうせページングするので、views.pyはこの形で覚えておくと良いかも</p>
-
-<h2>ページング</h2>
-
-<p>どうせbootstrapを使うのでdjango-bootstrap-toolkitを使う方法を載せる。
-ページ分けする対象をobject_list、ページ送りのURLにpage=以外に設定するパラメータをreqとすると、</p>
-
-<p><code>html list.html
-
-{% load bootstrap_toolkit %}↲
-{% bootstrap_pagination object_list align="center" extra=req %}
-
-</code></p>
-
-<p>と設定しておけば良い。</p>
-
-<h2>ページングにパラメータを付ける</h2>
-
-<p>ついでにメモ
-例えば"date=2001-01-01"みたいなパラメータを設定したいんだけど、割り当ててる変数？は日付オブジェクトの場合</p>
-
-<p><code>html list.html
-
-{% bootstrap\_pagination object\_list align="center" extra=date|date:"Y-m-d"|s    tringformat:"%date=%s"|slice:"1:" %}
-
-</code></p>
-
-<p>こんな感じで文字列をくっつけてパラメータにすることが出来る。かなり強引<a href="https://www.google.com/url?q=http://d.hatena.ne.jp/feiz/20110414/1302771447&amp;usd=2&amp;usg=AFQjCNFN9kzyrEJj_WZEatK2wIL07eaD0w">参考</a></p>
 ]]></content>
   </entry>
   
