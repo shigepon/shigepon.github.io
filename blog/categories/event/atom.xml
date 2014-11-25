@@ -4,7 +4,7 @@
   <title><![CDATA[Category: event | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/event/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-11-25T15:52:56+09:00</updated>
+  <updated>2014-11-26T00:13:35+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,84 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Kobe.R no 13に参加してきました]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/11/25/kobe-dot-r-no-13/"/>
+    <updated>2014-11-25T23:33:42+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/11/25/kobe-dot-r-no-13</id>
+    <content type="html"><![CDATA[<p>勉強会の話なので丁寧語で。11/24に<a href="http://kobexr.doorkeeper.jp/events/16989">Kobe.R #13</a>があったので参加してきました。<a href="http://blog.shigepon.info/blog/2014/10/28/kobe-dot-r-no-12/">前回</a>は大阪だったのですが今回は三宮で開かれました。今回はオープンデータ特集ということで、Rのネタもちょびっとある予定だったのですが、話がいっぱいあって結局オープンデータの話のみとなりました。Rネタだけでなく、データを扱う全般を範囲としているKobe.Rならではです。</p>
+
+<p>内容盛りだくさんなので、毎度忘れてる人や内容があって申し訳ないですが、感想です。</p>
+
+<h2>オープンデータとLinked Open Data</h2>
+
+<p>古崎さん</p>
+
+<p>Open Dataは今色々イベントやハッカソン、コンテストなどやってますよという話とオープンデータは誰でも自由に使える形で、さらに自分のデータにURI用意したり、他のデータにリンクしたりするともっとデータとしていいよという話でした。あとLinked Open DataはLODと略すそうです。</p>
+
+<p>リンクというのがあまりイメージ出来なかったけど、次の上田さんの発表で実際に動かしているところを見るとなるほどと思いました。</p>
+
+<p>ちなみに、12月7日の日曜日にOIHってとこ（グランドフロント大阪内）でLODハッカソン関西があるそうです。見てる人が居るかどうか知らないけど興味がある人は是非。</p>
+
+<p>他にもコンテストとして</p>
+
+<ul>
+<li><a href="http://lod.sfc.keio.ac.jp">LODチャレンジ2015</a></li>
+<li><a href="http://aigid.jp/?p=825">アーバンデータチャレンジ2014</a></li>
+</ul>
+
+
+<p>とか直近でやってるそうです。</p>
+
+<h2>SPARQLについて</h2>
+
+<p>@uedayouさん</p>
+
+<p>Linked Open Dataにすると、SQLっぽい言語で色んな形式で色んな条件でデータが取って来れるよという話でした。何となくイメージはWebが巨大なデータベースになって、そのデータベースにアクセスするような感じがしました。んで、リンクがデータ間のリレーションになってて、リレーショナルデータベースみたいな感じでのアクセスが可能になるんじゃないかとイメージ出来ました。SPARQL知らなかったけど、凄いですね。</p>
+
+<p>Google様にアクセスしたりするのとは訳が違うので、実際にこういうのを利用したサービスとかアプリとか作る場合はアクセス頻度を気にする必要がありそうですが、それは普通のデータベースでもそうですし、普通のことかなと思いました。</p>
+
+<p>それよりも</p>
+
+<p>```sql
+PREFIX rdfs: <a href="http://www.w3.org/2000/01/rdf-schema#">http://www.w3.org/2000/01/rdf-schema#</a>
+PREFIX dbpedia-ja: <a href="http://ja.dbpedia.org/resource/">http://ja.dbpedia.org/resource/</a>
+PREFIX prop-ja: <a href="http://ja.dbpedia.org/property/">http://ja.dbpedia.org/property/</a></p>
+
+<p>SELECT DISTINCT ?pref ?label WHERE
+{</p>
+
+<pre><code>dbpedia-ja:東京都  prop-ja:隣接都道府県  ?pref . 
+?pref  rdfs:label  ?label .
+</code></pre>
+
+<p>}
+```</p>
+
+<p>こんな感じのクエリを実行すれば、2つの異なるデータソース（エンドポイントと呼ぶらしい）で関連付けされているデータを取って来たり出来るとかすげーなと思いました。実際に例えばUbuntuで使うならどうするかとかは時間が無かったので、自分で調べて使ってみようと思いますです。</p>
+
+<h2>LOD Challengeについて</h2>
+
+<p>和田さん</p>
+
+<p>LOD Challengeというイベントについてのお話でした。ちょっと聞き疲れしてた時間帯だったので、頭を素通りしてしまいました＞＜すいませんです。</p>
+
+<h2>時系列データ分析・予測の方法（コンペ結果報告）</h2>
+
+<p>河原さん</p>
+
+<p>売り上げ予測のコンペ結果の報告をして頂きました。関連度と忘却度のマトリックスを作るという手法は面白そうでした。初心者なので実際にやってみるまでは道のりが長そうですが・・・・</p>
+
+<h2>OpenDataLabの活動紹介</h2>
+
+<p>毎度のことですが、最後らへんはどうしても名前を忘れてしまったりしてます。すいません＞＜。</p>
+
+<p>神戸でOpenDataLabというのをやっているという紹介でした。上手くやっておられるなぁという感じです。デジタルだけじゃないことも出来ることが強みだとおっしゃられていたような気がします。</p>
+
+<p>歳後に、今回でずっと運営の中心をされていた@floretsさんが東京へ行かれるということで、送別会みたいな感じで懇親会へ行ってきました。@floretsさんは勉強会の雰囲気をとても良く作ってくれる方で、Kobe.Rで今後お見かけ出来なくなるのは残念ですが、東京でのご活躍をお祈りしております。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Kobe.R #12に参加しました]]></title>

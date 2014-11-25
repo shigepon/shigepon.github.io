@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-11-25T15:52:56+09:00</updated>
+  <updated>2014-11-26T00:13:35+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,90 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Kobe.R no 13に参加してきました]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/11/25/kobe-dot-r-no-13/"/>
+    <updated>2014-11-25T23:33:42+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/11/25/kobe-dot-r-no-13</id>
+    <content type="html"><![CDATA[<p>勉強会の話なので丁寧語で。11/24に<a href="http://kobexr.doorkeeper.jp/events/16989">Kobe.R #13</a>があったので参加してきました。<a href="http://blog.shigepon.info/blog/2014/10/28/kobe-dot-r-no-12/">前回</a>は大阪だったのですが今回は三宮で開かれました。今回はオープンデータ特集ということで、Rのネタもちょびっとある予定だったのですが、話がいっぱいあって結局オープンデータの話のみとなりました。Rネタだけでなく、データを扱う全般を範囲としているKobe.Rならではです。</p>
+
+<p>内容盛りだくさんなので、毎度忘れてる人や内容があって申し訳ないですが、感想です。</p>
+
+<h2>オープンデータとLinked Open Data</h2>
+
+<p>古崎さん</p>
+
+<p>Open Dataは今色々イベントやハッカソン、コンテストなどやってますよという話とオープンデータは誰でも自由に使える形で、さらに自分のデータにURI用意したり、他のデータにリンクしたりするともっとデータとしていいよという話でした。あとLinked Open DataはLODと略すそうです。</p>
+
+<p>リンクというのがあまりイメージ出来なかったけど、次の上田さんの発表で実際に動かしているところを見るとなるほどと思いました。</p>
+
+<p>ちなみに、12月7日の日曜日にOIHってとこ（グランドフロント大阪内）でLODハッカソン関西があるそうです。見てる人が居るかどうか知らないけど興味がある人は是非。</p>
+
+<p>他にもコンテストとして</p>
+
+<ul>
+<li><a href="http://lod.sfc.keio.ac.jp">LODチャレンジ2015</a></li>
+<li><a href="http://aigid.jp/?p=825">アーバンデータチャレンジ2014</a></li>
+</ul>
+
+
+<p>とか直近でやってるそうです。</p>
+
+<h2>SPARQLについて</h2>
+
+<p>@uedayouさん</p>
+
+<p>Linked Open Dataにすると、SQLっぽい言語で色んな形式で色んな条件でデータが取って来れるよという話でした。何となくイメージはWebが巨大なデータベースになって、そのデータベースにアクセスするような感じがしました。んで、リンクがデータ間のリレーションになってて、リレーショナルデータベースみたいな感じでのアクセスが可能になるんじゃないかとイメージ出来ました。SPARQL知らなかったけど、凄いですね。</p>
+
+<p>Google様にアクセスしたりするのとは訳が違うので、実際にこういうのを利用したサービスとかアプリとか作る場合はアクセス頻度を気にする必要がありそうですが、それは普通のデータベースでもそうですし、普通のことかなと思いました。</p>
+
+<p>それよりも</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">PREFIX</span> <span class="n">rdfs</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="p">.</span><span class="n">w3</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="mi">2000</span><span class="o">/</span><span class="mi">01</span><span class="o">/</span><span class="n">rdf</span><span class="o">-</span><span class="k">schema</span><span class="o">#&gt;</span>
+</span><span class='line'><span class="k">PREFIX</span> <span class="n">dbpedia</span><span class="o">-</span><span class="n">ja</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">ja</span><span class="p">.</span><span class="n">dbpedia</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">resource</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="k">PREFIX</span> <span class="n">prop</span><span class="o">-</span><span class="n">ja</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">ja</span><span class="p">.</span><span class="n">dbpedia</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">property</span><span class="o">/&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">SELECT</span> <span class="k">DISTINCT</span> <span class="o">?</span><span class="n">pref</span> <span class="o">?</span><span class="n">label</span> <span class="k">WHERE</span>
+</span><span class='line'><span class="err">{</span>
+</span><span class='line'>    <span class="n">dbpedia</span><span class="o">-</span><span class="n">ja</span><span class="p">:</span><span class="err">東京都</span>  <span class="n">prop</span><span class="o">-</span><span class="n">ja</span><span class="p">:</span><span class="err">隣接都道府県</span>  <span class="o">?</span><span class="n">pref</span> <span class="p">.</span>
+</span><span class='line'>    <span class="o">?</span><span class="n">pref</span>  <span class="n">rdfs</span><span class="p">:</span><span class="n">label</span>  <span class="o">?</span><span class="n">label</span> <span class="p">.</span>
+</span><span class='line'><span class="err">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じのクエリを実行すれば、2つの異なるデータソース（エンドポイントと呼ぶらしい）で関連付けされているデータを取って来たり出来るとかすげーなと思いました。実際に例えばUbuntuで使うならどうするかとかは時間が無かったので、自分で調べて使ってみようと思いますです。</p>
+
+<h2>LOD Challengeについて</h2>
+
+<p>和田さん</p>
+
+<p>LOD Challengeというイベントについてのお話でした。ちょっと聞き疲れしてた時間帯だったので、頭を素通りしてしまいました＞＜すいませんです。</p>
+
+<h2>時系列データ分析・予測の方法（コンペ結果報告）</h2>
+
+<p>河原さん</p>
+
+<p>売り上げ予測のコンペ結果の報告をして頂きました。関連度と忘却度のマトリックスを作るという手法は面白そうでした。初心者なので実際にやってみるまでは道のりが長そうですが・・・・</p>
+
+<h2>OpenDataLabの活動紹介</h2>
+
+<p>毎度のことですが、最後らへんはどうしても名前を忘れてしまったりしてます。すいません＞＜。</p>
+
+<p>神戸でOpenDataLabというのをやっているという紹介でした。上手くやっておられるなぁという感じです。デジタルだけじゃないことも出来ることが強みだとおっしゃられていたような気がします。</p>
+
+<p>歳後に、今回でずっと運営の中心をされていた@floretsさんが東京へ行かれるということで、送別会みたいな感じで懇親会へ行ってきました。@floretsさんは勉強会の雰囲気をとても良く作ってくれる方で、Kobe.Rで今後お見かけ出来なくなるのは残念ですが、東京でのご活躍をお祈りしております。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[django-allauthを使ってみた]]></title>
@@ -1443,174 +1527,6 @@ subprocessを使う。何か昔は別の手法だったらしい。</p>
 
 
 <p>こんな感じで最低限使える。フォームに関してはもっと色々出来るみたいだけど、まだやってない。パッケージ使ってみたけど、これだけなら普通にbootstrapのファイルを読み込めば済むんだけど、フォーム関連などフィルタやカスタムタグがあるみたい。便利そうなので、これを使うことにしよう。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[詳細ページを作る：DjangoでPostgreSQLとBootstrapを使ったアプリを作ってみた(2)]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/06/19/make-detail-page-using-django-2/"/>
-    <updated>2014-06-19T17:58:11+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/06/19/make-detail-page-using-django-2</id>
-    <content type="html"><![CDATA[<p>詳細ページを作って表示するには</p>
-
-<ul>
-<li>models.pyでモデルを作る</li>
-<li>urls.pyを作る</li>
-<li>views.pyでビューを作る</li>
-<li>テンプレを作る</li>
-<li>Webサーバーを立ち上げる</li>
-<li>アクセスして確認</li>
-</ul>
-
-
-<p>くらいの手順が必要。</p>
-
-<h2>models.pyでモデルを作る</h2>
-
-<p>とりあえずおもむろにmodels.pyを編集。Railsの時と同様にテーブル名にeventを使う</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># Create your models here.</span>
-</span><span class='line'><span class="k">class</span> <span class="nc">Event</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-</span><span class='line'>  <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-</span><span class='line'>  <span class="n">date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">()</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-</span><span class='line'>      <span class="n">db_table</span> <span class="o">=</span> <span class="s">&#39;event&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>コマンドとか無くて、ソースで定義するのは個人的に性に合っている。Railsではモデルを修正したい時に、db/migrate以下のファイルを修正したり、app/models以下のファイルを修正したりで、情報がまとまってなくて困ったけど、Djangoの場合、models.pyを修正すれば事足りるっぽい。Metaクラスでdb_tableってのにテーブル名を指定してやると、指定したテーブル名を使用出来る。指定しない場合、bocho_eventってテーブルにアクセスするっぽい。</p>
-
-<p>フィールドの種類として何が使えるかとかまだまだ勉強中だけど、CharFieldはとりあえず最大文字数(max_length)を指定する必要があることは分かった。指定したくない場合はTextField使えばいいのかな？</p>
-
-<h2>urls.pyを作る</h2>
-
-<p>Railsでのconfig/routes.rbに当たるのが、urls.py。myproject以下には自動で出来るけど、作ったアプリ（今回はbocho）以下には用意されないので、自分で作って編集する。urlのルーティングは、まずmyproject側で行って、その後、必要な場合にアプリ側のルーティングが行われる。events/show/1でid=1のデータを表示する場合、</p>
-
-<p>myproject/urls.pyは</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
-</span><span class='line'>  <span class="n">url</span><span class="p">(</span><span class="s">r&#39;^events/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s">&#39;bocho.urls&#39;</span><span class="p">,</span><span class="n">namespace</span><span class="o">=</span><span class="s">&#39;bocho&#39;</span><span class="p">)),</span>
-</span><span class='line'><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と書いて、bocho/urls.pyを</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
-</span><span class='line'>  <span class="n">url</span><span class="p">(</span><span class="s">r&#39;^show/(\d+)/$&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">detail</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;detail&quot;</span><span class="p">),</span>
-</span><span class='line'><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と書くと、良さげな感じがする。書き方は色々あると思うけど（myproject側をr&#8217;&lsquo;みたいにして、bocho側にパターンを全て書いておくとかなんとか）。正規表現の()内はメソッドにパラメータとして渡される。rhacoもそうなので取っ付きやすい。</p>
-
-<p>nameとかnamespaceはviews.pyやテンプレートなどでurlを生成する時に用いる。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="p">{</span><span class="o">%</span> <span class="n">url</span> <span class="s">&#39;bocho:detail&#39;</span> <span class="mi">1</span> <span class="o">%</span><span class="p">}</span> <span class="c">#テンプレート内</span>
-</span><span class='line'><span class="n">reverse</span><span class="p">(</span><span class="s">&#39;bocho:detail&#39;</span><span class="p">,</span><span class="n">args</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c">#views内</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Railsだと、こういうのどうしたら良いか分からなくて困った。</p>
-
-<h2>views.pyでビューを作る</h2>
-
-<p>ビューはbocho/views.pyを編集すればおk。詳細表示の場合こんな感じ</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="c"># coding: utf-8</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">bocho.models</span> <span class="kn">import</span> <span class="n">Event</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">def</span> <span class="nf">detail</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="n">event_id</span><span class="p">):</span>
-</span><span class='line'>  <span class="n">event</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">event_id</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s">&#39;event/detail.html&#39;</span><span class="p">,{</span><span class="s">&#39;object&#39;</span><span class="p">:</span><span class="n">event</span><span class="p">})</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>※　coding: utf-8ってのはpython3では要らないらしい。
-modelは先にインポートする。表示に使うテンプレートと変数はview内で指定する。getとかallとかDBにアクセスするためのメソッドはこれから勉強が要るけど、要はDAOなので、それほど苦にはならないっしょ。</p>
-
-<h2>テンプレを作る</h2>
-
-<p>テンプレを作る前にテンプレのパスに関する設定をする。myproject/settings.pyに次の行を追加</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'><span class="o">....</span>
-</span><span class='line'><span class="s">&#39;bocho&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="p">)</span>
-</span><span class='line'><span class="n">TEMPLATE_DIRS</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">,</span> <span class="s">&#39;templates&#39;</span><span class="p">)]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こうしておくと、bochoアプリのテンプレはbocho/templates/以下を参照し、さらにファイルが無い場合はtemplates/以下も調べる。上のように&#8217;event/detail.html&#8217;と指定した場合は、bocho/templates/event/detail.htmlを参照する。</p>
-
-<p>設定出来たので、bocho/templates/event/detail.htmlを以下のように書く</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;html&gt;</span>
-</span><span class='line'><span class="nt">&lt;body&gt;</span>
-</span><span class='line'><span class="nt">&lt;h1&gt;</span>詳細画面<span class="nt">&lt;/h1&gt;</span>
-</span><span class='line'><span class="nt">&lt;dl&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;dt&gt;</span><span class="nt">&lt;/dt&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;dd&gt;</span><span class="nt">&lt;/dd&gt;</span>
-</span><span class='line'><span class="nt">&lt;/dl&gt;</span>
-</span><span class='line'><span class="nt">&lt;/body&gt;</span>
-</span><span class='line'><span class="nt">&lt;/html&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>フォーマットの方法とか良く分からないので、勉強が必要。dateはこの方法で良さそうだけど、他の場合どうなるんだろ？</p>
-
-<h2>Webサーバーを立ち上げる</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'>$ python manage.py runserver xxx.xxx.xx.xx:xxxx
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>xの部分にIPとポートを入れれば指定したIP、ポートで表示出来る。設定しない場合は知らない。どっかググれば書いてあるはず。あとはxxx.xxx.xx.xx:xxxxにブラウザでアクセスするとページを確認出来るようになる</p>
-
-<p>最初に作る時のコード量はRailsより多いけど、大したことはない。それより、フォルダとファイル構成が分かりやすいので、どこ修正したら良いか分からないなんてことも無いし、Railsより修正がやりやすい気がする。</p>
 ]]></content>
   </entry>
   
