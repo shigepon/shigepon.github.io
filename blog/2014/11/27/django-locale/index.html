@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>find by sqlでプリペアードステートメントを使う - shigeponが関心のある技術情報など</title>
+  <title>djangoで国際化やってみた - shigeponが関心のある技術情報など</title>
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="ActiveRecordは便利なのかどうか知らないけど、allなどのメソッドで:conditionとかで?を使うことが出来る。だけど、sqlを直接打ちたいケースは必ず出てくるので、その時に?使いたいなと思ったけど、なかなか例文が無かった。 んで結局こうするといいみたい。 1
-@results = &hellip;">
+  <meta name="description" content="Djangoで他の人が作ったモジュールを使ってると、英語のメッセージが入ってることがあるので、日本語化してみた。とりあえず英語のメッセージを日本語に変換するとこまで。 準備 gettextが無かったらインストール。Ubuntuの場合 1
+$ sudo aptitude install &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.shigepon.com/blog/2014/05/28/use-prepared-statement-in-find-by-sql">
+  <link rel="canonical" href="http://blog.shigepon.com/blog/2014/11/27/django-locale">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -83,7 +83,7 @@
   
   <header>
     
-      <h1 class="entry-title">Find by sqlでプリペアードステートメントを使う</h1>
+      <h1 class="entry-title">Djangoで国際化やってみた</h1>
     
     
       <p class="meta">
@@ -99,30 +99,81 @@
   
 
 
-<time datetime="2014-05-28T08:19:12+09:00" pubdate data-updated="true">May 28<span>th</span>, 2014</time>
+<time datetime="2014-11-27T13:02:12+09:00" pubdate data-updated="true">Nov 27<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>ActiveRecordは便利なのかどうか知らないけど、allなどのメソッドで:conditionとかで?を使うことが出来る。だけど、sqlを直接打ちたいケースは必ず出てくるので、その時に?使いたいなと思ったけど、なかなか例文が無かった。</p>
+<div class="entry-content"><p>Djangoで他の人が作ったモジュールを使ってると、英語のメッセージが入ってることがあるので、日本語化してみた。とりあえず英語のメッセージを日本語に変換するとこまで。</p>
 
-<p>んで結局こうするといいみたい。</p>
+<h2>準備</h2>
+
+<p>gettextが無かったらインストール。Ubuntuの場合</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="vi">@results</span> <span class="o">=</span> <span class="no">Model</span><span class="o">.</span><span class="n">find_by_sql</span><span class="p">(</span><span class="o">[</span><span class="s2">&quot;select * from hoge where fuga=?&quot;</span><span class="p">,</span><span class="s2">&quot;hage&quot;</span><span class="o">]</span><span class="p">)</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install gettext
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>しかし他にも直接sqlを実行する方法があって、</p>
+<p>プロジェクトにlocaleフォルダを作る。無いと後のコマンドでエラーが出た</p>
+
+<h2>poファイル作成</h2>
+
+<p>おもむろにpoファイルを作るコマンドを実行</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">raw_connection</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;select * from hoge where fuga = :1&quot;</span><span class="p">,</span> <span class="s1">&#39;hage&#39;</span><span class="p">)</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>django-admin.py makemessages -l ja
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>こんな書き方も出来るらしい。ActiveRecord::Base.connectionでは無理らしい。うーむ。むか〜しからRailsはちょっとレールからはずれるととたんに難しくなるんだなー。やる気が減って来た＞＜。</p>
+<p>するとpath/to/locale/ja/LC_MESSAGES/django.poってファイルが出来るので、それを修正していく。ただ、このコマンドプロジェクト内だけ捜査してファイルを作るみたいで、外部モジュールの場合、上手く読み取ってくれなかった。</p>
+
+<p>今回はvirtualenvでpipしたdjango-allauthのテンプレートを日本語化したかったので、path/to/virtualenv/dir/lib/python2.7/site-packages/allauth/templates/account/内のファイルを全部path/to/project/templates/account/にコピーしてからコマンド実行すると上手く読み取ってくれた。</p>
+
+<h2>翻訳</h2>
+
+<p>出来たpoファイルを編集すればオッケー。ファイル内でmsgid以下に書いてあるのが元の文、その次のmsgstr以下に文章書くと、翻訳文になる。元の英文に何かパラメーター付いてる場合は必ずパラメーターを翻訳文に設定しないとエラーが出る。</p>
+
+<figure class='code'><figcaption><span>例</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="c">#: path/to/python/module.py:23</span>
+</span><span class='line'><span class="n">msgid</span> <span class="s">&quot;Welcome to my site.&quot;</span>
+</span><span class='line'><span class="n">msgstr</span> <span class="s">&quot;いらっしゃーい&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>moファイル作成</h2>
+
+<p>おもむろにコマンドを実行するとmoファイルが出来る</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>django-admin.py compilemessages
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>settings.pyの設定</h2>
+
+<p>これだけで動くと思ったら動かなかったので色々調べてみたらLOCALE_PATHSを設定しないといけなかった。</p>
+
+<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">LOCALE_PATHS</span> <span class="o">=</span> <span class="p">(</span>
+</span><span class='line'>    <span class="s">&quot;path/to/locale&quot;</span><span class="p">,</span>
+</span><span class='line'><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これ設定しておいたらちゃんと動いた。</p>
+
+<p>あとは普通にrunserverとかでサーバ起動したら翻訳されてる</p>
+
+<p>参考：<a href="http://docs.djangoproject.jp/en/latest/topics/i18n/translation.html">翻訳 — Django 1.4 documentation</a></p>
+
+<p>翻訳したい文字列をマークする方法とかはリンク見れば分かる。あと、使いたい言語を選択出来るようにするとかそういう場合はLocaleMiddlewareを使うとかなんとかあるみたいだけどやってない。</p>
 </div>
 
 
@@ -145,12 +196,12 @@
   
 
 
-<time datetime="2014-05-28T08:19:12+09:00" pubdate data-updated="true">May 28<span>th</span>, 2014</time>
+<time datetime="2014-11-27T13:02:12+09:00" pubdate data-updated="true">Nov 27<span>th</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/rails/'>Rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+    <a class='category' href='/blog/categories/django/'>Django</a>, <a class='category' href='/blog/categories/python/'>Python</a>
   
 </span>
 
@@ -159,7 +210,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2014/05/28/use-prepared-statement-in-find-by-sql/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2014/05/28/use-prepared-statement-in-find-by-sql/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2014/11/27/django-locale/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2014/11/27/django-locale/" >Tweet</a>
   
   
   
@@ -179,10 +230,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/05/12/access-postgresql-through-odbc-ubuntu/" title="Previous Post: ubuntuでodbcを用いてpostgresqlにアクセスする">&laquo; ubuntuでodbcを用いてpostgresqlにアクセスする</a>
+        <a class="basic-alignment left" href="/blog/2014/11/25/kobe-dot-r-no-13/" title="Previous Post: Kobe.R no 13に参加してきました">&laquo; Kobe.R no 13に参加してきました</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/05/29/rails-memo/" title="Next Post: Rails memo">Rails memo &raquo;</a>
       
     </p>
   </footer>

@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-11-26T00:15:58+09:00</updated>
+  <updated>2014-11-27T13:22:21+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,82 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[djangoで国際化やってみた]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/11/27/django-locale/"/>
+    <updated>2014-11-27T13:02:12+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/11/27/django-locale</id>
+    <content type="html"><![CDATA[<p>Djangoで他の人が作ったモジュールを使ってると、英語のメッセージが入ってることがあるので、日本語化してみた。とりあえず英語のメッセージを日本語に変換するとこまで。</p>
+
+<h2>準備</h2>
+
+<p>gettextが無かったらインストール。Ubuntuの場合</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install gettext
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>プロジェクトにlocaleフォルダを作る。無いと後のコマンドでエラーが出た</p>
+
+<h2>poファイル作成</h2>
+
+<p>おもむろにpoファイルを作るコマンドを実行</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>django-admin.py makemessages -l ja
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>するとpath/to/locale/ja/LC_MESSAGES/django.poってファイルが出来るので、それを修正していく。ただ、このコマンドプロジェクト内だけ捜査してファイルを作るみたいで、外部モジュールの場合、上手く読み取ってくれなかった。</p>
+
+<p>今回はvirtualenvでpipしたdjango-allauthのテンプレートを日本語化したかったので、path/to/virtualenv/dir/lib/python2.7/site-packages/allauth/templates/account/内のファイルを全部path/to/project/templates/account/にコピーしてからコマンド実行すると上手く読み取ってくれた。</p>
+
+<h2>翻訳</h2>
+
+<p>出来たpoファイルを編集すればオッケー。ファイル内でmsgid以下に書いてあるのが元の文、その次のmsgstr以下に文章書くと、翻訳文になる。元の英文に何かパラメーター付いてる場合は必ずパラメーターを翻訳文に設定しないとエラーが出る。</p>
+
+<figure class='code'><figcaption><span>例</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="c">#: path/to/python/module.py:23</span>
+</span><span class='line'><span class="n">msgid</span> <span class="s">&quot;Welcome to my site.&quot;</span>
+</span><span class='line'><span class="n">msgstr</span> <span class="s">&quot;いらっしゃーい&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>moファイル作成</h2>
+
+<p>おもむろにコマンドを実行するとmoファイルが出来る</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>django-admin.py compilemessages
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>settings.pyの設定</h2>
+
+<p>これだけで動くと思ったら動かなかったので色々調べてみたらLOCALE_PATHSを設定しないといけなかった。</p>
+
+<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">LOCALE_PATHS</span> <span class="o">=</span> <span class="p">(</span>
+</span><span class='line'>    <span class="s">&quot;path/to/locale&quot;</span><span class="p">,</span>
+</span><span class='line'><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これ設定しておいたらちゃんと動いた。</p>
+
+<p>あとは普通にrunserverとかでサーバ起動したら翻訳されてる</p>
+
+<p>参考：<a href="http://docs.djangoproject.jp/en/latest/topics/i18n/translation.html">翻訳 — Django 1.4 documentation</a></p>
+
+<p>翻訳したい文字列をマークする方法とかはリンク見れば分かる。あと、使いたい言語を選択出来るようにするとかそういう場合はLocaleMiddlewareを使うとかなんとかあるみたいだけどやってない。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Kobe.R no 13に参加してきました]]></title>
@@ -1477,56 +1553,6 @@ subprocessを使う。何か昔は別の手法だったらしい。</p>
 <p>勉強会が終わった後は懇親会に行ってきました。そこで@soundkitchenさんにDocker薦められたので、一回Docker触ってみようと思います。Groonga全然関係ないですね。楽しかったので終電ギリギリまで居ちゃいました。</p>
 
 <p>Groongaは結構使っているんですが、使いこなしてはいないなと思い知らされる点がボコボコ出てくるとても有意義な勉強会でした。次回あればまた参加すると思います！ とりあえずこんな感じで。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(2):Bootstrapを使ってみる]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/06/25/django-with-bootstrap/"/>
-    <updated>2014-06-25T21:41:23+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/06/25/django-with-bootstrap</id>
-    <content type="html"><![CDATA[<p>テンプレートにBootstrapを当てはめたいので、Bootstrap関連のパッケージを探してみた。ググってみて<a href="https://github.com/dyve/django-bootstrap-toolkit">django-bootstrap-toolkit</a>が良さそうかなと思ったので、使ってみた。</p>
-
-<p>インストール</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install django-bootstrap-toolkit
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>myproject/settings.pyのINSTALLED_APPSに以下を追加</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="s1">&#39;bootstrap-toolkit&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>テンプレートを書く</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'>
-</span><span class='line'>{% load bootstrap_toolkit %}} #bootstrap-toolkitを使うページ全てに必要っぽい
-</span><span class='line'>...
-</span><span class='line'><span class="nt">&lt;head&gt;</span>
-</span><span class='line'>{% bootstrap_stylesheet_tag %}  #bootstrapのcssへのタグ(CDNから読み込み)
-</span><span class='line'>{% bootstrap_stylesheet_tag &quot;responsive %} #bootstrapのレスポンシブページ用タグ(CDNから読み込み)
-</span><span class='line'>{% bootstrap_javascript_tag %}  #bootstrapのjavascriptへのタグ(CDNから読み込み)
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;/head&gt;</span>
-</span><span class='line'>あとは普通にbootstrapのタグを書く
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな感じで最低限使える。フォームに関してはもっと色々出来るみたいだけど、まだやってない。パッケージ使ってみたけど、これだけなら普通にbootstrapのファイルを読み込めば済むんだけど、フォーム関連などフィルタやカスタムタグがあるみたい。便利そうなので、これを使うことにしよう。</p>
 ]]></content>
   </entry>
   

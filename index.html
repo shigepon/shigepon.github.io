@@ -9,7 +9,8 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="勉強会の話なので丁寧語で。11/24にKobe.R #13があったので参加してきました。前回は大阪だったのですが今回は三宮で開かれました。今回はオープンデータ特集ということで、Rのネタもちょびっとある予定だったのですが、話がいっぱいあって結局オープンデータの話のみとなりました。Rネタだけでなく、 &hellip;">
+  <meta name="description" content="Djangoで他の人が作ったモジュールを使ってると、英語のメッセージが入ってることがあるので、日本語化してみた。とりあえず英語のメッセージを日本語に変換するとこまで。 準備 gettextが無かったらインストール。Ubuntuの場合 1
+$ sudo aptitude install &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +80,109 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/27/django-locale/">Djangoで国際化やってみた</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-11-27T13:02:12+09:00" pubdate data-updated="true">Nov 27<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Djangoで他の人が作ったモジュールを使ってると、英語のメッセージが入ってることがあるので、日本語化してみた。とりあえず英語のメッセージを日本語に変換するとこまで。</p>
+
+<h2>準備</h2>
+
+<p>gettextが無かったらインストール。Ubuntuの場合</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install gettext
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>プロジェクトにlocaleフォルダを作る。無いと後のコマンドでエラーが出た</p>
+
+<h2>poファイル作成</h2>
+
+<p>おもむろにpoファイルを作るコマンドを実行</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>django-admin.py makemessages -l ja
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>するとpath/to/locale/ja/LC_MESSAGES/django.poってファイルが出来るので、それを修正していく。ただ、このコマンドプロジェクト内だけ捜査してファイルを作るみたいで、外部モジュールの場合、上手く読み取ってくれなかった。</p>
+
+<p>今回はvirtualenvでpipしたdjango-allauthのテンプレートを日本語化したかったので、path/to/virtualenv/dir/lib/python2.7/site-packages/allauth/templates/account/内のファイルを全部path/to/project/templates/account/にコピーしてからコマンド実行すると上手く読み取ってくれた。</p>
+
+<h2>翻訳</h2>
+
+<p>出来たpoファイルを編集すればオッケー。ファイル内でmsgid以下に書いてあるのが元の文、その次のmsgstr以下に文章書くと、翻訳文になる。元の英文に何かパラメーター付いてる場合は必ずパラメーターを翻訳文に設定しないとエラーが出る。</p>
+
+<figure class='code'><figcaption><span>例</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="c">#: path/to/python/module.py:23</span>
+</span><span class='line'><span class="n">msgid</span> <span class="s">&quot;Welcome to my site.&quot;</span>
+</span><span class='line'><span class="n">msgstr</span> <span class="s">&quot;いらっしゃーい&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>moファイル作成</h2>
+
+<p>おもむろにコマンドを実行するとmoファイルが出来る</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>django-admin.py compilemessages
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>settings.pyの設定</h2>
+
+<p>これだけで動くと思ったら動かなかったので色々調べてみたらLOCALE_PATHSを設定しないといけなかった。</p>
+
+<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">LOCALE_PATHS</span> <span class="o">=</span> <span class="p">(</span>
+</span><span class='line'>    <span class="s">&quot;path/to/locale&quot;</span><span class="p">,</span>
+</span><span class='line'><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これ設定しておいたらちゃんと動いた。</p>
+
+<p>あとは普通にrunserverとかでサーバ起動したら翻訳されてる</p>
+
+<p>参考：<a href="http://docs.djangoproject.jp/en/latest/topics/i18n/translation.html">翻訳 — Django 1.4 documentation</a></p>
+
+<p>翻訳したい文字列をマークする方法とかはリンク見れば分かる。あと、使いたい言語を選択出来るようにするとかそういう場合はLocaleMiddlewareを使うとかなんとかあるみたいだけどやってない。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1124,73 +1228,6 @@ uwsgi.iniのenvも変更しておく</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/09/22/kobe-dot-r-number-9/">Kobe.R #9に参加しました</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-09-22T20:42:57+09:00" pubdate data-updated="true">Sep 22<span>nd</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>勉強会の話なので丁寧語で。9/20に<a href="http://kobexr.doorkeeper.jp/events/14808">Kobe.R #9</a>があったので参加してきました。大阪で定期的に開催されているRの勉強会です。内容はRに限らず、統計処理をやる上で大事なことを扱うという感じでした。発表は誰がされたか名前を記憶していなかったりするので、とりあえず内容だけ照会します。</p>
-
-<h2>Statistical Disclosure Controlの紹介</h2>
-
-<p>Twitter ID @Wakamatzさん</p>
-
-<p>個人情報を含むデータや、他の情報と組み合わせると個人情報になるデータをどのように匿名化するかという話でした。どうしても匿名化すると、実際に欲しいデータの精度とのトレードオフになるので、それをどう評価するかが重要なようです。
-オォっと思った点を羅列します。</p>
-
-<ul>
-<li>開示リスク（どの程度特定されやすいデータになっているか?）を評価出来るライブラリがRにある。Rすげー。</li>
-<li>匿名化には適当なデータを混ぜたりクラスタリングする手法があるのかー。なるほどー。確かに適当なデータを混ぜると集計精度が落ちそう</li>
-<li>評価手法は何種類かあるけど、とりあえずIL1sという評価法を紹介してもらった。実際計算してみないとなんともいえないかな。</li>
-</ul>
-
-
-<h2>カードで説明する統計的独立</h2>
-
-<p>@florets1さん</p>
-
-<p>トランプのカードを例にして、独立とは何かを説明してくれました。なんとなくで済ませてたところを例を入れて分かりやすく説明してくれました。
-どっかの書籍で「○○が独立な場合に△△」とか書かれてイメージはしにくいのが、ざっくりですが、「計算しやすいので△△」くらいに読み替えてよさそうというのが分かった感じです。</p>
-
-<h2>Powershellいいよって話（タイトル忘れた）</h2>
-
-<p>Windows8から、常にインストールされているPowershellを使いこなすと、スクリプトで.Net使えたりして便利って話</p>
-
-<h2>他</h2>
-
-<p>Rでパイプ使う時はpipe Rが便利とかsql使ってdbアクセスするライブラリとかforループを速く便利にする方法とか教えてもらいました。まだ実際に試してないので、試してみないといかんす。</p>
-
-<p>次回参加は無理ですが、ちょこちょこ参加したいなと思いました（小並感）。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1216,6 +1253,10 @@ uwsgi.iniのenvも変更しておく</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/27/django-locale/">Djangoで国際化やってみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/25/kobe-dot-r-no-13/">Kobe.R No 13に参加してきました</a>
       </li>
     
@@ -1231,10 +1272,6 @@ uwsgi.iniのenvも変更しておく</p>
         <a href="/blog/2014/11/23/titanium-mobile-memo/">Titanium Mobileメモ</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/11/22/django-datetimefield-received-a-naive-datetime/">DjangoでDateTimeField Received a Naive datetimeってWarningが出た</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -1244,12 +1281,12 @@ uwsgi.iniのenvも変更しておく</p>
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (6)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C# (4)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C++ (3)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (8)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (9)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (7)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (10)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (11)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (3)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (1)</a></li>

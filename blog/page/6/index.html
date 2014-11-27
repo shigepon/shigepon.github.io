@@ -9,10 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="rhaco3で作ったWebサービス全体にBasic認証をかけた時にちょっとハマったのでメモ。 症状 rhaco3の認証が入っているサービスで全体にBasic認証をかけると、 トップページに入る時にBasic認証がかかる
-認証完了
-ログインページに移動
-またBasic認証がかかる &hellip;">
+  <meta name="description" content="unity使ってこれから何か作っていこうと思うのでめも。 最初にやったこと 【Unity】素人が7日間クソゲーを作り続けてわかったこと – uinyan. comに載っていたUNITY &ndash; Developer &ndash; はじめての Unity &ndash; 第1回 世界の「骨格 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +79,200 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/10/unity-memo/">Unity Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-10T23:25:11+09:00" pubdate data-updated="true">Feb 10<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>unity使ってこれから何か作っていこうと思うのでめも。</p>
+
+<h3>最初にやったこと</h3>
+
+<p><a href="http://uinyan.com/unity_7days_kusoge_challenge/">【Unity】素人が7日間クソゲーを作り続けてわかったこと – uinyan. com</a>に載っていた<a href="http://japan.unity3d.com/developer/document/tutorial/my-first-unity/01.html">UNITY &ndash; Developer &ndash; はじめての Unity &ndash; 第1回 世界の「骨格」をつくろう</a>に沿ってブロックとボールを作ってみた。<br/>
+実際にどう操作するかは<a href="https://www.google.com/url?q=http://dotinstall.com/&amp;usd=2&amp;usg=AFQjCNHZtbpqtTDbVeGhAQfx3_H-UUYI1Q">ドットインストールのUnity講座</a>を参考にした。</p>
+
+<h3>物をバウンドさせる</h3>
+
+<p> physicalMaterialでBouncinessに数値を入れる。1とか。1でバウンド時の力のロスが無い。</p>
+
+<h3>効果音を鳴らす</h3>
+
+<ul>
+<li><a href="http://www.senses-circuit.com/material/se_game.html">フリー効果音素材HP</a>などから音源をダウンロード</li>
+<li>Assetに音源をドラッグアンドドロップして追加</li>
+<li>追加したいオブジェクトでAddComponentボタンからComponent>Audio>Audio Sourceを選択</li>
+<li>Audio ClipにAssetに入れた音源を入れる。</li>
+<li>Audio Sourceコンポーネント内で3D Sound Setting>Min Distanceを10くらいに設定</li>
+</ul>
+
+
+<p>オブジェクトに設定したコードでは次のように書く。例としてスペースを押したら効果音が出るようにしてみた。<br/>
+コードの設定部分でこの例の場合clipに音源を入れる（でないと聞こえなかったような）</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="n">AudioClip</span> <span class="n">clip</span><span class="p">;</span>
+</span><span class='line'><span class="k">public</span> <span class="n">function</span> <span class="nf">Update</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="n">GetButton</span><span class="p">(</span><span class="s">&quot;Jump&quot;</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">audio</span><span class="p">.</span><span class="n">PlayOneShot</span><span class="p">(</span><span class="n">clip</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>BGMをかける</h3>
+
+<p>Assetに追加したBGMをHiearchyに追加して、InspectorのLoopをチェックしたらOK</p>
+
+<h3>位置移動</h3>
+
+<p>transform.positionにVectorオブジェクトを代入すればOK<br/>
+transform.position.xに直接値を入れるとC#では怒られた。</p>
+
+<h3>トリガで衝突判定</h3>
+
+<p>Collider2Dでis Triggerにチェックを入れるとTriggerを用いて衝突判定できる。衝突しないケースと衝突するケースを使い分けられるので便利。
+イベントとして2Dの場合は、</p>
+
+<ul>
+<li>OnTriggerEnter2D</li>
+<li>OnTriggerStay2D</li>
+<li>OntriggerExit2D</li>
+</ul>
+
+
+<p>が使える。2Dで物理エンジン使わない時とか使える。なんか使える条件があるような情報があった。</p>
+
+<h3>時間待ちの作法</h3>
+
+<p>コルーチンを使うらしい。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="n">function</span> <span class="nf">Update</span><span class="p">(){</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'>  <span class="n">StartCoroutine</span><span class="p">(</span><span class="s">&quot;GameOver&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">private</span> <span class="n">IENumerator</span> <span class="nf">GameOver</span><span class="p">(){</span>
+</span><span class='line'>  <span class="k">yield</span> <span class="k">return</span> <span class="k">new</span> <span class="nf">WaitForSeconds</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">Application</span><span class="p">.</span><span class="n">LoadLevel</span><span class="p">(</span><span class="s">&quot;GameOver&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じ。時間待ちとは言え、動きが止まったりするわけじゃない。</p>
+
+<h3>座標変換</h3>
+
+<p>タップやクリックの座標とUnity内での座標の場合は座標変換が必要。カメラのScreenToWorldPointメソッドを使うが2Dの場合直感的に行かなく、次のようにする</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="n">Vector3</span> <span class="n">screenPosition</span> <span class="p">=</span> <span class="n">Camera</span><span class="p">.</span><span class="n">main</span><span class="p">.</span><span class="n">ScreenToWorldPoint</span><span class="p">(</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">);</span>
+</span><span class='line'><span class="n">Vector2</span> <span class="n">clickPosition</span> <span class="p">=</span> <span class="n">Camera</span><span class="p">.</span><span class="n">main</span><span class="p">.</span><span class="n">ScreenToWorldPoint</span><span class="p">(</span><span class="k">new</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="n">mousePosition</span><span class="p">.</span><span class="n">x</span><span class="p">,</span><span class="n">Input</span><span class="p">.</span><span class="n">mousePosition</span><span class="p">.</span><span class="n">y</span><span class="p">,</span><span class="n">screenPosition</span><span class="p">.</span><span class="n">z</span><span class="p">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と2DなのにVector3（３次元座標）で指定する。</p>
+
+<h3>デバッグ</h3>
+
+<p>Unity Remoteを使う。Free Aspectだと上手く表示できないとか上手く行かないケースがあるので注意。かならずアスペクト比？を設定。</p>
+
+<h3>Androidへの実装</h3>
+
+<p>実機に実装する場合はBuild and Runをすれば良い。ただしXperia SO-01Bに実装すると初期の設定ではエラーがポコポコ出たので対処をメモしておく</p>
+
+<h3>iPhoneへの実装</h3>
+
+<p>iPhoneへの実装はios Developer Programへの登録など色々面倒で複数サイトを参考にした。
+ios Developer Programへの登録などUnity関係なくやらないといけない作業は、<a href="http://r-dimension.xsrv.jp/classes_j/ios_test/">iOSデバイス（iPhone・iPad）実機テスト | Yasushi Noguchi Class</a>が参考になった<br/>
+unity側での作業は<a href="http://tech.gmo-media.jp/post/54095871491/running-unity-app-on-iphone">iPhone実機でUnityを動かしてみた &ndash; unity部 | GMOメディア エンジニアブログ</a>を参考にすれば上手くいった。
+バージョンが変わったりすると、また画面構成とか変わるんだろうけど。</p>
+
+<p>あとiPhone初心者だったせいで、マナーモードになっているのに気づかず、音が出ないと１時間くらい悩んでた。（これでハマる人は少ないと思うけど一応メモ）</p>
+
+<h3>iPhoneへのadhocビルドと配布</h3>
+
+<p>やること色々あるので、参考にしたサイトの一覧を紹介する程度。</p>
+
+<ul>
+<li><a href="http://dev.classmethod.jp/smartphone/iphone/ios-app-how-to-release/#toc-xcode-">よく分かる！iOS アプリのリリース手順のまとめ ｜ Developers.IO</a>←App Storeでの配布についてのページだけどこのページが一番参考になった。多分画面が最新のものに対応してるから。</li>
+<li><a href="http://plus.vc/iphone/4357/">iPhoneアプリのAd Hoc配信方法まとめ完全版 [Xcode4対応] | PLUS</a> 上のページで分からないところはこのページを参考にした。Xcodeのビルド設定以降は参考になる。</li>
+</ul>
+
+
+<p>adhocで端末を追加したい場合に、またもハマった</p>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/mswar/20090303/1236087158">iPhone Developper Programingに 新しくデバイス追加する方法(２台目、３台目～) &ndash; mswar的電網日誌</a> adhocじゃないけど、それ以外の部分は参考になった</li>
+<li><a href="http://plus.vc/iphone/7015/">Adhocでデバイスを追加したものの、インストールできない場合のチェック方法 | PLUS</a>これはチェックしておかないといけない感じ</li>
+</ul>
+
+
+<h4>EGL_BAD_MATCH</h4>
+
+<p>まずは<strong>EGL_BAD_MATCH</strong>というエラーが出た。ググっでも答えが出ないので、ddmsを使ってログを取ってみると、どうも32bit Display Bufferとか24bit Display Bufferの処理をした後にエラーが出てたので、Player Setting > Android > Resolution and Presentationにある32bit Dispay Bufferと24bit Display Bufferのチェックをはずした。するとEGL_BAD_MATCHは消えた。</p>
+
+<h4>Profiler is only supported in Unity Pro</h4>
+
+<p>次にProfilerも使ってないのに<br/>
+<strong>Profiler is only supported in Unity Pro</strong><br/>
+というメッセージが出た。結局分からなかった。私が実装した時の問題点は画像が表示されないことだったのでこれは関係ないだろうと考えて無視。</p>
+
+<h4>結局画面が表示されない</h4>
+
+<p>Build Setting画面のTexture CompressionをDon&rsquo;t overrideからETC1 or RGB16に変更すると動いた！
+なんかどっかにこの話があったんだけど、どこか忘れたのでまた思い出したらリンクする。</p>
+
+<h3>その他</h3>
+
+<ul>
+<li>位置のScaleを-1にして反転するとアニメーションもそのまま反転した。すごい。</li>
+<li>StartよりAwakeが先に呼び出される。初期化に使える。</li>
+<li>MonoDevelop-UnityをMacにインストールしてて、C#の通常アプリが作れると思ったら大間違い。C#のアプリ作ろうと思ったらXamarin Studio入れた方がよさげ。NUnitが無いって怒られて散々だった。</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1048,42 +1239,6 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/28/test-post2/">Test Post2</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-28T14:43:59+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>テスト投稿（2時間ぶり2度目）</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -1111,6 +1266,10 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/27/django-locale/">Djangoで国際化やってみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/25/kobe-dot-r-no-13/">Kobe.R No 13に参加してきました</a>
       </li>
     
@@ -1126,10 +1285,6 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
         <a href="/blog/2014/11/23/titanium-mobile-memo/">Titanium Mobileメモ</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/11/22/django-datetimefield-received-a-naive-datetime/">DjangoでDateTimeField Received a Naive datetimeってWarningが出た</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -1139,12 +1294,12 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (6)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C# (4)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C++ (3)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (8)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (9)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (7)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (10)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (11)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (3)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (1)</a></li>
