@@ -9,8 +9,12 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Djangoで他の人が作ったモジュールを使ってると、英語のメッセージが入ってることがあるので、日本語化してみた。とりあえず英語のメッセージを日本語に変換するとこまで。 準備 gettextが無かったらインストール。Ubuntuの場合 1
-$ sudo aptitude install &hellip;">
+  <meta name="description" content="Southってのを使うとモデルを変更した時に、サクッとDB(PostgreSQL)に反映出来るらしんだけど、今すでに作成中のプロジェクトに反映させたかったので、メモ インストール 1
+$ pip install south 設定 settings.py1
+2
+3
+4
+INSTALLED_APPS &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +84,81 @@ $ sudo aptitude install &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/30/use-south-to-existing-project/">Southをすでにあるプロジェクトに適用する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-11-30T23:19:26+09:00" pubdate data-updated="true">Nov 30<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Southってのを使うとモデルを変更した時に、サクッとDB(PostgreSQL)に反映出来るらしんだけど、今すでに作成中のプロジェクトに反映させたかったので、メモ</p>
+
+<h2>インストール</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install south
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>設定</h2>
+
+<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
+</span><span class='line'><span class="o">....</span>
+</span><span class='line'>    <span class="s">&#39;south&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>作成中のアプリをsouthに追加</h2>
+
+<p>データベースが関連しているモデルが作成されているアプリにコマンドを実行すればおk</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py schemamigration アプリ名 --init
+</span><span class='line'><span class="nv">$ </span>python manage.py syncdb --all
+</span><span class='line'><span class="nv">$ </span>python manage.py migrate アプリ名 --fake
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>syncdbしないでmigrateすると、PostgreSQLだとエラーが出たので、先にsyncdbするのが必要みたい</p>
+
+<p>とりあえずここまで。実際にモデル変更した時の作業を追記予定</p>
+
+<p>参考：<a href="http://yu-write.blogspot.jp/2014/01/django-south.html">Yura YuWrite: [django] 既存のプロジェクトにsouthを追加する方法</a>、<a href="http://stackoverflow.com/questions/22236029/trouble-getting-django-set-up-on-heroku-using-south-keep-getting-programminger">postgresql &ndash; Trouble getting Django set up on Heroku using South &ndash; keep getting ProgrammingError: relation does not exist &ndash; Stack Overflow</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1143,91 +1222,6 @@ uwsgi.iniのenvも変更しておく</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/10/10/phantomjs/">PhantomJSとSeleniumをpythonから使ってみる</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-10-10T13:33:48+09:00" pubdate data-updated="true">Oct 10<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>スクレーピングするのに便利な方法を調べてる内に、PhantomJSが良さげだなと思ったので、軽く使ってみた。参考<a href="http://blog.kzfmix.com/entry/1379417397">Python+Selenium+PhantomJSが快適すぎる</a></p>
-
-<h2>PhantomJSのインストール</h2>
-
-<p>Ubuntuを使ってるので<a href="http://phantomjs.org/build.html">PhantomJSのページ</a>を参考に</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude update
-</span><span class='line'><span class="nv">$ </span>sudo aptitude install build-essential chrpath git-core libssl-dev libfontconfig1-dev libxft-dev
-</span><span class='line'><span class="nv">$ </span>git clone git://github.com/ariya/phantomjs.git
-</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>phantomjs
-</span><span class='line'><span class="nv">$ </span>git checkout 1.9
-</span><span class='line'><span class="nv">$ </span>./build.sh
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>あとは./bin/にphantomjsが入っているので、./bin/にパスを通しておしまい</p>
-
-<h2>Seleniumをpythonから使えるようにする</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install selenium
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これだけでおk</p>
-
-<h2>SeleniumでPhantomJSのドライバを使う</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">selenium</span> <span class="nn">import</span> <span class="nn">webdriver</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">PhantomJS</span><span class="p">()</span>
-</span><span class='line'><span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;http://www.yahoo.co.jp&quot;</span><span class="p">)</span>
-</span><span class='line'><span class="k">print</span> <span class="n">driver</span><span class="o">.</span><span class="n">current_url</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな感じ。何が出来るかは<a href="http://selenium-python.readthedocs.org/en/latest/api.html">Selenium Python BindingsのWebDriver API</a>を見ると良い。</p>
-
-<p>Javascriptをちゃんと評価してくれるので、すんげーやりやすい。昔ながらのフレームや、新規ウィンドウが出るようなものも上手く再現してくれる。すげーすげー</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1253,6 +1247,10 @@ uwsgi.iniのenvも変更しておく</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/30/use-south-to-existing-project/">Southをすでにあるプロジェクトに適用する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/27/django-locale/">Djangoで国際化やってみた</a>
       </li>
     
@@ -1268,10 +1266,6 @@ uwsgi.iniのenvも変更しておく</p>
         <a href="/blog/2014/11/23/django-memo/">Django Memo</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/11/23/titanium-mobile-memo/">Titanium Mobileメモ</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -1281,12 +1275,12 @@ uwsgi.iniのenvも変更しておく</p>
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (6)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C# (4)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C++ (3)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (9)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (10)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (7)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (11)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (12)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (3)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (1)</a></li>
