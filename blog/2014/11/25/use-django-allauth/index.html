@@ -201,6 +201,45 @@ pip install django-allauth ファイルでの設定 settings.pyとurls.pyを設�
 
 <p><a href="https://github.com/pennersr/django-allauth/blob/master/allauth/account/urls.py">githubのコード</a>
 見れば大体分かる感じ</p>
+
+<h2>ユーザー登録時のメール確認後の処理でハマる</h2>
+
+<p>ユーザー登録すると通常は登録したメールアドレスにメールが届いて、そこに書いてあるURLにアクセスすると登録完了する手順が表示される。そこらへんの文章とかも上のテンプレート上書きでいけて問題ないんだけど、初期状態では登録が最後まで完了すると、そのままログインしてログイン時のリダイレクト先に移動してしまう。完了画面を表示したい場合はこれではまずい。</p>
+
+<p>ので、<a href="http://django-allauth.readthedocs.org/en/latest/advanced.html">ここらへん</a>のCustom Redirectsの項目を参考にしてアダプタを作ってみた</p>
+
+<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">ACCOUNT_ADAPTER</span> <span class="o">=</span> <span class="s">&#39;project.users.adapter.MyAccountAdapter&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>project/users/adapter.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">allauth.account.adapter</span> <span class="kn">import</span> <span class="n">DefaultAccountAdapter</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">MyAccountAdapter</span><span class="p">(</span><span class="n">DefaultAccountAdapter</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">get_email_confirmation_redirect_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">request</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">path</span> <span class="o">=</span> <span class="s">&quot;/account/complete&quot;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">path</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でもこれだけでは上手くいかなかった。普通にログイン時のリダイレクト先に移動してしまった。どうもACCOUNT_LOGIN_ON_EMAIL_CONFIRMATIONをFalseにしないとダメみたい</p>
+
+<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION</span> <span class="o">=</span> <span class="bp">False</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これでやっと/account/completeにリダイレクトしてくれた。ログインした状態ではダメみたいなので、ログインは再度やってもらわないといけない。うーん今のとこ仕方ないか・・・。</p>
 </div>
 
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-11-30T23:41:55+09:00</updated>
+  <updated>2014-12-02T12:15:23+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -208,6 +208,37 @@ url('^accounts/profile/?', include('profile.urls',namespace='profile')), #ログ
 
 <p><a href="https://github.com/pennersr/django-allauth/blob/master/allauth/account/urls.py">githubのコード</a>
 見れば大体分かる感じ</p>
+
+<h2>ユーザー登録時のメール確認後の処理でハマる</h2>
+
+<p>ユーザー登録すると通常は登録したメールアドレスにメールが届いて、そこに書いてあるURLにアクセスすると登録完了する手順が表示される。そこらへんの文章とかも上のテンプレート上書きでいけて問題ないんだけど、初期状態では登録が最後まで完了すると、そのままログインしてログイン時のリダイレクト先に移動してしまう。完了画面を表示したい場合はこれではまずい。</p>
+
+<p>ので、<a href="http://django-allauth.readthedocs.org/en/latest/advanced.html">ここらへん</a>のCustom Redirectsの項目を参考にしてアダプタを作ってみた</p>
+
+<p><code>py settings.py
+ACCOUNT_ADAPTER = 'project.users.adapter.MyAccountAdapter'
+</code></p>
+
+<p>```py project/users/adapter.py
+from django.conf import settings
+from allauth.account.adapter import DefaultAccountAdapter</p>
+
+<p>class MyAccountAdapter(DefaultAccountAdapter):</p>
+
+<pre><code>def get_email_confirmation_redirect_url(self,request):
+    path = "/account/complete"
+    return path
+</code></pre>
+
+<p>```</p>
+
+<p>でもこれだけでは上手くいかなかった。普通にログイン時のリダイレクト先に移動してしまった。どうもACCOUNT_LOGIN_ON_EMAIL_CONFIRMATIONをFalseにしないとダメみたい</p>
+
+<p><code>py settings.py
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False
+</code></p>
+
+<p>これでやっと/account/completeにリダイレクトしてくれた。ログインした状態ではダメみたいなので、ログインは再度やってもらわないといけない。うーん今のとこ仕方ないか・・・。</p>
 ]]></content>
   </entry>
   
