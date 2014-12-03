@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-12-03T21:49:41+09:00</updated>
+  <updated>2014-12-03T21:58:07+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -539,6 +539,38 @@
 <p>これを書いておけばコンソールにスタックトレースを出力してくれる。apiのコード書いてる時とかajaxで呼び出してる場合とかに便利。</p>
 
 <p>参考：<a href="http://stackoverflow.com/questions/5886275/print-a-stack-trace-to-stdout-on-errors-in-django-while-using-manage-py-runserve">python &ndash; Print a stack trace to stdout on errors in Django while using manage.py runserver &ndash; Stack Overflow</a>というかここのコード丸コピー</p>
+
+<h2>Gmail送信</h2>
+
+<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">EMAIL_USE_TLS</span><span class="o">=</span><span class="bp">True</span>
+</span><span class='line'><span class="n">EMAIL_HOST</span><span class="o">=</span><span class="s">&#39;smpt.gmail.com&#39;</span>
+</span><span class='line'><span class="n">EMAIL_HOST_USER</span><span class="o">=</span><span class="s">&#39;mymail@gmail.com&#39;</span>
+</span><span class='line'><span class="n">EMAIL_HOST_PASSWORD</span><span class="o">=</span><span class="s">&#39;mypassword&#39;</span>
+</span><span class='line'><span class="n">EMAIL_PORT</span><span class="o">=</span><span class="mi">587</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">django.core.mail</span> <span class="kn">import</span> <span class="n">send_mail</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">mail</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">send_mail</span><span class="p">(</span><span class="s">&#39;Subject&#39;</span><span class="p">,</span><span class="s">&#39;message&#39;</span><span class="p">,</span><span class="s">&#39;mymail.gmail.com&#39;</span><span class="p">,[</span><span class="s">&#39;to@mail.address&#39;</span><span class="p">],</span><span class="n">fail_silently</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんだけ</p>
+
+<p>参考：<a href="http://d.hatena.ne.jp/yuheiomori0718/20120714/1342266647">DjangoでGmailを使ってメール送信 &ndash; brainstorm</a>、</p>
 ]]></content>
   </entry>
   
