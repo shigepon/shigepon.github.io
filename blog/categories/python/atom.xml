@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-12-03T21:42:37+09:00</updated>
+  <updated>2014-12-03T21:49:41+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -354,6 +354,33 @@ else:
 <p>```</p>
 
 <p>みたいな感じで取り出せる。</p>
+
+<h2>runserver実行時にコンソールにスタックとレースを出力する</h2>
+
+<p>```py settings.py
+LOGGING={</p>
+
+<pre><code>'version':1,
+'handlers':{
+    'console':{
+        'level':'DEBUG',
+        'class':'logging.StreamHandler',
+    },
+},
+'loggers':{
+    'django.request':{
+        'handlers':['console'],
+        'propagate':True,
+        'level':'DEBUG',
+    }
+},
+</code></pre>
+
+<p>}
+```
+これを書いておけばコンソールにスタックトレースを出力してくれる。apiのコード書いてる時とかajaxで呼び出してる場合とかに便利。</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/5886275/print-a-stack-trace-to-stdout-on-errors-in-django-while-using-manage-py-runserve">python &ndash; Print a stack trace to stdout on errors in Django while using manage.py runserver &ndash; Stack Overflow</a>というかここのコード丸コピー</p>
 ]]></content>
   </entry>
   

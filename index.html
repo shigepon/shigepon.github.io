@@ -701,6 +701,47 @@ INSTALLED_APPS &hellip;">
 
 
 <p>みたいな感じで取り出せる。</p>
+
+<h2>runserver実行時にコンソールにスタックとレースを出力する</h2>
+
+<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">LOGGING</span><span class="o">=</span><span class="p">{</span>
+</span><span class='line'>    <span class="s">&#39;version&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
+</span><span class='line'>    <span class="s">&#39;handlers&#39;</span><span class="p">:{</span>
+</span><span class='line'>        <span class="s">&#39;console&#39;</span><span class="p">:{</span>
+</span><span class='line'>            <span class="s">&#39;level&#39;</span><span class="p">:</span><span class="s">&#39;DEBUG&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;class&#39;</span><span class="p">:</span><span class="s">&#39;logging.StreamHandler&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="p">},</span>
+</span><span class='line'>    <span class="p">},</span>
+</span><span class='line'>    <span class="s">&#39;loggers&#39;</span><span class="p">:{</span>
+</span><span class='line'>        <span class="s">&#39;django.request&#39;</span><span class="p">:{</span>
+</span><span class='line'>            <span class="s">&#39;handlers&#39;</span><span class="p">:[</span><span class="s">&#39;console&#39;</span><span class="p">],</span>
+</span><span class='line'>            <span class="s">&#39;propagate&#39;</span><span class="p">:</span><span class="bp">True</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;level&#39;</span><span class="p">:</span><span class="s">&#39;DEBUG&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">},</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これを書いておけばコンソールにスタックトレースを出力してくれる。apiのコード書いてる時とかajaxで呼び出してる場合とかに便利。</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/5886275/print-a-stack-trace-to-stdout-on-errors-in-django-while-using-manage-py-runserve">python &ndash; Print a stack trace to stdout on errors in Django while using manage.py runserver &ndash; Stack Overflow</a>というかここのコード丸コピー</p>
 </div>
   
   
