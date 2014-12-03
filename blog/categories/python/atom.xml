@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-12-03T21:40:56+09:00</updated>
+  <updated>2014-12-03T21:42:37+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -320,7 +320,7 @@ print h.query
 
 <h2>ModelFormでcleanを使ってデータの検証する時に、updateしようとしてるかcreateしようとしてるか判断する</h2>
 
-<p>createの時だけチェックしたかったので、色々調べてみたらclean(self)内で、self.instanceでチェックすると良いみたい。例えばこんな感じ</p>
+<p>createの時だけチェックしたかったので、色々調べてみたらclean(self)内で、self.instanceでチェックすると良いみたい。例えばプライマリーキーでidがある場合こんな感じ</p>
 
 <p>```py models.py
 class Hoge(forms.ModelForm):</p>
@@ -337,7 +337,7 @@ class Hoge(forms.ModelForm):</p>
 
 <p>```</p>
 
-<p>例外のメッセージは</p>
+<p>instanceの型チェックする方が正攻法かも。例外のメッセージは</p>
 
 <p>```py views.py
 def test(request):</p>

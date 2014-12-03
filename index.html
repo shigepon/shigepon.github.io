@@ -656,7 +656,7 @@ INSTALLED_APPS &hellip;">
 
 <h2>ModelFormでcleanを使ってデータの検証する時に、updateしようとしてるかcreateしようとしてるか判断する</h2>
 
-<p>createの時だけチェックしたかったので、色々調べてみたらclean(self)内で、self.instanceでチェックすると良いみたい。例えばこんな感じ</p>
+<p>createの時だけチェックしたかったので、色々調べてみたらclean(self)内で、self.instanceでチェックすると良いみたい。例えばプライマリーキーでidがある場合こんな感じ</p>
 
 <figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -679,7 +679,7 @@ INSTALLED_APPS &hellip;">
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>例外のメッセージは</p>
+<p>instanceの型チェックする方が正攻法かも。例外のメッセージは</p>
 
 <figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
