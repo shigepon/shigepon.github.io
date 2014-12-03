@@ -150,7 +150,20 @@ INSTALLED_APPS &hellip;">
 
 <p>syncdbしないでmigrateすると、PostgreSQLだとエラーが出たので、先にsyncdbするのが必要みたい</p>
 
-<p>とりあえずここまで。実際にモデル変更した時の作業を追記予定</p>
+<p>実際にモデル変更した時の作業を追記</p>
+
+<h2>モデル変更</h2>
+
+<p>モデルを変更したら次のコマンドでデータベースに反映する</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py schemamigration アプリ名 --auto
+</span><span class='line'><span class="nv">$ </span>python manage.py migrate アプリ名
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この時にデータベース内の値が変更した制約等に引っ掛かる場合は途中で止まったりするので、制約に合うようにデータを変更するとか修正する。</p>
 
 <p>参考：<a href="http://yu-write.blogspot.jp/2014/01/django-south.html">Yura YuWrite: [django] 既存のプロジェクトにsouthを追加する方法</a>、<a href="http://stackoverflow.com/questions/22236029/trouble-getting-django-set-up-on-heroku-using-south-keep-getting-programminger">postgresql &ndash; Trouble getting Django set up on Heroku using South &ndash; keep getting ProgrammingError: relation does not exist &ndash; Stack Overflow</a></p>
 </div>
