@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Titanium | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/titanium/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-12-02T12:15:23+09:00</updated>
+  <updated>2014-12-03T21:40:56+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,30 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Titanium Mobileメモ]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/11/23/titanium-mobile-memo/"/>
+    <updated>2014-11-23T09:48:44+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/11/23/titanium-mobile-memo</id>
+    <content type="html"><![CDATA[<p>Titanium Mobileに関するメモ</p>
+
+<h2>アプリ固有の設定を登録する</h2>
+
+<p>アプリを終了して、再起動させた時も保存される設定をしたい時はTitanium.App.Propertiesを使う</p>
+
+<p><code>js
+Ti.App.Properties.setString("hoge","fuga");//設定
+hoge = Ti.App.Properties.getString("hoge");//取得
+</code></p>
+
+<p>stringを例にしてるが、ListとかObjectとかBoolとか色々入れられる。</p>
+
+<h2>Titanium MobileのUIで本家以外に参考にしてるサイト</h2>
+
+<p><a href="https://code.google.com/p/titanium-mobile-doc-ja/w/list">Wiki Pages &ndash; titanium-mobile-doc-ja &ndash; Appcelerator Titanium Mobileに関するドキュメントを日本語でまとめていくプロジェクト &ndash; Google Project Hosting</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Titanium MobileとDjangoでAjax認証を行う]]></title>

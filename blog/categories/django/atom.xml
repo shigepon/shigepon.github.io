@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Django | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/django/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-12-02T12:15:23+09:00</updated>
+  <updated>2014-12-03T21:40:56+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -317,6 +317,43 @@ print h.query
 <p>でおk。でもクエリが例外出す時には出せないような・・・</p>
 
 <p>参考：<a href="http://programmer-jobs.blogspot.jp/2013/01/djangosql.html">Djangoで、デバック用のSQLクエリの表示 一言多いプログラマーの独り言</a></p>
+
+<h2>ModelFormでcleanを使ってデータの検証する時に、updateしようとしてるかcreateしようとしてるか判断する</h2>
+
+<p>createの時だけチェックしたかったので、色々調べてみたらclean(self)内で、self.instanceでチェックすると良いみたい。例えばこんな感じ</p>
+
+<p>```py models.py
+class Hoge(forms.ModelForm):</p>
+
+<pre><code>def clean(self):
+    cleaned_data = self.cleaned_data
+    if self.instance.id is None:
+        #create用の処理
+        raise ValidationError('例外出すのはこんな感じ')
+    else:
+        #update用の処理
+    return cleaned_data
+</code></pre>
+
+<p>```</p>
+
+<p>例外のメッセージは</p>
+
+<p>```py views.py
+def test(request):</p>
+
+<pre><code>form = Hoge(request.POST)
+if form.is_valid():
+    #例外が無かった場合
+else:
+    for k,v in form.errors.item():
+        #kが例外のフィールド。cleanの場合は__all__
+        #vが例外のメッセージ
+</code></pre>
+
+<p>```</p>
+
+<p>みたいな感じで取り出せる。</p>
 ]]></content>
   </entry>
   

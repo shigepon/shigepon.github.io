@@ -196,6 +196,54 @@ def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る
 <p>でおk。でもクエリが例外出す時には出せないような・・・</p>
 
 <p>参考：<a href="http://programmer-jobs.blogspot.jp/2013/01/djangosql.html">Djangoで、デバック用のSQLクエリの表示 一言多いプログラマーの独り言</a></p>
+
+<h2>ModelFormでcleanを使ってデータの検証する時に、updateしようとしてるかcreateしようとしてるか判断する</h2>
+
+<p>createの時だけチェックしたかったので、色々調べてみたらclean(self)内で、self.instanceでチェックすると良いみたい。例えばこんな感じ</p>
+
+<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">class</span> <span class="nc">Hoge</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">clean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">cleaned_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span>
+</span><span class='line'>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">id</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+</span><span class='line'>            <span class="c">#create用の処理</span>
+</span><span class='line'>            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;例外出すのはこんな感じ&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>            <span class="c">#update用の処理</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">cleaned_data</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>例外のメッセージは</p>
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">form</span> <span class="o">=</span> <span class="n">Hoge</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+</span><span class='line'>        <span class="c">#例外が無かった場合</span>
+</span><span class='line'>    <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">item</span><span class="p">():</span>
+</span><span class='line'>            <span class="c">#kが例外のフィールド。cleanの場合は__all__</span>
+</span><span class='line'>            <span class="c">#vが例外のメッセージ</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいな感じで取り出せる。</p>
 </div>
 
 
@@ -316,13 +364,13 @@ def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る
 <li class='category'><a href='/blog/categories/python/'>Python (12)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (3)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
-<li class='category'><a href='/blog/categories/titanium/'>Titanium (1)</a></li>
+<li class='category'><a href='/blog/categories/titanium/'>Titanium (2)</a></li>
 <li class='category'><a href='/blog/categories/web/'>Web (1)</a></li>
 <li class='category'><a href='/blog/categories/event/'>event (3)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/linux/'>linux (5)</a></li>
 <li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
-<li class='category'><a href='/blog/categories/memo/'>memo (9)</a></li>
+<li class='category'><a href='/blog/categories/memo/'>memo (10)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (1)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (1)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>

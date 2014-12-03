@@ -4,7 +4,7 @@
   <title><![CDATA[Category: memo | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/memo/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-12-02T12:15:23+09:00</updated>
+  <updated>2014-12-03T21:40:56+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,30 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Titanium Mobileメモ]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/11/23/titanium-mobile-memo/"/>
+    <updated>2014-11-23T09:48:44+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/11/23/titanium-mobile-memo</id>
+    <content type="html"><![CDATA[<p>Titanium Mobileに関するメモ</p>
+
+<h2>アプリ固有の設定を登録する</h2>
+
+<p>アプリを終了して、再起動させた時も保存される設定をしたい時はTitanium.App.Propertiesを使う</p>
+
+<p><code>js
+Ti.App.Properties.setString("hoge","fuga");//設定
+hoge = Ti.App.Properties.getString("hoge");//取得
+</code></p>
+
+<p>stringを例にしてるが、ListとかObjectとかBoolとか色々入れられる。</p>
+
+<h2>Titanium MobileのUIで本家以外に参考にしてるサイト</h2>
+
+<p><a href="https://code.google.com/p/titanium-mobile-doc-ja/w/list">Wiki Pages &ndash; titanium-mobile-doc-ja &ndash; Appcelerator Titanium Mobileに関するドキュメントを日本語でまとめていくプロジェクト &ndash; Google Project Hosting</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[git memo]]></title>
@@ -233,51 +257,6 @@ $ ssh username@hostname options... "command"
 <p><code>sh
 $ ssh username@hostname options... "command" &lt; localfile
 </code></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[vim memo]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/03/01/vim-memo/"/>
-    <updated>2014-03-01T14:14:10+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/03/01/vim-memo</id>
-    <content type="html"><![CDATA[<h2>vimでsnippet</h2>
-
-<p>色々方法があるみたいだけど、neocomplecacheを入れているので、それと相性が良さそうな（作者が同じ）プラグインを入れた</p>
-
-<p>```
-NeoBundle &lsquo;Shougo/neosnippet&rsquo;
-NeoBundle &lsquo;Shougo/neosnippet-snippets&rsquo;</p>
-
-<p>&ldquo; Plugin key-mappings.
-imap &lt;C-k>     <Plug>(neosnippet_expand_or_jump)
-smap &lt;C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap &lt;C-k>     <Plug>(neosnippet_expand_target)
-&rdquo; &ldquo; SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ &rdquo;&lt;Plug>(neosnippet_expand_or_jump)&ldquo;
-\: pumvisible() ? &rdquo;&lt;C-n>&ldquo; : &rdquo;&lt;TAB>&ldquo;
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ &rdquo;&lt;Plug>(neosnippet_expand_or_jump)&ldquo;
-\: &rdquo;&lt;TAB>&ldquo;
-&rdquo;
-&ldquo; &rdquo; For snippet_complete marker.
-if has(&lsquo;conceal&rsquo;)
-  set conceallevel=2 concealcursor=i
-endif
-```</p>
-
-<p>を.vimrcに追記して、vimを再起動後、</p>
-
-<p><code>
-:NeoBundleInstall
-</code></p>
-
-<p>でインストール完了。もう一度vimを再起動して、phpファイルを空けて
-おもむろにインサートモードで「for」とか打ったらちゃんとsnippetが表示された。&lt;C-n>などで選択してからtab押したらちゃんと入力された。
-いいね〜！！</p>
-
-<p>現在、デフォルトのsnippetとしてneosnippet-snippetsをインストールしないとデフォルトのsnippetを出してくれないことに注意。</p>
 ]]></content>
   </entry>
   
