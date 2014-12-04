@@ -317,6 +317,17 @@ def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る
 <p>こんだけ</p>
 
 <p>参考：<a href="http://d.hatena.ne.jp/yuheiomori0718/20120714/1342266647">DjangoでGmailを使ってメール送信 &ndash; brainstorm</a>、</p>
+
+<h2>MultiValueDictKeyError</h2>
+
+<p>モデルをgetする時にキーに何も値が指定されてなかったりすると起こる。例えば</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">instance</span> <span class="o">=</span> <span class="n">SampleModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でkeyに何も設定されてないと起こるみたい。出た時に何回かイチイチぐぐったのでメモ</p>
 </div>
 
 
