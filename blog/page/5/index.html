@@ -9,8 +9,12 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="参考にした記事URL一覧 Ruby on Rails 4.0正式リリースとBootstrapの正しい設定法 | ユービックログ研究所
-#328 Twitter Bootstrap Basics &ndash; RailsCasts &hellip;">
+  <meta name="description" content="rhaco3を使ってる人なんて世界で何人居るのかなと思いつつ、あまりに情報が少ないので、メモ書きしていく。
+大きめネタは別記事にまとめるが小さいネタはここに追記する。 Daoで作ったSQLを確認する方法 Daoを継承したモデルとして、Hogeモデルがあるとして 1
+2
+3
+4
+\Hoge:: &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +84,116 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/15/rhaco3-memo/">Rhaco3 Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-15T13:28:55+09:00" pubdate data-updated="true">Mar 15<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>rhaco3を使ってる人なんて世界で何人居るのかなと思いつつ、あまりに情報が少ないので、メモ書きしていく。
+大きめネタは別記事にまとめるが小さいネタはここに追記する。</p>
+
+<h3>Daoで作ったSQLを確認する方法</h3>
+
+<p>Daoを継承したモデルとして、Hogeモデルがあるとして</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nx">\Hoge</span><span class="o">::</span><span class="na">start_record</span><span class="p">();</span>
+</span><span class='line'><span class="nx">\Hoge</span><span class="o">::</span><span class="na">find_get</span><span class="p">(</span><span class="nx">\org\rhaco\store\db\Q</span><span class="o">::</span><span class="na">eq</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">));</span><span class="c1">//\Hogeモデルからid=1のデータを1件取得する命令</span>
+</span><span class='line'><span class="nv">$queries</span> <span class="o">=</span> <span class="nx">\Hoge</span><span class="o">::</span><span class="na">stop_record</span><span class="p">();</span>
+</span><span class='line'><span class="nb">var_dump</span><span class="p">(</span><span class="nv">$queries</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じで使う。出力は</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>array(1) {
+</span><span class='line'>  [0]=&gt;
+</span><span class='line'>  array(2) {
+</span><span class='line'>    [0]=&gt;
+</span><span class='line'>    string(291) &quot;select t4.&quot;id&quot; as c5,t4.&quot;name&quot; as c10 from hoge t4 where  ( (t4.&quot;id&quot; = ?) )   offset 0 limit 1 &quot;
+</span><span class='line'>    [1]=&gt;
+</span><span class='line'>    array(1) {
+</span><span class='line'>      [0]=&gt;
+</span><span class='line'>      string(1) &quot;1&quot;
+</span><span class='line'>    }
+</span><span class='line'>  }
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいに出る</p>
+
+<h3>あるクラス用に設定したConfを別クラスから参照したい</h3>
+
+<p>\org\rhaco\Confはクラス用に設定値を決めるのに良く使う。
+大体commons/hoge.phpみたいにrhaco3で設定値を書くファイルに書くことが多い。</p>
+
+<p>例としてFlowクラスでルートURLを設定するには</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nx">\org\rhaco\Conf</span><span class="o">::</span><span class="na">set</span><span class="p">(</span><span class="s2">&quot;org.rhaco.Flow&quot;</span><span class="p">,</span><span class="s2">&quot;app_url&quot;</span><span class="p">,</span><span class="s2">&quot;localhost&quot;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じでcommons/hoge.phpに書いたりする。Flowクラス内では</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nv">$app_url</span> <span class="o">=</span> <span class="nx">\org\rhaco\Conf</span><span class="o">::</span><span class="na">get</span><span class="p">(</span><span class="s2">&quot;app_url&quot;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で設定した値を読み込める。
+他のクラスで読み込みたい場合にどうするか良く分からなかったがソース読んだら分かったのでメモしておく</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nv">$app_url</span> <span class="o">=</span> <span class="nx">\org\rhaco\Conf</span><span class="o">::</span><span class="na">get</span><span class="p">(</span><span class="s2">&quot;org.rhaco.Flow@app_url&quot;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これでおk。@で区切ってクラス名と取得したい値のキーを書くと値を取って来れる。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1372,76 +1486,6 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/11/svn-memo/">Svn Memo</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-11T11:53:32+09:00" pubdate data-updated="true">Feb 11<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>svn使っててはまることが結構あるのでメモ</p>
-
-<h2>ubuntuでsvnコマンドすると認証失敗する場合</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>Password <span class="k">for</span> ‘<span class="o">(</span>null<span class="o">)</span>’ GNOME keyring:
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>というメッセージが表示される場合、gnome-keyringというやつが邪魔をしているらしい。ログイン情報を削除すれば解決。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>rm ~/.gnome2/keyrings/login.keyring
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でいける。</p>
-
-<h2>コミットするファイルを、ファイルで指定する</h2>
-
-<p>fuga.htmlとhage.htmlを変更しててfuga.htmlだけコミットしたい場合</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>fuga.html
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>というファイル(hoge.txt)を作っておいて、</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>svn commit -m <span class="s2">&quot;コメント&quot;</span> --targets hoge.txt
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でおk</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -1469,6 +1513,10 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/12/08/add-uuid-to-titanium-mobile-project/">Titanium Mobileのプロジェクトをアドホック配信する時にテストしてもらうユーザーを追加する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/30/use-south-to-existing-project/">Southをすでにあるプロジェクトに適用する</a>
       </li>
     
@@ -1482,10 +1530,6 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
     
       <li class="post">
         <a href="/blog/2014/11/25/use-django-allauth/">Django-allauthを使ってみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/23/django-memo/">Django Memo</a>
       </li>
     
   </ul>
@@ -1505,7 +1549,7 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
 <li class='category'><a href='/blog/categories/python/'>Python (12)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (3)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
-<li class='category'><a href='/blog/categories/titanium/'>Titanium (2)</a></li>
+<li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
 <li class='category'><a href='/blog/categories/web/'>Web (1)</a></li>
 <li class='category'><a href='/blog/categories/event/'>event (3)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>

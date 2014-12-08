@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Titanium | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/titanium/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-12-04T09:48:28+09:00</updated>
+  <updated>2014-12-08T10:45:44+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,46 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Titanium Mobileのプロジェクトをアドホック配信する時にテストしてもらうユーザーを追加する]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/12/08/add-uuid-to-titanium-mobile-project/"/>
+    <updated>2014-12-08T01:42:49+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/12/08/add-uuid-to-titanium-mobile-project</id>
+    <content type="html"><![CDATA[<p>いやー色々ぐぐっても大変だったし、これからも結構な頻度でやりそうなのでメモ。</p>
+
+<p>もともと作ったプロビジョニングファイルにUUIDを追加するには、</p>
+
+<h2>ぐぐってしっかり情報があった箇所（プロビジョングファイルにUUIDを追加する）</h2>
+
+<ul>
+<li><a href="https://developer.apple.com/account/ios/profile/profileList.action">Apple Developer Center</a>で左メニューのDevices->Allをクリック</li>
+<li>右上の＋ボタンからデバイスを追加。名前とUUIDを記入してContinueでおk</li>
+<li>左メニューのProvisioning Profiles->AllからUUIDを追加したいプロビジョニングファイルを探してクリック->Editをクリック</li>
+<li>Devicesの一覧で、追加したDevice名をチェックしてGenerateボタンを押す</li>
+</ul>
+
+
+<h2>ぐぐると古い情報が結構あって混乱した箇所（Xcode使ってローカルのプロビジョニングファイルを最新にする）</h2>
+
+<ul>
+<li>Xcodeを起動して、メニューのXcode->Preferencesで開いた画面でAccountsのボタン（右からに番目）をクリック->View Detailsをクリック</li>
+<li>左下のリロードボタンを押す</li>
+</ul>
+
+
+<h2>そもそもあまりちゃんと情報が無かった箇所（Titanium Mobileで新しいプロビジョングファイルを使ってipaファイルを作成する）</h2>
+
+<ul>
+<li>Titanium Mobileを起動->App Explorerを表示->右上の箱型アイコンをクリック->Distribute &ndash; Ad Hoc/Enterpriseを選択</li>
+<li>Distributeの項目でSelect Provisioning Profileの項目で、作成したprofileを選択->残りの必要事項を入力してPublish</li>
+<li>DistributeのSpecify locationで指定したフォルダ内にipaファイルが出来ているのでそれを配布すればおk</li>
+</ul>
+
+
+<p>あまり良く分かってないけど、Titanium Mobileで配布する時のプロビジョングファイルと、デバッグ時のRun Configurationで指定するプロビジョングファイルは選択肢として違うものが出てくるので、結構混乱した。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Titanium Mobileメモ]]></title>
@@ -34,6 +74,23 @@ hoge = Ti.App.Properties.getString("hoge");//取得
 <h2>Titanium MobileのUIで本家以外に参考にしてるサイト</h2>
 
 <p><a href="https://code.google.com/p/titanium-mobile-doc-ja/w/list">Wiki Pages &ndash; titanium-mobile-doc-ja &ndash; Appcelerator Titanium Mobileに関するドキュメントを日本語でまとめていくプロジェクト &ndash; Google Project Hosting</a></p>
+
+<h2>Android実機で文字が小さくなる</h2>
+
+<p>```xml tiapp.xml
+<android xmlns:android="http://schemas.android.com/apk/res/android"></p>
+
+<pre><code>&lt;manifest&gt;
+     &lt;supports-screens android:anyDensity="false"/&gt;
+&lt;/manifest&gt;
+</code></pre>
+
+<p></android>
+```</p>
+
+<p>もしくは文字サイズをdpで指定</p>
+
+<p>参考：<a href="http://www.fujimotohajime.net/pukiwiki/index.php?TitaniumMobile%2FAndroid%E3%81%A7%E5%AE%9F%E6%A9%9F%E3%83%86%E3%82%B9%E3%83%88%E3%81%99%E3%82%8B%E3%81%A8%E6%96%87%E5%AD%97%E3%81%8C%E5%B0%8F%E3%81%95%E3%81%84">TitaniumMobile/Androidで実機テストすると文字が小さい &ndash; Wiki</a></p>
 ]]></content>
   </entry>
   

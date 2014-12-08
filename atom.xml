@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-12-04T09:48:28+09:00</updated>
+  <updated>2014-12-08T10:45:44+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,46 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Titanium Mobileのプロジェクトをアドホック配信する時にテストしてもらうユーザーを追加する]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/12/08/add-uuid-to-titanium-mobile-project/"/>
+    <updated>2014-12-08T01:42:49+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/12/08/add-uuid-to-titanium-mobile-project</id>
+    <content type="html"><![CDATA[<p>いやー色々ぐぐっても大変だったし、これからも結構な頻度でやりそうなのでメモ。</p>
+
+<p>もともと作ったプロビジョニングファイルにUUIDを追加するには、</p>
+
+<h2>ぐぐってしっかり情報があった箇所（プロビジョングファイルにUUIDを追加する）</h2>
+
+<ul>
+<li><a href="https://developer.apple.com/account/ios/profile/profileList.action">Apple Developer Center</a>で左メニューのDevices->Allをクリック</li>
+<li>右上の＋ボタンからデバイスを追加。名前とUUIDを記入してContinueでおk</li>
+<li>左メニューのProvisioning Profiles->AllからUUIDを追加したいプロビジョニングファイルを探してクリック->Editをクリック</li>
+<li>Devicesの一覧で、追加したDevice名をチェックしてGenerateボタンを押す</li>
+</ul>
+
+
+<h2>ぐぐると古い情報が結構あって混乱した箇所（Xcode使ってローカルのプロビジョニングファイルを最新にする）</h2>
+
+<ul>
+<li>Xcodeを起動して、メニューのXcode->Preferencesで開いた画面でAccountsのボタン（右からに番目）をクリック->View Detailsをクリック</li>
+<li>左下のリロードボタンを押す</li>
+</ul>
+
+
+<h2>そもそもあまりちゃんと情報が無かった箇所（Titanium Mobileで新しいプロビジョングファイルを使ってipaファイルを作成する）</h2>
+
+<ul>
+<li>Titanium Mobileを起動->App Explorerを表示->右上の箱型アイコンをクリック->Distribute &ndash; Ad Hoc/Enterpriseを選択</li>
+<li>Distributeの項目でSelect Provisioning Profileの項目で、作成したprofileを選択->残りの必要事項を入力してPublish</li>
+<li>DistributeのSpecify locationで指定したフォルダ内にipaファイルが出来ているのでそれを配布すればおk</li>
+</ul>
+
+
+<p>あまり良く分かってないけど、Titanium Mobileで配布する時のプロビジョングファイルと、デバッグ時のRun Configurationで指定するプロビジョングファイルは選択肢として違うものが出てくるので、結構混乱した。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Southをすでにあるプロジェクトに適用する]]></title>
@@ -621,6 +661,25 @@
 <h2>Titanium MobileのUIで本家以外に参考にしてるサイト</h2>
 
 <p><a href="https://code.google.com/p/titanium-mobile-doc-ja/w/list">Wiki Pages &ndash; titanium-mobile-doc-ja &ndash; Appcelerator Titanium Mobileに関するドキュメントを日本語でまとめていくプロジェクト &ndash; Google Project Hosting</a></p>
+
+<h2>Android実機で文字が小さくなる</h2>
+
+<figure class='code'><figcaption><span>tiapp.xml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;android</span> <span class="na">xmlns:android=</span><span class="s">&quot;http://schemas.android.com/apk/res/android&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;manifest&gt;</span>
+</span><span class='line'>         <span class="nt">&lt;supports-screens</span> <span class="na">android:anyDensity=</span><span class="s">&quot;false&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/manifest&gt;</span>
+</span><span class='line'><span class="nt">&lt;/android&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>もしくは文字サイズをdpで指定</p>
+
+<p>参考：<a href="http://www.fujimotohajime.net/pukiwiki/index.php?TitaniumMobile%2FAndroid%E3%81%A7%E5%AE%9F%E6%A9%9F%E3%83%86%E3%82%B9%E3%83%88%E3%81%99%E3%82%8B%E3%81%A8%E6%96%87%E5%AD%97%E3%81%8C%E5%B0%8F%E3%81%95%E3%81%84">TitaniumMobile/Androidで実機テストすると文字が小さい &ndash; Wiki</a></p>
 ]]></content>
   </entry>
   
@@ -1638,106 +1697,6 @@ AUTH_USER_MODEL
 <li>&mdash;list-tasks: playbookで行う内容をリストアップ</li>
 </ul>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Python memo]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/06/30/python-memo/"/>
-    <updated>2014-06-30T20:38:44+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/06/30/python-memo</id>
-    <content type="html"><![CDATA[<p>Djangoやり始めたので、その過程で記録しておきたいことをメモ。</p>
-
-<h2>pip freezeでWarning: cannot find svn location for distribute==0.6.24dev-r0</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo pip install --upgrade distribute
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でおk</p>
-
-<h2>for文でループカウント取得</h2>
-
-<p>参考<a href="http://fujishinko.exblog.jp/7669024">Python 配列をfor文でまわしているときのループカウント取得 : fujishinko 雑記帳</a></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">,</span><span class="s">&#39;c&#39;</span><span class="p">]):</span>
-</span><span class='line'>  <span class="k">print</span> <span class="n">i</span><span class="p">,</span><span class="n">item</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>日本語のコマンドライン引数取得</h2>
-
-<p>参考<a href="http://www.yukun.info/blog/2008/07/python-command-line-arguments.html">Python: コマンドライン引数の取得 – sys.argv変数</a></p>
-
-<figure class='code'><figcaption><span>:hoge.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="c"># -\*- encoding: utf-8 -\*-</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">sys</span>
-</span><span class='line'><span class="n">argv</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span>
-</span><span class='line'><span class="k">print</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python hoge.py あいうえお
-</span><span class='line'>あいうえお
-</span><span class='line'><span class="err">$</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>コマンド実行して実行結果を取得</h2>
-
-<p>参考<a href="http://qiita.com/mokemokechicken/items/a84b0aa96b94d1931f08">Python の subprocess で出力を受け取るときは communicate() を使おう &ndash; Qiita</a>
-subprocessを使う。何か昔は別の手法だったらしい。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">subprocess</span>
-</span><span class='line'><span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="s">&quot;echo &#39;hoge&#39;&quot;</span><span class="p">,</span><span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span><span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
-</span><span class='line'><span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-</span><span class='line'><span class="n">stdout_data</span><span class="p">,</span><span class="n">stderr_data</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-</span><span class='line'><span class="k">print</span> <span class="n">stdout_data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>親クラスのメソッド呼び出し</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">class</span> <span class="nc">Hoge</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">aaa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">param</span><span class="p">):</span>
-</span><span class='line'>        <span class="k">print</span> <span class="n">param</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">Fuga</span><span class="p">(</span><span class="n">Hoge</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">bbb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">param</span><span class="p">):</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">hage</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Fuga</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">aaa</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">f</span> <span class="o">=</span> <span class="n">Fuga</span><span class="p">()</span>
-</span><span class='line'><span class="n">f</span><span class="o">.</span><span class="n">bbb</span><span class="p">(</span><span class="s">&#39;test&#39;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな感じ。お作法を忘れがち。</p>
 ]]></content>
   </entry>
   

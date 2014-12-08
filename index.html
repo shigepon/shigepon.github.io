@@ -9,12 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Southってのを使うとモデルを変更した時に、サクッとDB(PostgreSQL)に反映出来るらしんだけど、今すでに作成中のプロジェクトに反映させたかったので、メモ インストール 1
-$ pip install south 設定 settings.py1
-2
-3
-4
-INSTALLED_APPS &hellip;">
+  <meta name="description" content="いやー色々ぐぐっても大変だったし、これからも結構な頻度でやりそうなのでメモ。 もともと作ったプロビジョニングファイルにUUIDを追加するには、 ぐぐってしっかり情報があった箇所（プロビジョングファイルにUUIDを追加する） Apple Developer Centerで左メニューのDevices &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,6 +79,73 @@ INSTALLED_APPS &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/12/08/add-uuid-to-titanium-mobile-project/">Titanium Mobileのプロジェクトをアドホック配信する時にテストしてもらうユーザーを追加する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-12-08T01:42:49+09:00" pubdate data-updated="true">Dec 8<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>いやー色々ぐぐっても大変だったし、これからも結構な頻度でやりそうなのでメモ。</p>
+
+<p>もともと作ったプロビジョニングファイルにUUIDを追加するには、</p>
+
+<h2>ぐぐってしっかり情報があった箇所（プロビジョングファイルにUUIDを追加する）</h2>
+
+<ul>
+<li><a href="https://developer.apple.com/account/ios/profile/profileList.action">Apple Developer Center</a>で左メニューのDevices->Allをクリック</li>
+<li>右上の＋ボタンからデバイスを追加。名前とUUIDを記入してContinueでおk</li>
+<li>左メニューのProvisioning Profiles->AllからUUIDを追加したいプロビジョニングファイルを探してクリック->Editをクリック</li>
+<li>Devicesの一覧で、追加したDevice名をチェックしてGenerateボタンを押す</li>
+</ul>
+
+
+<h2>ぐぐると古い情報が結構あって混乱した箇所（Xcode使ってローカルのプロビジョニングファイルを最新にする）</h2>
+
+<ul>
+<li>Xcodeを起動して、メニューのXcode->Preferencesで開いた画面でAccountsのボタン（右からに番目）をクリック->View Detailsをクリック</li>
+<li>左下のリロードボタンを押す</li>
+</ul>
+
+
+<h2>そもそもあまりちゃんと情報が無かった箇所（Titanium Mobileで新しいプロビジョングファイルを使ってipaファイルを作成する）</h2>
+
+<ul>
+<li>Titanium Mobileを起動->App Explorerを表示->右上の箱型アイコンをクリック->Distribute &ndash; Ad Hoc/Enterpriseを選択</li>
+<li>Distributeの項目でSelect Provisioning Profileの項目で、作成したprofileを選択->残りの必要事項を入力してPublish</li>
+<li>DistributeのSpecify locationで指定したフォルダ内にipaファイルが出来ているのでそれを配布すればおk</li>
+</ul>
+
+
+<p>あまり良く分かってないけど、Titanium Mobileで配布する時のプロビジョングファイルと、デバッグ時のRun Configurationで指定するプロビジョングファイルは選択肢として違うものが出てくるので、結構混乱した。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -851,6 +913,25 @@ INSTALLED_APPS &hellip;">
 <h2>Titanium MobileのUIで本家以外に参考にしてるサイト</h2>
 
 <p><a href="https://code.google.com/p/titanium-mobile-doc-ja/w/list">Wiki Pages &ndash; titanium-mobile-doc-ja &ndash; Appcelerator Titanium Mobileに関するドキュメントを日本語でまとめていくプロジェクト &ndash; Google Project Hosting</a></p>
+
+<h2>Android実機で文字が小さくなる</h2>
+
+<figure class='code'><figcaption><span>tiapp.xml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;android</span> <span class="na">xmlns:android=</span><span class="s">&quot;http://schemas.android.com/apk/res/android&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;manifest&gt;</span>
+</span><span class='line'>         <span class="nt">&lt;supports-screens</span> <span class="na">android:anyDensity=</span><span class="s">&quot;false&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/manifest&gt;</span>
+</span><span class='line'><span class="nt">&lt;/android&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>もしくは文字サイズをdpで指定</p>
+
+<p>参考：<a href="http://www.fujimotohajime.net/pukiwiki/index.php?TitaniumMobile%2FAndroid%E3%81%A7%E5%AE%9F%E6%A9%9F%E3%83%86%E3%82%B9%E3%83%88%E3%81%99%E3%82%8B%E3%81%A8%E6%96%87%E5%AD%97%E3%81%8C%E5%B0%8F%E3%81%95%E3%81%84">TitaniumMobile/Androidで実機テストすると文字が小さい &ndash; Wiki</a></p>
 </div>
   
   
@@ -1338,74 +1419,6 @@ uwsgi.iniのenvも変更しておく</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/10/28/kobe-dot-r-no-12/">Kobe.R #12に参加しました</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-10-28T08:13:51+09:00" pubdate data-updated="true">Oct 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>勉強会の話なので丁寧語で。10/26に<a href="http://kobexr.doorkeeper.jp/events/16101">Kobe.R #12</a>があったので参加してきました。神戸で定期的に開催されているRの勉強会です。今回はたまたま大阪で開かれました。前回と同様誰がされたか名前を記憶していなかったりするので、とりあえず内容だけ紹介します。</p>
-
-<h2>回帰分析の基礎</h2>
-
-<p>@florets1さん</p>
-
-<p>Rのコマンドを叩いて結果を確認しながら回帰分析の基礎を学べる発表でした。回帰分析はある程度知っていても、Rで実際にやるとこんな感じというのが分かって面白かったです。あと、基礎の部分も何となくで素通りしていた部分を改めて説明してもらえたりするので、とても為になる発表でした。</p>
-
-<p>Rは結果をプロットなどで確認しやすかったり、要約を出してくれたりするのがとても便利です。評価はRで行って、定期的な処理になったらPythonで実装するというやりかたもアリかなと妄想しました。</p>
-
-<h2>クラスタリングについて</h2>
-
-<p>Twitter ID @Wakamatzさん</p>
-
-<p>色んなデータをどうやってグループ分け（クラスタリング）するかという手法についての発表でした。基本は何グループに分けるかを指定して、その数に収束するまでクラスタリングするみたいですが、グループ数を決められない場合には自動的に決定する手法もあるそうです。が、なかなか難しい手法みたいです。</p>
-
-<h2>Rのこれから</h2>
-
-<p>不明(別のR勉強会を主催されていた方)</p>
-
-<p>スマホでもサーバクライアント型のサービスが増えてくるだろうから、サーバ内での解析にRが使えるんじゃないかという話でした。RDBやNOSQLとの接続が楽に出来るようになるとそうなるかも。Rをスマホにインストールするのは難しいとお話があったのですが、インストールはやろうと思えば出来るのでしょうか？脱獄したら出来るでしょうが。</p>
-
-<h2>カフェをなんとか盛り上げたい</h2>
-
-<p>不明(神戸で英会話カフェを主催されている方)</p>
-
-<p>神戸で毎週土曜日AM11:00〜PM2:00まで英会話の機会に使えるカフェを運営しているというお話と、カフェの問題点を紹介してくれました。今後何かRで分析する話になるかも？？？</p>
-
-<h2>Rで時系列データを取り扱う</h2>
-
-<p>Rで時系列データを扱い、時間に対して周期性があるデータから未来予測したりというライブラリの紹介とデモを見せて頂きました。Rのライブラリ紹介と実際に使った結果を見ることが出来ると理解が深まってとてもありがたいです。</p>
-
-<p>前回今回と大阪で参加しているのですが、今度は神戸で開催される時も参加してみようかと思います。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1431,6 +1444,10 @@ uwsgi.iniのenvも変更しておく</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/12/08/add-uuid-to-titanium-mobile-project/">Titanium Mobileのプロジェクトをアドホック配信する時にテストしてもらうユーザーを追加する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/30/use-south-to-existing-project/">Southをすでにあるプロジェクトに適用する</a>
       </li>
     
@@ -1444,10 +1461,6 @@ uwsgi.iniのenvも変更しておく</p>
     
       <li class="post">
         <a href="/blog/2014/11/25/use-django-allauth/">Django-allauthを使ってみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/23/django-memo/">Django Memo</a>
       </li>
     
   </ul>
@@ -1467,7 +1480,7 @@ uwsgi.iniのenvも変更しておく</p>
 <li class='category'><a href='/blog/categories/python/'>Python (12)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (3)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
-<li class='category'><a href='/blog/categories/titanium/'>Titanium (2)</a></li>
+<li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
 <li class='category'><a href='/blog/categories/web/'>Web (1)</a></li>
 <li class='category'><a href='/blog/categories/event/'>event (3)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>

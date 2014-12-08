@@ -9,8 +9,8 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="自分の話でなく、他人の話なので丁寧語で。
-6月27日にGroongaユーザー勉強会＠神戸に参加しました。ブログに書くまでが勉強会だったのを久々に思い出したので、感想書いてみます。 正直あまり回数行ったことがない神戸で、さらに行ったこと無い区域で、さらに入り口に「Closed」と書いてあったので、 &hellip;">
+  <meta name="description" content="Djangoやり始めたので、その過程で記録しておきたいことをメモ。 pip freezeでWarning: cannot find svn location for distribute==0.6.24dev-r0 1
+$ sudo pip install --upgrade distribute &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +80,133 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/30/python-memo/">Python Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-30T20:38:44+09:00" pubdate data-updated="true">Jun 30<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Djangoやり始めたので、その過程で記録しておきたいことをメモ。</p>
+
+<h2>pip freezeでWarning: cannot find svn location for distribute==0.6.24dev-r0</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo pip install --upgrade distribute
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でおk</p>
+
+<h2>for文でループカウント取得</h2>
+
+<p>参考<a href="http://fujishinko.exblog.jp/7669024">Python 配列をfor文でまわしているときのループカウント取得 : fujishinko 雑記帳</a></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">,</span><span class="s">&#39;c&#39;</span><span class="p">]):</span>
+</span><span class='line'>  <span class="k">print</span> <span class="n">i</span><span class="p">,</span><span class="n">item</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>日本語のコマンドライン引数取得</h2>
+
+<p>参考<a href="http://www.yukun.info/blog/2008/07/python-command-line-arguments.html">Python: コマンドライン引数の取得 – sys.argv変数</a></p>
+
+<figure class='code'><figcaption><span>:hoge.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="c"># -\*- encoding: utf-8 -\*-</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">sys</span>
+</span><span class='line'><span class="n">argv</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span>
+</span><span class='line'><span class="k">print</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python hoge.py あいうえお
+</span><span class='line'>あいうえお
+</span><span class='line'><span class="err">$</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>コマンド実行して実行結果を取得</h2>
+
+<p>参考<a href="http://qiita.com/mokemokechicken/items/a84b0aa96b94d1931f08">Python の subprocess で出力を受け取るときは communicate() を使おう &ndash; Qiita</a>
+subprocessを使う。何か昔は別の手法だったらしい。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">subprocess</span>
+</span><span class='line'><span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="s">&quot;echo &#39;hoge&#39;&quot;</span><span class="p">,</span><span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span><span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+</span><span class='line'><span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</span><span class='line'><span class="n">stdout_data</span><span class="p">,</span><span class="n">stderr_data</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+</span><span class='line'><span class="k">print</span> <span class="n">stdout_data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>親クラスのメソッド呼び出し</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">class</span> <span class="nc">Hoge</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">aaa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">param</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">print</span> <span class="n">param</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Fuga</span><span class="p">(</span><span class="n">Hoge</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">bbb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">param</span><span class="p">):</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">hage</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Fuga</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">aaa</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">f</span> <span class="o">=</span> <span class="n">Fuga</span><span class="p">()</span>
+</span><span class='line'><span class="n">f</span><span class="o">.</span><span class="n">bbb</span><span class="p">(</span><span class="s">&#39;test&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じ。お作法を忘れがち。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -993,99 +1120,6 @@ php-buildのインストールは下のような感じ</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/05/29/rails-memo/">Rails Memo</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-29T08:54:12+09:00" pubdate data-updated="true">May 29<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Rails関係でいつでも確認出来るようにメモ。</p>
-
-<h2>ルーティングでのパラメータの使い方</h2>
-
-<p>config/route.rbを編集する</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="n">get</span> <span class="s2">&quot;main/index/:hoge&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;main#index&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>app/controllers/main_controller.rbを編集</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">class</span> <span class="nc">MainController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">index</span>
-</span><span class='line'>    <span class="vi">@hoge</span> <span class="o">=</span> <span class="n">params</span><span class="o">[</span><span class="ss">:hoge</span><span class="o">]</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と書いておくとrouteで設定したパラメーターにアクセス出来る。</p>
-
-<h2>ルーティング中でURLの一部を省略可能にする</h2>
-
-<p>config/route.rbを編集する</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="n">get</span> <span class="s2">&quot;main/index/:hoge(/fuga/:hage)&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;main#index&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とやっておくと、main/index/1/fuga/2でもアクセス出来るし、main/index/1でもアクセス出来るようになる</p>
-
-<h2>ルーティング時にパラメーターの初期値を設定する</h2>
-
-<p>config/route.rbを編集する</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="n">get</span> <span class="s2">&quot;main/index/:hoge(/fuga/:hage)&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;main#index&quot;</span><span class="p">,</span><span class="ss">:defaults</span><span class="o">=&gt;</span><span class="p">{</span><span class="ss">:hage</span><span class="o">=&gt;</span><span class="mi">3</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と設定しておくと、app/controllers/main_controller.rb中のparams[:hage]の初期値として3を入れることが出来る。</p>
-
-<h2>Dateクラスの使い方メモ</h2>
-
-<p>個人的に文字列からDateクラスにして、1年前にするとか1ヶ月前にするとかそういう作業をすることが多いのでメモ</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'>  <span class="n">d</span> <span class="o">=</span> <span class="no">Date</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot;2014-05-24&quot;</span><span class="p">,</span><span class="s2">&quot;%Y-%m-%d&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">prev_year</span> <span class="c1">#1年前に指定</span>
-</span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -1113,6 +1147,10 @@ php-buildのインストールは下のような感じ</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/12/08/add-uuid-to-titanium-mobile-project/">Titanium Mobileのプロジェクトをアドホック配信する時にテストしてもらうユーザーを追加する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/30/use-south-to-existing-project/">Southをすでにあるプロジェクトに適用する</a>
       </li>
     
@@ -1126,10 +1164,6 @@ php-buildのインストールは下のような感じ</p>
     
       <li class="post">
         <a href="/blog/2014/11/25/use-django-allauth/">Django-allauthを使ってみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/23/django-memo/">Django Memo</a>
       </li>
     
   </ul>
@@ -1149,7 +1183,7 @@ php-buildのインストールは下のような感じ</p>
 <li class='category'><a href='/blog/categories/python/'>Python (12)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (3)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
-<li class='category'><a href='/blog/categories/titanium/'>Titanium (2)</a></li>
+<li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
 <li class='category'><a href='/blog/categories/web/'>Web (1)</a></li>
 <li class='category'><a href='/blog/categories/event/'>event (3)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>

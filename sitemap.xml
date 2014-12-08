@@ -238,7 +238,7 @@
     </url>
     <url>
         <loc>http://blog.shigepon.com/blog/2014/11/23/titanium-mobile-memo/</loc>
-        <lastmod>2014-12-03T21:40:48+09:00</lastmod>
+        <lastmod>2014-12-06T09:56:48+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/blog/2014/11/23/django-memo/</loc>
@@ -261,16 +261,20 @@
         <lastmod>2014-12-04T08:21:07+09:00</lastmod>
     </url>
     <url>
+        <loc>http://blog.shigepon.com/blog/2014/12/08/add-uuid-to-titanium-mobile-project/</loc>
+        <lastmod>2014-12-08T02:03:15+09:00</lastmod>
+    </url>
+    <url>
         <loc>http://blog.shigepon.com/blog/archives/</loc>
-        <lastmod>2014-12-04T09:48:09+09:00</lastmod>
+        <lastmod>2014-12-08T02:03:15+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/archives/</loc>
-        <lastmod>2014-12-04T09:48:09+09:00</lastmod>
+        <lastmod>2014-12-08T02:03:15+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/</loc>
-        <lastmod>2014-12-04T09:48:09+09:00</lastmod>
+        <lastmod>2014-12-08T02:03:15+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/robots.txt</loc>
