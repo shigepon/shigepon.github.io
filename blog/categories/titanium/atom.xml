@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Titanium | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/titanium/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-12-08T10:45:44+09:00</updated>
+  <updated>2014-12-10T12:46:53+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -18,16 +18,18 @@
     <link href="http://blog.shigepon.com/blog/2014/12/08/add-uuid-to-titanium-mobile-project/"/>
     <updated>2014-12-08T01:42:49+09:00</updated>
     <id>http://blog.shigepon.com/blog/2014/12/08/add-uuid-to-titanium-mobile-project</id>
-    <content type="html"><![CDATA[<p>いやー色々ぐぐっても大変だったし、これからも結構な頻度でやりそうなのでメモ。</p>
+    <content type="html"><![CDATA[<p>追記：UUIDと書いてたのはUDIDの間違いでした！恥ずかしー。ご指摘いただいた@key3さんありがとうございました！</p>
 
-<p>もともと作ったプロビジョニングファイルにUUIDを追加するには、</p>
+<p>いやー色々ぐぐっても大変だったし、これからも結構な頻度でやりそうなのでメモ。</p>
 
-<h2>ぐぐってしっかり情報があった箇所（プロビジョングファイルにUUIDを追加する）</h2>
+<p>もともと作ったプロビジョニングファイルにUDIDを追加するには、</p>
+
+<h2>ぐぐってしっかり情報があった箇所（プロビジョングファイルにUDIDを追加する）</h2>
 
 <ul>
 <li><a href="https://developer.apple.com/account/ios/profile/profileList.action">Apple Developer Center</a>で左メニューのDevices->Allをクリック</li>
-<li>右上の＋ボタンからデバイスを追加。名前とUUIDを記入してContinueでおk</li>
-<li>左メニューのProvisioning Profiles->AllからUUIDを追加したいプロビジョニングファイルを探してクリック->Editをクリック</li>
+<li>右上の＋ボタンからデバイスを追加。名前とUDIDを記入してContinueでおk</li>
+<li>左メニューのProvisioning Profiles->AllからUDIDを追加したいプロビジョニングファイルを探してクリック->Editをクリック</li>
 <li>Devicesの一覧で、追加したDevice名をチェックしてGenerateボタンを押す</li>
 </ul>
 
