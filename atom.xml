@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-12-10T12:46:53+09:00</updated>
+  <updated>2014-12-17T14:11:46+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,44 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[javascriptでカレンダーを書くライブラリを調べてみた]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/12/17/check-table-library/"/>
+    <updated>2014-12-17T13:37:38+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/12/17/check-table-library</id>
+    <content type="html"><![CDATA[<p>Django使ったサイトでカレンダーを表示しようとしたんだけど、HTMLCalendarとかだとレスポンシブにならないし、カスタマイズ面倒だしということで、javascriptで生成して、イベントデータはajaxリクエストから取り出すようにしたいと思ってライブラリを調べてみたのと感想を書いておく。結論からすると、FullCalendarが汎用的で使えそう。</p>
+
+<h2>Zabuto Calendar</h2>
+
+<p><a href="https://github.com/zabuto/calendar">github</a>
+jqueryプラグイン。イベントは数字が表示される。カレンダーの表示は月毎のみ。言語設定に日本語は無い。日本語で日付表示する方法はReadmeに書かれていなかった。</p>
+
+<h2>Calendario</h2>
+
+<p><a href="http://tympanus.net/codrops/2012/11/27/calendario-a-flexible-calendar-plugin/">ダウンロードページ</a></p>
+
+<p>デモは奇麗に見えるんだけど、そもそもメインのcssが何故かdemo.cssみたいなのをインポートしてて、これは無いんじゃないと思ったのと背景画像無しだとイメージに合わなかった。あと、デモサイトがあるだけで、最初に必要なファイルとかが分かりにくかった。</p>
+
+<h2>pickadate</h2>
+
+<p><a href="http://amsul.ca/pickadate.js/">ダウンロードページ</a></p>
+
+<p>カレンダーだけじゃなく、タイムスケジュールの表示もあるライブラリ。でもパッと使ってみただけだとモーダル以外での表示方法が分からなかった。デートピッカーとして使うなら良い？</p>
+
+<h2>FullCalendar</h2>
+
+<p><a href="http://fullcalendar.io/">Home</a></p>
+
+<p>GoogleCalendarっぽいカレンダーが作れて、カスタマイズ出来て、タイムスケジュールも表示出来るライブラリ。bower使うとか書いてあるけど、zip解凍して出て来たファイルを使うことでとりあえずはいけた。jqueryと<a href="http://momentjs.com/">Moment</a>ってライブラリが要る。汎用的だけど、それだけに色々見ないといけないけど、マニュアルあるので分かるようになっている。日本語の言語ファイルは無いが、曜日等のカスタマイズ方法がマニュアルに書いてあるので、日本語化出来る。</p>
+
+<h2>bootstrap-calendar</h2>
+
+<p><a href="https://github.com/Serhioromano/bootstrap-calendar">github</a></p>
+
+<p>試してない。結構汎用的な感じ？言語ファイルに日本語は無い。曜日を日本語化する方法がReadmeに無くて良くわからん。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Titanium Mobileのプロジェクトをアドホック配信する時にテストしてもらうユーザーを追加する]]></title>
@@ -1678,27 +1716,6 @@ AUTH_USER_MODEL
 
 
 <p>こんな感じで文字列をくっつけてパラメータにすることが出来る。かなり強引<a href="https://www.google.com/url?q=http://d.hatena.ne.jp/feiz/20110414/1302771447&amp;usd=2&amp;usg=AFQjCNFN9kzyrEJj_WZEatK2wIL07eaD0w">参考</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ansible memo]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/07/01/ansible-memo/"/>
-    <updated>2014-07-01T16:56:06+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/07/01/ansible-memo</id>
-    <content type="html"><![CDATA[<p>ansibleで自分が欲しい情報が色んなページに散らばっていたので、メモ</p>
-
-<h3>ansible-playbookのオプション</h3>
-
-<ul>
-<li>-K: sudoのパスワード入力</li>
-<li>-C (&mdash;check): 実際に実行しないでチェックしてくれる</li>
-<li>-l name: hostsファイルに[name]と書かれたホストにのみ実行</li>
-<li>-i hostsfile: 初期状態では/etc/ansible/hostsを見に行くので、自分で指定したい場合に</li>
-<li>&mdash;syntax-check: playbookの書式チェック。書いて最初にやるといい</li>
-<li>&mdash;list-tasks: playbookで行う内容をリストアップ</li>
-</ul>
-
 ]]></content>
   </entry>
   

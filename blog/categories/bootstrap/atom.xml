@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Bootstrap | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/bootstrap/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-12-10T12:46:53+09:00</updated>
+  <updated>2014-12-17T14:11:46+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,44 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[javascriptでカレンダーを書くライブラリを調べてみた]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/12/17/check-table-library/"/>
+    <updated>2014-12-17T13:37:38+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/12/17/check-table-library</id>
+    <content type="html"><![CDATA[<p>Django使ったサイトでカレンダーを表示しようとしたんだけど、HTMLCalendarとかだとレスポンシブにならないし、カスタマイズ面倒だしということで、javascriptで生成して、イベントデータはajaxリクエストから取り出すようにしたいと思ってライブラリを調べてみたのと感想を書いておく。結論からすると、FullCalendarが汎用的で使えそう。</p>
+
+<h2>Zabuto Calendar</h2>
+
+<p><a href="https://github.com/zabuto/calendar">github</a>
+jqueryプラグイン。イベントは数字が表示される。カレンダーの表示は月毎のみ。言語設定に日本語は無い。日本語で日付表示する方法はReadmeに書かれていなかった。</p>
+
+<h2>Calendario</h2>
+
+<p><a href="http://tympanus.net/codrops/2012/11/27/calendario-a-flexible-calendar-plugin/">ダウンロードページ</a></p>
+
+<p>デモは奇麗に見えるんだけど、そもそもメインのcssが何故かdemo.cssみたいなのをインポートしてて、これは無いんじゃないと思ったのと背景画像無しだとイメージに合わなかった。あと、デモサイトがあるだけで、最初に必要なファイルとかが分かりにくかった。</p>
+
+<h2>pickadate</h2>
+
+<p><a href="http://amsul.ca/pickadate.js/">ダウンロードページ</a></p>
+
+<p>カレンダーだけじゃなく、タイムスケジュールの表示もあるライブラリ。でもパッと使ってみただけだとモーダル以外での表示方法が分からなかった。デートピッカーとして使うなら良い？</p>
+
+<h2>FullCalendar</h2>
+
+<p><a href="http://fullcalendar.io/">Home</a></p>
+
+<p>GoogleCalendarっぽいカレンダーが作れて、カスタマイズ出来て、タイムスケジュールも表示出来るライブラリ。bower使うとか書いてあるけど、zip解凍して出て来たファイルを使うことでとりあえずはいけた。jqueryと<a href="http://momentjs.com/">Moment</a>ってライブラリが要る。汎用的だけど、それだけに色々見ないといけないけど、マニュアルあるので分かるようになっている。日本語の言語ファイルは無いが、曜日等のカスタマイズ方法がマニュアルに書いてあるので、日本語化出来る。</p>
+
+<h2>bootstrap-calendar</h2>
+
+<p><a href="https://github.com/Serhioromano/bootstrap-calendar">github</a></p>
+
+<p>試してない。結構汎用的な感じ？言語ファイルに日本語は無い。曜日を日本語化する方法がReadmeに無くて良くわからん。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する]]></title>
@@ -347,171 +385,6 @@ app/views/events/index.html.erbを次のように書き換える</p>
 ```</p>
 
 <p>ここらへんは<a href="http://waka.hatenablog.com/entry/2013/04/05/083349">ActiveRecordで日付の範囲指定 &ndash; yo_waka&rsquo;s blog</a>を参考にしながら適当に実装した。ActiveRecordは色んな表現方法があるのでどうしたもんかな。ただ、数字も何でもオブジェクトってのは面白い。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(2):データベースにPostgreSQLを使ってみた]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/03/10/a-way-of-creating-rails-application2/"/>
-    <updated>2014-03-10T18:10:41+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/03/10/a-way-of-creating-rails-application2</id>
-    <content type="html"><![CDATA[<p>参考にした記事URL一覧</p>
-
-<ul>
-<li><a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a></li>
-<li><a href="http://www.oiax.jp/rails3book/setup_postgresql.html">データベースとの接続（PostgreSQL編） &ndash; Ruby on Rails with OIAX</a></li>
-<li><a href="http://qiita.com/stkn_bb/items/72d06c149d3e6f315f8c">[Rails]既存のMySQLテーブルに接続する方法 &ndash; Qiita</a></li>
-</ul>
-
-
-<p>前回に引き続き<a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a>を参考にしているが、色々すっとばしてデータベースを作るところをなぞる。
-どうもモデルを作って、コマンド打ったら自動的にテーブル作ってくれてよしなにしてくれるらしい。</p>
-
-<p>ではモデルを作る。</p>
-
-<p><code>sh
-$ rails g model event name:string date:timestamp
-</code></p>
-
-<p>モデルは単数型の英語で書くのが良いらしい。idは書かなくても自動で設定してくれるらしい。コマンドを実行すると次のようなファイルが出来る</p>
-
-<p><code>
-app/models/event.rb
-db/migrate/20140310033758_create_events.rb
-</code></p>
-
-<p>後でテーブルの生成が上手く行かない場合に、変数の型で変なのを設定してる場合とかあるので、migrateフォルダのファイルを修正すると上手くいくことがある。</p>
-
-<p><code>
-rake db:migrate
-</code></p>
-
-<p>と打ったらテーブルが出来た。めでたしめでたし・・・と思ったらそういえばリモートサーバ上のPostgreSQLテーブルにデータ入れてたのを思い出したので、sqliteからPostgreSQLに使用データベースを変更してみる。</p>
-
-<p><a href="http://www.oiax.jp/rails3book/setup_postgresql.html">データベースとの接続（PostgreSQL編） &ndash; Ruby on Rails with OIAX</a>を参考にしたが、PostgreSQLの設定までは終了しているので、その後の部分をやってみた。</p>
-
-<h3>Gemfileを編集</h3>
-
-<p><code>
-gem "sqlite3"
-</code></p>
-
-<p>を</p>
-
-<p><code>
-gem "pg"
-</code></p>
-
-<p>に変更して、bundle installを実行。すると何かエラーが・・・メッセージを見ると<a href="http://qiita.com/youcune/items/5b783f7fde45d0fd4b35">Ruby &ndash; gem install pgしてNo pg_configとなる対処法 &ndash; Qiita</a>が参考になりそうなので、libpq-devを入れてエラーを解消した（Ubuntuの場合)</p>
-
-<h3>config/database.yamlを編集</h3>
-
-<p><code>yaml
-development:
-  adapter: sqlite3
-  database: db/development.sqlite3
-  pool: 5
-  timeout: 5000
-</code></p>
-
-<p>みたいな箇所を</p>
-
-<p><code>yaml
-development:
-  adapter: postgresql
-  host: 000.000.00.00
-  port: 5432
-  database: bocho
-  username: ****
-  password: ****
-  pool: 5
-  timeout: 5000
-</code></p>
-
-<p>に変更した。development以外にtest, productionと項目があって、それぞれ同じように変更した。これがどう違うのかはまだ勉強してない。localhostの場合はhost,portは要らないみたい。</p>
-
-<h3>テーブル名の変更</h3>
-
-<p>良く考えたら、PostgreSQLに保存してるデータのテーブルはeventsじゃなくてbochoだったので、そういう設定もしないといけない。その方法は<a href="http://qiita.com/stkn_bb/items/72d06c149d3e6f315f8c">[Rails]既存のMySQLテーブルに接続する方法 &ndash; Qiita</a>を参考にした。eventモデル(app/models/event.rb)を次のように変更</p>
-
-<p>```rb
-class Event &lt; ActiveRecord::Base</p>
-
-<pre><code>self.table_name = 'bocho'
-</code></pre>
-
-<p>end
-```</p>
-
-<p>なんかググったら他の書式もあったけど、それだとエラー出たので、今はこの書き方なのかな？
-これで準備が出来たので、テーブルからデータを読み込んで表示してみる</p>
-
-<h3>データ読み込み</h3>
-
-<p>app/controllers/events_controller.rbを次のように書き換え</p>
-
-<p>```rb
-  def show</p>
-
-<pre><code>  @event = Event.find_by(:id=&gt;params[:eventid]) 
-</code></pre>
-
-<p>  end
-```</p>
-
-<p>これ多分</p>
-
-<p><code>rb
-@event = Event.find(params[:eventid])
-</code></p>
-
-<p>でもいける。</p>
-
-<h3>データ表示</h3>
-
-<p>app/views/events/show.html.erbを編集</p>
-
-<p>```erb</p>
-
-<h1>Event</h1>
-
-
-<dl>
-    <dt>日時</dt>
-    <dd><%= @event[:date].strftime('%Y/%m/%d %H:%m') %></dd>
-    <dt>イベント名</dt>
-    <dd><%= @event[:name] %></dd>
-</dl>
-
-
-<p>```</p>
-
-<p><code>erb
-&lt;dd&gt;&lt;%= @event.date.strftime('%Y/%m/%d %H:%m') %&gt;&lt;/dd&gt;
-</code></p>
-
-<p>でもおk</p>
-
-<p>以上の作業後に [<a href="http://0.0.0.0:3000/events/show/1">http://0.0.0.0:3000/events/show/1</a>]にアクセスすると
-id=1,date=2014/03/01 10:00:00,name=ほげ
-というデータが入っていた場合、</p>
-
-<p>```html</p>
-
-<h1>Event</h1>
-
-
-<dl>
-    <dt>日時</dt>
-    <dd>2014/03/01 10:00</dd>
-    <dt>イベント名</dt>
-    <dd>ほげ</dd>
-</dl>
-
-
-<p>```</p>
-
-<p>と表示されたりする。</p>
 ]]></content>
   </entry>
   

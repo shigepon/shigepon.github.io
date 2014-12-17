@@ -9,7 +9,8 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="勉強会の話なので丁寧語で。10/26にKobe.R #12があったので参加してきました。神戸で定期的に開催されているRの勉強会です。今回はたまたま大阪で開かれました。前回と同様誰がされたか名前を記憶していなかったりするので、とりあえず内容だけ紹介します。 回帰分析の基礎 @florets1さん &hellip;">
+  <meta name="description" content="nginxのインストールは省略。ubuntuならaptitudeでインストールすればいい。デフォルトはちょっと古いけど。
+djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いているという前提。 uwsgiをインストール 全てvirtualenv上で行うとよさげ。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +80,224 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/04/use-django-with-uwsgi/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(4):djangoで作ったプロジェクトをnginx+uwsgiで使って公開する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-11-04T21:33:54+09:00" pubdate data-updated="true">Nov 4<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>nginxのインストールは省略。ubuntuならaptitudeでインストールすればいい。デフォルトはちょっと古いけど。
+djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いているという前提。</p>
+
+<h2>uwsgiをインストール</h2>
+
+<p>全てvirtualenv上で行うとよさげ。
+<a href="http://docs.djangoproject.jp/en/latest/howto/deployment/wsgi/uwsgi.html">uWSGI で Django を使う方法 — Django 1.4 documentation</a>ほぼそのまま</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">source </span>path/to/virtualenv/bin/activate
+</span><span class='line'><span class="k">$(</span>virtualenv<span class="k">)</span> pip install uwsgi
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>uwsgi.iniを作る</h2>
+
+<p>djangoのプロジェクトを/path/to/mysiteに置いた場合の設定。pidfile,daemonizeはプロジェクト毎に適当に設定。</p>
+
+<figure class='code'><figcaption><span>uwsgi.ini</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ini'><span class='line'><span class="k">[uwsgi]</span>
+</span><span class='line'><span class="na">chdir</span><span class="o">=</span><span class="s">/path/to/mysite</span>
+</span><span class='line'><span class="na">module</span><span class="o">=</span><span class="s">&#39;mysite.wsgi:application&#39;</span>
+</span><span class='line'><span class="na">master</span><span class="o">=</span><span class="s">True</span>
+</span><span class='line'><span class="na">pidfile</span><span class="o">=</span><span class="s">/tmp/project-master.pid</span>
+</span><span class='line'><span class="na">vacuum</span><span class="o">=</span><span class="s">True</span>
+</span><span class='line'><span class="na">max-requests</span><span class="o">=</span><span class="s">5000</span>
+</span><span class='line'><span class="na">daemonize</span><span class="o">=</span><span class="s">/var/log/uwsgi/mysite.log</span>
+</span><span class='line'><span class="na">socket</span><span class="o">=</span><span class="s">127.0.0.1:1234 #適当なポート</span>
+</span><span class='line'><span class="na">env</span><span class="o">=</span> <span class="s">DJANGO_SETTINGS_MODULE=mysite.settings</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>virtualenvで使う場合、sudoを使わないでuwsgiを起動するので、/var/log/uwsgi/yourproject.logの権限に注意する。
+uwsgiの起動や終了のコマンドは以下の通り</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>起動
+</span><span class='line'><span class="nv">$ </span>uwsgi --ini uwsgi.ini
+</span><span class='line'>再起動
+</span><span class='line'><span class="nv">$ </span>uwsgi --reload /tmp/project-master.pid
+</span><span class='line'>終了
+</span><span class='line'><span class="nv">$ </span>uwsgi --stop /tmp/project-master.pid
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>nginxの設定</h2>
+
+<p><a href="http://uwsgi-docs.readthedocs.org/en/latest/tutorials/Django_and_nginx.html">Setting up Django and your web server with uWSGI and nginx — uWSGI 2.0 documentation</a>を参考にした。</p>
+
+<h3>uwsgi_params</h3>
+
+<p>uwsgi_paramsは/etc/nginx/uwsgi_paramsに入ってるけど、修正する可能性もあるので、/path/to/mysite/uwsgi_paramsにコピーして、それを修正する。</p>
+
+<h3>nginx.conf</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>upstream django <span class="o">{</span>
+</span><span class='line'>  server 127.0.0.1:1234; <span class="c">#uwsgi.iniで設定したポート番号</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>server <span class="o">{</span>
+</span><span class='line'>  server_name hoge.example.com; <span class="c"># substitute your machine&#39;s IP address or FQDN</span>
+</span><span class='line'>      charset     utf-8;
+</span><span class='line'><span class="c"># max upload size</span>
+</span><span class='line'>  client_max_body_size 75M;   <span class="c"># adjust to taste</span>
+</span><span class='line'><span class="c"># Django media</span>
+</span><span class='line'><span class="c"># Finally, send all non-media requests to the Django server.</span>
+</span><span class='line'>  location / <span class="o">{</span>
+</span><span class='line'>      uwsgi_pass  django;
+</span><span class='line'>      include     /path/to/mysite/uwsgi_params; <span class="c"># the uwsgi_params file you installed</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これを作成して、/etc/nginx/sites-enabledへシンボリックリンクを貼っておけば良い</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>service nginx restart <span class="c">#reloadでもいい？</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でWebアクセスできるようになる。はず。</p>
+
+<h2>静的ファイルの設定手順</h2>
+
+<p>nginx+uwsgiでプロジェクトを公開した場合、manage.py runserverの場合と違い、静的ファイルの置場を設定しないといけないっぽい</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>location ~ ^/static/ <span class="o">{</span>
+</span><span class='line'>root /path/to/mysite;
+</span><span class='line'><span class="nb">break</span>;
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>settings.pyにSTATIC_URL, STATIC_ROOTを追加</p>
+
+<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">STATIC_URL</span> <span class="o">=</span> <span class="s">&#39;/static/&#39;</span>
+</span><span class='line'><span class="n">STATIC_ROOT</span> <span class="o">=</span> <span class="s">&quot;/path/to/mysite/static&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>テンプレでは次のように静的ファイルにアクセスする</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;js/hoge.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この設定だけでは静的ファイルが/path/to/mysite/staticに入ってないので、collectstaticコマンドを使ってファイルを集める</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py collectstatic
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで各アプリに入ってる静的ファイルとadmin関連の静的ファイル全て持って来てくれる</p>
+
+<h2>設定反映</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo service nginx reload <span class="c">#ubuntuの場合</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>deploy時に良く使うメモ</h2>
+
+<p>mysite/settings.pyを以外を設定ファイルとして読み込む場合はmanage.pyに以下のオプションを付ける
+uwsgi.iniのenvも変更しておく</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>--settings<span class="o">=</span>mysite.settings_deploy
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>設定ファイルは例えばこんな感じで書いて、元のsettings.pyを上書きする</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">pystock.settings</span> <span class="kn">import</span> <span class="o">*</span>
+</span><span class='line'><span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>  <span class="o">.......</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -920,54 +1139,6 @@ AUTH_USER_MODEL
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/07/01/ansible-memo/">Ansible Memo</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-07-01T16:56:06+09:00" pubdate data-updated="true">Jul 1<span>st</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>ansibleで自分が欲しい情報が色んなページに散らばっていたので、メモ</p>
-
-<h3>ansible-playbookのオプション</h3>
-
-<ul>
-<li>-K: sudoのパスワード入力</li>
-<li>-C (&mdash;check): 実際に実行しないでチェックしてくれる</li>
-<li>-l name: hostsファイルに[name]と書かれたホストにのみ実行</li>
-<li>-i hostsfile: 初期状態では/etc/ansible/hostsを見に行くので、自分で指定したい場合に</li>
-<li>&mdash;syntax-check: playbookの書式チェック。書いて最初にやるといい</li>
-<li>&mdash;list-tasks: playbookで行う内容をリストアップ</li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -995,6 +1166,10 @@ AUTH_USER_MODEL
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/12/17/check-table-library/">Javascriptでカレンダーを書くライブラリを調べてみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/12/08/add-uuid-to-titanium-mobile-project/">Titanium Mobileのプロジェクトをアドホック配信する時にテストしてもらうユーザーを追加する</a>
       </li>
     
@@ -1010,17 +1185,13 @@ AUTH_USER_MODEL
         <a href="/blog/2014/11/25/kobe-dot-r-no-13/">Kobe.R No 13に参加してきました</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/11/25/use-django-allauth/">Django-allauthを使ってみた</a>
-      </li>
-    
   </ul>
 </section>
 <section>
 <h1>Categories</h1>
 <ul id="categories">
 	<li class='category'><a href='/blog/categories/analytics/'>Analytics (1)</a></li>
-<li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (6)</a></li>
+<li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (7)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C# (4)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C++ (3)</a></li>
 <li class='category'><a href='/blog/categories/django/'>Django (10)</a></li>
@@ -1035,6 +1206,7 @@ AUTH_USER_MODEL
 <li class='category'><a href='/blog/categories/web/'>Web (1)</a></li>
 <li class='category'><a href='/blog/categories/event/'>event (3)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
+<li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linux/'>linux (5)</a></li>
 <li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (10)</a></li>
