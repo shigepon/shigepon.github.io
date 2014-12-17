@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Django | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/django/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-12-17T14:11:46+09:00</updated>
+  <updated>2014-12-17T14:56:03+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -426,6 +426,22 @@ instance = SampleModel.objects.get(id=key)
 </code></p>
 
 <p>でkeyに何も設定されてないと起こるみたい。出た時に何回かイチイチぐぐったのでメモ</p>
+
+<h2>PostgreSQLでDateTimeFieldの値を日付に対してグルーピングしたい</h2>
+
+<p>PostgreSQLではタイムゾーン入りのタイムスタンプで登録されるので、</p>
+
+<p><code>py
+q = Hoge.objects.extra({"date":"date_trunc('day',date)"})
+q.query.group_by['date']
+</code></p>
+
+<p>みたいな構文で日付だけ取り出して、グルーピングしようとすると、PostgreSQLの設定でタイムゾーンがUTCになっていた場合に、2014/12/17 00:00:00+9のデータは2014/12/16 15:00:00+0と認識されるので12/16のデータとしてグルーピングされてしまう。日本のタイムゾーンでやってると、これはまずいので、以下のようなコードにすると良い</p>
+
+<p><code>py
+q = Hoge.objects.extra({"date":"date_trunc('day',date AT TIME ZONE 'JST')"})
+q.query.group_by['date']
+</code></p>
 ]]></content>
   </entry>
   
