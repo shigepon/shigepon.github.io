@@ -9,8 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Nginxで503コードのページをカスタマイズする なるべく手軽にメンテナンスページを出すための手順 path/to/root/error/503.htmlにページを用意する。
-path/to/root/error/以下に画像やcss、javascriptなど必要なものを用意する。 &hellip;">
+  <meta name="description" content="本日、OpenSSLの重大バグが発覚。インターネットの大部分に影響の可能性 | TechCrunch Japanというニュースで 過去2年以内のあらゆるバージョンのOpenSSLが走るシステムで、システムメモリー上にある大量のデータを暴露することが可能 と書いてあった、これはまずいので、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +79,80 @@ path/to/root/error/以下に画像やcss、javascriptなど必要なものを用
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/04/08/update-openssl-security-patch/">Ubuntuでopensslのsecurity Patchを当てる</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-08T14:39:21+09:00" pubdate data-updated="true">Apr 8<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>本日、<a href="http://jp.techcrunch.com/2014/04/08/20140407massive-security-bug-in-openssl-could-effect-a-huge-chunk-of-the-internet/">OpenSSLの重大バグが発覚。インターネットの大部分に影響の可能性 | TechCrunch Japan</a>というニュースで</p>
+
+<blockquote><p>過去2年以内のあらゆるバージョンのOpenSSLが走るシステムで、システムメモリー上にある大量のデータを暴露することが可能</p></blockquote>
+
+<p>と書いてあった、これはまずいので、あわててセキュリティパッチを当てたので手順をメモ。 OSはUbuntu 12.04LTS。</p>
+
+<p>Ubuntuでは<a href="http://www.ubuntu.com/usn/usn-2165-1/">USN-2165-1: OpenSSL vulnerabilities | Ubuntu</a>にあるように、Ubuntu 13.10、12.10、12.04 LTSでセキュリティパッチが出ている（2014年4月7日現在)。ということでaptを使えばセキュリティパッチを当てることが出来る。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo apt-get update
+</span><span class='line'><span class="nv">$ </span>sudo apt-get upgrade
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>または</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude update
+</span><span class='line'><span class="nv">$ </span>sudo aptitude upgrade
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でおk。ただしopenssl versionでバージョン確認してもパッチが当たったかどうか良く分からないので以下のコマンドで確認</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>dpkg -l | grep openssl
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ubuntu 12.04LTSの場合</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>ii  openssl                              1.0.1-4ubuntu5.12                   Secure Socket Layer <span class="o">(</span>SSL<span class="o">)</span> binary and related cryptographic tools
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と出ればおk。確認してないけど、Ubuntu 13.10なら1.0.1e-3ubuntu1.2、Ubuntu 12.10なら1.0.1c-3ubuntu2.7と出ていればおk。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1197,87 +1270,6 @@ events_controller.rbを次のように変えると</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/28/vim-dbext-postgresql/">dbext.vimでpostgresqlにアクセスする</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-28T11:48:20+09:00" pubdate data-updated="true">Feb 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>ググってみたけど無かったのでメモ。
-単純に.vimrcに</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>let dbext_default_profile=""
-</span><span class='line'>let dbext_default_type="PGSQL"
-</span><span class='line'>let dbext_default_user="username"
-</span><span class='line'>let dbext_default_passwd="password"
-</span><span class='line'>let dbext_default_dbname="dbname"
-</span><span class='line'>let dbext_default_host="host"
-</span><span class='line'>let dbext_default_port="port"</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と入力してvimを再起動して</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="p">:</span><span class="k">Select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">hoge</span> <span class="k">limit</span> <span class="mi">1</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と何かのテーブルから１行だけ出力してみようとしてみたけど</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="n">dbext</span><span class="p">:</span><span class="n">PostgreSQL</span> <span class="n">requires</span> <span class="n">a</span> <span class="s1">&#39;$HOME/.pgpass&#39;</span> <span class="n">file</span> <span class="k">in</span> <span class="k">order</span> <span class="k">to</span> <span class="n">authenticate</span><span class="p">.</span> <span class="n">This</span> <span class="n">file</span> <span class="k">is</span> <span class="n">missing</span><span class="p">.</span> <span class="n">If</span> <span class="n">you</span> <span class="k">are</span> <span class="k">using</span> <span class="n">a</span> <span class="k">local</span> <span class="k">connection</span><span class="p">,</span> <span class="n">you</span> <span class="n">can</span> <span class="k">create</span> <span class="n">an</span> <span class="n">empty</span> <span class="p">.</span><span class="n">pgpass</span> <span class="n">file</span><span class="p">.</span>  <span class="n">The</span> <span class="n">b</span>
-</span><span class='line'><span class="n">inary</span> <span class="s1">&#39;psql&#39;</span> <span class="n">does</span> <span class="k">not</span> <span class="n">accept</span> <span class="n">commandline</span> <span class="n">passwords</span><span class="p">.</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>というエラーメッセージが！
-どうもpsqlがコマンドラインでパスワードを受け付けないので、パスワード設定しても意味ないみたい。
-なので、~/.pgpassに</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">host</span><span class="p">:</span><span class="n">port</span><span class="p">:</span><span class="n">dbname</span><span class="p">:</span><span class="n">username</span><span class="p">:</span><span class="n">password</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>を入力したらエラー無く動いた。良かった良かった。
-ちなみに.vimrcに書いたパスワード設定を消すと、それはそれでパスワード聞かれるので残しておいた方がいい。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -1305,6 +1297,10 @@ events_controller.rbを次のように変えると</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/12/18/use-bootstrap3-in-django/">Use Bootstrap3 in Django</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/12/17/check-table-library/">Javascriptでカレンダーを書くライブラリを調べてみた</a>
       </li>
     
@@ -1320,20 +1316,16 @@ events_controller.rbを次のように変えると</p>
         <a href="/blog/2014/11/27/django-locale/">Djangoで国際化やってみた</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/11/25/kobe-dot-r-no-13/">Kobe.R No 13に参加してきました</a>
-      </li>
-    
   </ul>
 </section>
 <section>
 <h1>Categories</h1>
 <ul id="categories">
 	<li class='category'><a href='/blog/categories/analytics/'>Analytics (1)</a></li>
-<li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (7)</a></li>
+<li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C# (4)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C++ (3)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (10)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (11)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Bootstrap | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/bootstrap/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-12-17T14:56:03+09:00</updated>
+  <updated>2014-12-18T10:53:58+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,77 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[use bootstrap3 in django]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/12/18/use-bootstrap3-in-django/"/>
+    <updated>2014-12-18T08:24:56+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/12/18/use-bootstrap3-in-django</id>
+    <content type="html"><![CDATA[<p>そろそろbootstrap3を使ってみたいなと思い、Djangoでbootstrap3を使う方法を調べてみた。django-bootstrap-toolkitのページを見てみるとdjango-bootstrap3を使ってねと書いてあるので、それを使ってみることにした。</p>
+
+<h2>インストール</h2>
+
+<p>```sh</p>
+
+<p>$ pip install django-bootstrap3
+```</p>
+
+<h2>設定</h2>
+
+<p>```py settings.py
+INSTALLED_APPS = (
+&hellip;.</p>
+
+<pre><code>'bootstrap3',
+</code></pre>
+
+<p>&hellip;.
+)
+```</p>
+
+<h2>テンプレート</h2>
+
+<p><code>html
+
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+
+</code></p>
+
+<p>これで必要ファイルがロードされる。あとはbootstrap3で使うタグで構成すれば良い。bootstrap_formとかそういうタグもあるけどまだ試していない。</p>
+
+<h2>Bootswatchにあるテーマを試す</h2>
+
+<p>まずはBootswatchのテーマcssをダウンロード</p>
+
+<p><code>sh
+$ cd /static/css
+$ wget http://bootswatch.com/cosmo/bootstrap.min.css
+</code></p>
+
+<p>/staticはアプリのフォルダ下に作る</p>
+
+<p>次に設定ファイルに項目を追加</p>
+
+<p>```py settings.py
+STATIC_URL = &lsquo;/static/&rsquo;
+BOOTSTRAP3 = {</p>
+
+<pre><code>'css_url':'/static/css/bootstrap.min.css'
+</code></pre>
+
+<p>}
+```</p>
+
+<p>これだけでテンプレートいじらずに動いてくれる</p>
+
+<p>bootstrap2だとnavbar表示の時に表示が重なるとか何とかあったけど、bootstrap3だと気にしなくて良いのかな？何も追加css書かなくても特に問題無さそう。これは嬉しい。</p>
+
+<p>でも<a href="http://qiita.com/Alex_23drum/items/bbf80aff7dbb6fd1a7d9">Navbarに画像入れると下に偏った配置になる</a>とかあるみたいなので、調べてみる必要があるかも</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[javascriptでカレンダーを書くライブラリを調べてみた]]></title>
@@ -288,103 +359,6 @@ body {padding-top:60px;}
 </code></p>
 
 <p>これでページが隠れなくなる。レイアウト変更にはapp/views/layouts/application.html.erbを編集する必要がある。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データ一覧ページを作って、詳細ページへのリンクを貼る]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/03/10/a-way-of-creating-rails-application3/"/>
-    <updated>2014-03-10T18:10:41+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/03/10/a-way-of-creating-rails-application3</id>
-    <content type="html"><![CDATA[<p>参考にした記事URL一覧</p>
-
-<ul>
-<li><a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a></li>
-<li><a href="http://qiita.com/somewhatgood@github/items/9890e75b4c195d47715a">Rails &ndash; link_to の引数と展開の違いまとめ &ndash; Qiita</a></li>
-</ul>
-
-
-<p>前回に引き続き<a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a>を参考にしているが、色々すっとばして16章から適当に確認しながら適当に実装する。</p>
-
-<h3>一覧表示</h3>
-
-<p><code>rb
-def index
-  @events = Event.all
-end
-</code></p>
-
-<p>と書くとテーブルにあるデータ全て取ってくるらしい（DAOで良くある書式）。
-ビューでは@eventsに対してループさせる必要があるので次のような書式になる。
-app/views/events/index.html.erbを次のように書き換える</p>
-
-<p>```erb</p>
-
-<h1>Events</h1>
-
-
-<table class="table">
-    <thead>
-        <th>日時</th><th>イベント名</th>
-    </thead>
-    <% @events.each do |event| %>
-        <tr>
-            <td><%= event.date.strftime('%Y/%m/%d %H:%m') %></td>
-            <td><%= event.name %></td>
-        </tr>
-    <% end %>
-</table>
-
-
-<p>```</p>
-
-<p>[<a href="http://0.0.0.0:3000/events/index">http://0.0.0.0:3000/events/index</a>]にアクセスすれば一覧が表示される。どこかのページでeachでなくeach_with_indexという書き方してるページあったけど、Rails4では動かなかった。
-バージョン違い？</p>
-
-<h3>リンクを貼る</h3>
-
-<p>一覧と詳細を繋げたいので、リンクを貼る。link_toというのを使うらしい。 <a href="http://qiita.com/somewhatgood@github/items/9890e75b4c195d47715a">Rails &ndash; link_to の引数と展開の違いまとめ &ndash; Qiita</a>の「基本」を使えば今回は十分。上のerbを次のように書き換える</p>
-
-<p>```erb</p>
-
-<h1>Events</h1>
-
-
-<table class="table">
-    <thead>
-        <th>日時</th><th>イベント名</th><th>link</th>
-    </thead>
-    <% @events.each do |event| %>
-        <tr>
-            <td><%= event.date.strftime('%Y/%m/%d %H:%m') %></td>
-            <td><%= event.name %></td>
-            <td><%= link_to "詳細",:controller=>"events",:action=>"show",:eventid=>event.id %></td>
-        </tr>
-    <% end %>
-</table>
-
-
-<p>```</p>
-
-<p>controllerはコントローラー、actionはビュー？かどうか分からないけど、コントローラー内で定義してるメソッド、あとパラメーター名（eventid）はconfig/routes.rbで指定したパラメーター名が使用出来る（と思う）。とりあえずこう作ったけど、最終的にハッシュにした方がいいんだろな。</p>
-
-<h3>一覧の範囲を絞り込む</h3>
-
-<p>テーブルのデータ全部でなく、一部のデータに絞り込んで表示してみる。
-日付のデータがあるので、今月のデータに絞り込んでみる。app/controllers/events_controller.rbを編集</p>
-
-<p>```rb
-  def index</p>
-
-<pre><code>  from = Time.now.at_beginning_of_month
-  to = from+1.month
-  @events = Event.all(:conditions=&gt;["date&gt;=? and date&lt;=?",from,to],:order=&gt;'date')
-</code></pre>
-
-<p>  end
-```</p>
-
-<p>ここらへんは<a href="http://waka.hatenablog.com/entry/2013/04/05/083349">ActiveRecordで日付の範囲指定 &ndash; yo_waka&rsquo;s blog</a>を参考にしながら適当に実装した。ActiveRecordは色んな表現方法があるのでどうしたもんかな。ただ、数字も何でもオブジェクトってのは面白い。</p>
 ]]></content>
   </entry>
   

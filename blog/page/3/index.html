@@ -9,9 +9,15 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="ansibleで自分が欲しい情報が色んなページに散らばっていたので、メモ ansible-playbookのオプション -K: sudoのパスワード入力
--C (&mdash;check): 実際に実行しないでチェックしてくれる
--l name: hostsファイルに[name] &hellip;">
+  <meta name="description" content="データの一覧表示 あとで参考ページとか追記する予定。
+データの一覧表示には何種類かファイルが必要（モデル、ビュー、テンプレート、URLディスパッチャー）。
+それぞれこんな感じで用意する。 モデル models.py1
+2
+3
+4
+5
+6
+from django.db import models &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +87,208 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/02/django-show-list-with-paging/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-02T11:51:44+09:00" pubdate data-updated="true">Jul 2<span>nd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>データの一覧表示</h2>
+
+<p>あとで参考ページとか追記する予定。
+データの一覧表示には何種類かファイルが必要（モデル、ビュー、テンプレート、URLディスパッチャー）。
+それぞれこんな感じで用意する。</p>
+
+<h3>モデル</h3>
+
+<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">Bocho</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">court</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
+</span><span class='line'>    <span class="o">....</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>モデルではフィールドとその属性を決める。このコードではクラスの中でMetaクラスを定義すると、モデルのテーブル名とかそういうのを色々定義出来るみたい。定義出来るフィールドの種類はDjangoのマニュアルに書いてあるのですぐ分かる。</p>
+
+<h3>ビュー</h3>
+
+<p>データをテンプレートに設定する部分。リクエストパラメータから、必要なデータを取得する部分。多分。</p>
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">django.core.paginator</span> <span class="kn">import</span> <span class="n">Paginator</span><span class="p">,</span> <span class="n">PageNotAnInteger</span><span class="p">,</span> <span class="n">EmptyPage</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">bocho.models</span> <span class="kn">import</span> <span class="n">Bocho</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span> <span class="c">#requestはHttpRequestオブジェクト</span>
+</span><span class='line'>    <span class="n">objects</span> <span class="o">=</span> <span class="n">Bocho</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&quot;-date&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">paginator</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">objects</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span> <span class="c">#10行毎にページング</span>
+</span><span class='line'>    <span class="n">page</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;page&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="c">#GETパラメータからページ番号を取得(初期値は1)</span>
+</span><span class='line'>    <span class="k">try</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">object_list</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="n">page</span><span class="p">)</span> <span class="c">#ここでページング</span>
+</span><span class='line'>    <span class="k">except</span> <span class="n">PageNotAnInteger</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">object_list</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c">#変なページ番号なら1ページ目</span>
+</span><span class='line'>    <span class="k">except</span> <span class="n">EmptyPage</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">object_list</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="n">paginator</span><span class="o">.</span><span class="n">num_pages</span><span class="p">)</span> <span class="c">#存在しないページ番号なら最後のページ</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">&#39;list.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;object_list&#39;</span><span class="p">:</span><span class="n">object_list</span><span class="p">})</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考<a href="http://www.djangoproject.jp/doc/ja/1.0/ref/request-response.html">リクエストオブジェクトとレスポンスオブジェクト — Django v1.0 documentation</a></p>
+
+<h3>テンプレート</h3>
+
+<p>bocho/templates/list.htmlを作る。中身は一部だけ。でビューで割り当てた変数を表示する。
+あと、色々テンプレート用のタグがある。これもDjangoマニュアルを見ると分かる。</p>
+
+<figure class='code'><figcaption><span>list.html</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>
+</span><span class='line'><span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">&quot;table&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;thead&gt;&lt;th</span> <span class="na">class=</span><span class="s">&quot;span2&quot;</span><span class="nt">&gt;</span>日付<span class="nt">&lt;/th&gt;&lt;th&gt;</span>名称<span class="nt">&lt;/th&gt;&lt;th&gt;</span>裁判所<span class="nt">&lt;/th&gt;&lt;/thead&gt;</span>
+</span><span class='line'>{% for object in object_list %}
+</span><span class='line'><span class="nt">&lt;tr&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;td&gt;</span>{{ object.date|date:&quot;Y-m-d&quot; }}<span class="nt">&lt;/td&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;td&gt;</span>{{ object.name }}<span class="nt">&lt;/td&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;td&gt;</span>{{ object.court }}<span class="nt">&lt;/td&gt;</span>
+</span><span class='line'><span class="nt">&lt;/tr&gt;</span>
+</span><span class='line'>{% endfor %}
+</span><span class='line'><span class="nt">&lt;/table&gt;</span>
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>URLディスパッチャー</h3>
+
+<p>ドメイン名/bocho/で一覧表示出来るように正規表現使ってviewsに割り当てる。</p>
+
+<p>myproject/urls.py</p>
+
+<figure class='code'><figcaption><span>urls.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">from</span> <span class="nn">django.conf.urls</span> <span class="kn">import</span> <span class="n">patterns</span><span class="p">,</span> <span class="n">include</span><span class="p">,</span> <span class="n">url</span>
+</span><span class='line'><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="c"># Examples:</span>
+</span><span class='line'>    <span class="c"># url(r&#39;^$&#39;, &#39;pycourt.views.home&#39;, name=&#39;home&#39;),</span>
+</span><span class='line'>    <span class="c"># url(r&#39;^blog/&#39;, include(&#39;blog.urls&#39;)),</span>
+</span><span class='line'>    <span class="n">url</span><span class="p">(</span><span class="s">r&#39;bocho/^&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s">&#39;bocho.urls&#39;</span><span class="p">,</span><span class="n">namespace</span><span class="o">=</span><span class="s">&#39;bocho&#39;</span><span class="p">)),</span> <span class="c">#url(正規表現, 別のurlsに投げる設定。ここではbocho/urls.pyに投げる)</span>
+</span><span class='line'><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>bocho/urls.pyは無いので作る。</p>
+
+<figure class='code'><figcaption><span>urls.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">from</span> <span class="nn">django.conf.urls</span> <span class="kn">import</span> <span class="n">patterns</span><span class="p">,</span> <span class="n">include</span><span class="p">,</span> <span class="n">url</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">bocho</span> <span class="kn">import</span> <span class="n">views</span>
+</span><span class='line'><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="n">url</span><span class="p">(</span><span class="s">r&#39;^$&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;index&quot;</span><span class="p">),</span> <span class="c">#url(正規表現, 割り当てるビュー, URL作ったりリダイレクトする時に付けておくと便利な名前)</span>
+</span><span class='line'><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>一覧はどうせページングするので、views.pyはこの形で覚えておくと良いかも</p>
+
+<h2>ページング</h2>
+
+<p>どうせbootstrapを使うのでdjango-bootstrap-toolkitを使う方法を載せる。
+ページ分けする対象をobject_list、ページ送りのURLにpage=以外に設定するパラメータをreqとすると、</p>
+
+<figure class='code'><figcaption><span>list.html</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>
+</span><span class='line'>{% load bootstrap_toolkit %}↲
+</span><span class='line'>{% bootstrap_pagination object_list align=&quot;center&quot; extra=req %}
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と設定しておけば良い。</p>
+
+<h2>ページングにパラメータを付ける</h2>
+
+<p>ついでにメモ
+例えば&#8221;date=2001-01-01&#8221;みたいなパラメータを設定したいんだけど、割り当ててる変数？は日付オブジェクトの場合</p>
+
+<figure class='code'><figcaption><span>list.html</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>
+</span><span class='line'>{% bootstrap\_pagination object\_list align=&quot;center&quot; extra=date|date:&quot;Y-m-d&quot;|s    tringformat:&quot;%date=%s&quot;|slice:&quot;1:&quot; %}
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じで文字列をくっつけてパラメータにすることが出来る。かなり強引<a href="https://www.google.com/url?q=http://d.hatena.ne.jp/feiz/20110414/1302771447&amp;usd=2&amp;usg=AFQjCNFN9kzyrEJj_WZEatK2wIL07eaD0w">参考</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1021,98 +1229,6 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/06/07/build-php-with-phpenv/">Phpenvとphp-buildを使って適当なバージョンのphpをビルドする</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-06-07T00:42:03+09:00" pubdate data-updated="true">Jun 7<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>基本は<a href="http://d.hatena.ne.jp/hnw/20130626">php-buildで複数バージョンのPHP-FPMを用意する &ndash; hnwの日記</a>を参考にして進める</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>curl https://raw.github.com/CHH/phpenv/master/bin/phpenv-install.sh | bash
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これが何故か上手くいかなかったので</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>wget https://raw.github.com/CHH/phpenv/master/bin/phpenv-install.sh
-</span><span class='line'><span class="nv">$ </span>chmod +x phpenv-install.sh
-</span><span class='line'><span class="nv">$ </span>./phpenv-install.sh
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こうやった。コマンド終了時のメッセージに従って.zshrcを変更して反映。
-php-buildのインストールは下のような感じ</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone git://github.com/CHH/php-build.git ~/.phpenv/plugins/php-build
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>で、おもむろにphpをインストール</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>phpenv install 5.5.5
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とかやると出るわ出るわエラーが出るわ。どうもビルド用のライブラリやヘッダファイルみたいなのが何かと足りないみたいで色々出て来た。出るメッセージは人によって違うと思うので、入れるライブラリの一覧より、ライブラリが無い場合の対処法を書いておく。ubuntuにはapt-fileというアプリ？があって、これを使うとライブラリをインストールした時にインストールされるファイル名で検索することが出来る。</p>
-
-<p>例えば「configure: error: mcrypt.h not found. Please reinstall libmcrypt.」みたいなエラーが出た場合、</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>apt-file search mcrypt.h
-</span><span class='line'>libmcrypt-dev: /usr/include/mcrypt.h
-</span><span class='line'>libmcrypt-dev: /usr/include/mutils/mcrypt.h
-</span><span class='line'>libtomcrypt-dev: /usr/include/tomcrypt.h
-</span><span class='line'>php-doc: /usr/share/doc/php-doc/html/book.mcrypt.html
-</span><span class='line'>php-doc: /usr/share/doc/php-doc/html/intro.mcrypt.html
-</span><span class='line'>php-doc: /usr/share/doc/php-doc/html/ref.mcrypt.html
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいにすると、mcrypt.hを含むライブラリとインストール箇所が表示されるので、これを見ながらインストールするライブラリを選んだ（この場合だとlibmcrypt-devをインストールした）</p>
-
-<p>これを地道に何度か繰り返して何とかビルド出来た。rbenvに比べると面倒だった。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -1140,6 +1256,10 @@ php-buildのインストールは下のような感じ</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/12/18/use-bootstrap3-in-django/">Use Bootstrap3 in Django</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/12/17/check-table-library/">Javascriptでカレンダーを書くライブラリを調べてみた</a>
       </li>
     
@@ -1155,20 +1275,16 @@ php-buildのインストールは下のような感じ</p>
         <a href="/blog/2014/11/27/django-locale/">Djangoで国際化やってみた</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/11/25/kobe-dot-r-no-13/">Kobe.R No 13に参加してきました</a>
-      </li>
-    
   </ul>
 </section>
 <section>
 <h1>Categories</h1>
 <ul id="categories">
 	<li class='category'><a href='/blog/categories/analytics/'>Analytics (1)</a></li>
-<li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (7)</a></li>
+<li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C# (4)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C++ (3)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (10)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (11)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
