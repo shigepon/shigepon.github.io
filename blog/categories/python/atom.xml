@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-12-18T10:53:58+09:00</updated>
+  <updated>2014-12-18T11:47:06+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -442,6 +442,26 @@ q.query.group_by['date']
 q = Hoge.objects.extra({"date":"date_trunc('day',date AT TIME ZONE 'JST')"})
 q.query.group_by['date']
 </code></p>
+
+<h2>django+uwsgi+nginxで502エラーが出た原因の１つ</h2>
+
+<p>djangoはあまり関係無いけどuwsgiの設定の問題だったので、こちらに。django+uwsgi+nginxで502エラーが出て、runserverでは普通に動いたので、しばらくググって解答が得られたのでメモ</p>
+
+<p><a href="http://datatables.net/">DataTables</a>を使って動的にテーブルデータをロードしようとしたら、runserverでは上手く行くのにuwsgiだと502エラーが出てロード出来なかった。最初にnginxのログを見てみると、uwsgiのとこでエラーと書いてあったので、uwsgiのログをチェックした。すると</p>
+
+<p><code>log
+invalid request block size: xxxxx (max 4096)...
+</code></p>
+
+<p>みたいなエラーが出ていた。リクエストが大きすぎるのかなと思い、リクエストの一部を削ってみたらエラーが出なかった。んで、対策をググってみたら書いてあったので、そのまま下のコードを実装してみた。</p>
+
+<p><code>ini uwsgi.ini
+buffer-size=65535
+</code></p>
+
+<p>みたいにバッファーサイズを大きく(例では64k)した。これでエラーが消えたのでめでたしめでたし。</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/22697584/nginx-uwsgi-104-connection-reset-by-peer-while-reading-response-header-from-u">django &ndash; Nginx uwsgi (104: Connection reset by peer) while reading response header from upstream &ndash; Stack Overflow</a></p>
 ]]></content>
   </entry>
   
