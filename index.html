@@ -9,8 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="そろそろbootstrap3を使ってみたいなと思い、Djangoでbootstrap3を使う方法を調べてみた。django-bootstrap-toolkitのページを見てみるとdjango-bootstrap3を使ってねと書いてあるので、それを使ってみることにした。 インストール 1
-$ pip &hellip;">
+  <meta name="description" content="pythonのデコレーターを使ってみたらとても便利だなと思ったのでメモ 参考にしたページを読んでいくと理解できた。要はデコレーターとして使う関数は引数に呼び出し元の関数を貰っておいて、内部で作った関数を返せば良い。内部の関数は適当に作れるみたい（今のとこそういう理解をしている）。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +79,88 @@ $ pip &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/06/python-decorator/">Pythonのデコレーターをdjangoで使って見る</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-01-06T08:55:46+09:00" pubdate data-updated="true">Jan 6<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>pythonのデコレーターを使ってみたらとても便利だなと思ったのでメモ</p>
+
+<p>参考にしたページを読んでいくと理解できた。要はデコレーターとして使う関数は引数に呼び出し元の関数を貰っておいて、内部で作った関数を返せば良い。内部の関数は適当に作れるみたい（今のとこそういう理解をしている）。djangoのビューで呼び出したかったので、内部の関数で可変長引数を取れるようにして下のようにしたら動いた。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">outer</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">print</span> <span class="s">&quot;hoge&quot;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">inner</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この時、args[0]にHttpRequestオブジェクトが入ってるので、これをいじると適当に値を追加したり整形したりするのをビューの外部に持っていけるので、使いようによっては共通部分と個別部分の分離や、ビューに直接関係ない処理（ログとか）を分離出来るので便利な感じがする。ただ、やりすぎるとコードが分割されすぎて読みにくくなる気もする。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">outer</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">request</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span class='line'>        <span class="n">request</span><span class="o">.</span><span class="n">hoge</span> <span class="o">=</span> <span class="s">&quot;fuga&quot;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">inner</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@outer</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">hoge</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">print</span> <span class="n">request</span><span class="o">.</span><span class="n">hoge</span>
+</span><span class='line'>    <span class="o">....</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とやったりすることが出来る。個人的にはWebサービスでサイドメニューに必要な情報をデコレーターでやって、メインコンテンツに必要な情報をビューでやるとかそんな感じで使ってみようと思う。</p>
+
+<p>参考：<a href="http://qiita.com/_rdtr/items/d3bc1a8d4b7eb375c368">Pythonのデコレータを理解するための12Step &ndash; Qiita</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1058,7 +1139,27 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 </span></code></pre></td></tr></table></div></figure>
 
 
+<h2>django+uwsgi+nginxで502エラーが出た原因の１つ</h2>
 
+<p>djangoはあまり関係無いけどuwsgiの設定の問題だったので、こちらに。django+uwsgi+nginxで502エラーが出て、runserverでは普通に動いたので、しばらくググって解答が得られたのでメモ</p>
+
+<p><a href="http://datatables.net/">DataTables</a>を使って動的にテーブルデータをロードしようとしたら、runserverでは上手く行くのにuwsgiだと502エラーが出てロード出来なかった。最初にnginxのログを見てみると、uwsgiのとこでエラーと書いてあったので、uwsgiのログをチェックした。すると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">invalid</span> <span class="n">request</span> <span class="n">block</span> <span class="n">size</span><span class="p">:</span> <span class="n">xxxxx</span> <span class="p">(</span><span class="nb">max</span> <span class="mi">4096</span><span class="p">)</span><span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいなエラーが出ていた。リクエストが大きすぎるのかなと思い、リクエストの一部を削ってみたらエラーが出なかった。んで、対策をググってみたら書いてあったので、そのまま下のコードを実装してみた。</p>
+
+<figure class='code'><figcaption><span>uwsgi.ini</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ini'><span class='line'><span class="na">buffer-size</span><span class="o">=</span><span class="s">65535</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいにバッファーサイズを大きく(例では64k)した。これでエラーが消えたのでめでたしめでたし。</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/22697584/nginx-uwsgi-104-connection-reset-by-peer-while-reading-response-header-from-u">django &ndash; Nginx uwsgi (104: Connection reset by peer) while reading response header from upstream &ndash; Stack Overflow</a></p>
 </div>
   
   
@@ -1138,56 +1239,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/22/django-datetimefield-received-a-naive-datetime/">DjangoでDateTimeField Received a Naive datetimeってWarningが出た</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-11-22T16:19:11+09:00" pubdate data-updated="true">Nov 22<span>nd</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>RuntimeWarning: DateTimeField received a naive datetime
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ってWarningが出るのに対する対処</p>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">USE_TZ</span> <span class="o">=</span> <span class="bp">False</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>を書けばおk。要はタイムゾーン入れてくれってエラーなので、そんなものはない！と指定すればいいっぽい</p>
-
-<p>参考：<a href="http://stackoverflow.com/questions/18622007/runtimewarning-datetimefield-received-a-naive-datetime">django &ndash; RuntimeWarning: DateTimeField received a naive datetime &ndash; Stack Overflow</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1213,6 +1264,10 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/01/06/python-decorator/">Pythonのデコレーターをdjangoで使って見る</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/12/18/use-bootstrap3-in-django/">Use Bootstrap3 in Django</a>
       </li>
     
@@ -1228,10 +1283,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
         <a href="/blog/2014/11/30/use-south-to-existing-project/">Southをすでにあるプロジェクトに適用する</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/11/27/django-locale/">Djangoで国際化やってみた</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -1241,12 +1292,12 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C# (4)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C++ (3)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (11)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (12)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (7)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (12)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (13)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (3)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
@@ -1287,7 +1338,7 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - shigepon -
+  Copyright &copy; 2015 - shigepon -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

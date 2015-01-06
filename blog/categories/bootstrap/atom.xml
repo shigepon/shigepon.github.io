@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Bootstrap | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/bootstrap/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-01-06T23:31:34+09:00</updated>
+  <updated>2015-01-06T23:52:51+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -43,12 +43,12 @@ INSTALLED_APPS = (
 <h2>テンプレート</h2>
 
 <p><code>html
-{% raw %}
+
 {% load bootstrap3 %}
 {% bootstrap_css %}
 {% bootstrap_javascript %}
 {% bootstrap_messages %}
-{% endraw %}
+
 </code></p>
 
 <p>これで必要ファイルがロードされる。あとはbootstrap3で使うタグで構成すれば良い。bootstrap_formとかそういうタグもあるけどまだ試していない。</p>
@@ -177,11 +177,11 @@ return render(request, 'list.html', {'object_list':object_list})
 
 <h3>テンプレート</h3>
 
-<p>bocho/templates/list.htmlを作る。中身は一部だけ。{{ 変数名 }}でビューで割り当てた変数を表示する。
+<p>bocho/templates/list.htmlを作る。中身は一部だけ。でビューで割り当てた変数を表示する。
 あと、色々テンプレート用のタグがある。これもDjangoマニュアルを見ると分かる。</p>
 
 <p>```html list.html
-{% raw %}</p>
+</p>
 
 <table class="table">
     <thead><th class="span2">日付</th><th>名称</th><th>裁判所</th></thead>
@@ -195,7 +195,7 @@ return render(request, 'list.html', {'object_list':object_list})
 </table>
 
 
-<p>{% endraw %}
+<p>
 ```</p>
 
 <h3>URLディスパッチャー</h3>
@@ -238,10 +238,10 @@ urlpatterns = patterns(&rdquo;,</p>
 ページ分けする対象をobject_list、ページ送りのURLにpage=以外に設定するパラメータをreqとすると、</p>
 
 <p><code>html list.html
-{% raw %}
+
 {% load bootstrap_toolkit %}↲
 {% bootstrap_pagination object_list align="center" extra=req %}
-{% endraw %}
+
 </code></p>
 
 <p>と設定しておけば良い。</p>
@@ -252,9 +252,9 @@ urlpatterns = patterns(&rdquo;,</p>
 例えば"date=2001-01-01"みたいなパラメータを設定したいんだけど、割り当ててる変数？は日付オブジェクトの場合</p>
 
 <p><code>html list.html
-{% raw %}
+
 {% bootstrap\_pagination object\_list align="center" extra=date|date:"Y-m-d"|s    tringformat:"%date=%s"|slice:"1:" %}
-{% endraw %}
+
 </code></p>
 
 <p>こんな感じで文字列をくっつけてパラメータにすることが出来る。かなり強引<a href="https://www.google.com/url?q=http://d.hatena.ne.jp/feiz/20110414/1302771447&amp;usd=2&amp;usg=AFQjCNFN9kzyrEJj_WZEatK2wIL07eaD0w">参考</a></p>
@@ -283,14 +283,14 @@ $ pip install django-bootstrap-toolkit
 <p>テンプレートを書く</p>
 
 <p><code>html
-{% raw %}
+
 {% load bootstrap_toolkit %}} #bootstrap-toolkitを使うページ全てに必要っぽい
 ...
 &lt;head&gt;
 {% bootstrap_stylesheet_tag %}  #bootstrapのcssへのタグ(CDNから読み込み)
 {% bootstrap_stylesheet_tag "responsive %} #bootstrapのレスポンシブページ用タグ(CDNから読み込み)
 {% bootstrap_javascript_tag %}  #bootstrapのjavascriptへのタグ(CDNから読み込み)
-{% endraw %}
+
 &lt;/head&gt;
 あとは普通にbootstrapのタグを書く
 </code></p>

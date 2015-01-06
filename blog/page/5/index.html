@@ -9,7 +9,10 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="本日、OpenSSLの重大バグが発覚。インターネットの大部分に影響の可能性 | TechCrunch Japanというニュースで 過去2年以内のあらゆるバージョンのOpenSSLが走るシステムで、システムメモリー上にある大量のデータを暴露することが可能 と書いてあった、これはまずいので、 &hellip;">
+  <meta name="description" content="git関連のメモ 変更履歴を見る 1
+$ git log -p で全体の変更履歴 1
+$ git log -p filename でfilenameの変更履歴を表示する ブランチ間の変更ファイル一覧を取得 1
+$ git diff --name-only -b parent_branch -b &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +82,67 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/04/09/git-memo/">Git Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-09T12:36:49+09:00" pubdate data-updated="true">Apr 9<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>git関連のメモ</p>
+
+<h3>変更履歴を見る</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git log -p
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で全体の変更履歴</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git log -p filename
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でfilenameの変更履歴を表示する</p>
+
+<h3>ブランチ間の変更ファイル一覧を取得</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git diff --name-only -b parent_branch -b child_branch
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考：<a href="http://qa.atmarkit.co.jp/q/2047">gitの指定ブランチで変更されたファイルの一覧を取得したい &ndash; QA@IT</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1180,96 +1244,6 @@ events_controller.rbを次のように変えると</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/01/vim-memo/">Vim Memo</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-01T14:14:10+09:00" pubdate data-updated="true">Mar 1<span>st</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>vimでsnippet</h2>
-
-<p>色々方法があるみたいだけど、neocomplecacheを入れているので、それと相性が良さそうな（作者が同じ）プラグインを入れた</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>NeoBundle 'Shougo/neosnippet'
-</span><span class='line'>NeoBundle 'Shougo/neosnippet-snippets'
-</span><span class='line'>
-</span><span class='line'>" Plugin key-mappings.
-</span><span class='line'>imap &lt;C-k&gt;     &lt;Plug&gt;(neosnippet_expand_or_jump)
-</span><span class='line'>smap &lt;C-k&gt;     &lt;Plug&gt;(neosnippet_expand_or_jump)
-</span><span class='line'>xmap &lt;C-k&gt;     &lt;Plug&gt;(neosnippet_expand_target)
-</span><span class='line'>" " SuperTab like snippets behavior.
-</span><span class='line'>imap &lt;expr&gt;&lt;TAB&gt; neosnippet#expandable_or_jumpable() ?
-</span><span class='line'>\ "\&lt;Plug&gt;(neosnippet_expand_or_jump)"
-</span><span class='line'>\: pumvisible() ? "\&lt;C-n&gt;" : "\&lt;TAB&gt;"
-</span><span class='line'>smap &lt;expr&gt;&lt;TAB&gt; neosnippet#expandable_or_jumpable() ?
-</span><span class='line'>\ "\&lt;Plug&gt;(neosnippet_expand_or_jump)"
-</span><span class='line'>\: "\&lt;TAB&gt;"
-</span><span class='line'>"
-</span><span class='line'>" " For snippet_complete marker.
-</span><span class='line'>if has('conceal')
-</span><span class='line'>  set conceallevel=2 concealcursor=i
-</span><span class='line'>endif</span></code></pre></td></tr></table></div></figure>
-
-
-<p>を.vimrcに追記して、vimを再起動後、</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>:NeoBundleInstall</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でインストール完了。もう一度vimを再起動して、phpファイルを空けて
-おもむろにインサートモードで「for」とか打ったらちゃんとsnippetが表示された。&lt;C-n>などで選択してからtab押したらちゃんと入力された。
-いいね〜！！</p>
-
-<p>現在、デフォルトのsnippetとしてneosnippet-snippetsをインストールしないとデフォルトのsnippetを出してくれないことに注意。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -1297,6 +1271,10 @@ events_controller.rbを次のように変えると</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/01/06/python-decorator/">Pythonのデコレーターをdjangoで使って見る</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/12/18/use-bootstrap3-in-django/">Use Bootstrap3 in Django</a>
       </li>
     
@@ -1312,10 +1290,6 @@ events_controller.rbを次のように変えると</p>
         <a href="/blog/2014/11/30/use-south-to-existing-project/">Southをすでにあるプロジェクトに適用する</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/11/27/django-locale/">Djangoで国際化やってみた</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -1325,12 +1299,12 @@ events_controller.rbを次のように変えると</p>
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C# (4)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C++ (3)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (11)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (12)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (7)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (12)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (13)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (3)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
@@ -1371,7 +1345,7 @@ events_controller.rbを次のように変えると</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - shigepon -
+  Copyright &copy; 2015 - shigepon -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

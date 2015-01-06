@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-12-18T10:53:58+09:00</updated>
+  <updated>2015-01-06T23:52:51+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,61 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[pythonのデコレーターをdjangoで使って見る]]></title>
+    <link href="http://blog.shigepon.com/blog/2015/01/06/python-decorator/"/>
+    <updated>2015-01-06T08:55:46+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2015/01/06/python-decorator</id>
+    <content type="html"><![CDATA[<p>pythonのデコレーターを使ってみたらとても便利だなと思ったのでメモ</p>
+
+<p>参考にしたページを読んでいくと理解できた。要はデコレーターとして使う関数は引数に呼び出し元の関数を貰っておいて、内部で作った関数を返せば良い。内部の関数は適当に作れるみたい（今のとこそういう理解をしている）。djangoのビューで呼び出したかったので、内部の関数で可変長引数を取れるようにして下のようにしたら動いた。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">outer</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">print</span> <span class="s">&quot;hoge&quot;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">inner</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この時、args[0]にHttpRequestオブジェクトが入ってるので、これをいじると適当に値を追加したり整形したりするのをビューの外部に持っていけるので、使いようによっては共通部分と個別部分の分離や、ビューに直接関係ない処理（ログとか）を分離出来るので便利な感じがする。ただ、やりすぎるとコードが分割されすぎて読みにくくなる気もする。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">outer</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">request</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span class='line'>        <span class="n">request</span><span class="o">.</span><span class="n">hoge</span> <span class="o">=</span> <span class="s">&quot;fuga&quot;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">inner</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@outer</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">hoge</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">print</span> <span class="n">request</span><span class="o">.</span><span class="n">hoge</span>
+</span><span class='line'>    <span class="o">....</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とやったりすることが出来る。個人的にはWebサービスでサイドメニューに必要な情報をデコレーターでやって、メインコンテンツに必要な情報をビューでやるとかそんな感じで使ってみようと思う。</p>
+
+<p>参考：<a href="http://qiita.com/_rdtr/items/d3bc1a8d4b7eb375c368">Pythonのデコレータを理解するための12Step &ndash; Qiita</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[use bootstrap3 in django]]></title>
@@ -778,7 +833,27 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 </span></code></pre></td></tr></table></div></figure>
 
 
+<h2>django+uwsgi+nginxで502エラーが出た原因の１つ</h2>
 
+<p>djangoはあまり関係無いけどuwsgiの設定の問題だったので、こちらに。django+uwsgi+nginxで502エラーが出て、runserverでは普通に動いたので、しばらくググって解答が得られたのでメモ</p>
+
+<p><a href="http://datatables.net/">DataTables</a>を使って動的にテーブルデータをロードしようとしたら、runserverでは上手く行くのにuwsgiだと502エラーが出てロード出来なかった。最初にnginxのログを見てみると、uwsgiのとこでエラーと書いてあったので、uwsgiのログをチェックした。すると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">invalid</span> <span class="n">request</span> <span class="n">block</span> <span class="n">size</span><span class="p">:</span> <span class="n">xxxxx</span> <span class="p">(</span><span class="nb">max</span> <span class="mi">4096</span><span class="p">)</span><span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいなエラーが出ていた。リクエストが大きすぎるのかなと思い、リクエストの一部を削ってみたらエラーが出なかった。んで、対策をググってみたら書いてあったので、そのまま下のコードを実装してみた。</p>
+
+<figure class='code'><figcaption><span>uwsgi.ini</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ini'><span class='line'><span class="na">buffer-size</span><span class="o">=</span><span class="s">65535</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいにバッファーサイズを大きく(例では64k)した。これでエラーが消えたのでめでたしめでたし。</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/22697584/nginx-uwsgi-104-connection-reset-by-peer-while-reading-response-header-from-u">django &ndash; Nginx uwsgi (104: Connection reset by peer) while reading response header from upstream &ndash; Stack Overflow</a></p>
 ]]></content>
   </entry>
   
@@ -1580,71 +1655,6 @@ AUTH_USER_MODEL
 
 <p>とかやると作れる。
 「twitter」の部分は認証の種類によって変えるが、どういうルールで名前を決めるのかイマイチ分かってない。試行錯誤が要るかも。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Groongaアンケート？]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/07/05/groonga-qa/"/>
-    <updated>2014-07-05T13:52:55+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/07/05/groonga-qa</id>
-    <content type="html"><![CDATA[<p>今回は他の人からの話があるので丁寧語で。
-@ktouさんからGroongaについて「Groongaについてのいくつかの質問について答えて欲しい」との話がありましたので、ブログに載せておきます。</p>
-
-<p>質問は以下の3点</p>
-
-<ul>
-<li>Groongaを選んだ決め手</li>
-<li>実際にGroongaを使っていてよいと思っているところ</li>
-<li>Groongaがこうなるともっとうれしいと思うところ</li>
-</ul>
-
-
-<h2>Groongaを選んだ決め手</h2>
-
-<p>現在運営しているサービス<a href="http://thoz.org">とある法律判例の全文検索</a>を作り始める時に、全文検索をサービスに入れるのを前提に考えてましたので、全文検索エンジンについて調べました。DBとしてはPostgreSQLをメインで使っているので、当時は選択肢として次のようなものがありました。</p>
-
-<ul>
-<li>Groonga（まだバージョン1になってなかったような）</li>
-<li>Senna</li>
-<li>tsvector</li>
-<li>namazu</li>
-<li>Hyper Estraier</li>
-</ul>
-
-
-<p>最初は何もアプリを入れなくていいのでtsvectorを使った全文検索を試してみたんですが、bigramで日本語が使えない。使うならソースからコンパイルというのが当時面倒だったので辞めました（当時からVagrantとかDockerとかあって、色々試せたらbigramでいってたかも）。</p>
-
-<p>なので、他4つを比較した訳なんですが、作るサービスは個人サービスだし、なるべく新しいもので、かつ日本人が作っているものを利用してみようと思い、Groongaを選択しました。あと、Groongaが「Sennaの後継」という立場だったのも大きかったと思います。Sennaの後継なら新しいアプリだとしても、それなりに信用があるだろう。すぐにメンテされなくなるようなものでも無いだろうという判断をしました。</p>
-
-<h2>実際にGroongaを使っていてよいと思っているところ</h2>
-
-<p>まずサーバ1個でかなり無茶な使い方してもちゃんと動いてくれるところです。Groonga勉強会では「データ量がメモリを超えだしたら分散を考えて」みたいな話が出たのですが、結構超えてても何の問題もなく動いてくれます。</p>
-
-<p>次は言語バインディングとかあまり考えなくてもHTTPでアクセス出来る方法を用意してくれているので、HTTPアクセスさえ出来ればどんな言語からでも利用出来る点が良いと思います。Mroongaは全く使っていませんし、Rroongaもデータのバックアップ用途以外は全く使ってません。HTTPアクセス出来る場合は、管理もHTTPで出来ます。これも便利だと思います。</p>
-
-<p>ドリルダウン、タグ検索、補完補正など、全文検索以外にも使える機能が沢山あります。沢山ありすぎて利用できていない機能が多々ありますがorz。</p>
-
-<p>機能とは関係ありませんが、TwitterでGroongaについてボヤくと@ktouさんがフォローしてくれるのがいつもとても助かっています＞＜。そういう人が居ると、使う時にとても心強いです。</p>
-
-<p>名前が好きです。Elasticなんたらは何かエラそうですが、Groongaはグルグルしてるっぽいのがいいです。</p>
-
-<h2>Groongaがこうなるともっとうれしいと思うところ</h2>
-
-<p>現在もとてもありがたいのですが、こうなると嬉しい点を箇条書きします。</p>
-
-<ul>
-<li>現在使っている機能以外でもっと色々出来るようなのですが、情報が少ない気がします。ドキュメントが充実してくるととても嬉しいです。ドキュメントが充実すればきっとTwitterでボヤく率も減る・・・かも。</li>
-<li>Rroonga使わないでGroonga単体の機能として、大容量データのバックアップを取れると嬉しいです。</li>
-<li>難しいと思いますが、複数カラム（カラムA,B)での全文検索で、CとDを検索したい時、カラムAにCが、カラムBにDが入ってる時に、検索結果として出力出来るフラグみたいなのを入れて欲しいです。</li>
-<li>もしかしたら出来るのかもしれませんが、ソースからビルドした場合にgroonga-server系の機能が使えるようにしてもらえるとHTTPから使っている身としては嬉しいです。</li>
-<li>cliでのヒストリーは特に何もアプリ入れなくても出来るようにしてくれるとまた嬉しいです。</li>
-<li>sqlのinsert文みたいな形でloadが出来ると、RDBで使っていたテーブルを丸々移動とか手軽に出来そうなので、そういうのが出来ると嬉しいです。もしくはcsvでloadが出来るとか。まぁsql使うならMroonga使えって話ですが・・・単体でも特にloadについてRDBから書き出せる形式のものを読み込めると嬉しいなーなんて思いました。</li>
-<li>勉強会の時に「ぐるーんが」なのか「むるーんが」なのか「るるーんが」なのかが発音でハッキリしませんでしたが、私の耳が悪いんですねきっと。</li>
-</ul>
-
-
-<p>以上追記するかもしれませんが、こんな感じで〜</p>
 ]]></content>
   </entry>
   

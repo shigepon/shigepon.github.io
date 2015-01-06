@@ -5,12 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Python memo - shigeponが関心のある技術情報など</title>
+  <title>pythonのデコレーターをdjangoで使って見る - shigeponが関心のある技術情報など</title>
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Djangoやり始めたので、その過程で記録しておきたいことをメモ。 pip freezeでWarning: cannot find svn location for distribute==0.6.24dev-r0 1
-$ sudo pip install --upgrade distribute &hellip;">
+  <meta name="description" content="pythonのデコレーターを使ってみたらとても便利だなと思ったのでメモ 参考にしたページを読んでいくと理解できた。要はデコレーターとして使う関数は引数に呼び出し元の関数を貰っておいて、内部で作った関数を返せば良い。内部の関数は適当に作れるみたい（今のとこそういう理解をしている）。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +18,7 @@ $ sudo pip install --upgrade distribute &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.shigepon.com/blog/2014/06/30/python-memo">
+  <link rel="canonical" href="http://blog.shigepon.com/blog/2015/01/06/python-decorator">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -83,7 +82,7 @@ $ sudo pip install --upgrade distribute &hellip;">
   
   <header>
     
-      <h1 class="entry-title">Python Memo</h1>
+      <h1 class="entry-title">Pythonのデコレーターをdjangoで使って見る</h1>
     
     
       <p class="meta">
@@ -99,80 +98,31 @@ $ sudo pip install --upgrade distribute &hellip;">
   
 
 
-<time datetime="2014-06-30T20:38:44+09:00" pubdate data-updated="true">Jun 30<span>th</span>, 2014</time>
+<time datetime="2015-01-06T08:55:46+09:00" pubdate data-updated="true">Jan 6<span>th</span>, 2015</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Djangoやり始めたので、その過程で記録しておきたいことをメモ。</p>
+<div class="entry-content"><p>pythonのデコレーターを使ってみたらとても便利だなと思ったのでメモ</p>
 
-<h2>pip freezeでWarning: cannot find svn location for distribute==0.6.24dev-r0</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo pip install --upgrade distribute
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でおk</p>
-
-<h2>for文でループカウント取得</h2>
-
-<p>参考<a href="http://fujishinko.exblog.jp/7669024">Python 配列をfor文でまわしているときのループカウント取得 : fujishinko 雑記帳</a></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">,</span><span class="s">&#39;c&#39;</span><span class="p">]):</span>
-</span><span class='line'>  <span class="k">print</span> <span class="n">i</span><span class="p">,</span><span class="n">item</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>日本語のコマンドライン引数取得</h2>
-
-<p>参考<a href="http://www.yukun.info/blog/2008/07/python-command-line-arguments.html">Python: コマンドライン引数の取得 – sys.argv変数</a></p>
-
-<figure class='code'><figcaption><span>:hoge.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="c"># -\*- encoding: utf-8 -\*-</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">sys</span>
-</span><span class='line'><span class="n">argv</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span>
-</span><span class='line'><span class="k">print</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python hoge.py あいうえお
-</span><span class='line'>あいうえお
-</span><span class='line'><span class="err">$</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>コマンド実行して実行結果を取得</h2>
-
-<p>参考<a href="http://qiita.com/mokemokechicken/items/a84b0aa96b94d1931f08">Python の subprocess で出力を受け取るときは communicate() を使おう &ndash; Qiita</a>
-subprocessを使う。何か昔は別の手法だったらしい。</p>
+<p>参考にしたページを読んでいくと理解できた。要はデコレーターとして使う関数は引数に呼び出し元の関数を貰っておいて、内部で作った関数を返せば良い。内部の関数は適当に作れるみたい（今のとこそういう理解をしている）。djangoのビューで呼び出したかったので、内部の関数で可変長引数を取れるようにして下のようにしたら動いた。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">subprocess</span>
-</span><span class='line'><span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="s">&quot;echo &#39;hoge&#39;&quot;</span><span class="p">,</span><span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span><span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
-</span><span class='line'><span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-</span><span class='line'><span class="n">stdout_data</span><span class="p">,</span><span class="n">stderr_data</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-</span><span class='line'><span class="k">print</span> <span class="n">stdout_data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">outer</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">print</span> <span class="s">&quot;hoge&quot;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">inner</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h2>親クラスのメソッド呼び出し</h2>
+<p>この時、args[0]にHttpRequestオブジェクトが入ってるので、これをいじると適当に値を追加したり整形したりするのをビューの外部に持っていけるので、使いようによっては共通部分と個別部分の分離や、ビューに直接関係ない処理（ログとか）を分離出来るので便利な感じがする。ただ、やりすぎるとコードが分割されすぎて読みにくくなる気もする。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -184,20 +134,24 @@ subprocessを使う。何か昔は別の手法だったらしい。</p>
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">class</span> <span class="nc">Hoge</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">aaa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">param</span><span class="p">):</span>
-</span><span class='line'>        <span class="k">print</span> <span class="n">param</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">outer</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">request</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span class='line'>        <span class="n">request</span><span class="o">.</span><span class="n">hoge</span> <span class="o">=</span> <span class="s">&quot;fuga&quot;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">inner</span>
 </span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">Fuga</span><span class="p">(</span><span class="n">Hoge</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">bbb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">param</span><span class="p">):</span>
-</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">hage</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Fuga</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">aaa</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">f</span> <span class="o">=</span> <span class="n">Fuga</span><span class="p">()</span>
-</span><span class='line'><span class="n">f</span><span class="o">.</span><span class="n">bbb</span><span class="p">(</span><span class="s">&#39;test&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="nd">@outer</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">hoge</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">print</span> <span class="n">request</span><span class="o">.</span><span class="n">hoge</span>
+</span><span class='line'>    <span class="o">....</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>こんな感じ。お作法を忘れがち。</p>
+<p>とやったりすることが出来る。個人的にはWebサービスでサイドメニューに必要な情報をデコレーターでやって、メインコンテンツに必要な情報をビューでやるとかそんな感じで使ってみようと思う。</p>
+
+<p>参考：<a href="http://qiita.com/_rdtr/items/d3bc1a8d4b7eb375c368">Pythonのデコレータを理解するための12Step &ndash; Qiita</a></p>
 </div>
 
 
@@ -220,12 +174,12 @@ subprocessを使う。何か昔は別の手法だったらしい。</p>
   
 
 
-<time datetime="2014-06-30T20:38:44+09:00" pubdate data-updated="true">Jun 30<span>th</span>, 2014</time>
+<time datetime="2015-01-06T08:55:46+09:00" pubdate data-updated="true">Jan 6<span>th</span>, 2015</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/python/'>Python</a>
+    <a class='category' href='/blog/categories/django/'>Django</a>, <a class='category' href='/blog/categories/python/'>Python</a>
   
 </span>
 
@@ -234,7 +188,7 @@ subprocessを使う。何か昔は別の手法だったらしい。</p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2014/06/30/python-memo/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2014/06/30/python-memo/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2015/01/06/python-decorator/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2015/01/06/python-decorator/" >Tweet</a>
   
   
   
@@ -254,10 +208,8 @@ subprocessを使う。何か昔は別の手法だったらしい。</p>
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/06/28/groonga-study-kobe-2014-06-27/" title="Previous Post: 全文検索エンジンGroongaユーザ勉強会＠神戸に参加しました">&laquo; 全文検索エンジンGroongaユーザ勉強会＠神戸に参加しました</a>
+        <a class="basic-alignment left" href="/blog/2014/12/18/use-bootstrap3-in-django/" title="Previous Post: use bootstrap3 in django">&laquo; use bootstrap3 in django</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/07/01/ansible-memo/" title="Next Post: ansible memo">ansible memo &raquo;</a>
       
     </p>
   </footer>
