@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Django | shigeponが関心のある技術情報など]]></title>
+  <title><![CDATA[Category: django | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/django/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2014-12-18T11:47:06+09:00</updated>
+  <updated>2015-01-06T23:31:34+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -14,525 +14,49 @@
 
   
   <entry>
-    <title type="html"><![CDATA[use bootstrap3 in django]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/12/18/use-bootstrap3-in-django/"/>
-    <updated>2014-12-18T08:24:56+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/12/18/use-bootstrap3-in-django</id>
-    <content type="html"><![CDATA[<p>そろそろbootstrap3を使ってみたいなと思い、Djangoでbootstrap3を使う方法を調べてみた。django-bootstrap-toolkitのページを見てみるとdjango-bootstrap3を使ってねと書いてあるので、それを使ってみることにした。</p>
-
-<h2>インストール</h2>
-
-<p>```sh</p>
-
-<p>$ pip install django-bootstrap3
-```</p>
-
-<h2>設定</h2>
-
-<p>```py settings.py
-INSTALLED_APPS = (
-&hellip;.</p>
-
-<pre><code>'bootstrap3',
-</code></pre>
-
-<p>&hellip;.
-)
-```</p>
-
-<h2>テンプレート</h2>
-
-<p><code>html
-{% raw %}
-{% load bootstrap3 %}
-{% bootstrap_css %}
-{% bootstrap_javascript %}
-{% bootstrap_messages %}
-{% endraw %}
-</code></p>
-
-<p>これで必要ファイルがロードされる。あとはbootstrap3で使うタグで構成すれば良い。bootstrap_formとかそういうタグもあるけどまだ試していない。</p>
-
-<h2>Bootswatchにあるテーマを試す</h2>
-
-<p>まずはBootswatchのテーマcssをダウンロード</p>
-
-<p><code>sh
-$ cd /static/css
-$ wget http://bootswatch.com/cosmo/bootstrap.min.css
-</code></p>
-
-<p>/staticはアプリのフォルダ下に作る</p>
-
-<p>次に設定ファイルに項目を追加</p>
-
-<p>```py settings.py
-STATIC_URL = &lsquo;/static/&rsquo;
-BOOTSTRAP3 = {</p>
-
-<pre><code>'css_url':'/static/css/bootstrap.min.css'
-</code></pre>
-
-<p>}
-```</p>
-
-<p>これだけでテンプレートいじらずに動いてくれる</p>
-
-<p>bootstrap2だとnavbar表示の時に表示が重なるとか何とかあったけど、bootstrap3だと気にしなくて良いのかな？何も追加css書かなくても特に問題無さそう。これは嬉しい。</p>
-
-<p>でも<a href="http://qiita.com/Alex_23drum/items/bbf80aff7dbb6fd1a7d9">Navbarに画像入れると下に偏った配置になる</a>とかあるみたいなので、調べてみる必要があるかも</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Southをすでにあるプロジェクトに適用する]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/11/30/use-south-to-existing-project/"/>
-    <updated>2014-11-30T23:19:26+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/11/30/use-south-to-existing-project</id>
-    <content type="html"><![CDATA[<p>Southってのを使うとモデルを変更した時に、サクッとDB(PostgreSQL)に反映出来るらしんだけど、今すでに作成中のプロジェクトに反映させたかったので、メモ</p>
-
-<h2>インストール</h2>
-
-<p><code>sh
-$ pip install south
-</code></p>
-
-<h2>設定</h2>
-
-<p>```py settings.py
-INSTALLED_APPS = (
-&hellip;.</p>
-
-<pre><code>'south',
-</code></pre>
-
-<p>)
-```</p>
-
-<h2>作成中のアプリをsouthに追加</h2>
-
-<p>データベースが関連しているモデルが作成されているアプリにコマンドを実行すればおk</p>
-
-<p><code>sh
-$ python manage.py schemamigration アプリ名 --init
-$ python manage.py syncdb --all
-$ python manage.py migrate アプリ名 --fake
-</code></p>
-
-<p>syncdbしないでmigrateすると、PostgreSQLだとエラーが出たので、先にsyncdbするのが必要みたい</p>
-
-<p>実際にモデル変更した時の作業を追記</p>
-
-<h2>モデル変更</h2>
-
-<p>モデルを変更したら次のコマンドでデータベースに反映する</p>
-
-<p><code>sh
-$ python manage.py schemamigration アプリ名 --auto
-$ python manage.py migrate アプリ名
-</code></p>
-
-<p>この時にデータベース内の値が変更した制約等に引っ掛かる場合は途中で止まったりするので、制約に合うようにデータを変更するとか修正する。</p>
-
-<p>参考：<a href="http://yu-write.blogspot.jp/2014/01/django-south.html">Yura YuWrite: [django] 既存のプロジェクトにsouthを追加する方法</a>、<a href="http://stackoverflow.com/questions/22236029/trouble-getting-django-set-up-on-heroku-using-south-keep-getting-programminger">postgresql &ndash; Trouble getting Django set up on Heroku using South &ndash; keep getting ProgrammingError: relation does not exist &ndash; Stack Overflow</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[djangoで国際化やってみた]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/11/27/django-locale/"/>
-    <updated>2014-11-27T13:02:12+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/11/27/django-locale</id>
-    <content type="html"><![CDATA[<p>Djangoで他の人が作ったモジュールを使ってると、英語のメッセージが入ってることがあるので、日本語化してみた。とりあえず英語のメッセージを日本語に変換するとこまで。</p>
-
-<h2>準備</h2>
-
-<p>gettextが無かったらインストール。Ubuntuの場合</p>
-
-<p><code>sh
-$ sudo aptitude install gettext
-</code></p>
-
-<p>プロジェクトにlocaleフォルダを作る。無いと後のコマンドでエラーが出た</p>
-
-<h2>poファイル作成</h2>
-
-<p>おもむろにpoファイルを作るコマンドを実行</p>
-
-<p><code>sh
-django-admin.py makemessages -l ja
-</code></p>
-
-<p>するとpath/to/locale/ja/LC_MESSAGES/django.poってファイルが出来るので、それを修正していく。ただ、このコマンドプロジェクト内だけ捜査してファイルを作るみたいで、外部モジュールの場合、上手く読み取ってくれなかった。</p>
-
-<p>今回はvirtualenvでpipしたdjango-allauthのテンプレートを日本語化したかったので、path/to/virtualenv/dir/lib/python2.7/site-packages/allauth/templates/account/内のファイルを全部path/to/project/templates/account/にコピーしてからコマンド実行すると上手く読み取ってくれた。</p>
-
-<h2>翻訳</h2>
-
-<p>出来たpoファイルを編集すればオッケー。ファイル内でmsgid以下に書いてあるのが元の文、その次のmsgstr以下に文章書くと、翻訳文になる。元の英文に何かパラメーター付いてる場合は必ずパラメーターを翻訳文に設定しないとエラーが出る。</p>
-
-<p>```py 例</p>
-
-<h1>: path/to/python/module.py:23</h1>
-
-<p>msgid &ldquo;Welcome to my site.&rdquo;
-msgstr &ldquo;いらっしゃーい&rdquo;
-```</p>
-
-<h2>moファイル作成</h2>
-
-<p>おもむろにコマンドを実行するとmoファイルが出来る</p>
-
-<p><code>sh
-django-admin.py compilemessages
-</code></p>
-
-<h2>settings.pyの設定</h2>
-
-<p>これだけで動くと思ったら動かなかったので色々調べてみたらLOCALE_PATHSを設定しないといけなかった。</p>
-
-<p>```py settings.py
-LOCALE_PATHS = (</p>
-
-<pre><code>"path/to/locale",
-</code></pre>
-
-<p>)
-```</p>
-
-<p>これ設定しておいたらちゃんと動いた。</p>
-
-<p>あとは普通にrunserverとかでサーバ起動したら翻訳されてる</p>
-
-<p>参考：<a href="http://docs.djangoproject.jp/en/latest/topics/i18n/translation.html">翻訳 — Django 1.4 documentation</a></p>
-
-<p>翻訳したい文字列をマークする方法とかはリンク見れば分かる。あと、使いたい言語を選択出来るようにするとかそういう場合はLocaleMiddlewareを使うとかなんとかあるみたいだけどやってない。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[django-allauthを使ってみた]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/11/25/use-django-allauth/"/>
-    <updated>2014-11-25T14:55:16+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/11/25/use-django-allauth</id>
-    <content type="html"><![CDATA[<p>ソーシャルログインだけでなく、通常のログインもやりたかったので、django-allauthを試してみた。</p>
-
-<h2>インストール</h2>
-
-<p>pipで</p>
-
-<p><code>sh
-pip install django-allauth
-</code></p>
-
-<h2>ファイルでの設定</h2>
-
-<p>settings.pyとurls.pyを設定</p>
-
-<p>```py settings.py
-INSTALLED_APPS = (
-&hellip;</p>
-
-<pre><code>'allauth',
-'allauth.account',
-'allauth.socialaccount',
-'allauth.socialaccount.providers.twitter', #例としてTwitter
-</code></pre>
-
-<p>)
-AUTHENTICATION_BACKENDS = (
-&hellip;</p>
-
-<pre><code>'allauth.account.auth_backends.AuthenticationBackend',
-</code></pre>
-
-<p>)
-TEMPLATE_CONTEXT_PROCESSORS = (
-&hellip;</p>
-
-<pre><code>"django.core.context_processors.request",
-"django.contrib.auth.context_processors.auth",
-"allauth.account.context_processors.account",
-"allauth.socialaccount.context_processors.socialaccount",
-</code></pre>
-
-<p>)
-SITE_ID = 1
-```</p>
-
-<p>`&ldquo;py urls.py
-urlpatterns = patterns(&rdquo;,</p>
-
-<pre><code>...
-url('^accounts/', include('allauth.urls')),
-url('^accounts/profile/?', include('profile.urls',namespace='profile')), #ログイン後のリダイレクト先
-</code></pre>
-
-<p>)
-```</p>
-
-<h2>adminページでの設定</h2>
-
-<p>ソーシャルログインする場合のみ必要。 <a href="http://domain/admin/">http://domain/admin/</a> にアクセスして管理者ログインしてSocial applicationを追加する。
-フォーム内では名前を適当に付けて、Twitterの場合Client idにConsumer keyを登録して、Secret keyにConsumer secretを登録すればおk
-最後に、利用可能サイトから一番上のサイト(SITE_ID=1と指定してるので)を選択するとおk</p>
-
-<p><a href="http://domain/accounts">http://domain/accounts</a> にアクセスすればログインフォームが出てくる。出来た。</p>
-
-<h2>テンプレートを上書きする</h2>
-
-<p>プロジェクトディレクトリ/templates/account以下にファイルを設定すればおk
-例えばログインのテンプレートなら、login.htmlを設置すればおk</p>
-
-<p>元のファイルはgithubを見れば分かる</p>
-
-<h2>使える機能</h2>
-
-<p><a href="https://github.com/pennersr/django-allauth/blob/master/allauth/account/urls.py">githubのコード</a>
-見れば大体分かる感じ</p>
-
-<h2>ユーザー登録時のメール確認後の処理でハマる</h2>
-
-<p>ユーザー登録すると通常は登録したメールアドレスにメールが届いて、そこに書いてあるURLにアクセスすると登録完了する手順が表示される。そこらへんの文章とかも上のテンプレート上書きでいけて問題ないんだけど、初期状態では登録が最後まで完了すると、そのままログインしてログイン時のリダイレクト先に移動してしまう。完了画面を表示したい場合はこれではまずい。</p>
-
-<p>ので、<a href="http://django-allauth.readthedocs.org/en/latest/advanced.html">ここらへん</a>のCustom Redirectsの項目を参考にしてアダプタを作ってみた</p>
-
-<p><code>py settings.py
-ACCOUNT_ADAPTER = 'project.users.adapter.MyAccountAdapter'
-</code></p>
-
-<p>```py project/users/adapter.py
-from django.conf import settings
-from allauth.account.adapter import DefaultAccountAdapter</p>
-
-<p>class MyAccountAdapter(DefaultAccountAdapter):</p>
-
-<pre><code>def get_email_confirmation_redirect_url(self,request):
-    path = "/account/complete"
-    return path
+    <title type="html"><![CDATA[pythonのデコレーターをdjangoで使って見る]]></title>
+    <link href="http://blog.shigepon.com/blog/2015/01/06/python-decorator/"/>
+    <updated>2015-01-06T08:55:46+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2015/01/06/python-decorator</id>
+    <content type="html"><![CDATA[<p>pythonのデコレーターを使ってみたらとても便利だなと思ったのでメモ</p>
+
+<p>参考にしたページを読んでいくと理解できた。要はデコレーターとして使う関数は引数に呼び出し元の関数を貰っておいて、内部で作った関数を返せば良い。内部の関数は適当に作れるみたい（今のとこそういう理解をしている）。djangoのビューで呼び出したかったので、内部の関数で可変長引数を取れるようにして下のようにしたら動いた。</p>
+
+<p>```py
+def outer(func):</p>
+
+<pre><code>def inner(*args,**kwargs):
+    print "hoge"
+    return func(*args,**kwargs)
+return inner
 </code></pre>
 
 <p>```</p>
 
-<p>でもこれだけでは上手くいかなかった。普通にログイン時のリダイレクト先に移動してしまった。どうもACCOUNT_LOGIN_ON_EMAIL_CONFIRMATIONをFalseにしないとダメみたい</p>
+<p>この時、args[0]にHttpRequestオブジェクトが入ってるので、これをいじると適当に値を追加したり整形したりするのをビューの外部に持っていけるので、使いようによっては共通部分と個別部分の分離や、ビューに直接関係ない処理（ログとか）を分離出来るので便利な感じがする。ただ、やりすぎるとコードが分割されすぎて読みにくくなる気もする。</p>
 
-<p><code>py settings.py
-ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False
-</code></p>
+<p>```py
+def outer(func):</p>
 
-<p>これでやっと/account/completeにリダイレクトしてくれた。ログインした状態ではダメみたいなので、ログインは再度やってもらわないといけない。うーん今のとこ仕方ないか・・・。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Django Memo]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/11/23/django-memo/"/>
-    <updated>2014-11-23T22:35:38+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/11/23/django-memo</id>
-    <content type="html"><![CDATA[<p>Djangoやってて忘れっぽいところとかをメモ</p>
+<pre><code>def inner(*args,**kwargs):
+    request = args[0]
+    request.hoge = "fuga"
+    return func(*args,**kwargs)
+return inner
+</code></pre>
 
-<h2>リクエストパラメーターをモデルに入れる</h2>
+<p>@outer
+def hoge(request):</p>
 
-<p>```py views.py
-def a_view(request):</p>
-
-<pre><code>hoge = Fuga(request.GET) #新たにインスタンス作る場合
-fuga = Fuga.objects.get(pk=1)
-hage = Fuga(request.GET,instance=fuga) #既にあるインスタンスに入れる場合
+<pre><code>print request.hoge
+....
 </code></pre>
 
 <p>```</p>
 
-<p>instance=xxxとやるのを何度か忘れた＞＜</p>
+<p>とやったりすることが出来る。個人的にはWebサービスでサイドメニューに必要な情報をデコレーターでやって、メインコンテンツに必要な情報をビューでやるとかそんな感じで使ってみようと思う。</p>
 
-<h2>forms.DateFieldでISO-8601フォーマットの入力を受入れる</h2>
-
-<p>html5でdatetime-localとか扱おうとすると、入力値がISO-8601形式になって、そのままだとDateFieldが入力をdatetimeの正しい形式として認識してくれない。</p>
-
-<p>で、input_formatsを設定するといけるらしいんだけど、あまりマニュアルでちゃんと説明してない。Stack Overflowの情報とかをググると設定方法が間違ってるコードとかあって、正しいのが良く分からない。で、結局色々調べたら</p>
-
-<p><code>py models.py
-date = forms.DateField(input_formats=('%Y-%m-%dT%H:%M:%S',))
-</code></p>
-
-<p>とタプルで渡す必要があるらしい</p>
-
-<p>参考：<a href="http://labs.uechoco.com/blog/2011/08/django-dateform-inputs_format-wrong.html">うえちょこ＠ぼろぐ» [Django]forms.DateFieldのinputs_formatではまった</a></p>
-
-<h2>ModelForm使ってフォーム出力する時にrequeied属性をテンプレートで参照するとか</h2>
-
-<p><code>py models.py
-hoge = forms.CharField(max_length=100,widget=TextInput(attrs={"required":"true"}))↲
-</code></p>
-
-<p>こんな感じで定義したフィールドの属性取ってきたい場合、</p>
-
-<p><code>html
-\{\% for field in form \%\}
-  \{\% if field.field.required \%\}&lt;p&gt;必須&lt;/p&gt;\{\% endif \%\}
-\{\% endfor \%\}
-</code></p>
-
-<p>適当だけど、こんな感じでアクセスできる。</p>
-
-<h2>DjangoでGroup By</h2>
-
-<p>DjangoでGroup Byして何個かのフィールドのデータで例えば、日付とその日に登録したデータの件数だけ欲しい時</p>
-
-<p>```py views.py
-q = Hoge.objects.filter(date<strong>gte = date).filter(date</strong>lt = dto).extra({&lsquo;date&rsquo;:&ldquo;date_trunc(&lsquo;day&rsquo;,date)&rdquo;})
-q.query.group_by = [&lsquo;date&rsquo;]
-values = q.values(&lsquo;date&rsquo;).order_by().annotate(c = Count(&lsquo;id&rsquo;))</p>
-
-<p>こんな感じでいける。ちなみにPostgreSQL。dateが時間の情報も持っているのでPostgreSQLのdate_trunc関数を使ってdateを日付の情報だけにしてから、group_byする。
-annotateは集計した値を新しいフィールド（ここだとc）に入れる。
-例えばvalues[0].cでアクセスできる。このコードで、日付とその日に登録したデータ件数が入った辞書のリストを得ることが出来る
-```</p>
-
-<h2>QuerySetで吐いたクエリを出力</h2>
-
-<p><code>py views.py
-h = Hoge.objects.all()
-print h.query
-</code></p>
-
-<p>でおk。でもクエリが例外出す時には出せないような・・・</p>
-
-<p>参考：<a href="http://programmer-jobs.blogspot.jp/2013/01/djangosql.html">Djangoで、デバック用のSQLクエリの表示 一言多いプログラマーの独り言</a></p>
-
-<h2>ModelFormでcleanを使ってデータの検証する時に、updateしようとしてるかcreateしようとしてるか判断する</h2>
-
-<p>createの時だけチェックしたかったので、色々調べてみたらclean(self)内で、self.instanceでチェックすると良いみたい。例えばプライマリーキーでidがある場合こんな感じ</p>
-
-<p>```py models.py
-class Hoge(forms.ModelForm):</p>
-
-<pre><code>def clean(self):
-    cleaned_data = self.cleaned_data
-    if self.instance.id is None:
-        #create用の処理
-        raise ValidationError('例外出すのはこんな感じ')
-    else:
-        #update用の処理
-    return cleaned_data
-</code></pre>
-
-<p>```</p>
-
-<p>instanceの型チェックする方が正攻法かも。例外のメッセージは</p>
-
-<p>```py views.py
-def test(request):</p>
-
-<pre><code>form = Hoge(request.POST)
-if form.is_valid():
-    #例外が無かった場合
-else:
-    for k,v in form.errors.item():
-        #kが例外のフィールド。cleanの場合は__all__
-        #vが例外のメッセージ
-</code></pre>
-
-<p>```</p>
-
-<p>みたいな感じで取り出せる。</p>
-
-<h2>runserver実行時にコンソールにスタックとレースを出力する</h2>
-
-<p>```py settings.py
-LOGGING={</p>
-
-<pre><code>'version':1,
-'handlers':{
-    'console':{
-        'level':'DEBUG',
-        'class':'logging.StreamHandler',
-    },
-},
-'loggers':{
-    'django.request':{
-        'handlers':['console'],
-        'propagate':True,
-        'level':'DEBUG',
-    }
-},
-</code></pre>
-
-<p>}
-```
-これを書いておけばコンソールにスタックトレースを出力してくれる。apiのコード書いてる時とかajaxで呼び出してる場合とかに便利。</p>
-
-<p>参考：<a href="http://stackoverflow.com/questions/5886275/print-a-stack-trace-to-stdout-on-errors-in-django-while-using-manage-py-runserve">python &ndash; Print a stack trace to stdout on errors in Django while using manage.py runserver &ndash; Stack Overflow</a>というかここのコード丸コピー</p>
-
-<h2>Gmail送信</h2>
-
-<p><code>py settings.py
-EMAIL_USE_TLS=True
-EMAIL_HOST='smpt.gmail.com'
-EMAIL_HOST_USER='mymail@gmail.com'
-EMAIL_HOST_PASSWORD='mypassword'
-EMAIL_PORT=587
-</code></p>
-
-<p>```py views.py
-from django.core.mail import send_mail</p>
-
-<p>def mail(request):</p>
-
-<pre><code>send_mail('Subject','message','mymail.gmail.com',['to@mail.address'],fail_silently=False)
-</code></pre>
-
-<p>```</p>
-
-<p>こんだけ</p>
-
-<p>参考：<a href="http://d.hatena.ne.jp/yuheiomori0718/20120714/1342266647">DjangoでGmailを使ってメール送信 &ndash; brainstorm</a>、</p>
-
-<h2>MultiValueDictKeyError</h2>
-
-<p>モデルをgetする時にキーに何も値が指定されてなかったりすると起こる。例えば</p>
-
-<p><code>py
-instance = SampleModel.objects.get(id=key)
-</code></p>
-
-<p>でkeyに何も設定されてないと起こるみたい。出た時に何回かイチイチぐぐったのでメモ</p>
-
-<h2>PostgreSQLでDateTimeFieldの値を日付に対してグルーピングしたい</h2>
-
-<p>PostgreSQLではタイムゾーン入りのタイムスタンプで登録されるので、</p>
-
-<p><code>py
-q = Hoge.objects.extra({"date":"date_trunc('day',date)"})
-q.query.group_by['date']
-</code></p>
-
-<p>みたいな構文で日付だけ取り出して、グルーピングしようとすると、PostgreSQLの設定でタイムゾーンがUTCになっていた場合に、2014/12/17 00:00:00+9のデータは2014/12/16 15:00:00+0と認識されるので12/16のデータとしてグルーピングされてしまう。日本のタイムゾーンでやってると、これはまずいので、以下のようなコードにすると良い</p>
-
-<p><code>py
-q = Hoge.objects.extra({"date":"date_trunc('day',date AT TIME ZONE 'JST')"})
-q.query.group_by['date']
-</code></p>
-
-<h2>django+uwsgi+nginxで502エラーが出た原因の１つ</h2>
-
-<p>djangoはあまり関係無いけどuwsgiの設定の問題だったので、こちらに。django+uwsgi+nginxで502エラーが出て、runserverでは普通に動いたので、しばらくググって解答が得られたのでメモ</p>
-
-<p><a href="http://datatables.net/">DataTables</a>を使って動的にテーブルデータをロードしようとしたら、runserverでは上手く行くのにuwsgiだと502エラーが出てロード出来なかった。最初にnginxのログを見てみると、uwsgiのとこでエラーと書いてあったので、uwsgiのログをチェックした。すると</p>
-
-<p><code>log
-invalid request block size: xxxxx (max 4096)...
-</code></p>
-
-<p>みたいなエラーが出ていた。リクエストが大きすぎるのかなと思い、リクエストの一部を削ってみたらエラーが出なかった。んで、対策をググってみたら書いてあったので、そのまま下のコードを実装してみた。</p>
-
-<p><code>ini uwsgi.ini
-buffer-size=65535
-</code></p>
-
-<p>みたいにバッファーサイズを大きく(例では64k)した。これでエラーが消えたのでめでたしめでたし。</p>
-
-<p>参考：<a href="http://stackoverflow.com/questions/22697584/nginx-uwsgi-104-connection-reset-by-peer-while-reading-response-header-from-u">django &ndash; Nginx uwsgi (104: Connection reset by peer) while reading response header from upstream &ndash; Stack Overflow</a></p>
+<p>参考：<a href="http://qiita.com/_rdtr/items/d3bc1a8d4b7eb375c368">Pythonのデコレータを理解するための12Step &ndash; Qiita</a></p>
 ]]></content>
   </entry>
   
