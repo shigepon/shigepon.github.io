@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-01-06T23:52:51+09:00</updated>
+  <updated>2015-01-26T09:10:05+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,91 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[djangoのModelFormでMultiWidgetを使って見る]]></title>
+    <link href="http://blog.shigepon.com/blog/2015/01/24/django-modelform-multiwidget/"/>
+    <updated>2015-01-24T17:23:07+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2015/01/24/django-modelform-multiwidget</id>
+    <content type="html"><![CDATA[<p>ModelFormでModelの１つのカラムを複数のフォーム要素（inputとか）で表現したかったので調べてみた。フォーム要素を適当に作って、clean_xxxの時にくっつけるとかそんな実装の仕方も出来るみたいだけど、MultiWidgetを使うと、Modelの１つのカラムに対して複数のinput要素を使うことが出来るみたいなので、使ってみた。名前のカラムに対して姓、名の入力要素を作るとかそんなのが出来るみたい。</p>
+
+<p>まずはMultiWidgetを継承したクラスを作る</p>
+
+<p>```py models.py
+from django.forms.widgets import MultiWidget</p>
+
+<p>class NameWidget(MultiWidget):</p>
+
+<p>```</p>
+
+<p>次にクラスに対して、__init__をオーバーライドし、widgetとしてTextInputのフォームを2つ登録してみた。コードはこんな感じ。</p>
+
+<p>```py models.py
+class NameWidget(MultiWidget):</p>
+
+<pre><code>def __init__(self,attrs=None):
+    widgets = (
+            forms.TextInput(attrs=attrs.update({"placeholder":"姓"})),
+            forms.TextInput(attrs=attrs.update({"placeholder":"名"}))
+            )
+    super(NameWidget,self).__init__(widgets,attrs)
+</code></pre>
+
+<p>```</p>
+
+<p>widgetsはリストでもタプルでも良さげ？ともかくやることはwidgetのリストかタプルを作って、親クラス(MultiWidget)のinitを呼び出すこと。</p>
+
+<p>次に、decompress、value_from_datadictメソッドを書く。decompressはカラムの値を複数のフォームに振り分ける手順、value_from_datadictはModelFormの入力データからModelのカラムに入れる値を作る手順を記述する。姓名を半角スペースで繋げて、半角スペースで分割するように作ってみた。</p>
+
+<p>```py models.py
+class NameWidget(MultiWidget):</p>
+
+<pre><code>def __init__(self,attrs={}):
+    attrsSei = attrs.copy()
+    attrsMei = attrs.copy()
+    widgets = (
+            forms.TextInput(attrs=attrsSei.update({"placeholder":"姓"})),
+            forms.TextInput(attrs=attrsMei.update({"placeholder":"名"}))
+            )
+    super(NameWidget,self).__init__(widgets,attrs)
+def decompress(self,value):
+    if value:
+        names = value.split(' ')
+        return (names[0],names[1])
+    return (None,None)
+def value_from_datadict(self,data,files,name):
+    ulist = [widget.value_from_datadict(data,files,name+'_{0}'.format(i)) for i, widget in enumerate(self.widgets)]
+    return u"{0} {1}".format(ulist[0].replace(u' ',''),ulist[1].replace(u' ',''))
+</code></pre>
+
+<p>```</p>
+
+<p>あとはこのWidgetを使いたい要素にwidgetとして指定すればおk</p>
+
+<p>```py models.py
+from django import forms
+&hellip;（上のコードなど）&hellip;
+class HogeForm(forms.ModelForm):</p>
+
+<pre><code>name = forms.CharField(max_length=100,label=u'名前',widget=NameWidget())
+</code></pre>
+
+<p>```</p>
+
+<p>このコードだと姓、名のフォームが2行に表示されている。1行にしたい場合はインライン指定とかそんなのを付けたクラスをattrsで指定して後はcssでやっちゃえばいいんじゃないかなと</p>
+
+<p>```py models.py</p>
+
+<pre><code>name = forms.CharField(max_length=100,label=u'名前',widget=NameWidget(attrs={"class":"inline"}))
+</code></pre>
+
+<p>```</p>
+
+<p>とかそんな感じ</p>
+
+<p>他にももっと細かくhtmlを記述出来るformat_outputとかあるみたいだけど、試してないので省略。なくても取りあえず出来る。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[pythonのデコレーターをdjangoで使って見る]]></title>
@@ -297,218 +382,6 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False
 </code></p>
 
 <p>これでやっと/account/completeにリダイレクトしてくれた。ログインした状態ではダメみたいなので、ログインは再度やってもらわないといけない。うーん今のとこ仕方ないか・・・。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Django Memo]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/11/23/django-memo/"/>
-    <updated>2014-11-23T22:35:38+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/11/23/django-memo</id>
-    <content type="html"><![CDATA[<p>Djangoやってて忘れっぽいところとかをメモ</p>
-
-<h2>リクエストパラメーターをモデルに入れる</h2>
-
-<p>```py views.py
-def a_view(request):</p>
-
-<pre><code>hoge = Fuga(request.GET) #新たにインスタンス作る場合
-fuga = Fuga.objects.get(pk=1)
-hage = Fuga(request.GET,instance=fuga) #既にあるインスタンスに入れる場合
-</code></pre>
-
-<p>```</p>
-
-<p>instance=xxxとやるのを何度か忘れた＞＜</p>
-
-<h2>forms.DateFieldでISO-8601フォーマットの入力を受入れる</h2>
-
-<p>html5でdatetime-localとか扱おうとすると、入力値がISO-8601形式になって、そのままだとDateFieldが入力をdatetimeの正しい形式として認識してくれない。</p>
-
-<p>で、input_formatsを設定するといけるらしいんだけど、あまりマニュアルでちゃんと説明してない。Stack Overflowの情報とかをググると設定方法が間違ってるコードとかあって、正しいのが良く分からない。で、結局色々調べたら</p>
-
-<p><code>py models.py
-date = forms.DateField(input_formats=('%Y-%m-%dT%H:%M:%S',))
-</code></p>
-
-<p>とタプルで渡す必要があるらしい</p>
-
-<p>参考：<a href="http://labs.uechoco.com/blog/2011/08/django-dateform-inputs_format-wrong.html">うえちょこ＠ぼろぐ» [Django]forms.DateFieldのinputs_formatではまった</a></p>
-
-<h2>ModelForm使ってフォーム出力する時にrequeied属性をテンプレートで参照するとか</h2>
-
-<p><code>py models.py
-hoge = forms.CharField(max_length=100,widget=TextInput(attrs={"required":"true"}))↲
-</code></p>
-
-<p>こんな感じで定義したフィールドの属性取ってきたい場合、</p>
-
-<p><code>html
-\{\% for field in form \%\}
-  \{\% if field.field.required \%\}&lt;p&gt;必須&lt;/p&gt;\{\% endif \%\}
-\{\% endfor \%\}
-</code></p>
-
-<p>適当だけど、こんな感じでアクセスできる。</p>
-
-<h2>DjangoでGroup By</h2>
-
-<p>DjangoでGroup Byして何個かのフィールドのデータで例えば、日付とその日に登録したデータの件数だけ欲しい時</p>
-
-<p>```py views.py
-q = Hoge.objects.filter(date<strong>gte = date).filter(date</strong>lt = dto).extra({&lsquo;date&rsquo;:&ldquo;date_trunc(&lsquo;day&rsquo;,date)&rdquo;})
-q.query.group_by = [&lsquo;date&rsquo;]
-values = q.values(&lsquo;date&rsquo;).order_by().annotate(c = Count(&lsquo;id&rsquo;))</p>
-
-<p>こんな感じでいける。ちなみにPostgreSQL。dateが時間の情報も持っているのでPostgreSQLのdate_trunc関数を使ってdateを日付の情報だけにしてから、group_byする。
-annotateは集計した値を新しいフィールド（ここだとc）に入れる。
-例えばvalues[0].cでアクセスできる。このコードで、日付とその日に登録したデータ件数が入った辞書のリストを得ることが出来る
-```</p>
-
-<h2>QuerySetで吐いたクエリを出力</h2>
-
-<p><code>py views.py
-h = Hoge.objects.all()
-print h.query
-</code></p>
-
-<p>でおk。でもクエリが例外出す時には出せないような・・・</p>
-
-<p>参考：<a href="http://programmer-jobs.blogspot.jp/2013/01/djangosql.html">Djangoで、デバック用のSQLクエリの表示 一言多いプログラマーの独り言</a></p>
-
-<h2>ModelFormでcleanを使ってデータの検証する時に、updateしようとしてるかcreateしようとしてるか判断する</h2>
-
-<p>createの時だけチェックしたかったので、色々調べてみたらclean(self)内で、self.instanceでチェックすると良いみたい。例えばプライマリーキーでidがある場合こんな感じ</p>
-
-<p>```py models.py
-class Hoge(forms.ModelForm):</p>
-
-<pre><code>def clean(self):
-    cleaned_data = self.cleaned_data
-    if self.instance.id is None:
-        #create用の処理
-        raise ValidationError('例外出すのはこんな感じ')
-    else:
-        #update用の処理
-    return cleaned_data
-</code></pre>
-
-<p>```</p>
-
-<p>instanceの型チェックする方が正攻法かも。例外のメッセージは</p>
-
-<p>```py views.py
-def test(request):</p>
-
-<pre><code>form = Hoge(request.POST)
-if form.is_valid():
-    #例外が無かった場合
-else:
-    for k,v in form.errors.item():
-        #kが例外のフィールド。cleanの場合は__all__
-        #vが例外のメッセージ
-</code></pre>
-
-<p>```</p>
-
-<p>みたいな感じで取り出せる。</p>
-
-<h2>runserver実行時にコンソールにスタックとレースを出力する</h2>
-
-<p>```py settings.py
-LOGGING={</p>
-
-<pre><code>'version':1,
-'handlers':{
-    'console':{
-        'level':'DEBUG',
-        'class':'logging.StreamHandler',
-    },
-},
-'loggers':{
-    'django.request':{
-        'handlers':['console'],
-        'propagate':True,
-        'level':'DEBUG',
-    }
-},
-</code></pre>
-
-<p>}
-```
-これを書いておけばコンソールにスタックトレースを出力してくれる。apiのコード書いてる時とかajaxで呼び出してる場合とかに便利。</p>
-
-<p>参考：<a href="http://stackoverflow.com/questions/5886275/print-a-stack-trace-to-stdout-on-errors-in-django-while-using-manage-py-runserve">python &ndash; Print a stack trace to stdout on errors in Django while using manage.py runserver &ndash; Stack Overflow</a>というかここのコード丸コピー</p>
-
-<h2>Gmail送信</h2>
-
-<p><code>py settings.py
-EMAIL_USE_TLS=True
-EMAIL_HOST='smpt.gmail.com'
-EMAIL_HOST_USER='mymail@gmail.com'
-EMAIL_HOST_PASSWORD='mypassword'
-EMAIL_PORT=587
-</code></p>
-
-<p>```py views.py
-from django.core.mail import send_mail</p>
-
-<p>def mail(request):</p>
-
-<pre><code>send_mail('Subject','message','mymail.gmail.com',['to@mail.address'],fail_silently=False)
-</code></pre>
-
-<p>```</p>
-
-<p>こんだけ</p>
-
-<p>参考：<a href="http://d.hatena.ne.jp/yuheiomori0718/20120714/1342266647">DjangoでGmailを使ってメール送信 &ndash; brainstorm</a>、</p>
-
-<h2>MultiValueDictKeyError</h2>
-
-<p>モデルをgetする時にキーに何も値が指定されてなかったりすると起こる。例えば</p>
-
-<p><code>py
-instance = SampleModel.objects.get(id=key)
-</code></p>
-
-<p>でkeyに何も設定されてないと起こるみたい。出た時に何回かイチイチぐぐったのでメモ</p>
-
-<h2>PostgreSQLでDateTimeFieldの値を日付に対してグルーピングしたい</h2>
-
-<p>PostgreSQLではタイムゾーン入りのタイムスタンプで登録されるので、</p>
-
-<p><code>py
-q = Hoge.objects.extra({"date":"date_trunc('day',date)"})
-q.query.group_by['date']
-</code></p>
-
-<p>みたいな構文で日付だけ取り出して、グルーピングしようとすると、PostgreSQLの設定でタイムゾーンがUTCになっていた場合に、2014/12/17 00:00:00+9のデータは2014/12/16 15:00:00+0と認識されるので12/16のデータとしてグルーピングされてしまう。日本のタイムゾーンでやってると、これはまずいので、以下のようなコードにすると良い</p>
-
-<p><code>py
-q = Hoge.objects.extra({"date":"date_trunc('day',date AT TIME ZONE 'JST')"})
-q.query.group_by['date']
-</code></p>
-
-<h2>django+uwsgi+nginxで502エラーが出た原因の１つ</h2>
-
-<p>djangoはあまり関係無いけどuwsgiの設定の問題だったので、こちらに。django+uwsgi+nginxで502エラーが出て、runserverでは普通に動いたので、しばらくググって解答が得られたのでメモ</p>
-
-<p><a href="http://datatables.net/">DataTables</a>を使って動的にテーブルデータをロードしようとしたら、runserverでは上手く行くのにuwsgiだと502エラーが出てロード出来なかった。最初にnginxのログを見てみると、uwsgiのとこでエラーと書いてあったので、uwsgiのログをチェックした。すると</p>
-
-<p><code>
-invalid request block size: xxxxx (max 4096)...
-</code></p>
-
-<p>みたいなエラーが出ていた。リクエストが大きすぎるのかなと思い、リクエストの一部を削ってみたらエラーが出なかった。んで、対策をググってみたら書いてあったので、そのまま下のコードを実装してみた。</p>
-
-<p><code>ini uwsgi.ini
-buffer-size=65535
-</code></p>
-
-<p>みたいにバッファーサイズを大きく(例では64k)した。これでエラーが消えたのでめでたしめでたし。</p>
-
-<p>参考：<a href="http://stackoverflow.com/questions/22697584/nginx-uwsgi-104-connection-reset-by-peer-while-reading-response-header-from-u">django &ndash; Nginx uwsgi (104: Connection reset by peer) while reading response header from upstream &ndash; Stack Overflow</a></p>
 ]]></content>
   </entry>
   

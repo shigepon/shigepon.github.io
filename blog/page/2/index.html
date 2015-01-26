@@ -9,9 +9,9 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="1
-RuntimeWarning: DateTimeField received a naive datetime ってWarningが出るのに対する対処 settings.py1
-USE_TZ = False を書けばおk。要はタイムゾーン入れてくれってエラーなので、そんなものはない！ &hellip;">
+  <meta name="description" content="Titanium Mobileに関するメモ アプリ固有の設定を登録する アプリを終了して、再起動させた時も保存される設定をしたい時はTitanium.App.Propertiesを使う 1
+2
+Ti.App.Properties.setString(&quot;hoge&quot;,&quot; &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +81,78 @@ USE_TZ = False を書けばおk。要はタイムゾーン入れてくれって�
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/23/titanium-mobile-memo/">Titanium Mobileメモ</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-11-23T09:48:44+09:00" pubdate data-updated="true">Nov 23<span>rd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Titanium Mobileに関するメモ</p>
+
+<h2>アプリ固有の設定を登録する</h2>
+
+<p>アプリを終了して、再起動させた時も保存される設定をしたい時はTitanium.App.Propertiesを使う</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">Properties</span><span class="p">.</span><span class="nx">setString</span><span class="p">(</span><span class="s2">&quot;hoge&quot;</span><span class="p">,</span><span class="s2">&quot;fuga&quot;</span><span class="p">);</span><span class="c1">//設定</span>
+</span><span class='line'><span class="nx">hoge</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">Properties</span><span class="p">.</span><span class="nx">getString</span><span class="p">(</span><span class="s2">&quot;hoge&quot;</span><span class="p">);</span><span class="c1">//取得</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>stringを例にしてるが、ListとかObjectとかBoolとか色々入れられる。</p>
+
+<h2>Titanium MobileのUIで本家以外に参考にしてるサイト</h2>
+
+<p><a href="https://code.google.com/p/titanium-mobile-doc-ja/w/list">Wiki Pages &ndash; titanium-mobile-doc-ja &ndash; Appcelerator Titanium Mobileに関するドキュメントを日本語でまとめていくプロジェクト &ndash; Google Project Hosting</a></p>
+
+<h2>Android実機で文字が小さくなる</h2>
+
+<figure class='code'><figcaption><span>tiapp.xml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;android</span> <span class="na">xmlns:android=</span><span class="s">&quot;http://schemas.android.com/apk/res/android&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;manifest&gt;</span>
+</span><span class='line'>         <span class="nt">&lt;supports-screens</span> <span class="na">android:anyDensity=</span><span class="s">&quot;false&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/manifest&gt;</span>
+</span><span class='line'><span class="nt">&lt;/android&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>もしくは文字サイズをdpで指定</p>
+
+<p>参考：<a href="http://www.fujimotohajime.net/pukiwiki/index.php?TitaniumMobile%2FAndroid%E3%81%A7%E5%AE%9F%E6%A9%9F%E3%83%86%E3%82%B9%E3%83%88%E3%81%99%E3%82%8B%E3%81%A8%E6%96%87%E5%AD%97%E3%81%8C%E5%B0%8F%E3%81%95%E3%81%84">TitaniumMobile/Androidで実機テストすると文字が小さい &ndash; Wiki</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -993,121 +1065,6 @@ uwsgi.iniのenvも変更しておく</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/07/23/use-python-social-auth-in-django/">Djangoでpython-social-authを使うための最低限の設定</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-07-23T09:40:36+09:00" pubdate data-updated="true">Jul 23<span>rd</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>「djangoでfacebook, twitter, mixiでの認証使うにはどうしたらいいんだろ？」<a href="http://twitter.com/shigepon/status/491397829215006720">URL</a>と質問したら、@key3さんから「@shigepon python-social-authおすすめ <a href="https://t.co/uWqOX8Xh94">https://t.co/uWqOX8Xh94</a>」<a href="http://twitter.com/key3/status/491404335335477248">URL</a>と教えて貰ったので試してみた。</p>
-
-<p>一日試してみて、認証出来たんだけど、<a href="http://psa.matiasaguirre.net/docs/index.html">ドキュメント</a>見ても、どれが最低限必要な設定なのか良く分からなかったのでブログに残しておく。</p>
-
-<h2>python-social-authをインストール</h2>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ pip install python-social-auth</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>設定</h2>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'><span class="o">...</span>
-</span><span class='line'>      <span class="s">&#39;social.apps.django_app.default&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="o">...</span>
-</span><span class='line'><span class="p">)</span>
-</span><span class='line'><span class="n">AUTHENTICATION_BACKENDS</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'><span class="o">...</span>
-</span><span class='line'>      <span class="s">&#39;social.backends.twitter.TwitterOAuth&#39;</span><span class="p">,</span><span class="c">#Twitterでの認証をする場合。他の認証がある場合は該当するバックエンドを追加</span>
-</span><span class='line'>      <span class="s">&#39;django.contrib.auth.backends.ModelBackend&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="o">...</span>
-</span><span class='line'>      <span class="p">)</span>
-</span><span class='line'><span class="n">SOCIAL_AUTH_TWITTER_KEY</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="c">#これと次の行はTwitter認証用。別の認証を用いる場合は別の設定が必要</span>
-</span><span class='line'><span class="n">SOCIAL_AUTH_TWITTER_SECRET</span><span class="o">=</span><span class="s">&#39;&#39;</span>
-</span><span class='line'><span class="n">SOCIAL_AUTH_LOGIN_REDIRECT_URL</span> <span class="o">=</span> <span class="s">&#39;/&#39;</span>
-</span><span class='line'><span class="n">SOCIAL_AUTH_LOGIN_URL</span> <span class="o">=</span> <span class="s">&#39;/login/&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>注意：
-AUTH_USER_MODEL
-を加えるとエラー出たので注意(Django 1.6)</p>
-
-<figure class='code'><figcaption><span>urls.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">url</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s">&#39;social.apps.django_app.urls&#39;</span><span class="p">,</span><span class="n">namespace</span><span class="o">=</span><span class="s">&#39;social&#39;</span><span class="p">)),</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>設定後</h2>
-
-<p>syncdbしておく</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py syncdb
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これで例えばtwitter認証の場合に</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'>http://host/login/twitter
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>にアクセスすると認証を行ってくれるようになった。
-テンプレートにリンクを作りたい場合は</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;\{\% url &#39;social:base&#39; &#39;twitter&#39; \%\}&quot;</span><span class="nt">&gt;</span>login<span class="nt">&lt;/a&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とかやると作れる。
-「twitter」の部分は認証の種類によって変えるが、どういうルールで名前を決めるのかイマイチ分かってない。試行錯誤が要るかも。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1135,6 +1092,10 @@ AUTH_USER_MODEL
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/01/24/django-modelform-multiwidget/">djangoのModelFormでMultiWidgetを使って見る</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/01/06/python-decorator/">Pythonのデコレーターをdjangoで使って見る</a>
       </li>
     
@@ -1150,10 +1111,6 @@ AUTH_USER_MODEL
         <a href="/blog/2014/12/08/add-uuid-to-titanium-mobile-project/">Titanium Mobileのプロジェクトをアドホック配信する時にテストしてもらうユーザーを追加する</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/11/30/use-south-to-existing-project/">Southをすでにあるプロジェクトに適用する</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -1163,12 +1120,12 @@ AUTH_USER_MODEL
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C# (4)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C++ (3)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (12)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (13)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (7)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (13)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (14)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (3)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>

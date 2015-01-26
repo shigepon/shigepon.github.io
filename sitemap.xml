@@ -277,16 +277,20 @@
         <lastmod>2015-01-06T23:46:55+09:00</lastmod>
     </url>
     <url>
+        <loc>http://blog.shigepon.com/blog/2015/01/24/django-modelform-multiwidget/</loc>
+        <lastmod>2015-01-26T09:09:37+09:00</lastmod>
+    </url>
+    <url>
         <loc>http://blog.shigepon.com/blog/archives/</loc>
-        <lastmod>2015-01-06T23:52:07+09:00</lastmod>
+        <lastmod>2015-01-26T09:09:37+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/archives/</loc>
-        <lastmod>2015-01-06T23:52:07+09:00</lastmod>
+        <lastmod>2015-01-26T09:09:37+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/</loc>
-        <lastmod>2015-01-06T23:52:07+09:00</lastmod>
+        <lastmod>2015-01-26T09:09:37+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.com/robots.txt</loc>

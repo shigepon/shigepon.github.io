@@ -9,18 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="C#のdllを呼び出せるように、C#のdllを参照した後、Plugin.cppの一部を以下のように書き換えました 1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-PHiValue __stdcall sample01(DWORD param) { PHiValue result; &hellip;">
+  <meta name="description" content="なでしこ2でプラグインを作りたい人向けというニッチすぎるネタです。現在なでしこの時期バージョンなでしこ2が開発中です(えらい長いこと開発中です)が、構文の実装がある程度終わっているので、プラグインを開発することが出来ます。try catchの実装どうするかなーとか考えて進んでないですが、それはそれ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -90,6 +79,151 @@ PHiValue __stdcall sample01(DWORD param) { PHiValue result; &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/29/nadesiko2-make-plugin/">なでしこ2のプラグインを作る方法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-29T09:49:17+09:00" pubdate data-updated="true">Jan 29<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>なでしこ2でプラグインを作りたい人向けというニッチすぎるネタです。現在なでしこの時期バージョンなでしこ2が開発中です(えらい長いこと開発中です)が、構文の実装がある程度終わっているので、プラグインを開発することが出来ます。try catchの実装どうするかなーとか考えて進んでないですが、それはそれ。</p>
+
+<p>なでしこ2はC#で組まれているので、プラグインもC#で組むことができます。</p>
+
+<p>まずは準備として、なでしこ2のソースをsvnでチェックアウトします。 <a href="http://code.google.com/p/nadesiko2/source/checkout">URL</a></p>
+
+<p>SharpDevelopで開発中なので、SharpDevelopでソリューションを開きます。で、中にNakoPluginXXXというプロジェクトがあるので、それを参考にすれば良いわけですが、軽く説明しておきます。</p>
+
+<p>プラグインのソースは下のようになります。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>/*
+</span><span class='line'> * Created by SharpDevelop.
+</span><span class='line'> * User: shigepon
+</span><span class='line'> * Date: 2011/04/04
+</span><span class='line'> * Time: 9:42
+</span><span class='line'> *
+</span><span class='line'> * To change this template use Tools | Options | Coding | Edit Standard Headers.
+</span><span class='line'> */
+</span><span class='line'>using System;
+</span><span class='line'>using System.Collections.Generic;
+</span><span class='line'>using System.Text;
+</span><span class='line'>using Libnako.JPNCompiler;
+</span><span class='line'>using NakoPlugin;
+</span><span class='line'>namespace NakoPluginSample{
+</span><span class='line'>    public class NakoPluginSample : INakoPlugin    {
+</span><span class='line'>  string _description = &quot;サンプルプラグイン&quot;;
+</span><span class='line'>        double _version = 1.0;
+</span><span class='line'>        //&lt;del&gt; プラグイン共通の部分 &lt;/del&gt;
+</span><span class='line'>        public double TargetNakoVersion { get { return 2.0; } }
+</span><span class='line'>        public bool Used { get; set; }
+</span><span class='line'>        public string Name { get { return this.GetType().FullName; } }
+</span><span class='line'>        public double PluginVersion { get { return _version; } }
+</span><span class='line'>        public string Description { get { return _description; } }
+</span><span class='line'>        //&lt;del&gt; 関数の定義 &lt;/del&gt;
+</span><span class='line'>        public void DefineFunction(INakoPluginBank bank)        {
+</span><span class='line'>            bank.AddFunc({関数名}&cedil; {なでしこ形式の引数}&cedil; {戻り値の形式}&cedil; {実際の呼び出し先}&cedil;{関数の説明}&cedil; {関数のよみかた});
+</span><span class='line'>        }
+</span><span class='line'>  // プラグインの初期化処理
+</span><span class='line'>        public void PluginInit(INakoInterpreter runner)        {
+</span><span class='line'>        }
+</span><span class='line'>        // プラグインの終了処理
+</span><span class='line'>        public void PluginFin(INakoInterpreter runner)        {
+</span><span class='line'>        }
+</span><span class='line'>       public Object {実際の処理}(INakoFuncCallInfo info){
+</span><span class='line'>            ...
+</span><span class='line'>        }
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実装時に大事なとこを説明します。</p>
+
+<p>+まずプラグイン共通部分とPluginInit、PluginFinはコピペでもかまわないと思います。私もまだ初期処理、終了処理の必要なプラグインは作っていません。
++なでしこ上での関数呼び出し方法の定義はDefineFunctionで行います。bank.AddFuncメソッドで関数を追加できます。メソッド内の引数は下のように設定します。
+++関数名はなでしこで呼び出す名前になります。（例：文字検索）なでしこで使う助詞を使わないとか、他の命令の名称とかぶらないなどの制限があります。
+++なでしこ形式の引数は「SでAを」のようになでしこで一般的に使う形式で指定します。引数を参照渡しにしたい場合は「{参照渡し}SでAを」のように指定します。助詞を複数指定したい場合は「SでAを|Sが」という形式で指定します。参照渡しを使う場合は実装が少々複雑になります。後日やり方を書こうと思います。
+++戻り値の形式はenum NakoVarTypeで指定します。(Void&cedil; Int&cedil; Double&cedil; String&cedil; Array)
+++実際の呼び出し先はそのままメソッド名を指定します。(_hogeとか)
+++関数の説明と関数のよみかたは分かりやすさの為に必要です。個人用なら適当でも良いと思います。（多分今後エディタとかそういうのにつかわれると思います）
++実際の処理は必ずINakoFuncCallInfo型のインスタンスを引数に取ります。なでしこで渡された引数はこのインスタンスから取得します。取得方法は以下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>long l = info.StackPopAsInt();
+</span><span class='line'>double d = info.StackPopAsDouble();
+</span><span class='line'>String s = info.StackPopAsString();
+</span><span class='line'>Object o = info.StackPop();//配列の場合はこれを使う</span></code></pre></td></tr></table></div></figure>
+
+
+<p>StackPopメソッドで得られる値はNakoVariable型なので、ちょっと扱いが難しくなります。実際の処理の実装方法はまた今度</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -804,6 +938,10 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/01/24/django-modelform-multiwidget/">djangoのModelFormでMultiWidgetを使って見る</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/01/06/python-decorator/">Pythonのデコレーターをdjangoで使って見る</a>
       </li>
     
@@ -819,10 +957,6 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
         <a href="/blog/2014/12/08/add-uuid-to-titanium-mobile-project/">Titanium Mobileのプロジェクトをアドホック配信する時にテストしてもらうユーザーを追加する</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/11/30/use-south-to-existing-project/">Southをすでにあるプロジェクトに適用する</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -832,12 +966,12 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C# (4)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C++ (3)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (12)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (13)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (7)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (13)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (14)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (3)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
