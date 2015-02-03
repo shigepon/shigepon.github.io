@@ -310,6 +310,17 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 </pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="n">pg_relation_size</span><span class="p">(</span><span class="s1">&#39;tablename&#39;</span><span class="p">);</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<h1>select結果を配列にして、比較する</h1>
+
+<p>テーブル(event)に、日付(date)とイベントコード(code)カラムがあって、あるイベントコードのイベントと、全く同じ日程のイベントがあるかどうか調べる必要があったんだけど、配列使ったら上手く出来たのでメモ</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="n">array_agg</span><span class="p">(</span><span class="n">date_trunc</span><span class="p">(</span><span class="s1">&#39;day&#39;</span><span class="p">,</span><span class="nb">date</span><span class="p">))</span> <span class="k">as</span> <span class="n">d</span><span class="p">,</span> <span class="n">code</span> <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">event</span> <span class="k">where</span> <span class="k">order</span> <span class="k">by</span> <span class="nb">date</span><span class="p">)</span> <span class="n">b</span> <span class="k">group</span> <span class="k">by</span> <span class="n">code</span><span class="p">)</span> <span class="n">a</span> <span class="k">where</span> <span class="n">code</span> <span class="o">!=</span> <span class="s1">&#39;...&#39;</span> <span class="k">and</span> <span class="n">a</span><span class="p">.</span><span class="n">d</span> <span class="o">=</span> <span class="nb">ARRAY</span><span class="p">(</span><span class="k">select</span> <span class="n">date_trunc</span><span class="p">(</span><span class="s1">&#39;day&#39;</span><span class="p">,</span><span class="nb">date</span><span class="p">)</span> <span class="k">from</span> <span class="n">event</span> <span class="k">where</span> <span class="n">code</span> <span class="o">=</span><span class="s1">&#39;...&#39;</span> <span class="k">order</span> <span class="k">by</span> <span class="nb">date</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じで出来た。ポイントはgroup_byとarray_aggを使うとgroup化した時にそれぞれの行にあった数字をまとめて配列化できることと、配列は順序を同じにしておかないと比較出来ないので、予めorderをかけておくこと。select結果をそのまま配列にするにはARRAYでいけること。もうちょっとsqlをスッキリ出来そうだけど、とりあえずこんな感じ。</p>
 </div>
 
 
