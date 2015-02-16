@@ -657,6 +657,21 @@ subprocessを使う。何か昔は別の手法だったらしい。</p>
 
 
 <p>こんな感じ。お作法を忘れがち。</p>
+
+<h2>正規表現オブジェクトのパターンをチェックする方法</h2>
+
+<p>他のライブラリで正規表現が設定されてて、その内容をチェックしたかったので調べてみたら、patternプロパティを見れば良いらしい</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">re</span>
+</span><span class='line'><span class="n">r</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&#39;^hoge&#39;</span><span class="p">,</span><span class="n">re</span><span class="o">.</span><span class="n">l</span><span class="p">)</span>
+</span><span class='line'><span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">pattern</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考：<a href="http://compgroups.net/comp.lang.python/how-to-print-sre_pattern-regexp-object-text/309372">How to print SRE_Pattern (regexp object) text for debugging purposes? &ndash; comp.lang.python</a></p>
 </div>
   
   
