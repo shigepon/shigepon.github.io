@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-02-03T14:26:11+09:00</updated>
+  <updated>2015-02-16T12:13:15+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -384,6 +384,52 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False
 </code></p>
 
 <p>これでやっと/account/completeにリダイレクトしてくれた。ログインした状態ではダメみたいなので、ログインは再度やってもらわないといけない。うーん今のとこ仕方ないか・・・。</p>
+
+<h2>django-allauthのサインアップフォームをカスタマイズしたい</h2>
+
+<h3>あるフィールドにhelp_textを付ける</h3>
+
+<p>参考：<a href="http://stackoverflow.com/questions/23580771/overwrite-django-allauth-form-field">Overwrite django-allauth form field &ndash; Stack Overflow</a></p>
+
+<p>__init__を上書きして、フィールドに属性を追加する
+コードはこんな感じ。例としてユーザー名入力フォームにヘルプテキストとして「required」という文字を追加する</p>
+
+<p>```py appname/forms.py
+from django import forms</p>
+
+<p>class SignupForm(forms.Form):
+  def <strong>init</strong>(self, *args, **kwargs):</p>
+
+<pre><code>super(SignupForm, self).__init__(*args, **kwargs)
+self.fields['username'].help_text = "required"
+</code></pre>
+
+<p>```</p>
+
+<p><code>py settings.py
+ACCOUNT_SIGNUP_FORM_CLASS = "appname.forms.SignupForm"
+</code></p>
+
+<p>こんな感じ</p>
+
+<h3>フィールドのバリデーションを追加</h3>
+
+<p>参考：<a href="http://stackoverflow.com/questions/24175228/how-to-clean-username-with-django-allauth-adapter">python &ndash; How to clean username with Django allauth adapter? &ndash; Stack Overflow</a></p>
+
+<p>Account Adapterを設定してあげて、そこでclean_xxxを作ると上手くいくみたい</p>
+
+<p><code>
+</code>py project/users/adapter.py
+class MyAccountAdapter(DefaultAccountAdapter):</p>
+
+<pre><code>...
+def clean_username(self, username):
+    " 適当に処理を入れる
+    " エラーの場合はraise Exception
+    return username
+</code></pre>
+
+<p>```</p>
 ]]></content>
   </entry>
   

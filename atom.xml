@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-02-03T14:26:11+09:00</updated>
+  <updated>2015-02-16T12:13:15+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -693,6 +693,64 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 
 
 <p>これでやっと/account/completeにリダイレクトしてくれた。ログインした状態ではダメみたいなので、ログインは再度やってもらわないといけない。うーん今のとこ仕方ないか・・・。</p>
+
+<h2>django-allauthのサインアップフォームをカスタマイズしたい</h2>
+
+<h3>あるフィールドにhelp_textを付ける</h3>
+
+<p>参考：<a href="http://stackoverflow.com/questions/23580771/overwrite-django-allauth-form-field">Overwrite django-allauth form field &ndash; Stack Overflow</a></p>
+
+<p>__init__を上書きして、フィールドに属性を追加する
+コードはこんな感じ。例としてユーザー名入力フォームにヘルプテキストとして「required」という文字を追加する</p>
+
+<figure class='code'><figcaption><span>appname/forms.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">forms</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">SignupForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span class='line'>    <span class="nb">super</span><span class="p">(</span><span class="n">SignupForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="s">&quot;required&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">ACCOUNT_SIGNUP_FORM_CLASS</span> <span class="o">=</span> <span class="s">&quot;appname.forms.SignupForm&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じ</p>
+
+<h3>フィールドのバリデーションを追加</h3>
+
+<p>参考：<a href="http://stackoverflow.com/questions/24175228/how-to-clean-username-with-django-allauth-adapter">python &ndash; How to clean username with Django allauth adapter? &ndash; Stack Overflow</a></p>
+
+<p>Account Adapterを設定してあげて、そこでclean_xxxを作ると上手くいくみたい</p>
+
+<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="sb">``</span><span class="err">`</span><span class="n">py</span> <span class="n">project</span><span class="o">/</span><span class="n">users</span><span class="o">/</span><span class="n">adapter</span><span class="o">.</span><span class="n">py</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">MyAccountAdapter</span><span class="p">(</span><span class="n">DefaultAccountAdapter</span><span class="p">):</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">clean_username</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">):</span>
+</span><span class='line'>        <span class="s">&quot; 適当に処理を入れる</span>
+</span><span class='line'>        <span class="s">&quot; エラーの場合はraise Exception</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">username</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
 ]]></content>
   </entry>
   
