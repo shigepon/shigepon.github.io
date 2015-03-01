@@ -5,13 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>ansible memo - shigeponが関心のある技術情報など</title>
+  <title>Kobe.R #15に参加しました - shigeponが関心のある技術情報など</title>
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="ansibleで自分が欲しい情報が色んなページに散らばっていたので、メモ ansible-playbookのオプション -K: sudoのパスワード入力
--C (&mdash;check): 実際に実行しないでチェックしてくれる
--l name: hostsファイルに[name] &hellip;">
+  <meta name="description" content="勉強会の話なので丁寧語で。2/28にKobe.R #15があったので参加してきました。今回は三宮で開かれました。今回は珍しく（？）Rの話題が多いR勉強会でした。抜けてる点もちょいちょいあると思いますが、覚えている限りの感想を書いておきます。 Rによるデータ処理入門 Kobe Rの主催者の河原さん &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.shigepon.com/blog/2014/07/01/ansible-memo">
+  <link rel="canonical" href="http://blog.shigepon.com/blog/2015/03/01/kobe-dot-r-no-15">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -84,7 +82,7 @@
   
   <header>
     
-      <h1 class="entry-title">Ansible Memo</h1>
+      <h1 class="entry-title">Kobe.R #15に参加しました</h1>
     
     
       <p class="meta">
@@ -100,26 +98,62 @@
   
 
 
-<time datetime="2014-07-01T16:56:06+09:00" pubdate data-updated="true">Jul 1<span>st</span>, 2014</time>
+<time datetime="2015-03-01T10:57:17+09:00" pubdate data-updated="true">Mar 1<span>st</span>, 2015</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>ansibleで自分が欲しい情報が色んなページに散らばっていたので、メモ</p>
+<div class="entry-content"><p>勉強会の話なので丁寧語で。2/28に<a href="https://kobexr.doorkeeper.jp/events/20843">Kobe.R #15</a>があったので参加してきました。今回は三宮で開かれました。今回は珍しく（？）Rの話題が多いR勉強会でした。抜けてる点もちょいちょいあると思いますが、覚えている限りの感想を書いておきます。</p>
 
-<h3>ansible-playbookのオプション</h3>
+<h2>Rによるデータ処理入門</h2>
+
+<p>Kobe Rの主催者の河原さん（@h_kawahara）による発表でした。 データ読み込み、加工、表示までのRで解析する前に絶対必要な操作をまとめてくれました。大事なことはデータ加工≠データ整形ということかなと。何となく突っ込みどころを箇条書きにします</p>
 
 <ul>
-<li>-K: sudoのパスワード入力</li>
-<li>-C (&mdash;check): 実際に実行しないでチェックしてくれる</li>
-<li>-l name: hostsファイルに[name]と書かれたホストにのみ実行</li>
-<li>-i hostsfile: 初期状態では/etc/ansible/hostsを見に行くので、自分で指定したい場合に</li>
-<li>&mdash;syntax-check: playbookの書式チェック。書いて最初にやるといい</li>
-<li>&mdash;list-tasks: playbookで行う内容をリストアップ</li>
+<li>strがstructureの略称とか、stringの略称じゃないんだ！</li>
+<li>何度も言うけどforは遅い</li>
+<li>db接続がodbcだけだとちょっと今後辛い気がする</li>
+<li>大きいファイルはRDataファイルにしておくと容量小さい</li>
+<li>データ加工に便利なのはdplyr(でぃーぷらいやーと読むらしい）</li>
+<li>dplyrのソート命令がarrange！sortとかorderじゃないのか。</li>
+<li>dplyrだとカラムの結合や分解も手軽に出来そう</li>
+<li>自分でちょっといじって、packageとかfunctionを探す方法を掴まないと、関数名に略称とか使ってるケースが結構あって、探しにくいかも。使ってみないと何とも言えないけど</li>
+<li>発表でちょっと気になったけど、同じ書式の演算子でパッケージによって違う意味になったりするの？</li>
 </ul>
 
+
+<p>データの前処理ってとても大事なので、参考にしてちょっと練習出来たらなと思います。</p>
+
+<h2>R in Life Science</h2>
+
+<p>Tomitaさんの発表。生物系の学生さんだそうで、研究で使いそうなヒートマップ表示について教えてくれました。
+車のデータを利用して燃費をベースにしてグルーピングしながら、各項目についてヒートマップ表示して傾向が見やすくなってました。
+最初バイオ系なのでSDS-PAGEか何かかと思いましたががが。あと、ggplot（だったかな？）でのヒートマップ関数としてheatmap.2ってのを紹介されていましたが、関数名に2とか入るの久しぶりに見ました。これはん〜〜〜〜〜〜、ちょっとな〜〜〜。でも機能は多いみたいです。</p>
+
+<h2>Incanterチョットシッテル</h2>
+
+<p>@tnoda_さんの発表
+<a href="http://sssslide.com/www.slideshare.net/tnoda/kober-15-incanter">スライドはこちら</a>。
+Twitterでインなんとかとか言っちゃいましたが、インキャンターです。「ノリを間違えたかも！（意訳）」とおっしゃっていましたが、とても楽しい発表でした。リアルタイムに突っ込み入れたかったのですが、出来なかったので、ここで突っ込みしておきます。</p>
+
+<ul>
+<li>Clojureってカッコだらけだ！Lis(ry (*)</li>
+<li>3D pie chart以外はRと同じことは出来るらしい</li>
+<li>インストールはLeiningen（らいにんげん）からやるらしい。プロジェクト作ったりライブラリ管理とかやってくれるらしい。pipとかmagage.pyみたいなもん？</li>
+<li>Incanterの公式ダウンロードリンクからインストールしてはいけない。インストールしてしまった後のことは知らない。</li>
+<li>Rの話は8ページ目で終了と言ってたけど、dplyr出て来たよ（25ページ目）</li>
+<li>マクロという言葉に拒否感ががが（C的Excel的意味で）。でもきっと慣れると便利なんだろう。きっと。多分。</li>
+<li>Clojureが並列処理に向いているらしいので、並列処理＋統計処理に良さげ</li>
+<li>javaベースなので、javaベースのものと統合しやすいらしい。javaで開発してないからさっぱり分かんないけど。</li>
+<li>Incanterで3D pie chart書きたかったら、RserveってのでIncanterとRをつないだらいいらしい。3D pie chartの為だけにそこまでやるとか変態すぐる</li>
+</ul>
+
+
+<h2>分析実践</h2>
+
+<p>残った時間で実際にやってみましょうということで、弁当屋のデータを元にして売り上げ予測をやるという目的でRを触ってみるということをやっていました。R勉強会とは言え、実際にRをバリバリ使ってる人とかほとんど居ないと思うので、とても良い試みだと思いました。が、私はパソコン持ってなかったので読書しながら他の人がハマっているのを見たりしてました（悪趣味）。どうも文字コード周りでハマるケースが結構あるっぽいです。うむむむむ。ハマりポイントはハッキリさせたいところです。</p>
 </div>
 
 
@@ -142,7 +176,7 @@
   
 
 
-<time datetime="2014-07-01T16:56:06+09:00" pubdate data-updated="true">Jul 1<span>st</span>, 2014</time>
+<time datetime="2015-03-01T10:57:17+09:00" pubdate data-updated="true">Mar 1<span>st</span>, 2015</time>
       
 
 
@@ -150,7 +184,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2014/07/01/ansible-memo/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2014/07/01/ansible-memo/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2015/03/01/kobe-dot-r-no-15/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2015/03/01/kobe-dot-r-no-15/" >Tweet</a>
   
   
   
@@ -170,10 +204,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/06/30/python-memo/" title="Previous Post: Python memo">&laquo; Python memo</a>
+        <a class="basic-alignment left" href="/blog/2015/01/24/django-modelform-multiwidget/" title="Previous Post: djangoのModelFormでMultiWidgetを使って見る">&laquo; djangoのModelFormでMultiWidgetを使って見る</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/07/02/django-show-list-with-paging/" title="Next Post: Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する &raquo;</a>
       
     </p>
   </footer>

@@ -9,7 +9,24 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="さくらvpsのUbuntu12.04にnginxとunicornをインストールしてローカル環境に作ったRailsアプリを手動でアップロードして表示させてみた。何となくユニコーンって名前が好きなので、unicornを使うことにした。 nginxインストール &hellip;">
+  <meta name="description" content="まだデプロイ作業を途中までしか確認していないので、とりあえずハマったポイントを書いておく。 デプロイ作業をテストしてみたらこんなエラーが出た 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+$ bundle exec cap production deploy: &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +96,186 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/">Capistrano3でbitbucketからデプロイしようとしたらハマった話</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-04T10:04:00+09:00" pubdate data-updated="true">May 4<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>まだデプロイ作業を途中までしか確認していないので、とりあえずハマったポイントを書いておく。
+ デプロイ作業をテストしてみたらこんなエラーが出た</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle <span class="nb">exec </span>cap production deploy:check
+</span><span class='line'> INFO <span class="o">[</span>5f874a7e<span class="o">]</span> Running /usr/bin/env mkdir -p /tmp/hoge/ on fuga
+</span><span class='line'>DEBUG <span class="o">[</span>5f874a7e<span class="o">]</span> Command: /usr/bin/env mkdir -p /tmp/hoge/
+</span><span class='line'> INFO <span class="o">[</span>5f874a7e<span class="o">]</span> Finished in 0.321 seconds with <span class="nb">exit </span>status 0 <span class="o">(</span>successful<span class="o">)</span>.
+</span><span class='line'>DEBUG Uploading /tmp/hoge/git-ssh.sh 0.0%
+</span><span class='line'> INFO Uploading /tmp/hoge/git-ssh.sh 100.0%
+</span><span class='line'> INFO <span class="o">[</span>c2bf6ab8<span class="o">]</span> Running /usr/bin/env chmod +x /tmp/hoge/git-ssh.sh on fuga
+</span><span class='line'>DEBUG <span class="o">[</span>c2bf6ab8<span class="o">]</span> Command: /usr/bin/env chmod +x /tmp/hoge/git-ssh.sh
+</span><span class='line'> INFO <span class="o">[</span>c2bf6ab8<span class="o">]</span> Finished in 0.031 seconds with <span class="nb">exit </span>status 0 <span class="o">(</span>successful<span class="o">)</span>.
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span> Running /usr/bin/env git ls-remote -h git@bitbucket.org:fuga/hoge.git on fuga
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span> Command: <span class="o">(</span> <span class="nv">GIT_ASKPASS</span><span class="o">=</span>/bin/echo <span class="nv">GIT_SSH</span><span class="o">=</span>/tmp/hoge/git-ssh.sh /usr/bin/env git ls-remote -h git@bitbucket.org:fuga/hoge.git <span class="o">)</span>
+</span><span class='line'>DEBUG <span class="o">[</span>cb27da31<span class="o">]</span>    Error reading response length from authentication socket
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span>    Permission denied <span class="o">(</span>publickey<span class="o">)</span>.
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span>    
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span>    fatal: The remote end hung up unexpectedly
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span>    
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span> Finished in 2.287 seconds with <span class="nb">exit </span>status 128 <span class="o">(</span>failed<span class="o">)</span>.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>うげげ。gitで鍵認証のエラー出てるわ。とりあえずbitbucketに公開鍵を登録してみた。
+ <a href="http://morizyun.github.io/blog/ssh-key-bitbucket-github/">SSH認証キーをBitbucket/GitHubに設定しよう！ [Mac簡単手順] &ndash; 酒と泪とRubyとRailsと</a>の通りに登録したら出来た。~/.ssh/configに秘密鍵を追加して</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Host bitbucket.org
+</span><span class='line'>  HostName bitbucket.org
+</span><span class='line'>  IdentityFile ~/.ssh/id_rsa
+</span><span class='line'>  User git
+</span><span class='line'>  TCPKeepAlive yes
+</span><span class='line'>  IdentitiesOnly yes
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p> じゃあ再度デプロイをテストしてみたら・・・同じエラーが出た。
+色々試行錯誤して、「Error reading response length from authentication socket」でググった結果、ssh_agentが動いてないことが判明したので</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">eval</span> <span class="sb">`</span>ssh-agent -s<span class="sb">`</span>
+</span><span class='line'><span class="nv">$ </span>ssh-add ~/.ssh/id_rsa
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>としてデプロイをテストしたら無事動いた。めでたしめでたし。でも一旦ログアウトしたりするとssh-agentに接続しないとまた同じエラーが出た。ssh-agentへの接続方法は<a href="http://tipspc.blogspot.jp/2010/02/ssh-agent.html">PC便利帳: ssh-agentを使用したパスワードなしの接続</a>を参考にして</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ps ax | grep ssh-agent
+</span><span class='line'><span class="nv">$ </span>ls /tmp | grep ssh
+</span><span class='line'><span class="nv">$ SSH_AUTH_SOCK</span><span class="o">=</span>/tmp/ssh-XXXXX1111/agent.1111; <span class="nb">export </span>SSH_AUTH_SOCK;
+</span><span class='line'><span class="nv">$ SSH_AGENT_PID</span><span class="o">=</span>2222; <span class="nb">export </span>SSH_AGENT_PID;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>`</p>
+
+<p>とやれば接続できて、デプロイできた。
+ さらに実際にデプロイすると下のようにエラーでまくった。</p>
+
+<h2>capistrano3でbundle exec cap production deloyしようとしたらエラーが出まくる</h2>
+
+<p>Gemfileから色々省いてたらエラーが出まくる</p>
+
+<ul>
+<li>rubyが指定されてない（rbenvが足りない）</li>
+<li>uglifierが無いとかsassが足りないとか</li>
+<li>いちいちGemfile.lockをアップデートしないとエラー出る</li>
+</ul>
+
+
+<p>rbenvはcapistrano-rbenvをGemfileに追加して、Capfileにcapistrano/rbenvを指定して、config/deploy.rbに</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="n">set</span> <span class="ss">:rbenv_ruby</span><span class="p">,</span> <span class="s1">&#39;2.1.0&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とか何とか設定するとおk。</p>
+
+<p>uglifierとかsassとかproductionを指定した場合に使うような設定になってるみたいい（config/environments/production.rb）。とりあえずuglifierとかsassとかcofee-railsとか色々Gemfileに入れておけばエラーでなかった。</p>
+
+<h2>デプロイした後でcss関連でエラーが出た</h2>
+
+<p>sassが足らないと言われた。sass使わないので、sassが関わるファイル（app/assets/stylesheets内のscssファイル）を消すとエラーは消えた</p>
+
+<h2>productionモードでデプロイすると、cssやjsを読み込んでくれない</h2>
+
+<p>config/environments/production.rbに次の行を追記</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="n">config</span><span class="o">.</span><span class="n">assets</span><span class="o">.</span><span class="n">compile</span> <span class="o">=</span> <span class="kp">true</span>
+</span><span class='line'> <span class="n">config</span><span class="o">.</span><span class="n">assets</span><span class="o">.</span><span class="n">precompile</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;*.js&#39;</span><span class="p">,</span><span class="s1">&#39;*.css&#39;</span><span class="p">,</span><span class="s1">&#39;*.css.erb&#39;</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考<a href="http://stackoverflow.com/questions/18700219/rails-4-assets-not-loading-in-production">ruby &ndash; Rails 4: assets not loading in production &ndash; Stack Overflow</a>
+すると解決した。なんかバッドノウハウみたいでやだ。</p>
+
+<h2>productionモードでunicornが起動してくれない</h2>
+
+<p>capistranoとは関係なかったけどcapistrano関連と思い込んでたのでメモ。capistranoの設定にミスがあると思って苦しんでたけど、単にunicornのオプションを指定してなかったのが悪かった。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle <span class="nb">exec </span>unicorn_rails -E production
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でおkだった。</p>
+
+<p>Capistranoは確かに便利なんだけど、なんかハマりポイントが多いような印象。
+バージョン変わって設定方法も変わったみたいだし。最初のハードルが高い感じがする。慣れたら楽になるのかな。</p>
+
+<h2>capistrano3でunicornの再起動に失敗する</h2>
+
+<p><a href="http://qiita.com/satococoa/items/9b0cc416ffc042680b9b">unicorn + rails 用 Capistrano 3 の設定ファイル &ndash; Qiita</a>と<a href="http://blog.dealforest.net/2014/02/failed_restart_unicorn_with_capistrano3/">Capistrano3 で Unicorn の再起動に失敗したのを対応したメモ | Supernova</a>が参考になった。</p>
+
+<p>でもrestartでちゃんと再起動して修正箇所が反映しない。stopしてstartしないと。うーん。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1202,72 +1399,6 @@ events_controller.rbを次のように変えると</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/09/how-to-block-bot-access-from-google-analytics/">Google Analyticsからbotアクセスを取り除く</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-09T21:53:40+09:00" pubdate data-updated="true">Mar 9<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>参考ページ<a href="http://www.lunametrics.com/blog/2013/09/05/filter-bots-google-analytics/#sr=d&amp;m=n&amp;cp=d&amp;ct=-tmc&amp;ts=1394369739">How to Block Bots from Your Google Analytics</a></p>
-
-<p>ここ数日Google Analyticsにアメリカからリファラ無し直帰率100%近くのアクセスを大量に発見。
-どう考えてもbotですどうも(ry
-本当はGoogle Analyticsに自動でフィルタして欲しいけど、どうもフィルタしてないので、自力でフィルタ設定しないといけないみたい。</p>
-
-<p>上のリンクを参考に設定してみる</p>
-
-<ul>
-<li>アナリティクス設定→ ビュー→フィルタと移動</li>
-<li>「新しいボタン」をクリック</li>
-</ul>
-
-
-<h3>設定は以下の通り</h3>
-
-<ul>
-<li>新しいフィルタを作成</li>
-<li>フィルタ名：適当（Smart Bot 除外）とか？</li>
-<li>フィルタの種類：カスタムフィルタ</li>
-<li>除外</li>
-<li>フィルタフィールド：ISPドメインからのトラフィック</li>
-<li>フィルタパターン：<sup>microsoft corp(oration)?|inktomi corporation|yahoo! inc.|google inc.|stumbleupon inc.</sup>$|gomez</li>
-<li><p>大文字小文字を区別：いいえ</p></li>
-<li><p>「保存」をクリック</p></li>
-</ul>
-
-
-<p>これでフィルタできるけど、フィルタをかける以前の情報には反映しない。
-参考ページに設定テンプレートがあったのでここでもリンクしておく
-<a href="https://www.google.com/analytics/web/template?uid=svscm2YdTe6s0yJeGHQM4Q">Smart Botを除外するテンプレート</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -1295,6 +1426,10 @@ events_controller.rbを次のように変えると</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/03/01/kobe-dot-r-no-15/">Kobe.R #15に参加しました</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/01/24/django-modelform-multiwidget/">djangoのModelFormでMultiWidgetを使って見る</a>
       </li>
     
@@ -1308,10 +1443,6 @@ events_controller.rbを次のように変えると</p>
     
       <li class="post">
         <a href="/blog/2014/12/17/check-table-library/">Javascriptでカレンダーを書くライブラリを調べてみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/12/08/add-uuid-to-titanium-mobile-project/">Titanium Mobileのプロジェクトをアドホック配信する時にテストしてもらうユーザーを追加する</a>
       </li>
     
   </ul>

@@ -9,7 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="ModelFormでModelの１つのカラムを複数のフォーム要素（inputとか）で表現したかったので調べてみた。フォーム要素を適当に作って、clean_xxxの時にくっつけるとかそんな実装の仕方も出来るみたいだけど、MultiWidgetを使うと、 &hellip;">
+  <meta name="description" content="勉強会の話なので丁寧語で。2/28にKobe.R #15があったので参加してきました。今回は三宮で開かれました。今回は珍しく（？）Rの話題が多いR勉強会でした。抜けてる点もちょいちょいあると思いますが、覚えている限りの感想を書いておきます。 Rによるデータ処理入門 Kobe Rの主催者の河原さん &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,90 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/03/01/kobe-dot-r-no-15/">Kobe.R #15に参加しました</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-03-01T10:57:17+09:00" pubdate data-updated="true">Mar 1<span>st</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>勉強会の話なので丁寧語で。2/28に<a href="https://kobexr.doorkeeper.jp/events/20843">Kobe.R #15</a>があったので参加してきました。今回は三宮で開かれました。今回は珍しく（？）Rの話題が多いR勉強会でした。抜けてる点もちょいちょいあると思いますが、覚えている限りの感想を書いておきます。</p>
+
+<h2>Rによるデータ処理入門</h2>
+
+<p>Kobe Rの主催者の河原さん（@h_kawahara）による発表でした。 データ読み込み、加工、表示までのRで解析する前に絶対必要な操作をまとめてくれました。大事なことはデータ加工≠データ整形ということかなと。何となく突っ込みどころを箇条書きにします</p>
+
+<ul>
+<li>strがstructureの略称とか、stringの略称じゃないんだ！</li>
+<li>何度も言うけどforは遅い</li>
+<li>db接続がodbcだけだとちょっと今後辛い気がする</li>
+<li>大きいファイルはRDataファイルにしておくと容量小さい</li>
+<li>データ加工に便利なのはdplyr(でぃーぷらいやーと読むらしい）</li>
+<li>dplyrのソート命令がarrange！sortとかorderじゃないのか。</li>
+<li>dplyrだとカラムの結合や分解も手軽に出来そう</li>
+<li>自分でちょっといじって、packageとかfunctionを探す方法を掴まないと、関数名に略称とか使ってるケースが結構あって、探しにくいかも。使ってみないと何とも言えないけど</li>
+<li>発表でちょっと気になったけど、同じ書式の演算子でパッケージによって違う意味になったりするの？</li>
+</ul>
+
+
+<p>データの前処理ってとても大事なので、参考にしてちょっと練習出来たらなと思います。</p>
+
+<h2>R in Life Science</h2>
+
+<p>Tomitaさんの発表。生物系の学生さんだそうで、研究で使いそうなヒートマップ表示について教えてくれました。
+車のデータを利用して燃費をベースにしてグルーピングしながら、各項目についてヒートマップ表示して傾向が見やすくなってました。
+最初バイオ系なのでSDS-PAGEか何かかと思いましたががが。あと、ggplot（だったかな？）でのヒートマップ関数としてheatmap.2ってのを紹介されていましたが、関数名に2とか入るの久しぶりに見ました。これはん〜〜〜〜〜〜、ちょっとな〜〜〜。でも機能は多いみたいです。</p>
+
+<h2>Incanterチョットシッテル</h2>
+
+<p>@tnoda_さんの発表
+<a href="http://sssslide.com/www.slideshare.net/tnoda/kober-15-incanter">スライドはこちら</a>。
+Twitterでインなんとかとか言っちゃいましたが、インキャンターです。「ノリを間違えたかも！（意訳）」とおっしゃっていましたが、とても楽しい発表でした。リアルタイムに突っ込み入れたかったのですが、出来なかったので、ここで突っ込みしておきます。</p>
+
+<ul>
+<li>Clojureってカッコだらけだ！Lis(ry (*)</li>
+<li>3D pie chart以外はRと同じことは出来るらしい</li>
+<li>インストールはLeiningen（らいにんげん）からやるらしい。プロジェクト作ったりライブラリ管理とかやってくれるらしい。pipとかmagage.pyみたいなもん？</li>
+<li>Incanterの公式ダウンロードリンクからインストールしてはいけない。インストールしてしまった後のことは知らない。</li>
+<li>Rの話は8ページ目で終了と言ってたけど、dplyr出て来たよ（25ページ目）</li>
+<li>マクロという言葉に拒否感ががが（C的Excel的意味で）。でもきっと慣れると便利なんだろう。きっと。多分。</li>
+<li>Clojureが並列処理に向いているらしいので、並列処理＋統計処理に良さげ</li>
+<li>javaベースなので、javaベースのものと統合しやすいらしい。javaで開発してないからさっぱり分かんないけど。</li>
+<li>Incanterで3D pie chart書きたかったら、RserveってのでIncanterとRをつないだらいいらしい。3D pie chartの為だけにそこまでやるとか変態すぐる</li>
+</ul>
+
+
+<h2>分析実践</h2>
+
+<p>残った時間で実際にやってみましょうということで、弁当屋のデータを元にして売り上げ予測をやるという目的でRを触ってみるということをやっていました。R勉強会とは言え、実際にRをバリバリ使ってる人とかほとんど居ないと思うので、とても良い試みだと思いました。が、私はパソコン持ってなかったので読書しながら他の人がハマっているのを見たりしてました（悪趣味）。どうも文字コード周りでハマるケースが結構あるっぽいです。うむむむむ。ハマりポイントはハッキリさせたいところです。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1064,302 +1148,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/23/django-memo/">Django Memo</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-11-23T22:35:38+09:00" pubdate data-updated="true">Nov 23<span>rd</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Djangoやってて忘れっぽいところとかをメモ</p>
-
-<h2>リクエストパラメーターをモデルに入れる</h2>
-
-<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">a_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-</span><span class='line'>    <span class="n">hoge</span> <span class="o">=</span> <span class="n">Fuga</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">)</span> <span class="c">#新たにインスタンス作る場合</span>
-</span><span class='line'>    <span class="n">fuga</span> <span class="o">=</span> <span class="n">Fuga</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">hage</span> <span class="o">=</span> <span class="n">Fuga</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span><span class="n">instance</span><span class="o">=</span><span class="n">fuga</span><span class="p">)</span> <span class="c">#既にあるインスタンスに入れる場合</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>instance=xxxとやるのを何度か忘れた＞＜</p>
-
-<h2>forms.DateFieldでISO-8601フォーマットの入力を受入れる</h2>
-
-<p>html5でdatetime-localとか扱おうとすると、入力値がISO-8601形式になって、そのままだとDateFieldが入力をdatetimeの正しい形式として認識してくれない。</p>
-
-<p>で、input_formatsを設定するといけるらしいんだけど、あまりマニュアルでちゃんと説明してない。Stack Overflowの情報とかをググると設定方法が間違ってるコードとかあって、正しいのが良く分からない。で、結局色々調べたら</p>
-
-<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">date</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">DateField</span><span class="p">(</span><span class="n">input_formats</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;%Y-%m-</span><span class="si">%d</span><span class="s">T%H:%M:%S&#39;</span><span class="p">,))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とタプルで渡す必要があるらしい</p>
-
-<p>参考：<a href="http://labs.uechoco.com/blog/2011/08/django-dateform-inputs_format-wrong.html">うえちょこ＠ぼろぐ» [Django]forms.DateFieldのinputs_formatではまった</a></p>
-
-<h2>ModelForm使ってフォーム出力する時にrequeied属性をテンプレートで参照するとか</h2>
-
-<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">hoge</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">widget</span><span class="o">=</span><span class="n">TextInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;required&quot;</span><span class="p">:</span><span class="s">&quot;true&quot;</span><span class="p">}))</span><span class="err">↲</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな感じで定義したフィールドの属性取ってきたい場合、</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'>\{\% for field in form \%\}
-</span><span class='line'>  \{\% if field.field.required \%\}<span class="nt">&lt;p&gt;</span>必須<span class="nt">&lt;/p&gt;</span>\{\% endif \%\}
-</span><span class='line'>\{\% endfor \%\}
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>適当だけど、こんな感じでアクセスできる。</p>
-
-<h2>DjangoでGroup By</h2>
-
-<p>DjangoでGroup Byして何個かのフィールドのデータで例えば、日付とその日に登録したデータの件数だけ欲しい時</p>
-
-<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">q</span> <span class="o">=</span> <span class="n">Hoge</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span> <span class="o">=</span> <span class="n">date</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__lt</span> <span class="o">=</span> <span class="n">dto</span><span class="p">)</span><span class="o">.</span><span class="n">extra</span><span class="p">({</span><span class="s">&#39;date&#39;</span><span class="p">:</span><span class="s">&quot;date_trunc(&#39;day&#39;,date)&quot;</span><span class="p">})</span>
-</span><span class='line'><span class="n">q</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">group_by</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">]</span>
-</span><span class='line'><span class="n">values</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s">&#39;date&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">()</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">c</span> <span class="o">=</span> <span class="n">Count</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">))</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="err">こんな感じでいける。ちなみに</span><span class="n">PostgreSQL</span><span class="err">。</span><span class="n">date</span><span class="err">が時間の情報も持っているので</span><span class="n">PostgreSQL</span><span class="err">の</span><span class="n">date_trunc</span><span class="err">関数を使って</span><span class="n">date</span><span class="err">を日付の情報だけにしてから、</span><span class="n">group_by</span><span class="err">する。</span>
-</span><span class='line'><span class="n">annotate</span><span class="err">は集計した値を新しいフィールド（ここだと</span><span class="n">c</span><span class="err">）に入れる。</span>
-</span><span class='line'><span class="err">例えば</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">c</span><span class="err">でアクセスできる。このコードで、日付とその日に登録したデータ件数が入った辞書のリストを得ることが出来る</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>QuerySetで吐いたクエリを出力</h2>
-
-<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">h</span> <span class="o">=</span> <span class="n">Hoge</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-</span><span class='line'><span class="k">print</span> <span class="n">h</span><span class="o">.</span><span class="n">query</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でおk。でもクエリが例外出す時には出せないような・・・</p>
-
-<p>参考：<a href="http://programmer-jobs.blogspot.jp/2013/01/djangosql.html">Djangoで、デバック用のSQLクエリの表示 一言多いプログラマーの独り言</a></p>
-
-<h2>ModelFormでcleanを使ってデータの検証する時に、updateしようとしてるかcreateしようとしてるか判断する</h2>
-
-<p>createの時だけチェックしたかったので、色々調べてみたらclean(self)内で、self.instanceでチェックすると良いみたい。例えばプライマリーキーでidがある場合こんな感じ</p>
-
-<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">class</span> <span class="nc">Hoge</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">clean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span class='line'>        <span class="n">cleaned_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span>
-</span><span class='line'>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">id</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-</span><span class='line'>            <span class="c">#create用の処理</span>
-</span><span class='line'>            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;例外出すのはこんな感じ&#39;</span><span class="p">)</span>
-</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
-</span><span class='line'>            <span class="c">#update用の処理</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">cleaned_data</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>instanceの型チェックする方が正攻法かも。例外のメッセージは</p>
-
-<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-</span><span class='line'>    <span class="n">form</span> <span class="o">=</span> <span class="n">Hoge</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
-</span><span class='line'>        <span class="c">#例外が無かった場合</span>
-</span><span class='line'>    <span class="k">else</span><span class="p">:</span>
-</span><span class='line'>        <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">item</span><span class="p">():</span>
-</span><span class='line'>            <span class="c">#kが例外のフィールド。cleanの場合は__all__</span>
-</span><span class='line'>            <span class="c">#vが例外のメッセージ</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいな感じで取り出せる。</p>
-
-<h2>runserver実行時にコンソールにスタックとレースを出力する</h2>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">LOGGING</span><span class="o">=</span><span class="p">{</span>
-</span><span class='line'>    <span class="s">&#39;version&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
-</span><span class='line'>    <span class="s">&#39;handlers&#39;</span><span class="p">:{</span>
-</span><span class='line'>        <span class="s">&#39;console&#39;</span><span class="p">:{</span>
-</span><span class='line'>            <span class="s">&#39;level&#39;</span><span class="p">:</span><span class="s">&#39;DEBUG&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;class&#39;</span><span class="p">:</span><span class="s">&#39;logging.StreamHandler&#39;</span><span class="p">,</span>
-</span><span class='line'>        <span class="p">},</span>
-</span><span class='line'>    <span class="p">},</span>
-</span><span class='line'>    <span class="s">&#39;loggers&#39;</span><span class="p">:{</span>
-</span><span class='line'>        <span class="s">&#39;django.request&#39;</span><span class="p">:{</span>
-</span><span class='line'>            <span class="s">&#39;handlers&#39;</span><span class="p">:[</span><span class="s">&#39;console&#39;</span><span class="p">],</span>
-</span><span class='line'>            <span class="s">&#39;propagate&#39;</span><span class="p">:</span><span class="bp">True</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;level&#39;</span><span class="p">:</span><span class="s">&#39;DEBUG&#39;</span><span class="p">,</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">},</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これを書いておけばコンソールにスタックトレースを出力してくれる。apiのコード書いてる時とかajaxで呼び出してる場合とかに便利。</p>
-
-<p>参考：<a href="http://stackoverflow.com/questions/5886275/print-a-stack-trace-to-stdout-on-errors-in-django-while-using-manage-py-runserve">python &ndash; Print a stack trace to stdout on errors in Django while using manage.py runserver &ndash; Stack Overflow</a>というかここのコード丸コピー</p>
-
-<h2>Gmail送信</h2>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">EMAIL_USE_TLS</span><span class="o">=</span><span class="bp">True</span>
-</span><span class='line'><span class="n">EMAIL_HOST</span><span class="o">=</span><span class="s">&#39;smpt.gmail.com&#39;</span>
-</span><span class='line'><span class="n">EMAIL_HOST_USER</span><span class="o">=</span><span class="s">&#39;mymail@gmail.com&#39;</span>
-</span><span class='line'><span class="n">EMAIL_HOST_PASSWORD</span><span class="o">=</span><span class="s">&#39;mypassword&#39;</span>
-</span><span class='line'><span class="n">EMAIL_PORT</span><span class="o">=</span><span class="mi">587</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">django.core.mail</span> <span class="kn">import</span> <span class="n">send_mail</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">def</span> <span class="nf">mail</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-</span><span class='line'>    <span class="n">send_mail</span><span class="p">(</span><span class="s">&#39;Subject&#39;</span><span class="p">,</span><span class="s">&#39;message&#39;</span><span class="p">,</span><span class="s">&#39;mymail.gmail.com&#39;</span><span class="p">,[</span><span class="s">&#39;to@mail.address&#39;</span><span class="p">],</span><span class="n">fail_silently</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんだけ</p>
-
-<p>参考：<a href="http://d.hatena.ne.jp/yuheiomori0718/20120714/1342266647">DjangoでGmailを使ってメール送信 &ndash; brainstorm</a>、</p>
-
-<h2>MultiValueDictKeyError</h2>
-
-<p>モデルをgetする時にキーに何も値が指定されてなかったりすると起こる。例えば</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">instance</span> <span class="o">=</span> <span class="n">SampleModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でkeyに何も設定されてないと起こるみたい。出た時に何回かイチイチぐぐったのでメモ</p>
-
-<h2>PostgreSQLでDateTimeFieldの値を日付に対してグルーピングしたい</h2>
-
-<p>PostgreSQLではタイムゾーン入りのタイムスタンプで登録されるので、</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">q</span> <span class="o">=</span> <span class="n">Hoge</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">extra</span><span class="p">({</span><span class="s">&quot;date&quot;</span><span class="p">:</span><span class="s">&quot;date_trunc(&#39;day&#39;,date)&quot;</span><span class="p">})</span>
-</span><span class='line'><span class="n">q</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">group_by</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいな構文で日付だけ取り出して、グルーピングしようとすると、PostgreSQLの設定でタイムゾーンがUTCになっていた場合に、2014/12/17 00:00:00+9のデータは2014/12/16 15:00:00+0と認識されるので12/16のデータとしてグルーピングされてしまう。日本のタイムゾーンでやってると、これはまずいので、以下のようなコードにすると良い</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">q</span> <span class="o">=</span> <span class="n">Hoge</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">extra</span><span class="p">({</span><span class="s">&quot;date&quot;</span><span class="p">:</span><span class="s">&quot;date_trunc(&#39;day&#39;,date AT TIME ZONE &#39;JST&#39;)&quot;</span><span class="p">})</span>
-</span><span class='line'><span class="n">q</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">group_by</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>django+uwsgi+nginxで502エラーが出た原因の１つ</h2>
-
-<p>djangoはあまり関係無いけどuwsgiの設定の問題だったので、こちらに。django+uwsgi+nginxで502エラーが出て、runserverでは普通に動いたので、しばらくググって解答が得られたのでメモ</p>
-
-<p><a href="http://datatables.net/">DataTables</a>を使って動的にテーブルデータをロードしようとしたら、runserverでは上手く行くのにuwsgiだと502エラーが出てロード出来なかった。最初にnginxのログを見てみると、uwsgiのとこでエラーと書いてあったので、uwsgiのログをチェックした。すると</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">invalid</span> <span class="n">request</span> <span class="n">block</span> <span class="n">size</span><span class="p">:</span> <span class="n">xxxxx</span> <span class="p">(</span><span class="nb">max</span> <span class="mi">4096</span><span class="p">)</span><span class="o">...</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいなエラーが出ていた。リクエストが大きすぎるのかなと思い、リクエストの一部を削ってみたらエラーが出なかった。んで、対策をググってみたら書いてあったので、そのまま下のコードを実装してみた。</p>
-
-<figure class='code'><figcaption><span>uwsgi.ini</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ini'><span class='line'><span class="na">buffer-size</span><span class="o">=</span><span class="s">65535</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいにバッファーサイズを大きく(例では64k)した。これでエラーが消えたのでめでたしめでたし。</p>
-
-<p>参考：<a href="http://stackoverflow.com/questions/22697584/nginx-uwsgi-104-connection-reset-by-peer-while-reading-response-header-from-u">django &ndash; Nginx uwsgi (104: Connection reset by peer) while reading response header from upstream &ndash; Stack Overflow</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1385,6 +1173,10 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/03/01/kobe-dot-r-no-15/">Kobe.R #15に参加しました</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/01/24/django-modelform-multiwidget/">djangoのModelFormでMultiWidgetを使って見る</a>
       </li>
     
@@ -1398,10 +1190,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
     
       <li class="post">
         <a href="/blog/2014/12/17/check-table-library/">Javascriptでカレンダーを書くライブラリを調べてみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/12/08/add-uuid-to-titanium-mobile-project/">Titanium Mobileのプロジェクトをアドホック配信する時にテストしてもらうユーザーを追加する</a>
       </li>
     
   </ul>
