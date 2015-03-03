@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-03-01T11:53:34+09:00</updated>
+  <updated>2015-03-03T10:18:19+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,63 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[突然サーバエラーが頻発したので、調べてみたらエラーログが原因だった]]></title>
+    <link href="http://blog.shigepon.com/blog/2015/03/03/error-log-make-php-error/"/>
+    <updated>2015-03-03T09:56:56+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2015/03/03/error-log-make-php-error</id>
+    <content type="html"><![CDATA[<p>参考：<a href="http://zapanet.info/blog/item/2489">PHPのエラーログが肥大してPHPが動かなくなった話</a></p>
+
+<p>ある日、運用しているサービスがサーバエラーを頻出しだしたので、調べてみた。環境はUbuntu、nginx、php-fpm、postgresql。</p>
+
+<ul>
+<li>他のサーバへのdbアクセスがおかしくなったのかと思い、他の方法でdbアクセス→問題無し</li>
+<li>サービスを色々再起動してみた。→変化なし</li>
+<li>サーバを再起動。しばらくエラーでないが、しばらくするとエラーががが</li>
+<li>php-fpmを再起動。しばらくエラーでないが、しばらくするとエラーががが</li>
+<li>php周りかなと思ったので、phpのログを開く→開かない！</li>
+<li>良く見たらphp-fpmのログが2GB超えてた。ナンテコッタイ。</li>
+<li>ログを退避して、ローテーション設定して改めてphp-fpmを再起動したら直った。めでたしめでたし。</li>
+</ul>
+
+
+<p>メモがてらローテーション設定を書いておく</p>
+
+<p>/etc/logrotate.d/php.conf</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>/path/to/php5-fpm.log {
+</span><span class='line'>  daily
+</span><span class='line'>  missingok
+</span><span class='line'>  rotate 52
+</span><span class='line'>  compress
+</span><span class='line'>  delaycompress
+</span><span class='line'>  notifyempty
+</span><span class='line'>  create 0644 group username
+</span><span class='line'>  dateext
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>エラーチェックテストはこんな感じ</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>logrotate -dv /etc/logrotate.d/php.conf
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Kobe.R #15に参加しました]]></title>
@@ -1687,65 +1744,6 @@ uwsgi.iniのenvも変更しておく</p>
 
 
 <p>を追加インストールしておこうということだった。情報無かったので結構はまった。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[djangoで出てくるエラーメッセージメモ]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/08/06/django-error/"/>
-    <updated>2014-08-06T15:42:43+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/08/06/django-error</id>
-    <content type="html"><![CDATA[<p>Djangoでエラーメッセージが出た時に、どこから当たりを付けていくか
-イチイチググってるので、まとめておく。逐次追記。</p>
-
-<h2>other_dict must be a mapping (dictionary-like) object</h2>
-
-<p>returnで返す時のdictionaryが</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{'a','b'}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>となってないかチェック。正しくは</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{'a':'b'}</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Django ImportError when importing xxx</h2>
-
-<p>ライブラリをインストールしていない場合、</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install xxx
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ライブラリ入れてる場合、xxxと同じファイル名のpythonファイル（とキャッシュ）が無いかチェックして、名前を変更するか、消す</p>
-
-<h2>locale.Error: unsupported locale setting</h2>
-
-<p>localeの設定名がおかしい。例えばこんな風だとエラー</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">locale</span>
-</span><span class='line'><span class="n">locale</span><span class="o">.</span><span class="n">setlocale</span><span class="p">(</span><span class="n">locale</span><span class="o">.</span><span class="n">LC_ALL</span><span class="p">,</span><span class="s">&#39;ja_JP&#39;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こうするとオッケー</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">locale</span>
-</span><span class='line'><span class="n">locale</span><span class="o">.</span><span class="n">setlocale</span><span class="p">(</span><span class="n">locale</span><span class="o">.</span><span class="n">LC_ALL</span><span class="p">,</span><span class="s">&#39;ja_JP.utf8&#39;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>IndexError: list index out of range</h2>
-
-<p>リストのインデックスが範囲外なので、該当する箇所のリストの添字をチェック。そもそもリストになっているかどうかもチェック。</p>
 ]]></content>
   </entry>
   

@@ -9,7 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="勉強会の話なので丁寧語で。2/28にKobe.R #15があったので参加してきました。今回は三宮で開かれました。今回は珍しく（？）Rの話題が多いR勉強会でした。抜けてる点もちょいちょいあると思いますが、覚えている限りの感想を書いておきます。 Rによるデータ処理入門 Kobe Rの主催者の河原さん &hellip;">
+  <meta name="description" content="参考：PHPのエラーログが肥大してPHPが動かなくなった話 ある日、運用しているサービスがサーバエラーを頻出しだしたので、調べてみた。環境はUbuntu、nginx、php-fpm、postgresql。 他のサーバへのdbアクセスがおかしくなったのかと思い、他の方法でdbアクセス→問題無し &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,90 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/03/03/error-log-make-php-error/">突然サーバエラーが頻発したので、調べてみたらエラーログが原因だった</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-03-03T09:56:56+09:00" pubdate data-updated="true">Mar 3<span>rd</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>参考：<a href="http://zapanet.info/blog/item/2489">PHPのエラーログが肥大してPHPが動かなくなった話</a></p>
+
+<p>ある日、運用しているサービスがサーバエラーを頻出しだしたので、調べてみた。環境はUbuntu、nginx、php-fpm、postgresql。</p>
+
+<ul>
+<li>他のサーバへのdbアクセスがおかしくなったのかと思い、他の方法でdbアクセス→問題無し</li>
+<li>サービスを色々再起動してみた。→変化なし</li>
+<li>サーバを再起動。しばらくエラーでないが、しばらくするとエラーががが</li>
+<li>php-fpmを再起動。しばらくエラーでないが、しばらくするとエラーががが</li>
+<li>php周りかなと思ったので、phpのログを開く→開かない！</li>
+<li>良く見たらphp-fpmのログが2GB超えてた。ナンテコッタイ。</li>
+<li>ログを退避して、ローテーション設定して改めてphp-fpmを再起動したら直った。めでたしめでたし。</li>
+</ul>
+
+
+<p>メモがてらローテーション設定を書いておく</p>
+
+<p>/etc/logrotate.d/php.conf</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>/path/to/php5-fpm.log {
+</span><span class='line'>  daily
+</span><span class='line'>  missingok
+</span><span class='line'>  rotate 52
+</span><span class='line'>  compress
+</span><span class='line'>  delaycompress
+</span><span class='line'>  notifyempty
+</span><span class='line'>  create 0644 group username
+</span><span class='line'>  dateext
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>エラーチェックテストはこんな感じ</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>logrotate -dv /etc/logrotate.d/php.conf
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -926,228 +1010,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/25/use-django-allauth/">Django-allauthを使ってみた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-11-25T14:55:16+09:00" pubdate data-updated="true">Nov 25<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>ソーシャルログインだけでなく、通常のログインもやりたかったので、django-allauthを試してみた。</p>
-
-<h2>インストール</h2>
-
-<p>pipで</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>pip install django-allauth
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>ファイルでの設定</h2>
-
-<p>settings.pyとurls.pyを設定</p>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'><span class="o">...</span>
-</span><span class='line'>    <span class="s">&#39;allauth&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="s">&#39;allauth.account&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="s">&#39;allauth.socialaccount&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="s">&#39;allauth.socialaccount.providers.twitter&#39;</span><span class="p">,</span> <span class="c">#例としてTwitter</span>
-</span><span class='line'><span class="p">)</span>
-</span><span class='line'><span class="n">AUTHENTICATION_BACKENDS</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'><span class="o">...</span>
-</span><span class='line'>    <span class="s">&#39;allauth.account.auth_backends.AuthenticationBackend&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="p">)</span>
-</span><span class='line'><span class="n">TEMPLATE_CONTEXT_PROCESSORS</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'><span class="o">...</span>
-</span><span class='line'>    <span class="s">&quot;django.core.context_processors.request&quot;</span><span class="p">,</span>
-</span><span class='line'>    <span class="s">&quot;django.contrib.auth.context_processors.auth&quot;</span><span class="p">,</span>
-</span><span class='line'>    <span class="s">&quot;allauth.account.context_processors.account&quot;</span><span class="p">,</span>
-</span><span class='line'>    <span class="s">&quot;allauth.socialaccount.context_processors.socialaccount&quot;</span><span class="p">,</span>
-</span><span class='line'><span class="p">)</span>
-</span><span class='line'><span class="n">SITE_ID</span> <span class="o">=</span> <span class="mi">1</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span>urls.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="o">...</span>
-</span><span class='line'>    <span class="n">url</span><span class="p">(</span><span class="s">&#39;^accounts/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s">&#39;allauth.urls&#39;</span><span class="p">)),</span>
-</span><span class='line'>    <span class="n">url</span><span class="p">(</span><span class="s">&#39;^accounts/profile/?&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s">&#39;profile.urls&#39;</span><span class="p">,</span><span class="n">namespace</span><span class="o">=</span><span class="s">&#39;profile&#39;</span><span class="p">)),</span> <span class="c">#ログイン後のリダイレクト先</span>
-</span><span class='line'><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>adminページでの設定</h2>
-
-<p>ソーシャルログインする場合のみ必要。 <a href="http://domain/admin/">http://domain/admin/</a> にアクセスして管理者ログインしてSocial applicationを追加する。
-フォーム内では名前を適当に付けて、Twitterの場合Client idにConsumer keyを登録して、Secret keyにConsumer secretを登録すればおk
-最後に、利用可能サイトから一番上のサイト(SITE_ID=1と指定してるので)を選択するとおk</p>
-
-<p><a href="http://domain/accounts">http://domain/accounts</a> にアクセスすればログインフォームが出てくる。出来た。</p>
-
-<h2>テンプレートを上書きする</h2>
-
-<p>プロジェクトディレクトリ/templates/account以下にファイルを設定すればおk
-例えばログインのテンプレートなら、login.htmlを設置すればおk</p>
-
-<p>元のファイルはgithubを見れば分かる</p>
-
-<h2>使える機能</h2>
-
-<p><a href="https://github.com/pennersr/django-allauth/blob/master/allauth/account/urls.py">githubのコード</a>
-見れば大体分かる感じ</p>
-
-<h2>ユーザー登録時のメール確認後の処理でハマる</h2>
-
-<p>ユーザー登録すると通常は登録したメールアドレスにメールが届いて、そこに書いてあるURLにアクセスすると登録完了する手順が表示される。そこらへんの文章とかも上のテンプレート上書きでいけて問題ないんだけど、初期状態では登録が最後まで完了すると、そのままログインしてログイン時のリダイレクト先に移動してしまう。完了画面を表示したい場合はこれではまずい。</p>
-
-<p>ので、<a href="http://django-allauth.readthedocs.org/en/latest/advanced.html">ここらへん</a>のCustom Redirectsの項目を参考にしてアダプタを作ってみた</p>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">ACCOUNT_ADAPTER</span> <span class="o">=</span> <span class="s">&#39;project.users.adapter.MyAccountAdapter&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span>project/users/adapter.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">allauth.account.adapter</span> <span class="kn">import</span> <span class="n">DefaultAccountAdapter</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">MyAccountAdapter</span><span class="p">(</span><span class="n">DefaultAccountAdapter</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">get_email_confirmation_redirect_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">request</span><span class="p">):</span>
-</span><span class='line'>        <span class="n">path</span> <span class="o">=</span> <span class="s">&quot;/account/complete&quot;</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">path</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でもこれだけでは上手くいかなかった。普通にログイン時のリダイレクト先に移動してしまった。どうもACCOUNT_LOGIN_ON_EMAIL_CONFIRMATIONをFalseにしないとダメみたい</p>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION</span> <span class="o">=</span> <span class="bp">False</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これでやっと/account/completeにリダイレクトしてくれた。ログインした状態ではダメみたいなので、ログインは再度やってもらわないといけない。うーん今のとこ仕方ないか・・・。</p>
-
-<h2>django-allauthのサインアップフォームをカスタマイズしたい</h2>
-
-<h3>あるフィールドにhelp_textを付ける</h3>
-
-<p>参考：<a href="http://stackoverflow.com/questions/23580771/overwrite-django-allauth-form-field">Overwrite django-allauth form field &ndash; Stack Overflow</a></p>
-
-<p>__init__を上書きして、フィールドに属性を追加する
-コードはこんな感じ。例としてユーザー名入力フォームにヘルプテキストとして「required」という文字を追加する</p>
-
-<figure class='code'><figcaption><span>appname/forms.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">forms</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">SignupForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-</span><span class='line'>    <span class="nb">super</span><span class="p">(</span><span class="n">SignupForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</span><span class='line'>    <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="s">&quot;required&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">ACCOUNT_SIGNUP_FORM_CLASS</span> <span class="o">=</span> <span class="s">&quot;appname.forms.SignupForm&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな感じ</p>
-
-<h3>フィールドのバリデーションを追加</h3>
-
-<p>参考：<a href="http://stackoverflow.com/questions/24175228/how-to-clean-username-with-django-allauth-adapter">python &ndash; How to clean username with Django allauth adapter? &ndash; Stack Overflow</a></p>
-
-<p>Account Adapterを設定してあげて、そこでclean_xxxを作ると上手くいくみたい</p>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="sb">``</span><span class="err">`</span><span class="n">py</span> <span class="n">project</span><span class="o">/</span><span class="n">users</span><span class="o">/</span><span class="n">adapter</span><span class="o">.</span><span class="n">py</span>
-</span><span class='line'><span class="k">class</span> <span class="nc">MyAccountAdapter</span><span class="p">(</span><span class="n">DefaultAccountAdapter</span><span class="p">):</span>
-</span><span class='line'>    <span class="o">...</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">clean_username</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">):</span>
-</span><span class='line'>        <span class="s">&quot; 適当に処理を入れる</span>
-</span><span class='line'>        <span class="s">&quot; エラーの場合はraise Exception</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">username</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1173,6 +1035,10 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/03/03/error-log-make-php-error/">突然サーバエラーが頻発したので、調べてみたらエラーログが原因だった</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/01/kobe-dot-r-no-15/">Kobe.R #15に参加しました</a>
       </li>
     
@@ -1188,10 +1054,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
         <a href="/blog/2014/12/18/use-bootstrap3-in-django/">Use Bootstrap3 in Django</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/12/17/check-table-library/">Javascriptでカレンダーを書くライブラリを調べてみた</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -1205,23 +1067,24 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
+<li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (7)</a></li>
 <li class='category'><a href='/blog/categories/python/'>Python (14)</a></li>
-<li class='category'><a href='/blog/categories/r/'>R (3)</a></li>
+<li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
 <li class='category'><a href='/blog/categories/web/'>Web (1)</a></li>
-<li class='category'><a href='/blog/categories/event/'>event (3)</a></li>
+<li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (5)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (6)</a></li>
 <li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (10)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (1)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (1)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>postgresql (1)</a></li>
-<li class='category'><a href='/blog/categories/rhaco/'>rhaco (2)</a></li>
+<li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>
 <li class='category'><a href='/blog/categories/ruby/'>ruby (9)</a></li>
 <li class='category'><a href='/blog/categories/sqlite/'>sqlite (1)</a></li>

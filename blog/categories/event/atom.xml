@@ -4,7 +4,7 @@
   <title><![CDATA[Category: event | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/event/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-03-01T11:53:34+09:00</updated>
+  <updated>2015-03-03T10:18:19+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,63 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Kobe.R #15に参加しました]]></title>
+    <link href="http://blog.shigepon.com/blog/2015/03/01/kobe-dot-r-no-15/"/>
+    <updated>2015-03-01T10:57:17+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2015/03/01/kobe-dot-r-no-15</id>
+    <content type="html"><![CDATA[<p>勉強会の話なので丁寧語で。2/28に<a href="https://kobexr.doorkeeper.jp/events/20843">Kobe.R #15</a>があったので参加してきました。今回は三宮で開かれました。今回は珍しく（？）Rの話題が多いR勉強会でした。抜けてる点もちょいちょいあると思いますが、覚えている限りの感想を書いておきます。</p>
+
+<h2>Rによるデータ処理入門</h2>
+
+<p>Kobe Rの主催者の河原さん（@h_kawahara）による発表でした。 データ読み込み、加工、表示までのRで解析する前に絶対必要な操作をまとめてくれました。大事なことはデータ加工≠データ整形ということかなと。何となく突っ込みどころを箇条書きにします</p>
+
+<ul>
+<li>strがstructureの略称とか、stringの略称じゃないんだ！</li>
+<li>何度も言うけどforは遅い</li>
+<li>db接続がodbcだけだとちょっと今後辛い気がする</li>
+<li>大きいファイルはRDataファイルにしておくと容量小さい</li>
+<li>データ加工に便利なのはdplyr(でぃーぷらいやーと読むらしい）</li>
+<li>dplyrのソート命令がarrange！sortとかorderじゃないのか。</li>
+<li>dplyrだとカラムの結合や分解も手軽に出来そう</li>
+<li>自分でちょっといじって、packageとかfunctionを探す方法を掴まないと、関数名に略称とか使ってるケースが結構あって、探しにくいかも。使ってみないと何とも言えないけど</li>
+<li>発表でちょっと気になったけど、同じ書式の演算子でパッケージによって違う意味になったりするの？</li>
+</ul>
+
+
+<p>データの前処理ってとても大事なので、参考にしてちょっと練習出来たらなと思います。</p>
+
+<h2>R in Life Science</h2>
+
+<p>Tomitaさんの発表。生物系の学生さんだそうで、研究で使いそうなヒートマップ表示について教えてくれました。
+車のデータを利用して燃費をベースにしてグルーピングしながら、各項目についてヒートマップ表示して傾向が見やすくなってました。
+最初バイオ系なのでSDS-PAGEか何かかと思いましたががが。あと、ggplot（だったかな？）でのヒートマップ関数としてheatmap.2ってのを紹介されていましたが、関数名に2とか入るの久しぶりに見ました。これはん〜〜〜〜〜〜、ちょっとな〜〜〜。でも機能は多いみたいです。</p>
+
+<h2>Incanterチョットシッテル</h2>
+
+<p>@tnoda_さんの発表
+<a href="http://sssslide.com/www.slideshare.net/tnoda/kober-15-incanter">スライドはこちら</a>。
+Twitterでインなんとかとか言っちゃいましたが、インキャンターです。「ノリを間違えたかも！（意訳）」とおっしゃっていましたが、とても楽しい発表でした。リアルタイムに突っ込み入れたかったのですが、出来なかったので、ここで突っ込みしておきます。</p>
+
+<ul>
+<li>Clojureってカッコだらけだ！Lis(ry (*)</li>
+<li>3D pie chart以外はRと同じことは出来るらしい</li>
+<li>インストールはLeiningen（らいにんげん）からやるらしい。プロジェクト作ったりライブラリ管理とかやってくれるらしい。pipとかmagage.pyみたいなもん？</li>
+<li>Incanterの公式ダウンロードリンクからインストールしてはいけない。インストールしてしまった後のことは知らない。</li>
+<li>Rの話は8ページ目で終了と言ってたけど、dplyr出て来たよ（25ページ目）</li>
+<li>マクロという言葉に拒否感ががが（C的Excel的意味で）。でもきっと慣れると便利なんだろう。きっと。多分。</li>
+<li>Clojureが並列処理に向いているらしいので、並列処理＋統計処理に良さげ</li>
+<li>javaベースなので、javaベースのものと統合しやすいらしい。javaで開発してないからさっぱり分かんないけど。</li>
+<li>Incanterで3D pie chart書きたかったら、RserveってのでIncanterとRをつないだらいいらしい。3D pie chartの為だけにそこまでやるとか変態すぐる</li>
+</ul>
+
+
+<h2>分析実践</h2>
+
+<p>残った時間で実際にやってみましょうということで、弁当屋のデータを元にして売り上げ予測をやるという目的でRを触ってみるということをやっていました。R勉強会とは言え、実際にRをバリバリ使ってる人とかほとんど居ないと思うので、とても良い試みだと思いました。が、私はパソコン持ってなかったので読書しながら他の人がハマっているのを見たりしてました（悪趣味）。どうも文字コード周りでハマるケースが結構あるっぽいです。うむむむむ。ハマりポイントはハッキリさせたいところです。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Kobe.R no 13に参加してきました]]></title>

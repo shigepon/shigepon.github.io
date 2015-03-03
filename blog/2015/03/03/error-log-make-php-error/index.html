@@ -5,14 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>git memo - shigeponが関心のある技術情報など</title>
+  <title>突然サーバエラーが頻発したので、調べてみたらエラーログが原因だった - shigeponが関心のある技術情報など</title>
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="git関連のメモ 変更履歴を見る 1
-$ git log -p で全体の変更履歴 1
-$ git log -p filename でfilenameの変更履歴を表示する ブランチ間の変更ファイル一覧を取得 1
-$ git diff --name-only -b parent_branch -b &hellip;">
+  <meta name="description" content="参考：PHPのエラーログが肥大してPHPが動かなくなった話 ある日、運用しているサービスがサーバエラーを頻出しだしたので、調べてみた。環境はUbuntu、nginx、php-fpm、postgresql。 他のサーバへのdbアクセスがおかしくなったのかと思い、他の方法でdbアクセス→問題無し &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +18,7 @@ $ git diff --name-only -b parent_branch -b &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.shigepon.com/blog/2014/04/09/git-memo">
+  <link rel="canonical" href="http://blog.shigepon.com/blog/2015/03/03/error-log-make-php-error">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -85,7 +82,7 @@ $ git diff --name-only -b parent_branch -b &hellip;">
   
   <header>
     
-      <h1 class="entry-title">Git Memo</h1>
+      <h1 class="entry-title">突然サーバエラーが頻発したので、調べてみたらエラーログが原因だった</h1>
     
     
       <p class="meta">
@@ -101,39 +98,62 @@ $ git diff --name-only -b parent_branch -b &hellip;">
   
 
 
-<time datetime="2014-04-09T12:36:49+09:00" pubdate data-updated="true">Apr 9<span>th</span>, 2014</time>
+<time datetime="2015-03-03T09:56:56+09:00" pubdate data-updated="true">Mar 3<span>rd</span>, 2015</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>git関連のメモ</p>
+<div class="entry-content"><p>参考：<a href="http://zapanet.info/blog/item/2489">PHPのエラーログが肥大してPHPが動かなくなった話</a></p>
 
-<h3>変更履歴を見る</h3>
+<p>ある日、運用しているサービスがサーバエラーを頻出しだしたので、調べてみた。環境はUbuntu、nginx、php-fpm、postgresql。</p>
+
+<ul>
+<li>他のサーバへのdbアクセスがおかしくなったのかと思い、他の方法でdbアクセス→問題無し</li>
+<li>サービスを色々再起動してみた。→変化なし</li>
+<li>サーバを再起動。しばらくエラーでないが、しばらくするとエラーががが</li>
+<li>php-fpmを再起動。しばらくエラーでないが、しばらくするとエラーががが</li>
+<li>php周りかなと思ったので、phpのログを開く→開かない！</li>
+<li>良く見たらphp-fpmのログが2GB超えてた。ナンテコッタイ。</li>
+<li>ログを退避して、ローテーション設定して改めてphp-fpmを再起動したら直った。めでたしめでたし。</li>
+</ul>
+
+
+<p>メモがてらローテーション設定を書いておく</p>
+
+<p>/etc/logrotate.d/php.conf</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>/path/to/php5-fpm.log {
+</span><span class='line'>  daily
+</span><span class='line'>  missingok
+</span><span class='line'>  rotate 52
+</span><span class='line'>  compress
+</span><span class='line'>  delaycompress
+</span><span class='line'>  notifyempty
+</span><span class='line'>  create 0644 group username
+</span><span class='line'>  dateext
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>エラーチェックテストはこんな感じ</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git log -p
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>logrotate -dv /etc/logrotate.d/php.conf
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>で全体の変更履歴</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git log -p filename
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でfilenameの変更履歴を表示する</p>
-
-<h3>ブランチ間の変更ファイル一覧を取得</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git diff --name-only -b parent_branch -b child_branch
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>参考：<a href="http://qa.atmarkit.co.jp/q/2047">gitの指定ブランチで変更されたファイルの一覧を取得したい &ndash; QA@IT</a></p>
 </div>
 
 
@@ -156,12 +176,12 @@ $ git diff --name-only -b parent_branch -b &hellip;">
   
 
 
-<time datetime="2014-04-09T12:36:49+09:00" pubdate data-updated="true">Apr 9<span>th</span>, 2014</time>
+<time datetime="2015-03-03T09:56:56+09:00" pubdate data-updated="true">Mar 3<span>rd</span>, 2015</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/git/'>git</a>, <a class='category' href='/blog/categories/memo/'>memo</a>
+    <a class='category' href='/blog/categories/php/'>PHP</a>, <a class='category' href='/blog/categories/linux/'>linux</a>, <a class='category' href='/blog/categories/rhaco/'>rhaco</a>
   
 </span>
 
@@ -170,7 +190,7 @@ $ git diff --name-only -b parent_branch -b &hellip;">
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2014/04/09/git-memo/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2014/04/09/git-memo/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2015/03/03/error-log-make-php-error/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2015/03/03/error-log-make-php-error/" >Tweet</a>
   
   
   
@@ -190,10 +210,8 @@ $ git diff --name-only -b parent_branch -b &hellip;">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/04/08/update-openssl-security-patch/" title="Previous Post: Ubuntuでopensslのsecurity patchを当てる">&laquo; Ubuntuでopensslのsecurity patchを当てる</a>
+        <a class="basic-alignment left" href="/blog/2015/03/01/kobe-dot-r-no-15/" title="Previous Post: Kobe.R #15に参加しました">&laquo; Kobe.R #15に参加しました</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/05/02/use-nginxand-unicorn-on-sakura-vps/" title="Next Post: nginx,unicornをさくらvpsにインストールしてrailsアプリを手動でデプロイしてみる">nginx,unicornをさくらvpsにインストールしてrailsアプリを手動でデプロイしてみる &raquo;</a>
       
     </p>
   </footer>
