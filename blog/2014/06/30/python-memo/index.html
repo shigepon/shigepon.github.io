@@ -233,6 +233,17 @@ subprocessを使う。何か昔は別の手法だったらしい。</p>
 
 <p>こんな感じで出来る。
 参考：<a href="http://blog.kjirou.net/p/381">[Python] 月の加減算処理ができない？ | それなりブログ</a></p>
+
+<h2>日付表示で良く使うフォーマット</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">date</span>
+</span><span class='line'><span class="k">print</span> <span class="n">date</span><span class="p">(</span><span class="mi">2002</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>としておくと、2002-12-04と表示される</p>
 </div>
 
 
