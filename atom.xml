@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-03-04T00:24:11+09:00</updated>
+  <updated>2015-03-05T10:31:38+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,39 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[uwsgiメモ]]></title>
+    <link href="http://blog.shigepon.com/blog/2015/03/05/uwsgi-memo/"/>
+    <updated>2015-03-05T10:21:54+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2015/03/05/uwsgi-memo</id>
+    <content type="html"><![CDATA[<p>uwsgi関連ではまった点などをメモ</p>
+
+<h2>invalid request block size</h2>
+
+<p>ajaxでサーバ側からデータを読み込むライブラリを使ってると、条件によって502エラーが出てる(=大体djangoとかのプログラム側のエラーで出る)ので、uwsgiのログを調べると、invalid request block sizeというエラーが出てた。</p>
+
+<p>んで、調べてみると、uwsgiがリクエストのサイズが大きすぎるとエラーを吐いているらしい。ライブラリ側で勝手にパラメーター付けて送られてリクエストのサイズが大きくなっているので、こりゃ調整しないとなということで調べてみた。起動時にオプション設定するか、iniファイルで設定したらいけるらしい</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>uwsgi --buffer-size<span class="o">=</span>xxxx
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ini'><span class='line'><span class="err">...</span>
+</span><span class='line'><span class="na">buffer-size</span><span class="o">=</span> <span class="s">xxxx</span>
+</span><span class='line'><span class="err">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考：<a href="http://stackoverflow.com/questions/15878176/uwsgi-invalid-request-block-size">uwsgi invalid request block size &ndash; Stack Overflow</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[突然サーバエラーが頻発したので、調べてみたらエラーログが原因だった]]></title>
@@ -1717,33 +1750,6 @@ uwsgi.iniのenvも変更しておく</p>
 <p>Rでパイプ使う時はpipe Rが便利とかsql使ってdbアクセスするライブラリとかforループを速く便利にする方法とか教えてもらいました。まだ実際に試してないので、試してみないといかんす。</p>
 
 <p>次回参加は無理ですが、ちょこちょこ参加したいなと思いました（小並感）。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ubuntuのmonoでMicrosoft.VisualBasicが動かない件]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/08/20/vb-not-work-on-ubuntu/"/>
-    <updated>2014-08-20T13:38:34+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/08/20/vb-not-work-on-ubuntu</id>
-    <content type="html"><![CDATA[<p>なでしこ2にコミットしたりしつつ、実際にUbuntu 12.04で使ってみたりしているが、vb系のインポートが出来ないとか何とか言われたのでメモ</p>
-
-<p>参考：<a href="http://stackoverflow.com/questions/10071836/vb-net-not-working-on-ubuntu-10-04-with-mono">.net &ndash; VB.NET Not working on Ubuntu 10.04 With Mono &ndash; Stack Overflow</a></p>
-
-<p>要は普通にmonoをインストールしただけ</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install mono-devel
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>だとVB系のライブラリはインストールされないらしい。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install mono-vbnc
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>を追加インストールしておこうということだった。情報無かったので結構はまった。</p>
 ]]></content>
   </entry>
   

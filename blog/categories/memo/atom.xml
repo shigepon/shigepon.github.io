@@ -4,7 +4,7 @@
   <title><![CDATA[Category: memo | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/memo/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-03-04T00:24:11+09:00</updated>
+  <updated>2015-03-05T10:31:38+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,33 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[uwsgiメモ]]></title>
+    <link href="http://blog.shigepon.com/blog/2015/03/05/uwsgi-memo/"/>
+    <updated>2015-03-05T10:21:54+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2015/03/05/uwsgi-memo</id>
+    <content type="html"><![CDATA[<p>uwsgi関連ではまった点などをメモ</p>
+
+<h2>invalid request block size</h2>
+
+<p>ajaxでサーバ側からデータを読み込むライブラリを使ってると、条件によって502エラーが出てる(=大体djangoとかのプログラム側のエラーで出る)ので、uwsgiのログを調べると、invalid request block sizeというエラーが出てた。</p>
+
+<p>んで、調べてみると、uwsgiがリクエストのサイズが大きすぎるとエラーを吐いているらしい。ライブラリ側で勝手にパラメーター付けて送られてリクエストのサイズが大きくなっているので、こりゃ調整しないとなということで調べてみた。起動時にオプション設定するか、iniファイルで設定したらいけるらしい</p>
+
+<p><code>sh
+$ uwsgi --buffer-size=xxxx
+</code></p>
+
+<p><code>ini
+...
+buffer-size= xxxx
+...
+</code></p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/15878176/uwsgi-invalid-request-block-size">uwsgi invalid request block size &ndash; Stack Overflow</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Titanium Mobileメモ]]></title>
@@ -198,82 +225,6 @@ $app_url = \org\rhaco\Conf::get("org.rhaco.Flow@app_url");
 </code></p>
 
 <p>これでおk。@で区切ってクラス名と取得したい値のキーを書くと値を取って来れる。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[linux command memo]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/03/07/linux-command-memo/"/>
-    <updated>2014-03-07T08:50:21+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/03/07/linux-command-memo</id>
-    <content type="html"><![CDATA[<h2>アクセスログのIPアドレスを集計してみる</h2>
-
-<p>参考：<a href="http://blog.livedoor.jp/stock_value/archives/51443839.html">Linux サーバーでお手軽にログの集計：こっそりと。 &ndash; livedoor Blog（ブログ）</a></p>
-
-<p>Google Analyticsでリファラ無しの変なアクセスが増えたので、アクセスログからIPを集計してみた。
-アクセスログの書式はLTSVでこんな感じ</p>
-
-<p><code>
-time:07/Mar/2014:06:25:22 +0900       host::11.22.33.46       forwardedfor:-  req:GET / HTTP/1.1   status:200      size:1       referer:-ua:Mozilla/5.0 (***)      reqtime:0.777   cache:- runtime:-       vhost:hoge.fuga
-</code></p>
-
-<p>なんか色々ソフト使うのとか面倒だったのでgrepとかawkでほげほげした。要はhost:11.22.33.44に当たる箇所を取り出して表示回数をまとめれば良い。</p>
-
-<p><code>
-$ cat access.log | grep -v -i "bot" | grep "referer:-" | grep "status:200" | awk '{print $3}' | sort | uniq -c
-</code></p>
-
-<p>軽くbot避けを入れてるけど、crawlerとかspiderとかを避けておくとより正確になるかも。
-これだけだと一杯出てくるので100回以上アクセスあったIPだけ取り出してみた。</p>
-
-<p><code>
-$ cat access.log | grep -v -i "bot" | grep "referer:-" | grep "status:200" | awk '{print $3}' | sort | uniq -c | grep "[0-9]\{3,\}\s"
-</code></p>
-
-<p>ただ、最初の目的には最初の集計の方が役に立った。結局Bingのボットだったみたい。Analyticsではじけなかったアクセスがあったのかな。</p>
-
-<h2>大きなファイルを探す</h2>
-
-<p>例：100MB以上のファイルを探す</p>
-
-<p><code>sh
-$ find path -size 100M
-</code></p>
-
-<h2>Windows共有フォルダをマウント</h2>
-
-<p>参考：<a href="http://qiita.com/mdstoy/items/54925cdcbca6d558b666">Ubuntu から Windows の共有フォルダをマウントして利用する &ndash; Qiita</a>というかほぼそのまま</p>
-
-<p><code>sh
-$ sudo aptitude install cifs-utils
-$ sudo mkdir -p /mnt/windows
-$ sudo mount -t cifs -o username=WindowsUsername,password=WindowsPassword //ServerNameOrIp/path/to/share /mnt/windows
-</code></p>
-
-<h2>ファイルのフルパス一覧を取得</h2>
-
-<p>参考：<a href="http://linux.just4fun.biz/%E9%80%86%E5%BC%95%E3%81%8DUNIX%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%81%AE%E3%83%95%E3%83%AB%E3%83%91%E3%82%B9%E5%90%8D%E3%82%92%E5%8F%96%E5%BE%97%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95.html">逆引きUNIXコマンド/ファイルのフルパス名を取得する方法 &ndash; Linuxと過ごす</a></p>
-
-<p>単純なlsだとファイル名だけが一覧になるので、フルパスの一覧が欲しい場合は一工夫必要</p>
-
-<p><code>sh
-$ ls -dF /path/to/dir/*
-$ find `pwd` -maxdepth 1 -mindepth 1
-</code></p>
-
-<h2>SSHを使ってリモートでコマンド実行する</h2>
-
-<p>単純なコマンド実行</p>
-
-<p><code>sh
-$ ssh username@hostname options... "command"
-</code></p>
-
-<p>ローカルのファイルをリダイレクトしてリモートコマンドに使用する。</p>
-
-<p><code>sh
-$ ssh username@hostname options... "command" &lt; localfile
-</code></p>
 ]]></content>
   </entry>
   

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: uwsgi | shigeponが関心のある技術情報など]]></title>
+  <link href="http://blog.shigepon.com/blog/categories/uwsgi/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.com/"/>
+  <updated>2015-03-05T10:31:38+09:00</updated>
+  <id>http://blog.shigepon.com/</id>
+  <author>
+    <name><![CDATA[shigepon]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[uwsgiメモ]]></title>
+    <link href="http://blog.shigepon.com/blog/2015/03/05/uwsgi-memo/"/>
+    <updated>2015-03-05T10:21:54+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2015/03/05/uwsgi-memo</id>
+    <content type="html"><![CDATA[<p>uwsgi関連ではまった点などをメモ</p>
+
+<h2>invalid request block size</h2>
+
+<p>ajaxでサーバ側からデータを読み込むライブラリを使ってると、条件によって502エラーが出てる(=大体djangoとかのプログラム側のエラーで出る)ので、uwsgiのログを調べると、invalid request block sizeというエラーが出てた。</p>
+
+<p>んで、調べてみると、uwsgiがリクエストのサイズが大きすぎるとエラーを吐いているらしい。ライブラリ側で勝手にパラメーター付けて送られてリクエストのサイズが大きくなっているので、こりゃ調整しないとなということで調べてみた。起動時にオプション設定するか、iniファイルで設定したらいけるらしい</p>
+
+<p><code>sh
+$ uwsgi --buffer-size=xxxx
+</code></p>
+
+<p><code>ini
+...
+buffer-size= xxxx
+...
+</code></p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/15878176/uwsgi-invalid-request-block-size">uwsgi invalid request block size &ndash; Stack Overflow</a></p>
+]]></content>
+  </entry>
+  
+</feed>
