@@ -159,7 +159,7 @@
 <ul>
 <li>マイグレーションの状態がちゃんと最新になっているか確認する</li>
 <li>settings.pyのINSTALLED_APPSの行から&#8217;south&#8217;を取り除く</li>
-<li>数字の付いたマイグレーションファイルを全て削除する。ディレクトリと<strong>init</strong>.pyは残す。.pycファイルも削除すること。</li>
+<li>数字の付いたマイグレーションファイルを全て削除する。ディレクトリと__init__.pyは残す。.pycファイルも削除すること。</li>
 <li>python manage.py makemigrasionsを実行する。Djangoが空のマイグレーションディレクトリに新しい初期マイグレーションを作る。</li>
 <li>python manage.py migrateを実行する。Djangoは初期マイグレーションをチェックして、実行しないで適用済みにする。</li>
 </ul>
