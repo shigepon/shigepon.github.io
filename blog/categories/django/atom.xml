@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Django | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/django/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-03-09T23:02:50+09:00</updated>
+  <updated>2015-03-09T23:05:20+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -54,7 +54,7 @@ admin.site.register(Model)
 
 <p>次はSouthでマイグレーションやってるプロジェクトだったので、下のようなエラーが出た。</p>
 
-<p><code>
+<p><code>sh
 raise RuntimeError("South does not support Django 1.7 or higher. Please use native Django migrations.")
 </code></p>
 
