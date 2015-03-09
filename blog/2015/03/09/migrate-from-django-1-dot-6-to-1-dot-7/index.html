@@ -5,13 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Groongaアンケート？ - shigeponが関心のある技術情報など</title>
+  <title>Django 1.6から1.7にアップデートしてみた - shigeponが関心のある技術情報など</title>
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="今回は他の人からの話があるので丁寧語で。
-@ktouさんからGroongaについて「Groongaについてのいくつかの質問について答えて欲しい」との話がありましたので、ブログに載せておきます。 質問は以下の3点 Groongaを選んだ決め手
-実際にGroongaを使っていてよいと思っているところ &hellip;">
+  <meta name="description" content="Djangoが去年の9月に1.7にバージョンアップしてて、今更ながらアップデートしてみた。色々教えて頂いた@key3さんに感謝！ Django本体のアップデート Djangoはpipで管理してるので、pipコマンドでアップデート出来る 1
+$ pip install django -U &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.shigepon.com/blog/2014/07/05/groonga-qa">
+  <link rel="canonical" href="http://blog.shigepon.com/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -84,7 +83,7 @@
   
   <header>
     
-      <h1 class="entry-title">Groongaアンケート？</h1>
+      <h1 class="entry-title">Django 1.6から1.7にアップデートしてみた</h1>
     
     
       <p class="meta">
@@ -100,70 +99,72 @@
   
 
 
-<time datetime="2014-07-05T13:52:55+09:00" pubdate data-updated="true">Jul 5<span>th</span>, 2014</time>
+<time datetime="2015-03-09T22:11:02+09:00" pubdate data-updated="true">Mar 9<span>th</span>, 2015</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>今回は他の人からの話があるので丁寧語で。
-@ktouさんからGroongaについて「Groongaについてのいくつかの質問について答えて欲しい」との話がありましたので、ブログに載せておきます。</p>
+<div class="entry-content"><p>Djangoが去年の9月に1.7にバージョンアップしてて、今更ながらアップデートしてみた。色々教えて頂いた<a href="https://twitter.com/key3">@key3</a>さんに感謝！</p>
 
-<p>質問は以下の3点</p>
+<h2>Django本体のアップデート</h2>
+
+<p>Djangoはpipで管理してるので、pipコマンドでアップデート出来る</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install django -U
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで本体はアップデート完了した。</p>
+
+<h2>プロジェクトをDjango1.7で動かす</h2>
+
+<p>何も変更せずにおもむろに</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py runserver
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とするとエラー出て動かなかった。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>raise AppRegistryNotReady<span class="o">(</span><span class="s2">&quot;Models aren&#39;t loaded yet.&quot;</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Tracebackを見てみるとどうもmodels.pyの中で</p>
+
+<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Model</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とかやってたのがまずかったみたいで、管理サイトで使うモデル定義などのコードをadmin.pyに移動したら上のエラーは出なくなった。何となくで書いてたらいかんな。ちなみにアップデートには関係無いけど、Django1.7で@admin.register(Model)というデコレーターが使えるようになったので、そっちに変えた方がスマートな気がする。</p>
+
+<p>次はSouthでマイグレーションやってるプロジェクトだったので、下のようなエラーが出た。</p>
+
+<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&quot;South does not support Django 1.7 or higher. Please use native Django migrations.&quot;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>要はSouthはもうサポートしてないからDjango自身のマイグレーションでやってねということらしい。</p>
+
+<p><a href="https://docs.djangoproject.com/en/1.7/topics/migrations/#upgrading-from-south">Migrations | Django documentation | Django</a>を見ながらやってみる。ざっくり手順を日本語で書いておく</p>
 
 <ul>
-<li>Groongaを選んだ決め手</li>
-<li>実際にGroongaを使っていてよいと思っているところ</li>
-<li>Groongaがこうなるともっとうれしいと思うところ</li>
+<li>マイグレーションの状態がちゃんと最新になっているか確認する</li>
+<li>settings.pyのINSTALLED_APPSの行から&#8217;south&#8217;を取り除く</li>
+<li>数字の付いたマイグレーションファイルを全て削除する。ディレクトリと<strong>init</strong>.pyは残す。.pycファイルも削除すること。</li>
+<li>python manage.py makemigrasionsを実行する。Djangoが空のマイグレーションディレクトリに新しい初期マイグレーションを作る。</li>
+<li>python manage.py migrateを実行する。Djangoは初期マイグレーションをチェックして、実行しないで適用済みにする。</li>
 </ul>
 
 
-<h2>Groongaを選んだ決め手</h2>
-
-<p>現在運営しているサービス<a href="http://thoz.org">とある法律判例の全文検索</a>を作り始める時に、全文検索をサービスに入れるのを前提に考えてましたので、全文検索エンジンについて調べました。DBとしてはPostgreSQLをメインで使っているので、当時は選択肢として次のようなものがありました。</p>
-
-<ul>
-<li>Groonga（まだバージョン1になってなかったような）</li>
-<li>Senna</li>
-<li>tsvector</li>
-<li>namazu</li>
-<li>Hyper Estraier</li>
-</ul>
-
-
-<p>最初は何もアプリを入れなくていいのでtsvectorを使った全文検索を試してみたんですが、bigramで日本語が使えない。使うならソースからコンパイルというのが当時面倒だったので辞めました（当時からVagrantとかDockerとかあって、色々試せたらbigramでいってたかも）。</p>
-
-<p>なので、他4つを比較した訳なんですが、作るサービスは個人サービスだし、なるべく新しいもので、かつ日本人が作っているものを利用してみようと思い、Groongaを選択しました。あと、Groongaが「Sennaの後継」という立場だったのも大きかったと思います。Sennaの後継なら新しいアプリだとしても、それなりに信用があるだろう。すぐにメンテされなくなるようなものでも無いだろうという判断をしました。</p>
-
-<h2>実際にGroongaを使っていてよいと思っているところ</h2>
-
-<p>まずサーバ1個でかなり無茶な使い方してもちゃんと動いてくれるところです。Groonga勉強会では「データ量がメモリを超えだしたら分散を考えて」みたいな話が出たのですが、結構超えてても何の問題もなく動いてくれます。</p>
-
-<p>次は言語バインディングとかあまり考えなくてもHTTPでアクセス出来る方法を用意してくれているので、HTTPアクセスさえ出来ればどんな言語からでも利用出来る点が良いと思います。Mroongaは全く使っていませんし、Rroongaもデータのバックアップ用途以外は全く使ってません。HTTPアクセス出来る場合は、管理もHTTPで出来ます。これも便利だと思います。</p>
-
-<p>ドリルダウン、タグ検索、補完補正など、全文検索以外にも使える機能が沢山あります。沢山ありすぎて利用できていない機能が多々ありますがorz。</p>
-
-<p>機能とは関係ありませんが、TwitterでGroongaについてボヤくと@ktouさんがフォローしてくれるのがいつもとても助かっています＞＜。そういう人が居ると、使う時にとても心強いです。</p>
-
-<p>名前が好きです。Elasticなんたらは何かエラそうですが、Groongaはグルグルしてるっぽいのがいいです。</p>
-
-<h2>Groongaがこうなるともっとうれしいと思うところ</h2>
-
-<p>現在もとてもありがたいのですが、こうなると嬉しい点を箇条書きします。</p>
-
-<ul>
-<li>現在使っている機能以外でもっと色々出来るようなのですが、情報が少ない気がします。ドキュメントが充実してくるととても嬉しいです。ドキュメントが充実すればきっとTwitterでボヤく率も減る・・・かも。</li>
-<li>Rroonga使わないでGroonga単体の機能として、大容量データのバックアップを取れると嬉しいです。</li>
-<li>難しいと思いますが、複数カラム（カラムA,B)での全文検索で、CとDを検索したい時、カラムAにCが、カラムBにDが入ってる時に、検索結果として出力出来るフラグみたいなのを入れて欲しいです。</li>
-<li>もしかしたら出来るのかもしれませんが、ソースからビルドした場合にgroonga-server系の機能が使えるようにしてもらえるとHTTPから使っている身としては嬉しいです。</li>
-<li>cliでのヒストリーは特に何もアプリ入れなくても出来るようにしてくれるとまた嬉しいです。</li>
-<li>sqlのinsert文みたいな形でloadが出来ると、RDBで使っていたテーブルを丸々移動とか手軽に出来そうなので、そういうのが出来ると嬉しいです。もしくはcsvでloadが出来るとか。まぁsql使うならMroonga使えって話ですが・・・単体でも特にloadについてRDBから書き出せる形式のものを読み込めると嬉しいなーなんて思いました。</li>
-<li>勉強会の時に「ぐるーんが」なのか「むるーんが」なのか「るるーんが」なのかが発音でハッキリしませんでしたが、私の耳が悪いんですねきっと。</li>
-</ul>
-
-
-<p>以上追記するかもしれませんが、こんな感じで〜</p>
+<p>以上やってみたら、エラーは出ずにプロジェクトをDjango1.7に対応できた。めでたしめでたし。</p>
 </div>
 
 
@@ -186,15 +187,21 @@
   
 
 
-<time datetime="2014-07-05T13:52:55+09:00" pubdate data-updated="true">Jul 5<span>th</span>, 2014</time>
+<time datetime="2015-03-09T22:11:02+09:00" pubdate data-updated="true">Mar 9<span>th</span>, 2015</time>
       
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/django/'>Django</a>, <a class='category' href='/blog/categories/python/'>Python</a>
+  
+</span>
 
 
     </p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2014/07/05/groonga-qa/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2014/07/05/groonga-qa/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/" >Tweet</a>
   
   
   
@@ -214,10 +221,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/07/02/django-show-list-with-paging/" title="Previous Post: Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する">&laquo; Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する</a>
+        <a class="basic-alignment left" href="/blog/2015/03/05/uwsgi-memo/" title="Previous Post: uwsgiメモ">&laquo; uwsgiメモ</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/07/23/use-python-social-auth-in-django/" title="Next Post: Djangoでpython-social-authを使うための最低限の設定">Djangoでpython-social-authを使うための最低限の設定 &raquo;</a>
       
     </p>
   </footer>

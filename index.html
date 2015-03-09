@@ -9,7 +9,8 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="uwsgi関連ではまった点などをメモ invalid request block size ajaxでサーバ側からデータを読み込むライブラリを使ってると、条件によって502エラーが出てる(=大体djangoとかのプログラム側のエラーで出る)ので、uwsgiのログを調べると、invalid &hellip;">
+  <meta name="description" content="Djangoが去年の9月に1.7にバージョンアップしてて、今更ながらアップデートしてみた。色々教えて頂いた@key3さんに感謝！ Django本体のアップデート Djangoはpipで管理してるので、pipコマンドでアップデート出来る 1
+$ pip install django -U &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +80,100 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/">Django 1.6から1.7にアップデートしてみた</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-03-09T22:11:02+09:00" pubdate data-updated="true">Mar 9<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Djangoが去年の9月に1.7にバージョンアップしてて、今更ながらアップデートしてみた。色々教えて頂いた<a href="https://twitter.com/key3">@key3</a>さんに感謝！</p>
+
+<h2>Django本体のアップデート</h2>
+
+<p>Djangoはpipで管理してるので、pipコマンドでアップデート出来る</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install django -U
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで本体はアップデート完了した。</p>
+
+<h2>プロジェクトをDjango1.7で動かす</h2>
+
+<p>何も変更せずにおもむろに</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py runserver
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とするとエラー出て動かなかった。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>raise AppRegistryNotReady<span class="o">(</span><span class="s2">&quot;Models aren&#39;t loaded yet.&quot;</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Tracebackを見てみるとどうもmodels.pyの中で</p>
+
+<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Model</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とかやってたのがまずかったみたいで、管理サイトで使うモデル定義などのコードをadmin.pyに移動したら上のエラーは出なくなった。何となくで書いてたらいかんな。ちなみにアップデートには関係無いけど、Django1.7で@admin.register(Model)というデコレーターが使えるようになったので、そっちに変えた方がスマートな気がする。</p>
+
+<p>次はSouthでマイグレーションやってるプロジェクトだったので、下のようなエラーが出た。</p>
+
+<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&quot;South does not support Django 1.7 or higher. Please use native Django migrations.&quot;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>要はSouthはもうサポートしてないからDjango自身のマイグレーションでやってねということらしい。</p>
+
+<p><a href="https://docs.djangoproject.com/en/1.7/topics/migrations/#upgrading-from-south">Migrations | Django documentation | Django</a>を見ながらやってみる。ざっくり手順を日本語で書いておく</p>
+
+<ul>
+<li>マイグレーションの状態がちゃんと最新になっているか確認する</li>
+<li>settings.pyのINSTALLED_APPSの行から&#8217;south&#8217;を取り除く</li>
+<li>数字の付いたマイグレーションファイルを全て削除する。ディレクトリと<strong>init</strong>.pyは残す。.pycファイルも削除すること。</li>
+<li>python manage.py makemigrasionsを実行する。Djangoが空のマイグレーションディレクトリに新しい初期マイグレーションを作る。</li>
+<li>python manage.py migrateを実行する。Djangoは初期マイグレーションをチェックして、実行しないで適用済みにする。</li>
+</ul>
+
+
+<p>以上やってみたら、エラーは出ずにプロジェクトをDjango1.7に対応できた。めでたしめでたし。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -856,109 +951,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/27/django-locale/">Djangoで国際化やってみた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-11-27T13:02:12+09:00" pubdate data-updated="true">Nov 27<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Djangoで他の人が作ったモジュールを使ってると、英語のメッセージが入ってることがあるので、日本語化してみた。とりあえず英語のメッセージを日本語に変換するとこまで。</p>
-
-<h2>準備</h2>
-
-<p>gettextが無かったらインストール。Ubuntuの場合</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install gettext
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>プロジェクトにlocaleフォルダを作る。無いと後のコマンドでエラーが出た</p>
-
-<h2>poファイル作成</h2>
-
-<p>おもむろにpoファイルを作るコマンドを実行</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>django-admin.py makemessages -l ja
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>するとpath/to/locale/ja/LC_MESSAGES/django.poってファイルが出来るので、それを修正していく。ただ、このコマンドプロジェクト内だけ捜査してファイルを作るみたいで、外部モジュールの場合、上手く読み取ってくれなかった。</p>
-
-<p>今回はvirtualenvでpipしたdjango-allauthのテンプレートを日本語化したかったので、path/to/virtualenv/dir/lib/python2.7/site-packages/allauth/templates/account/内のファイルを全部path/to/project/templates/account/にコピーしてからコマンド実行すると上手く読み取ってくれた。</p>
-
-<h2>翻訳</h2>
-
-<p>出来たpoファイルを編集すればオッケー。ファイル内でmsgid以下に書いてあるのが元の文、その次のmsgstr以下に文章書くと、翻訳文になる。元の英文に何かパラメーター付いてる場合は必ずパラメーターを翻訳文に設定しないとエラーが出る。</p>
-
-<figure class='code'><figcaption><span>例</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="c">#: path/to/python/module.py:23</span>
-</span><span class='line'><span class="n">msgid</span> <span class="s">&quot;Welcome to my site.&quot;</span>
-</span><span class='line'><span class="n">msgstr</span> <span class="s">&quot;いらっしゃーい&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>moファイル作成</h2>
-
-<p>おもむろにコマンドを実行するとmoファイルが出来る</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>django-admin.py compilemessages
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>settings.pyの設定</h2>
-
-<p>これだけで動くと思ったら動かなかったので色々調べてみたらLOCALE_PATHSを設定しないといけなかった。</p>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">LOCALE_PATHS</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'>    <span class="s">&quot;path/to/locale&quot;</span><span class="p">,</span>
-</span><span class='line'><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これ設定しておいたらちゃんと動いた。</p>
-
-<p>あとは普通にrunserverとかでサーバ起動したら翻訳されてる</p>
-
-<p>参考：<a href="http://docs.djangoproject.jp/en/latest/topics/i18n/translation.html">翻訳 — Django 1.4 documentation</a></p>
-
-<p>翻訳したい文字列をマークする方法とかはリンク見れば分かる。あと、使いたい言語を選択出来るようにするとかそういう場合はLocaleMiddlewareを使うとかなんとかあるみたいだけどやってない。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -984,6 +976,10 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/">Django 1.6から1.7にアップデートしてみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/05/uwsgi-memo/">Uwsgiメモ</a>
       </li>
     
@@ -999,10 +995,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
         <a href="/blog/2015/01/24/django-modelform-multiwidget/">djangoのModelFormでMultiWidgetを使って見る</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/01/06/python-decorator/">Pythonのデコレーターをdjangoで使って見る</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -1012,13 +1004,13 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C# (4)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C++ (3)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (14)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (15)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (7)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (14)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (15)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>

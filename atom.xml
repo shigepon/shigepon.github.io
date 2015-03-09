@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-03-09T11:48:14+09:00</updated>
+  <updated>2015-03-09T23:02:50+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,73 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Django 1.6から1.7にアップデートしてみた]]></title>
+    <link href="http://blog.shigepon.com/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/"/>
+    <updated>2015-03-09T22:11:02+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7</id>
+    <content type="html"><![CDATA[<p>Djangoが去年の9月に1.7にバージョンアップしてて、今更ながらアップデートしてみた。色々教えて頂いた<a href="https://twitter.com/key3">@key3</a>さんに感謝！</p>
+
+<h2>Django本体のアップデート</h2>
+
+<p>Djangoはpipで管理してるので、pipコマンドでアップデート出来る</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install django -U
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで本体はアップデート完了した。</p>
+
+<h2>プロジェクトをDjango1.7で動かす</h2>
+
+<p>何も変更せずにおもむろに</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py runserver
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とするとエラー出て動かなかった。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>raise AppRegistryNotReady<span class="o">(</span><span class="s2">&quot;Models aren&#39;t loaded yet.&quot;</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Tracebackを見てみるとどうもmodels.pyの中で</p>
+
+<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Model</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とかやってたのがまずかったみたいで、管理サイトで使うモデル定義などのコードをadmin.pyに移動したら上のエラーは出なくなった。何となくで書いてたらいかんな。ちなみにアップデートには関係無いけど、Django1.7で@admin.register(Model)というデコレーターが使えるようになったので、そっちに変えた方がスマートな気がする。</p>
+
+<p>次はSouthでマイグレーションやってるプロジェクトだったので、下のようなエラーが出た。</p>
+
+<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&quot;South does not support Django 1.7 or higher. Please use native Django migrations.&quot;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>要はSouthはもうサポートしてないからDjango自身のマイグレーションでやってねということらしい。</p>
+
+<p><a href="https://docs.djangoproject.com/en/1.7/topics/migrations/#upgrading-from-south">Migrations | Django documentation | Django</a>を見ながらやってみる。ざっくり手順を日本語で書いておく</p>
+
+<ul>
+<li>マイグレーションの状態がちゃんと最新になっているか確認する</li>
+<li>settings.pyのINSTALLED_APPSの行から&#8217;south&#8217;を取り除く</li>
+<li>数字の付いたマイグレーションファイルを全て削除する。ディレクトリと<strong>init</strong>.pyは残す。.pycファイルも削除すること。</li>
+<li>python manage.py makemigrasionsを実行する。Djangoが空のマイグレーションディレクトリに新しい初期マイグレーションを作る。</li>
+<li>python manage.py migrateを実行する。Djangoは初期マイグレーションをチェックして、実行しないで適用済みにする。</li>
+</ul>
+
+
+<p>以上やってみたら、エラーは出ずにプロジェクトをDjango1.7に対応できた。めでたしめでたし。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[uwsgiメモ]]></title>
@@ -1710,46 +1777,6 @@ uwsgi.iniのenvも変更しておく</p>
 <p>こんな感じ。何が出来るかは<a href="http://selenium-python.readthedocs.org/en/latest/api.html">Selenium Python BindingsのWebDriver API</a>を見ると良い。</p>
 
 <p>Javascriptをちゃんと評価してくれるので、すんげーやりやすい。昔ながらのフレームや、新規ウィンドウが出るようなものも上手く再現してくれる。すげーすげー</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Kobe.R #9に参加しました]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/09/22/kobe-dot-r-number-9/"/>
-    <updated>2014-09-22T20:42:57+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/09/22/kobe-dot-r-number-9</id>
-    <content type="html"><![CDATA[<p>勉強会の話なので丁寧語で。9/20に<a href="http://kobexr.doorkeeper.jp/events/14808">Kobe.R #9</a>があったので参加してきました。大阪で定期的に開催されているRの勉強会です。内容はRに限らず、統計処理をやる上で大事なことを扱うという感じでした。発表は誰がされたか名前を記憶していなかったりするので、とりあえず内容だけ照会します。</p>
-
-<h2>Statistical Disclosure Controlの紹介</h2>
-
-<p>Twitter ID @Wakamatzさん</p>
-
-<p>個人情報を含むデータや、他の情報と組み合わせると個人情報になるデータをどのように匿名化するかという話でした。どうしても匿名化すると、実際に欲しいデータの精度とのトレードオフになるので、それをどう評価するかが重要なようです。
-オォっと思った点を羅列します。</p>
-
-<ul>
-<li>開示リスク（どの程度特定されやすいデータになっているか?）を評価出来るライブラリがRにある。Rすげー。</li>
-<li>匿名化には適当なデータを混ぜたりクラスタリングする手法があるのかー。なるほどー。確かに適当なデータを混ぜると集計精度が落ちそう</li>
-<li>評価手法は何種類かあるけど、とりあえずIL1sという評価法を紹介してもらった。実際計算してみないとなんともいえないかな。</li>
-</ul>
-
-
-<h2>カードで説明する統計的独立</h2>
-
-<p>@florets1さん</p>
-
-<p>トランプのカードを例にして、独立とは何かを説明してくれました。なんとなくで済ませてたところを例を入れて分かりやすく説明してくれました。
-どっかの書籍で「○○が独立な場合に△△」とか書かれてイメージはしにくいのが、ざっくりですが、「計算しやすいので△△」くらいに読み替えてよさそうというのが分かった感じです。</p>
-
-<h2>Powershellいいよって話（タイトル忘れた）</h2>
-
-<p>Windows8から、常にインストールされているPowershellを使いこなすと、スクリプトで.Net使えたりして便利って話</p>
-
-<h2>他</h2>
-
-<p>Rでパイプ使う時はpipe Rが便利とかsql使ってdbアクセスするライブラリとかforループを速く便利にする方法とか教えてもらいました。まだ実際に試してないので、試してみないといかんす。</p>
-
-<p>次回参加は無理ですが、ちょこちょこ参加したいなと思いました（小並感）。</p>
 ]]></content>
   </entry>
   

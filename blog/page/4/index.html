@@ -9,12 +9,8 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="詳細ページを作って表示するには models.pyでモデルを作る
-urls.pyを作る
-views.pyでビューを作る
-テンプレを作る
-Webサーバーを立ち上げる
-アクセスして確認 くらいの手順が必要。 models.pyでモデルを作る とりあえずおもむろにmodels.pyを編集。 &hellip;">
+  <meta name="description" content="テンプレートにBootstrapを当てはめたいので、Bootstrap関連のパッケージを探してみた。ググってみてdjango-bootstrap-toolkitが良さそうかなと思ったので、使ってみた。 インストール 1
+$ pip install django-bootstrap-toolkit &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,6 +80,83 @@ Webサーバーを立ち上げる
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/25/django-with-bootstrap/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(2):Bootstrapを使ってみる</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-25T21:41:23+09:00" pubdate data-updated="true">Jun 25<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>テンプレートにBootstrapを当てはめたいので、Bootstrap関連のパッケージを探してみた。ググってみて<a href="https://github.com/dyve/django-bootstrap-toolkit">django-bootstrap-toolkit</a>が良さそうかなと思ったので、使ってみた。</p>
+
+<p>インストール</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install django-bootstrap-toolkit
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>myproject/settings.pyのINSTALLED_APPSに以下を追加</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="s1">&#39;bootstrap-toolkit&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>テンプレートを書く</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>
+</span><span class='line'>{% load bootstrap_toolkit %}} #bootstrap-toolkitを使うページ全てに必要っぽい
+</span><span class='line'>...
+</span><span class='line'><span class="nt">&lt;head&gt;</span>
+</span><span class='line'>{% bootstrap_stylesheet_tag %}  #bootstrapのcssへのタグ(CDNから読み込み)
+</span><span class='line'>{% bootstrap_stylesheet_tag &quot;responsive %} #bootstrapのレスポンシブページ用タグ(CDNから読み込み)
+</span><span class='line'>{% bootstrap_javascript_tag %}  #bootstrapのjavascriptへのタグ(CDNから読み込み)
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;/head&gt;</span>
+</span><span class='line'>あとは普通にbootstrapのタグを書く
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じで最低限使える。フォームに関してはもっと色々出来るみたいだけど、まだやってない。パッケージ使ってみたけど、これだけなら普通にbootstrapのファイルを読み込めば済むんだけど、フォーム関連などフィルタやカスタムタグがあるみたい。便利そうなので、これを使うことにしよう。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -991,70 +1064,6 @@ php-buildのインストールは下のような感じ</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/05/12/access-postgresql-through-odbc-ubuntu/">Ubuntuでodbcを用いてpostgresqlにアクセスする</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-12T22:11:33+09:00" pubdate data-updated="true">May 12<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>なでしこ2のテストのためにubuntuにodbcドライバをインストールしたりしたのでメモ</p>
-
-<h2>odbcドライバのインストール</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install unixodbc, odbc-postgresql
-</span><span class='line'><span class="nv">$ </span>sudo odbcinst -i -d -f /usr/share/psqlodbc/odbcinst.ini.template
-</span><span class='line'><span class="nv">$ </span>sudo odbcinst -i -s -l  -n adyoung-pg -f /usr/share/doc/odbc-postgresql/examples/odbc.ini.template
-</span><span class='line'><span class="nv">$ </span>vim /etc/odbc.ini
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>odbc.iniにはサンプルの設定が入っているので、それを参考にしながら設定</p>
-
-<h2>odbcアクセスしてみる</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>isql -v DSN <span class="o">(</span>UID <span class="o">(</span>PWD<span class="o">))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でアクセスできる。あとはSQLを入力すれば結果を見たりできる。</p>
-
-<h2>monoを使ってアクセスする場合</h2>
-
-<p>monoというかなでしこ2でアクセスする場合に必要だった。libodbc.soが必要というエラーが出るのでunixodbc-devの追加インストールが必要。インストールすればエラー出ずに動くようになる。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -1082,6 +1091,10 @@ php-buildのインストールは下のような感じ</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/">Django 1.6から1.7にアップデートしてみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/05/uwsgi-memo/">Uwsgiメモ</a>
       </li>
     
@@ -1097,10 +1110,6 @@ php-buildのインストールは下のような感じ</p>
         <a href="/blog/2015/01/24/django-modelform-multiwidget/">djangoのModelFormでMultiWidgetを使って見る</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/01/06/python-decorator/">Pythonのデコレーターをdjangoで使って見る</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -1110,13 +1119,13 @@ php-buildのインストールは下のような感じ</p>
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C# (4)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C++ (3)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (14)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (15)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octpress/'>Octpress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (7)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (14)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (15)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
