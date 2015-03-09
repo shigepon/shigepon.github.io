@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-03-09T23:05:20+09:00</updated>
+  <updated>2015-03-09T23:10:26+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -19,6 +19,8 @@
     <updated>2015-03-09T22:11:02+09:00</updated>
     <id>http://blog.shigepon.com/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7</id>
     <content type="html"><![CDATA[<p>Djangoが去年の9月に1.7にバージョンアップしてて、今更ながらアップデートしてみた。色々教えて頂いた<a href="https://twitter.com/key3">@key3</a>さんに感謝！</p>
+
+<p>※注　アップデートの前に必ずデータとかソースとか色々バックアップしておくこと。</p>
 
 <h2>Django本体のアップデート</h2>
 
