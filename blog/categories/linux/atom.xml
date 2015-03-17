@@ -4,7 +4,7 @@
   <title><![CDATA[Category: linux | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-03-09T23:18:23+09:00</updated>
+  <updated>2015-03-17T14:39:11+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -226,6 +226,14 @@ $ ssh username@hostname options... "command"
 <p><code>sh
 $ ssh username@hostname options... "command" &lt; localfile
 </code></p>
+
+<h2>重複行を削除する</h2>
+
+<p><code>sh
+$ cat hoge | sort | uniq
+</code></p>
+
+<p>参考：<a href="http://codenote.net/linux/1300.html">[Linux] sort と uniq をパイプでつないで重複行を削除する | CodeNote.net</a></p>
 ]]></content>
   </entry>
   
