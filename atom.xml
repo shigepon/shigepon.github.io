@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-03-20T00:23:04+09:00</updated>
+  <updated>2015-03-20T00:25:51+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -14,9 +14,9 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Use Sparql With Python]]></title>
+    <title type="html"><![CDATA[PythonでSparql使ってLinked Open Dataをいじってみた]]></title>
     <link href="http://blog.shigepon.com/blog/2015/03/19/use-sparql-with-python/"/>
-    <updated>2015-03-19T00:00:00+09:00</updated>
+    <updated>2015-03-19T22:07:12+09:00</updated>
     <id>http://blog.shigepon.com/blog/2015/03/19/use-sparql-with-python</id>
     <content type="html"><![CDATA[<p>以前<a href="http://blog.shigepon.info/blog/2014/11/25/kobe-dot-r-no-13/">Kobe.R no 13に参加してきました &ndash; shigeponが関心のある技術情報など</a>でLinked Open Dataが気になってたので、Pythonでいじれるライブラリを探してみて遊んでみた。</p>
 

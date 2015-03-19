@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-03-20T00:23:04+09:00</updated>
+  <updated>2015-03-20T00:25:51+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,65 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[PythonでSparql使ってLinked Open Dataをいじってみた]]></title>
+    <link href="http://blog.shigepon.com/blog/2015/03/19/use-sparql-with-python/"/>
+    <updated>2015-03-19T22:07:12+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2015/03/19/use-sparql-with-python</id>
+    <content type="html"><![CDATA[<p>以前<a href="http://blog.shigepon.info/blog/2014/11/25/kobe-dot-r-no-13/">Kobe.R no 13に参加してきました &ndash; shigeponが関心のある技術情報など</a>でLinked Open Dataが気になってたので、Pythonでいじれるライブラリを探してみて遊んでみた。</p>
+
+<p>Sparqlで色々試してみると面白そうなので、pip search sparqlで出た結果とググってみた結果から、SPARQLWrapperが何となく良さげかなと思い、インストールしてみた。</p>
+
+<p><code>sh
+$ pip install SPARQLWrapper
+</code></p>
+
+<p>これだけでおk</p>
+
+<p>djangoのshellから使ってみる</p>
+
+<p>```py
+$ python manage.py shell
+from SPARQLWrapper import SPARQLWrapper, JSON
+sparql = SPARQLWrapper(&ldquo;<a href="http://dbpedia.org/sparql">http://dbpedia.org/sparql</a>&rdquo;)
+sparql.setQuery(&ldquo;&rdquo;&ldquo;
+  PREFIX rdfs: <a href="http://www.w3.org/2000/01/rdf-schema#">http://www.w3.org/2000/01/rdf-schema#</a>
+  SELECT ?label
+  WHERE { <a href="http://dbpedia.org/resource/Asturias">http://dbpedia.org/resource/Asturias</a> rdfs:label ?label }
+&rdquo;&ldquo;&rdquo;)
+sparql.setReturnFormat(JSON)
+results = sparql.query().convert()</p>
+
+<p>for result in results[&ldquo;results&rdquo;][&ldquo;bindings&rdquo;]:</p>
+
+<pre><code>print(result["label]["value"])
+</code></pre>
+
+<p>```</p>
+
+<p>とやるとこんな感じの結果が出た</p>
+
+<p><code>sh
+Asturias
+منطقة أستورياس
+Asturien
+Asturias
+Asturies
+Asturie
+アストゥリアス州
+Asturië (regio)
+Asturia
+Astúrias
+Астурия
+阿斯图里亚斯
+</code></p>
+
+<p>参考：<a href="http://rdflib.github.io/sparqlwrapper/">SPARQL Endpoint interface to Python</a></p>
+
+<p>Sparqlの書き方は<a href="http://kobexr.blogspot.jp/2014/12/kober-13-open-data.html">Kobe.R: Kobe.R #13 + Open Data</a>に載っているスライドが参考になる。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Django 1.6から1.7にアップデートしてみた]]></title>
@@ -262,78 +321,6 @@ $ python manage.py migrate アプリ名
 <p>この時にデータベース内の値が変更した制約等に引っ掛かる場合は途中で止まったりするので、制約に合うようにデータを変更するとか修正する。</p>
 
 <p>参考：<a href="http://yu-write.blogspot.jp/2014/01/django-south.html">Yura YuWrite: [django] 既存のプロジェクトにsouthを追加する方法</a>、<a href="http://stackoverflow.com/questions/22236029/trouble-getting-django-set-up-on-heroku-using-south-keep-getting-programminger">postgresql &ndash; Trouble getting Django set up on Heroku using South &ndash; keep getting ProgrammingError: relation does not exist &ndash; Stack Overflow</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[djangoで国際化やってみた]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/11/27/django-locale/"/>
-    <updated>2014-11-27T13:02:12+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/11/27/django-locale</id>
-    <content type="html"><![CDATA[<p>Djangoで他の人が作ったモジュールを使ってると、英語のメッセージが入ってることがあるので、日本語化してみた。とりあえず英語のメッセージを日本語に変換するとこまで。</p>
-
-<h2>準備</h2>
-
-<p>gettextが無かったらインストール。Ubuntuの場合</p>
-
-<p><code>sh
-$ sudo aptitude install gettext
-</code></p>
-
-<p>プロジェクトにlocaleフォルダを作る。無いと後のコマンドでエラーが出た</p>
-
-<h2>poファイル作成</h2>
-
-<p>おもむろにpoファイルを作るコマンドを実行</p>
-
-<p><code>sh
-django-admin.py makemessages -l ja
-</code></p>
-
-<p>するとpath/to/locale/ja/LC_MESSAGES/django.poってファイルが出来るので、それを修正していく。ただ、このコマンドプロジェクト内だけ捜査してファイルを作るみたいで、外部モジュールの場合、上手く読み取ってくれなかった。</p>
-
-<p>今回はvirtualenvでpipしたdjango-allauthのテンプレートを日本語化したかったので、path/to/virtualenv/dir/lib/python2.7/site-packages/allauth/templates/account/内のファイルを全部path/to/project/templates/account/にコピーしてからコマンド実行すると上手く読み取ってくれた。</p>
-
-<h2>翻訳</h2>
-
-<p>出来たpoファイルを編集すればオッケー。ファイル内でmsgid以下に書いてあるのが元の文、その次のmsgstr以下に文章書くと、翻訳文になる。元の英文に何かパラメーター付いてる場合は必ずパラメーターを翻訳文に設定しないとエラーが出る。</p>
-
-<p>```py 例</p>
-
-<h1>: path/to/python/module.py:23</h1>
-
-<p>msgid &ldquo;Welcome to my site.&rdquo;
-msgstr &ldquo;いらっしゃーい&rdquo;
-```</p>
-
-<h2>moファイル作成</h2>
-
-<p>おもむろにコマンドを実行するとmoファイルが出来る</p>
-
-<p><code>sh
-django-admin.py compilemessages
-</code></p>
-
-<h2>settings.pyの設定</h2>
-
-<p>これだけで動くと思ったら動かなかったので色々調べてみたらLOCALE_PATHSを設定しないといけなかった。</p>
-
-<p>```py settings.py
-LOCALE_PATHS = (</p>
-
-<pre><code>"path/to/locale",
-</code></pre>
-
-<p>)
-```</p>
-
-<p>これ設定しておいたらちゃんと動いた。</p>
-
-<p>あとは普通にrunserverとかでサーバ起動したら翻訳されてる</p>
-
-<p>参考：<a href="http://docs.djangoproject.jp/en/latest/topics/i18n/translation.html">翻訳 — Django 1.4 documentation</a></p>
-
-<p>翻訳したい文字列をマークする方法とかはリンク見れば分かる。あと、使いたい言語を選択出来るようにするとかそういう場合はLocaleMiddlewareを使うとかなんとかあるみたいだけどやってない。</p>
 ]]></content>
   </entry>
   
