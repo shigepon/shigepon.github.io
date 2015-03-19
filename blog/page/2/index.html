@@ -823,6 +823,44 @@ $ sudo aptitude install &hellip;">
 
 
 <p>参考：<a href="http://surgo.jp/2010/02/django.html">パーフェクトな Django の設定ファイル &mdash; Kosei Kitahara&rsquo;s Blog</a></p>
+
+<h2>テンプレートの読み込まれ順</h2>
+
+<ul>
+<li>TEMPLATE_DIRSで指定されたディレクトリの順番で、そこを起点にした全てのテンプレート</li>
+<li>INSTALLED_APPSに指定した順にアプリケーション直下のtemplatesディレクトリを調べる</li>
+</ul>
+
+
+<p>hogeアプリでテンプレートを指定した場合に、hogeアプリ直下のtemplatesディレクトリを調べてくれる訳ではないので注意が必要。</p>
+
+<p>例えば</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">TEMPLATE_DIRS</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/home/hoge/templates&#39;</span><span class="p">,]</span>
+</span><span class='line'><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
+</span><span class='line'>    <span class="s">&#39;hoge&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s">&#39;fuga&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と書いてあり、プロジェクトが/www/a_project/に置いてある場合、</p>
+
+<ul>
+<li>/home/hoge/templates</li>
+<li>/www/a_project/hoge/templates</li>
+<li>/www/a_project/fuga/templates</li>
+</ul>
+
+
+<p>の順でテンプレートの存在を調べる</p>
+
+<p>参考：<a href="http://www.tsuyukimakoto.com/blog/2006/11/22/django-template-loader/">DjangoのTemplateローダ | tsuyuki.makoto</a></p>
 </div>
   
   
