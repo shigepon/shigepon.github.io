@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-03-19T18:40:21+09:00</updated>
+  <updated>2015-03-20T00:23:04+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,88 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Use Sparql With Python]]></title>
+    <link href="http://blog.shigepon.com/blog/2015/03/19/use-sparql-with-python/"/>
+    <updated>2015-03-19T00:00:00+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2015/03/19/use-sparql-with-python</id>
+    <content type="html"><![CDATA[<p>以前<a href="http://blog.shigepon.info/blog/2014/11/25/kobe-dot-r-no-13/">Kobe.R no 13に参加してきました &ndash; shigeponが関心のある技術情報など</a>でLinked Open Dataが気になってたので、Pythonでいじれるライブラリを探してみて遊んでみた。</p>
+
+<p>Sparqlで色々試してみると面白そうなので、pip search sparqlで出た結果とググってみた結果から、SPARQLWrapperが何となく良さげかなと思い、インストールしてみた。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install SPARQLWrapper
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これだけでおk</p>
+
+<p>djangoのshellから使ってみる</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">$</span> <span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">shell</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">SPARQLWrapper</span> <span class="kn">import</span> <span class="n">SPARQLWrapper</span><span class="p">,</span> <span class="n">JSON</span>
+</span><span class='line'><span class="n">sparql</span> <span class="o">=</span> <span class="n">SPARQLWrapper</span><span class="p">(</span><span class="s">&quot;http://dbpedia.org/sparql&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="n">sparql</span><span class="o">.</span><span class="n">setQuery</span><span class="p">(</span><span class="s">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="s">  PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;</span>
+</span><span class='line'><span class="s">  SELECT ?label</span>
+</span><span class='line'><span class="s">  WHERE { &lt;http://dbpedia.org/resource/Asturias&gt; rdfs:label ?label }</span>
+</span><span class='line'><span class="s">&quot;&quot;&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="n">sparql</span><span class="o">.</span><span class="n">setReturnFormat</span><span class="p">(</span><span class="n">JSON</span><span class="p">)</span>
+</span><span class='line'><span class="n">results</span> <span class="o">=</span> <span class="n">sparql</span><span class="o">.</span><span class="n">query</span><span class="p">()</span><span class="o">.</span><span class="n">convert</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="s">&quot;results&quot;</span><span class="p">][</span><span class="s">&quot;bindings&quot;</span><span class="p">]:</span>
+</span><span class='line'>    <span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s">&quot;label][&quot;</span><span class="n">value</span><span class="s">&quot;])</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とやるとこんな感じの結果が出た</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Asturias
+</span><span class='line'>منطقة أستورياس
+</span><span class='line'>Asturien
+</span><span class='line'>Asturias
+</span><span class='line'>Asturies
+</span><span class='line'>Asturie
+</span><span class='line'>アストゥリアス州
+</span><span class='line'>Asturië <span class="o">(</span>regio<span class="o">)</span>
+</span><span class='line'>Asturia
+</span><span class='line'>Astúrias
+</span><span class='line'>Астурия
+</span><span class='line'>阿斯图里亚斯
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考：<a href="http://rdflib.github.io/sparqlwrapper/">SPARQL Endpoint interface to Python</a></p>
+
+<p>Sparqlの書き方は<a href="http://kobexr.blogspot.jp/2014/12/kober-13-open-data.html">Kobe.R: Kobe.R #13 + Open Data</a>に載っているスライドが参考になる。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Django 1.6から1.7にアップデートしてみた]]></title>
@@ -1776,64 +1858,6 @@ uwsgi.iniのenvも変更しておく</p>
 <p>Rで時系列データを扱い、時間に対して周期性があるデータから未来予測したりというライブラリの紹介とデモを見せて頂きました。Rのライブラリ紹介と実際に使った結果を見ることが出来ると理解が深まってとてもありがたいです。</p>
 
 <p>前回今回と大阪で参加しているのですが、今度は神戸で開催される時も参加してみようかと思います。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[PhantomJSとSeleniumをpythonから使ってみる]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/10/10/phantomjs/"/>
-    <updated>2014-10-10T13:33:48+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/10/10/phantomjs</id>
-    <content type="html"><![CDATA[<p>スクレーピングするのに便利な方法を調べてる内に、PhantomJSが良さげだなと思ったので、軽く使ってみた。参考<a href="http://blog.kzfmix.com/entry/1379417397">Python+Selenium+PhantomJSが快適すぎる</a></p>
-
-<h2>PhantomJSのインストール</h2>
-
-<p>Ubuntuを使ってるので<a href="http://phantomjs.org/build.html">PhantomJSのページ</a>を参考に</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude update
-</span><span class='line'><span class="nv">$ </span>sudo aptitude install build-essential chrpath git-core libssl-dev libfontconfig1-dev libxft-dev
-</span><span class='line'><span class="nv">$ </span>git clone git://github.com/ariya/phantomjs.git
-</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>phantomjs
-</span><span class='line'><span class="nv">$ </span>git checkout 1.9
-</span><span class='line'><span class="nv">$ </span>./build.sh
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>あとは./bin/にphantomjsが入っているので、./bin/にパスを通しておしまい</p>
-
-<h2>Seleniumをpythonから使えるようにする</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install selenium
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これだけでおk</p>
-
-<h2>SeleniumでPhantomJSのドライバを使う</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">selenium</span> <span class="nn">import</span> <span class="nn">webdriver</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">PhantomJS</span><span class="p">()</span>
-</span><span class='line'><span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;http://www.yahoo.co.jp&quot;</span><span class="p">)</span>
-</span><span class='line'><span class="k">print</span> <span class="n">driver</span><span class="o">.</span><span class="n">current_url</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな感じ。何が出来るかは<a href="http://selenium-python.readthedocs.org/en/latest/api.html">Selenium Python BindingsのWebDriver API</a>を見ると良い。</p>
-
-<p>Javascriptをちゃんと評価してくれるので、すんげーやりやすい。昔ながらのフレームや、新規ウィンドウが出るようなものも上手く再現してくれる。すげーすげー</p>
 ]]></content>
   </entry>
   
