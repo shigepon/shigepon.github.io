@@ -4,7 +4,7 @@
   <title><![CDATA[Category: postgresql | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/postgresql/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-03-20T00:31:35+09:00</updated>
+  <updated>2015-03-30T11:10:41+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -194,7 +194,7 @@ select pg_database_size('dbname');
 select pg_relation_size('tablename');
 </code></p>
 
-<h1>select結果を配列にして、比較する</h1>
+<h2>select結果を配列にして、比較する</h2>
 
 <p>テーブル(event)に、日付(date)とイベントコード(code)カラムがあって、あるイベントコードのイベントと、全く同じ日程のイベントがあるかどうか調べる必要があったんだけど、配列使ったら上手く出来たのでメモ</p>
 
@@ -203,6 +203,20 @@ select * from (select array_agg(date_trunc('day',date)) as d, code from (select 
 </code></p>
 
 <p>こんな感じで出来た。ポイントはgroup_byとarray_aggを使うとgroup化した時にそれぞれの行にあった数字をまとめて配列化できることと、配列は順序を同じにしておかないと比較出来ないので、予めorderをかけておくこと。select結果をそのまま配列にするにはARRAYでいけること。もうちょっとsqlをスッキリ出来そうだけど、とりあえずこんな感じ。</p>
+
+<h2>正規表現関連</h2>
+
+<h3>置換</h3>
+
+<p><code>sql
+select regex_replace(columnname,'pattern','replace') from tablename;
+</code></p>
+
+<h3>検索</h3>
+
+<p><code>sql
+select * from tablename where columnname ~ 'pattern';
+</code></p>
 ]]></content>
   </entry>
   

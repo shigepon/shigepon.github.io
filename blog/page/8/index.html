@@ -314,7 +314,7 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h1>select結果を配列にして、比較する</h1>
+<h2>select結果を配列にして、比較する</h2>
 
 <p>テーブル(event)に、日付(date)とイベントコード(code)カラムがあって、あるイベントコードのイベントと、全く同じ日程のイベントがあるかどうか調べる必要があったんだけど、配列使ったら上手く出来たのでメモ</p>
 
@@ -324,6 +324,22 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 
 
 <p>こんな感じで出来た。ポイントはgroup_byとarray_aggを使うとgroup化した時にそれぞれの行にあった数字をまとめて配列化できることと、配列は順序を同じにしておかないと比較出来ないので、予めorderをかけておくこと。select結果をそのまま配列にするにはARRAYでいけること。もうちょっとsqlをスッキリ出来そうだけど、とりあえずこんな感じ。</p>
+
+<h2>正規表現関連</h2>
+
+<h3>置換</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="n">regex_replace</span><span class="p">(</span><span class="n">columnname</span><span class="p">,</span><span class="s1">&#39;pattern&#39;</span><span class="p">,</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span> <span class="k">from</span> <span class="n">tablename</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>検索</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">tablename</span> <span class="k">where</span> <span class="n">columnname</span> <span class="o">~</span> <span class="s1">&#39;pattern&#39;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
 </div>
   
   
