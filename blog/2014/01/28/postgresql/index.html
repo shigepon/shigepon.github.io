@@ -337,6 +337,17 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 </pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">tablename</span> <span class="k">where</span> <span class="n">columnname</span> <span class="o">~</span> <span class="s1">&#39;pattern&#39;</span><span class="p">;</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<h2>psqlでパスワードを入力しない方法</h2>
+
+<p>~HOME/.pgpassを作成する(Linuxの場合)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="n">hostname</span><span class="p">:</span><span class="n">port</span><span class="p">:</span><span class="k">database</span><span class="p">:</span><span class="n">username</span><span class="p">:</span><span class="n">password</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考：<a href="http://saikyoline.jp/weblog/2005/10/14/234742.html">パスワード入力なしでpsql » サイキョウライン</a></p>
 </div>
 
 

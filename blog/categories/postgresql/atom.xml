@@ -4,7 +4,7 @@
   <title><![CDATA[Category: postgresql | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/postgresql/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-03-30T11:10:41+09:00</updated>
+  <updated>2015-04-02T11:07:38+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -217,6 +217,16 @@ select regex_replace(columnname,'pattern','replace') from tablename;
 <p><code>sql
 select * from tablename where columnname ~ 'pattern';
 </code></p>
+
+<h2>psqlでパスワードを入力しない方法</h2>
+
+<p>~HOME/.pgpassを作成する(Linuxの場合)</p>
+
+<p><code>
+hostname:port:database:username:password
+</code></p>
+
+<p>参考：<a href="http://saikyoline.jp/weblog/2005/10/14/234742.html">パスワード入力なしでpsql » サイキョウライン</a></p>
 ]]></content>
   </entry>
   
