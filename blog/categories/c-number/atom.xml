@@ -4,7 +4,7 @@
   <title><![CDATA[Category: C# | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/c-number/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-05-01T09:19:03+09:00</updated>
+  <updated>2015-05-01T09:27:00+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,95 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[ubuntuのcli環境でなでしこ2をビルドする]]></title>
-    <link href="http://blog.shigepon.com/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cli/"/>
-    <updated>2015-05-01T08:23:00+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cli</id>
-    <content type="html"><![CDATA[<p>今までmono developでなでしこ2をビルド、テストして、cli環境にアップロードしてたんだけど、面倒になってきたのでcli環境で直接ビルド、テストしてみようと思ったのでついでに開発を始める段階からメモしてみる。</p>
-
-<p>環境はubuntu 12.04とするが、上位バージョンでも問題無いはず</p>
-
-<h1>mono環境の準備</h1>
-
-<p>mono-develをインストールしたらmono関連で必要なものは勝手にインストールされたような気がする。ついでに<a href="http://blog.shigepon.info/blog/2014/08/20/vb-not-work-on-ubuntu/">VisualBasicが動かない件</a>にあるように、mono-vbnc、あとはnunitのインストール</p>
-
-<p><code>sh
-$ aptitude install mono-devel mono-vbnc nunit
-</code></p>
-
-<h1>なでしこ2リポジトリを取得</h1>
-
-<p><a href="http://it.slashdot.jp/story/15/03/13/0340256/">Google Codeが2016年1月に閉鎖される</a>ので、なでしこ2のリポジトリはgithubに移動している。</p>
-
-<p>なので、リポジトリの取得はgit cloneでいける。kujirahandさんのリポジトリをcloneするなら</p>
-
-<p><code>sh
-$ git clone https://github.com/kujirahand/nadesiko2.git
-</code></p>
-
-<p>shigeponがfolkしたリポジトリなら</p>
-
-<p><code>sh
-$ git clone https://github.com/shigepon/nadesiko2.git
-</code></p>
-
-<p>で、カレントディレクトリにnadesiko2ディレクトリが出来て、その下にプロジェクト1式が入っている。中にはソリューションが3つあり、それぞれ</p>
-
-<ul>
-<li>Nako2_CNako.sln → cli環境で動かすなでしこ2(cnako)関連</li>
-<li>Nako2_Plugins.sln → なでしこ2のプラグイン関連</li>
-<li>Nako2_Plugins_Office.sln → なでしこ2のOffice関係プラグイン</li>
-</ul>
-
-
-<p>のソリューションである。今回は\/home\/usernameディレクトリ上でcloneすると考える</p>
-
-<h1>おもむろにビルド</h1>
-
-<p>kujirahandさんのリポジトリをcloneしたとして、とりあえず何もせずにCNakoのソリューションをビルドしてみると</p>
-
-<p><code>sh
-$ xbuild Nako2_CNako.sln
-...
-NakoPluginArrayTest.cs(9,7): error CS0246: The type or namespace name `NUnit' could not be found. Are you missing a using directive or an assembly reference?
-...
-</code></p>
-
-<p>みたいなエラーメッセージを出してビルド出来ない。一方でプラグイン関連のソリューションは</p>
-
-<p>```sh
-$ xbuild Nako2_Plugins.sln
-&hellip;</p>
-
-<pre><code>18 Warning(s)
- 0 Error(s)
-</code></pre>
-
-<p>Time Elapsed 00:00:06.1095450
-```</p>
-
-<p>と出て、エラー無くビルド出来る。この違いはそれぞれのソリューションで参照しているテストプロジェクトにnunitへの参照パスが入っているかどうかの違いだったので、NakoPluginTest/NakoPluginTest.csprojを参考にしてCNakoTest/CNakoTest.csprojの</p>
-
-<p><code>
-&lt;Reference Include="nunit.framework.extensions, ..." /&gt;
-</code></p>
-
-<p>行に３行追記する</p>
-
-<p>```xml
-   <Reference Include="nunit.framework"></p>
-
-<pre><code>   &lt;HintPath&gt;..\..\..\..\usr\lib\mono\gac\nunit.framework\2.5.10.0__96d09a1eb7f44a77\nunit.framework.dll&lt;/HintPath&gt;
-</code></pre>
-
-<p>   </Reference>
-```</p>
-
-<p>で、再度ビルドするとビルド出来た。shigeponのリポジトリには修正したものをアップしておくのでそのままビルド出来ると思う。パスはリポジトリをcloneするディレクトリによっては変更しないといけないと思う。</p>
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[なでしこ2のプラグインを作る方法]]></title>
