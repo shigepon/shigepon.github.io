@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>nginx,unicornをさくらvpsにインストールしてrailsアプリを手動でデプロイしてみる - shigeponが関心のある技術情報など</title>
+  <title>ubuntuのcli環境でなでしこ2をビルドする - shigeponが関心のある技術情報など</title>
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="さくらvpsのUbuntu12.04にnginxとunicornをインストールしてローカル環境に作ったRailsアプリを手動でアップロードして表示させてみた。何となくユニコーンって名前が好きなので、unicornを使うことにした。 nginxインストール &hellip;">
+  <meta name="description" content="今までmono developでなでしこ2をビルド、テストして、cli環境にアップロードしてたんだけど、面倒になってきたのでcli環境で直接ビルド、テストしてみようと思ったのでついでに開発を始める段階からメモしてみる。 環境はubuntu 12.04とするが、上位バージョンでも問題無いはず &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.shigepon.com/blog/2014/05/02/use-nginxand-unicorn-on-sakura-vps">
+  <link rel="canonical" href="http://blog.shigepon.com/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cli">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -82,7 +82,7 @@
   
   <header>
     
-      <h1 class="entry-title">Nginx,unicornをさくらvpsにインストールしてrailsアプリを手動でデプロイしてみる</h1>
+      <h1 class="entry-title">Ubuntuのcli環境でなでしこ2をビルドする</h1>
     
     
       <p class="meta">
@@ -98,116 +98,104 @@
   
 
 
-<time datetime="2014-05-02T15:10:23+09:00" pubdate data-updated="true">May 2<span>nd</span>, 2014</time>
+<time datetime="2015-05-01T08:23:00+09:00" pubdate data-updated="true">May 1<span>st</span>, 2015</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>さくらvpsのUbuntu12.04にnginxとunicornをインストールしてローカル環境に作ったRailsアプリを手動でアップロードして表示させてみた。何となくユニコーンって名前が好きなので、unicornを使うことにした。</p>
+<div class="entry-content"><p>今までmono developでなでしこ2をビルド、テストして、cli環境にアップロードしてたんだけど、面倒になってきたのでcli環境で直接ビルド、テストしてみようと思ったのでついでに開発を始める段階からメモしてみる。</p>
 
-<h2>nginxインストール</h2>
+<p>環境はubuntu 12.04とするが、上位バージョンでも問題無いはず</p>
 
-<p>nginxは本当は手動でインストールするのがいいんだろうけど、面倒なので</p>
+<h1>mono環境の準備</h1>
+
+<p>mono-develをインストールしたらmono関連で必要なものは勝手にインストールされたような気がする。ついでに<a href="http://blog.shigepon.info/blog/2014/08/20/vb-not-work-on-ubuntu/">VisualBasicが動かない件</a>にあるように、mono-vbnc、あとはnunitのインストール</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install nginx
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>aptitude install mono-devel mono-vbnc nunit
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>でインストール</p>
+<h1>なでしこ2リポジトリを取得</h1>
 
-<h2>unicornインストール</h2>
+<p><a href="http://it.slashdot.jp/story/15/03/13/0340256/">Google Codeが2016年1月に閉鎖される</a>ので、なでしこ2のリポジトリはgithubに移動している。</p>
 
-<p>rubyとかbundlerとかが必要なので、無い場合は<a href="http://blog.shigepon.com/blog/2014/02/26/rails-startup/">Ruby on Railsを入れてみた</a>に書いた通りにインストール。unicornはGemfileに</p>
+<p>なので、リポジトリの取得はgit cloneでいける。kujirahandさんのリポジトリをcloneするなら</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>gem <span class="s2">&quot;unicorn&quot;</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone https://github.com/kujirahand/nadesiko2.git
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>と追記して</p>
+<p>shigeponがfolkしたリポジトリなら</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle install -path vendor/bundle
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone https://github.com/shigepon/nadesiko2.git
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>でインストール出来る。要らないかもしれないけどお約束のようにインストール後はrbenv rehashしておく。</p>
+<p>で、カレントディレクトリにnadesiko2ディレクトリが出来て、その下にプロジェクト1式が入っている。中にはソリューションが3つあり、それぞれ</p>
 
-<h2>nginxの設定</h2>
+<ul>
+<li>Nako2_CNako.sln → cli環境で動かすなでしこ2(cnako)関連</li>
+<li>Nako2_Plugins.sln → なでしこ2のプラグイン関連</li>
+<li>Nako2_Plugins_Office.sln → なでしこ2のOffice関係プラグイン</li>
+</ul>
 
-<p>設定ファイルは最低限これくらい書いておけばよさげ</p>
+
+<p>のソリューションである。今回は\/home\/usernameディレクトリ上でcloneすると考える</p>
+
+<h1>おもむろにビルド</h1>
+
+<p>kujirahandさんのリポジトリをcloneしたとして、とりあえず何もせずにCNakoのソリューションをビルドしてみると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>xbuild Nako2_CNako.sln
+</span><span class='line'>...
+</span><span class='line'>NakoPluginArrayTest.cs<span class="o">(</span>9,7<span class="o">)</span>: error CS0246: The <span class="nb">type </span>or namespace name <span class="sb">`</span>NUnit<span class="err">&#39;</span> could not be found. Are you missing a using directive or an assembly reference?
+</span><span class='line'>...
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいなエラーメッセージを出してビルド出来ない。一方でプラグイン関連のソリューションは</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>upstream unicorn-unix-domain-socket <span class="o">{</span>
-</span><span class='line'>        server unix:/var/run/unicorn/unicorn_<span class="o">[</span>app_name<span class="o">]</span>.sock <span class="nv">fail_timeout</span><span class="o">=</span>0;
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>upstream unicorn-tcp <span class="o">{</span>
-</span><span class='line'>        server 127.0.0.1:8080;
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>server <span class="o">{</span>
-</span><span class='line'>        listen 80;
-</span><span class='line'>        server_name http://hoge;
-</span><span class='line'>
-</span><span class='line'>        root /path/to/app_root/public;
-</span><span class='line'>
-</span><span class='line'>        access_log  /var/log/nginx/access.log;
-</span><span class='line'>        error_log /var/log/nginx/error.log;
-</span><span class='line'>
-</span><span class='line'>        location / <span class="o">{</span>
-</span><span class='line'>                proxy_pass http://unicorn-tcp;
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>xbuild Nako2_Plugins.sln
+</span><span class='line'>...
+</span><span class='line'>    18 Warning<span class="o">(</span>s<span class="o">)</span>
+</span><span class='line'>     0 Error<span class="o">(</span>s<span class="o">)</span>
+</span><span class='line'>Time Elapsed 00:00:06.1095450
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>/var/run/unicornディレクトリは前もって作っておく。/tmpとかでも良さげなんだけど、どうなんだろう？</p>
-
-<h2>railsアプリのアップロード</h2>
-
-<p>適当にアップロード。rsyncで適当にやった。</p>
-
-<h2>unicorn起動</h2>
+<p>と出て、エラー無くビルド出来る。この違いはそれぞれのソリューションで参照しているテストプロジェクトにnunitへの参照パスが入っているかどうかの違いだったので、NakoPluginTest/NakoPluginTest.csprojを参考にしてCNakoTest/CNakoTest.csprojの</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle <span class="nb">exec </span>unicorn_rails -D
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;Reference <span class="nv">Include</span><span class="o">=</span><span class="s2">&quot;nunit.framework.extensions, ...&quot;</span> /&gt;
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>-Dはデーモンとして起動。configファイルを指定する場合は、-c path/to/config.rbを指定する。</p>
-
-<h2>nginx起動</h2>
+<p>行に３行追記する</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>service nginx start
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>   <span class="nt">&lt;Reference</span> <span class="na">Include=</span><span class="s">&quot;nunit.framework&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>       <span class="nt">&lt;HintPath&gt;</span>..\..\..\..\usr\lib\mono\gac\nunit.framework\2.5.10.0__96d09a1eb7f44a77\nunit.framework.dll<span class="nt">&lt;/HintPath&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;/Reference&gt;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>以上でrailsアプリが見れるようになる。</p>
+<p>で、再度ビルドするとビルド出来た。shigeponのリポジトリには修正したものをアップしておくのでそのままビルド出来ると思う。パスはリポジトリをcloneするディレクトリによっては変更しないといけないと思う。</p>
 </div>
 
 
@@ -230,12 +218,12 @@
   
 
 
-<time datetime="2014-05-02T15:10:23+09:00" pubdate data-updated="true">May 2<span>nd</span>, 2014</time>
+<time datetime="2015-05-01T08:23:00+09:00" pubdate data-updated="true">May 1<span>st</span>, 2015</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/rails/'>Rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+    <a class='category' href='/blog/categories/c-number/'>C#</a>, <a class='category' href='/blog/categories/linux/'>linux</a>, <a class='category' href='/blog/categories/nadesiko2/'>nadesiko2</a>
   
 </span>
 
@@ -244,7 +232,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2014/05/02/use-nginxand-unicorn-on-sakura-vps/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2014/05/02/use-nginxand-unicorn-on-sakura-vps/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.com/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cli/" data-via="shigepon" data-counturl="http://blog.shigepon.com/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cli/" >Tweet</a>
   
   
   
@@ -264,10 +252,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/04/09/git-memo/" title="Previous Post: git memo">&laquo; git memo</a>
+        <a class="basic-alignment left" href="/blog/2015/03/19/use-sparql-with-python/" title="Previous Post: PythonでSparql使ってLinked Open Dataをいじってみた">&laquo; PythonでSparql使ってLinked Open Dataをいじってみた</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/" title="Next Post: Capistrano3でbitbucketからデプロイしようとしたらハマった話">Capistrano3でbitbucketからデプロイしようとしたらハマった話 &raquo;</a>
       
     </p>
   </footer>

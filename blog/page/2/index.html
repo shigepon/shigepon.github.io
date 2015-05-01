@@ -9,12 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Southってのを使うとモデルを変更した時に、サクッとDB(PostgreSQL)に反映出来るらしんだけど、今すでに作成中のプロジェクトに反映させたかったので、メモ インストール 1
-$ pip install south 設定 settings.py1
-2
-3
-4
-INSTALLED_APPS &hellip;">
+  <meta name="description" content="追記：UUIDと書いてたのはUDIDの間違いでした！恥ずかしー。ご指摘いただいた@key3さんありがとうございました！ いやー色々ぐぐっても大変だったし、これからも結構な頻度でやりそうなのでメモ。 もともと作ったプロビジョニングファイルにUDIDを追加するには、 ぐぐってしっかり情報があった箇所（ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,6 +79,75 @@ INSTALLED_APPS &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/12/08/add-uuid-to-titanium-mobile-project/">Titanium Mobileのプロジェクトをアドホック配信する時にテストしてもらうユーザーを追加する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-12-08T01:42:49+09:00" pubdate data-updated="true">Dec 8<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>追記：UUIDと書いてたのはUDIDの間違いでした！恥ずかしー。ご指摘いただいた@key3さんありがとうございました！</p>
+
+<p>いやー色々ぐぐっても大変だったし、これからも結構な頻度でやりそうなのでメモ。</p>
+
+<p>もともと作ったプロビジョニングファイルにUDIDを追加するには、</p>
+
+<h2>ぐぐってしっかり情報があった箇所（プロビジョングファイルにUDIDを追加する）</h2>
+
+<ul>
+<li><a href="https://developer.apple.com/account/ios/profile/profileList.action">Apple Developer Center</a>で左メニューのDevices->Allをクリック</li>
+<li>右上の＋ボタンからデバイスを追加。名前とUDIDを記入してContinueでおk</li>
+<li>左メニューのProvisioning Profiles->AllからUDIDを追加したいプロビジョニングファイルを探してクリック->Editをクリック</li>
+<li>Devicesの一覧で、追加したDevice名をチェックしてGenerateボタンを押す</li>
+</ul>
+
+
+<h2>ぐぐると古い情報が結構あって混乱した箇所（Xcode使ってローカルのプロビジョニングファイルを最新にする）</h2>
+
+<ul>
+<li>Xcodeを起動して、メニューのXcode->Preferencesで開いた画面でAccountsのボタン（右からに番目）をクリック->View Detailsをクリック</li>
+<li>左下のリロードボタンを押す</li>
+</ul>
+
+
+<h2>そもそもあまりちゃんと情報が無かった箇所（Titanium Mobileで新しいプロビジョングファイルを使ってipaファイルを作成する）</h2>
+
+<ul>
+<li>Titanium Mobileを起動->App Explorerを表示->右上の箱型アイコンをクリック->Distribute &ndash; Ad Hoc/Enterpriseを選択</li>
+<li>Distributeの項目でSelect Provisioning Profileの項目で、作成したprofileを選択->残りの必要事項を入力してPublish</li>
+<li>DistributeのSpecify locationで指定したフォルダ内にipaファイルが出来ているのでそれを配布すればおk</li>
+</ul>
+
+
+<p>あまり良く分かってないけど、Titanium Mobileで配布する時のプロビジョングファイルと、デバッグ時のRun Configurationで指定するプロビジョングファイルは選択肢として違うものが出てくるので、結構混乱した。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1512,74 +1576,6 @@ uwsgi.iniのenvも変更しておく</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/10/28/kobe-dot-r-no-12/">Kobe.R #12に参加しました</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-10-28T08:13:51+09:00" pubdate data-updated="true">Oct 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>勉強会の話なので丁寧語で。10/26に<a href="http://kobexr.doorkeeper.jp/events/16101">Kobe.R #12</a>があったので参加してきました。神戸で定期的に開催されているRの勉強会です。今回はたまたま大阪で開かれました。前回と同様誰がされたか名前を記憶していなかったりするので、とりあえず内容だけ紹介します。</p>
-
-<h2>回帰分析の基礎</h2>
-
-<p>@florets1さん</p>
-
-<p>Rのコマンドを叩いて結果を確認しながら回帰分析の基礎を学べる発表でした。回帰分析はある程度知っていても、Rで実際にやるとこんな感じというのが分かって面白かったです。あと、基礎の部分も何となくで素通りしていた部分を改めて説明してもらえたりするので、とても為になる発表でした。</p>
-
-<p>Rは結果をプロットなどで確認しやすかったり、要約を出してくれたりするのがとても便利です。評価はRで行って、定期的な処理になったらPythonで実装するというやりかたもアリかなと妄想しました。</p>
-
-<h2>クラスタリングについて</h2>
-
-<p>Twitter ID @Wakamatzさん</p>
-
-<p>色んなデータをどうやってグループ分け（クラスタリング）するかという手法についての発表でした。基本は何グループに分けるかを指定して、その数に収束するまでクラスタリングするみたいですが、グループ数を決められない場合には自動的に決定する手法もあるそうです。が、なかなか難しい手法みたいです。</p>
-
-<h2>Rのこれから</h2>
-
-<p>不明(別のR勉強会を主催されていた方)</p>
-
-<p>スマホでもサーバクライアント型のサービスが増えてくるだろうから、サーバ内での解析にRが使えるんじゃないかという話でした。RDBやNOSQLとの接続が楽に出来るようになるとそうなるかも。Rをスマホにインストールするのは難しいとお話があったのですが、インストールはやろうと思えば出来るのでしょうか？脱獄したら出来るでしょうが。</p>
-
-<h2>カフェをなんとか盛り上げたい</h2>
-
-<p>不明(神戸で英会話カフェを主催されている方)</p>
-
-<p>神戸で毎週土曜日AM11:00〜PM2:00まで英会話の機会に使えるカフェを運営しているというお話と、カフェの問題点を紹介してくれました。今後何かRで分析する話になるかも？？？</p>
-
-<h2>Rで時系列データを取り扱う</h2>
-
-<p>Rで時系列データを扱い、時間に対して周期性があるデータから未来予測したりというライブラリの紹介とデモを見せて頂きました。Rのライブラリ紹介と実際に使った結果を見ることが出来ると理解が深まってとてもありがたいです。</p>
-
-<p>前回今回と大阪で参加しているのですが、今度は神戸で開催される時も参加してみようかと思います。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1607,6 +1603,10 @@ uwsgi.iniのenvも変更しておく</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cli/">Ubuntuのcli環境でなでしこ2をビルドする</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/19/use-sparql-with-python/">PythonでSparql使ってLinked Open Dataをいじってみた</a>
       </li>
     
@@ -1622,10 +1622,6 @@ uwsgi.iniのenvも変更しておく</p>
         <a href="/blog/2015/03/03/error-log-make-php-error/">突然サーバエラーが頻発したので、調べてみたらエラーログが原因だった</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/03/01/kobe-dot-r-no-15/">Kobe.R #15に参加しました</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -1633,7 +1629,7 @@ uwsgi.iniのenvも変更しておく</p>
 <ul id="categories">
 	<li class='category'><a href='/blog/categories/analytics/'>Analytics (1)</a></li>
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
-<li class='category'><a href='/blog/categories/c­/'>C# (4)</a></li>
+<li class='category'><a href='/blog/categories/c­/'>C# (5)</a></li>
 <li class='category'><a href='/blog/categories/c­/'>C++ (3)</a></li>
 <li class='category'><a href='/blog/categories/django/'>Django (15)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
@@ -1650,11 +1646,11 @@ uwsgi.iniのenvも変更しておく</p>
 <li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (6)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (7)</a></li>
 <li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (11)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (1)</a></li>
-<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (1)</a></li>
+<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (2)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>postgresql (1)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>

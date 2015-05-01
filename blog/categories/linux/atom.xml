@@ -4,7 +4,7 @@
   <title><![CDATA[Category: linux | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-04-02T11:07:38+09:00</updated>
+  <updated>2015-05-01T09:19:03+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,95 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[ubuntuのcli環境でなでしこ2をビルドする]]></title>
+    <link href="http://blog.shigepon.com/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cli/"/>
+    <updated>2015-05-01T08:23:00+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cli</id>
+    <content type="html"><![CDATA[<p>今までmono developでなでしこ2をビルド、テストして、cli環境にアップロードしてたんだけど、面倒になってきたのでcli環境で直接ビルド、テストしてみようと思ったのでついでに開発を始める段階からメモしてみる。</p>
+
+<p>環境はubuntu 12.04とするが、上位バージョンでも問題無いはず</p>
+
+<h1>mono環境の準備</h1>
+
+<p>mono-develをインストールしたらmono関連で必要なものは勝手にインストールされたような気がする。ついでに<a href="http://blog.shigepon.info/blog/2014/08/20/vb-not-work-on-ubuntu/">VisualBasicが動かない件</a>にあるように、mono-vbnc、あとはnunitのインストール</p>
+
+<p><code>sh
+$ aptitude install mono-devel mono-vbnc nunit
+</code></p>
+
+<h1>なでしこ2リポジトリを取得</h1>
+
+<p><a href="http://it.slashdot.jp/story/15/03/13/0340256/">Google Codeが2016年1月に閉鎖される</a>ので、なでしこ2のリポジトリはgithubに移動している。</p>
+
+<p>なので、リポジトリの取得はgit cloneでいける。kujirahandさんのリポジトリをcloneするなら</p>
+
+<p><code>sh
+$ git clone https://github.com/kujirahand/nadesiko2.git
+</code></p>
+
+<p>shigeponがfolkしたリポジトリなら</p>
+
+<p><code>sh
+$ git clone https://github.com/shigepon/nadesiko2.git
+</code></p>
+
+<p>で、カレントディレクトリにnadesiko2ディレクトリが出来て、その下にプロジェクト1式が入っている。中にはソリューションが3つあり、それぞれ</p>
+
+<ul>
+<li>Nako2_CNako.sln → cli環境で動かすなでしこ2(cnako)関連</li>
+<li>Nako2_Plugins.sln → なでしこ2のプラグイン関連</li>
+<li>Nako2_Plugins_Office.sln → なでしこ2のOffice関係プラグイン</li>
+</ul>
+
+
+<p>のソリューションである。今回は\/home\/usernameディレクトリ上でcloneすると考える</p>
+
+<h1>おもむろにビルド</h1>
+
+<p>kujirahandさんのリポジトリをcloneしたとして、とりあえず何もせずにCNakoのソリューションをビルドしてみると</p>
+
+<p><code>sh
+$ xbuild Nako2_CNako.sln
+...
+NakoPluginArrayTest.cs(9,7): error CS0246: The type or namespace name `NUnit' could not be found. Are you missing a using directive or an assembly reference?
+...
+</code></p>
+
+<p>みたいなエラーメッセージを出してビルド出来ない。一方でプラグイン関連のソリューションは</p>
+
+<p>```sh
+$ xbuild Nako2_Plugins.sln
+&hellip;</p>
+
+<pre><code>18 Warning(s)
+ 0 Error(s)
+</code></pre>
+
+<p>Time Elapsed 00:00:06.1095450
+```</p>
+
+<p>と出て、エラー無くビルド出来る。この違いはそれぞれのソリューションで参照しているテストプロジェクトにnunitへの参照パスが入っているかどうかの違いだったので、NakoPluginTest/NakoPluginTest.csprojを参考にしてCNakoTest/CNakoTest.csprojの</p>
+
+<p><code>
+&lt;Reference Include="nunit.framework.extensions, ..." /&gt;
+</code></p>
+
+<p>行に３行追記する</p>
+
+<p>```xml
+   <Reference Include="nunit.framework"></p>
+
+<pre><code>   &lt;HintPath&gt;..\..\..\..\usr\lib\mono\gac\nunit.framework\2.5.10.0__96d09a1eb7f44a77\nunit.framework.dll&lt;/HintPath&gt;
+</code></pre>
+
+<p>   </Reference>
+```</p>
+
+<p>で、再度ビルドするとビルド出来た。shigeponのリポジトリには修正したものをアップしておくのでそのままビルド出来ると思う。パスはリポジトリをcloneするディレクトリによっては変更しないといけないと思う。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[突然サーバエラーが頻発したので、調べてみたらエラーログが原因だった]]></title>
@@ -150,90 +239,6 @@ ii  openssl                              1.0.1-4ubuntu5.12                   Sec
 </code></p>
 
 <p>と出ればおk。確認してないけど、Ubuntu 13.10なら1.0.1e-3ubuntu1.2、Ubuntu 12.10なら1.0.1c-3ubuntu2.7と出ていればおk。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[linux command memo]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/03/07/linux-command-memo/"/>
-    <updated>2014-03-07T08:50:21+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/03/07/linux-command-memo</id>
-    <content type="html"><![CDATA[<h2>アクセスログのIPアドレスを集計してみる</h2>
-
-<p>参考：<a href="http://blog.livedoor.jp/stock_value/archives/51443839.html">Linux サーバーでお手軽にログの集計：こっそりと。 &ndash; livedoor Blog（ブログ）</a></p>
-
-<p>Google Analyticsでリファラ無しの変なアクセスが増えたので、アクセスログからIPを集計してみた。
-アクセスログの書式はLTSVでこんな感じ</p>
-
-<p><code>
-time:07/Mar/2014:06:25:22 +0900       host::11.22.33.46       forwardedfor:-  req:GET / HTTP/1.1   status:200      size:1       referer:-ua:Mozilla/5.0 (***)      reqtime:0.777   cache:- runtime:-       vhost:hoge.fuga
-</code></p>
-
-<p>なんか色々ソフト使うのとか面倒だったのでgrepとかawkでほげほげした。要はhost:11.22.33.44に当たる箇所を取り出して表示回数をまとめれば良い。</p>
-
-<p><code>
-$ cat access.log | grep -v -i "bot" | grep "referer:-" | grep "status:200" | awk '{print $3}' | sort | uniq -c
-</code></p>
-
-<p>軽くbot避けを入れてるけど、crawlerとかspiderとかを避けておくとより正確になるかも。
-これだけだと一杯出てくるので100回以上アクセスあったIPだけ取り出してみた。</p>
-
-<p><code>
-$ cat access.log | grep -v -i "bot" | grep "referer:-" | grep "status:200" | awk '{print $3}' | sort | uniq -c | grep "[0-9]\{3,\}\s"
-</code></p>
-
-<p>ただ、最初の目的には最初の集計の方が役に立った。結局Bingのボットだったみたい。Analyticsではじけなかったアクセスがあったのかな。</p>
-
-<h2>大きなファイルを探す</h2>
-
-<p>例：100MB以上のファイルを探す</p>
-
-<p><code>sh
-$ find path -size 100M
-</code></p>
-
-<h2>Windows共有フォルダをマウント</h2>
-
-<p>参考：<a href="http://qiita.com/mdstoy/items/54925cdcbca6d558b666">Ubuntu から Windows の共有フォルダをマウントして利用する &ndash; Qiita</a>というかほぼそのまま</p>
-
-<p><code>sh
-$ sudo aptitude install cifs-utils
-$ sudo mkdir -p /mnt/windows
-$ sudo mount -t cifs -o username=WindowsUsername,password=WindowsPassword //ServerNameOrIp/path/to/share /mnt/windows
-</code></p>
-
-<h2>ファイルのフルパス一覧を取得</h2>
-
-<p>参考：<a href="http://linux.just4fun.biz/%E9%80%86%E5%BC%95%E3%81%8DUNIX%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%81%AE%E3%83%95%E3%83%AB%E3%83%91%E3%82%B9%E5%90%8D%E3%82%92%E5%8F%96%E5%BE%97%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95.html">逆引きUNIXコマンド/ファイルのフルパス名を取得する方法 &ndash; Linuxと過ごす</a></p>
-
-<p>単純なlsだとファイル名だけが一覧になるので、フルパスの一覧が欲しい場合は一工夫必要</p>
-
-<p><code>sh
-$ ls -dF /path/to/dir/*
-$ find `pwd` -maxdepth 1 -mindepth 1
-</code></p>
-
-<h2>SSHを使ってリモートでコマンド実行する</h2>
-
-<p>単純なコマンド実行</p>
-
-<p><code>sh
-$ ssh username@hostname options... "command"
-</code></p>
-
-<p>ローカルのファイルをリダイレクトしてリモートコマンドに使用する。</p>
-
-<p><code>sh
-$ ssh username@hostname options... "command" &lt; localfile
-</code></p>
-
-<h2>重複行を削除する</h2>
-
-<p><code>sh
-$ cat hoge | sort | uniq
-</code></p>
-
-<p>参考：<a href="http://codenote.net/linux/1300.html">[Linux] sort と uniq をパイプでつないで重複行を削除する | CodeNote.net</a></p>
 ]]></content>
   </entry>
   

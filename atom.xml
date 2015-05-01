@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-04-02T11:07:38+09:00</updated>
+  <updated>2015-05-01T09:19:03+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,105 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[ubuntuのcli環境でなでしこ2をビルドする]]></title>
+    <link href="http://blog.shigepon.com/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cli/"/>
+    <updated>2015-05-01T08:23:00+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cli</id>
+    <content type="html"><![CDATA[<p>今までmono developでなでしこ2をビルド、テストして、cli環境にアップロードしてたんだけど、面倒になってきたのでcli環境で直接ビルド、テストしてみようと思ったのでついでに開発を始める段階からメモしてみる。</p>
+
+<p>環境はubuntu 12.04とするが、上位バージョンでも問題無いはず</p>
+
+<h1>mono環境の準備</h1>
+
+<p>mono-develをインストールしたらmono関連で必要なものは勝手にインストールされたような気がする。ついでに<a href="http://blog.shigepon.info/blog/2014/08/20/vb-not-work-on-ubuntu/">VisualBasicが動かない件</a>にあるように、mono-vbnc、あとはnunitのインストール</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>aptitude install mono-devel mono-vbnc nunit
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>なでしこ2リポジトリを取得</h1>
+
+<p><a href="http://it.slashdot.jp/story/15/03/13/0340256/">Google Codeが2016年1月に閉鎖される</a>ので、なでしこ2のリポジトリはgithubに移動している。</p>
+
+<p>なので、リポジトリの取得はgit cloneでいける。kujirahandさんのリポジトリをcloneするなら</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone https://github.com/kujirahand/nadesiko2.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>shigeponがfolkしたリポジトリなら</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone https://github.com/shigepon/nadesiko2.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で、カレントディレクトリにnadesiko2ディレクトリが出来て、その下にプロジェクト1式が入っている。中にはソリューションが3つあり、それぞれ</p>
+
+<ul>
+<li>Nako2_CNako.sln → cli環境で動かすなでしこ2(cnako)関連</li>
+<li>Nako2_Plugins.sln → なでしこ2のプラグイン関連</li>
+<li>Nako2_Plugins_Office.sln → なでしこ2のOffice関係プラグイン</li>
+</ul>
+
+
+<p>のソリューションである。今回は\/home\/usernameディレクトリ上でcloneすると考える</p>
+
+<h1>おもむろにビルド</h1>
+
+<p>kujirahandさんのリポジトリをcloneしたとして、とりあえず何もせずにCNakoのソリューションをビルドしてみると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>xbuild Nako2_CNako.sln
+</span><span class='line'>...
+</span><span class='line'>NakoPluginArrayTest.cs<span class="o">(</span>9,7<span class="o">)</span>: error CS0246: The <span class="nb">type </span>or namespace name <span class="sb">`</span>NUnit<span class="err">&#39;</span> could not be found. Are you missing a using directive or an assembly reference?
+</span><span class='line'>...
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいなエラーメッセージを出してビルド出来ない。一方でプラグイン関連のソリューションは</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>xbuild Nako2_Plugins.sln
+</span><span class='line'>...
+</span><span class='line'>    18 Warning<span class="o">(</span>s<span class="o">)</span>
+</span><span class='line'>     0 Error<span class="o">(</span>s<span class="o">)</span>
+</span><span class='line'>Time Elapsed 00:00:06.1095450
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と出て、エラー無くビルド出来る。この違いはそれぞれのソリューションで参照しているテストプロジェクトにnunitへの参照パスが入っているかどうかの違いだったので、NakoPluginTest/NakoPluginTest.csprojを参考にしてCNakoTest/CNakoTest.csprojの</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;Reference <span class="nv">Include</span><span class="o">=</span><span class="s2">&quot;nunit.framework.extensions, ...&quot;</span> /&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>行に３行追記する</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>   <span class="nt">&lt;Reference</span> <span class="na">Include=</span><span class="s">&quot;nunit.framework&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>       <span class="nt">&lt;HintPath&gt;</span>..\..\..\..\usr\lib\mono\gac\nunit.framework\2.5.10.0__96d09a1eb7f44a77\nunit.framework.dll<span class="nt">&lt;/HintPath&gt;</span>
+</span><span class='line'>   <span class="nt">&lt;/Reference&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で、再度ビルドするとビルド出来た。shigeponのリポジトリには修正したものをアップしておくのでそのままビルド出来ると思う。パスはリポジトリをcloneするディレクトリによっては変更しないといけないと思う。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[PythonでSparql使ってLinked Open Dataをいじってみた]]></title>
@@ -1819,47 +1918,6 @@ uwsgi.iniのenvも変更しておく</p>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Kobe.R #12に参加しました]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/10/28/kobe-dot-r-no-12/"/>
-    <updated>2014-10-28T08:13:51+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/10/28/kobe-dot-r-no-12</id>
-    <content type="html"><![CDATA[<p>勉強会の話なので丁寧語で。10/26に<a href="http://kobexr.doorkeeper.jp/events/16101">Kobe.R #12</a>があったので参加してきました。神戸で定期的に開催されているRの勉強会です。今回はたまたま大阪で開かれました。前回と同様誰がされたか名前を記憶していなかったりするので、とりあえず内容だけ紹介します。</p>
-
-<h2>回帰分析の基礎</h2>
-
-<p>@florets1さん</p>
-
-<p>Rのコマンドを叩いて結果を確認しながら回帰分析の基礎を学べる発表でした。回帰分析はある程度知っていても、Rで実際にやるとこんな感じというのが分かって面白かったです。あと、基礎の部分も何となくで素通りしていた部分を改めて説明してもらえたりするので、とても為になる発表でした。</p>
-
-<p>Rは結果をプロットなどで確認しやすかったり、要約を出してくれたりするのがとても便利です。評価はRで行って、定期的な処理になったらPythonで実装するというやりかたもアリかなと妄想しました。</p>
-
-<h2>クラスタリングについて</h2>
-
-<p>Twitter ID @Wakamatzさん</p>
-
-<p>色んなデータをどうやってグループ分け（クラスタリング）するかという手法についての発表でした。基本は何グループに分けるかを指定して、その数に収束するまでクラスタリングするみたいですが、グループ数を決められない場合には自動的に決定する手法もあるそうです。が、なかなか難しい手法みたいです。</p>
-
-<h2>Rのこれから</h2>
-
-<p>不明(別のR勉強会を主催されていた方)</p>
-
-<p>スマホでもサーバクライアント型のサービスが増えてくるだろうから、サーバ内での解析にRが使えるんじゃないかという話でした。RDBやNOSQLとの接続が楽に出来るようになるとそうなるかも。Rをスマホにインストールするのは難しいとお話があったのですが、インストールはやろうと思えば出来るのでしょうか？脱獄したら出来るでしょうが。</p>
-
-<h2>カフェをなんとか盛り上げたい</h2>
-
-<p>不明(神戸で英会話カフェを主催されている方)</p>
-
-<p>神戸で毎週土曜日AM11:00〜PM2:00まで英会話の機会に使えるカフェを運営しているというお話と、カフェの問題点を紹介してくれました。今後何かRで分析する話になるかも？？？</p>
-
-<h2>Rで時系列データを取り扱う</h2>
-
-<p>Rで時系列データを扱い、時間に対して周期性があるデータから未来予測したりというライブラリの紹介とデモを見せて頂きました。Rのライブラリ紹介と実際に使った結果を見ることが出来ると理解が深まってとてもありがたいです。</p>
-
-<p>前回今回と大阪で参加しているのですが、今度は神戸で開催される時も参加してみようかと思います。</p>
 ]]></content>
   </entry>
   
