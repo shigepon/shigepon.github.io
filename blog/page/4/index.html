@@ -9,8 +9,9 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Djangoやり始めたので、その過程で記録しておきたいことをメモ。 pip freezeでWarning: cannot find svn location for distribute==0.6.24dev-r0 1
-$ sudo pip install --upgrade distribute &hellip;">
+  <meta name="description" content="ansibleで自分が欲しい情報が色んなページに散らばっていたので、メモ ansible-playbookのオプション -K: sudoのパスワード入力
+-C (&mdash;check): 実際に実行しないでチェックしてくれる
+-l name: hostsファイルに[name] &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +81,54 @@ $ sudo pip install --upgrade distribute &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/01/ansible-memo/">Ansible Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-01T16:56:06+09:00" pubdate data-updated="true">Jul 1<span>st</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ansibleで自分が欲しい情報が色んなページに散らばっていたので、メモ</p>
+
+<h3>ansible-playbookのオプション</h3>
+
+<ul>
+<li>-K: sudoのパスワード入力</li>
+<li>-C (&mdash;check): 実際に実行しないでチェックしてくれる</li>
+<li>-l name: hostsファイルに[name]と書かれたホストにのみ実行</li>
+<li>-i hostsfile: 初期状態では/etc/ansible/hostsを見に行くので、自分で指定したい場合に</li>
+<li>&mdash;syntax-check: playbookの書式チェック。書いて最初にやるといい</li>
+<li>&mdash;list-tasks: playbookで行う内容をリストアップ</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1110,62 +1159,6 @@ php-buildのインストールは下のような感じ</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/06/06/difficult-to-use-rails/">Railsやりにくいから挫折しそうという話</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-06-06T10:38:10+09:00" pubdate data-updated="true">Jun 6<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>今までphpの<a href="http://rhaco.org">rhaco</a>というドマイナーなフレームワークを使ってきてたので、メジャーなフレームワークでも使ってみるかー。ついでにrubyの練習にもなるかーと思ってRails4をはじめたんだけど、なんかこー色々自分の開発方法に合ってないような気がするので挫折する。</p>
-
-<p>使いにくいなと思った点はメリットとの二律背反の部分もあるんだけど、次のような感じ</p>
-
-<ul>
-<li>モデルをコマンドで作ると、テーブル名が勝手に複数形になる</li>
-<li>viewでurl表示させたりするのが面倒。きっとやり方知らないだけだろうけど。</li>
-<li>コマンドありきで作っていくので、手作業でどこまで修正して良いか分からない</li>
-<li>どんな流れで処理が進むのかさっぱり分からない（フレームワークが大きすぎるから？）。本読めって話だろうけど・・・なー(めんどい)。</li>
-<li>分からない時に聞く相手が居ない</li>
-<li>バージョンによってやり方が結構変わるみたいで、ググってもそれが正しい手法か分からない時がある（これはrhacoも同じだからrhacoにも何とかして欲しいとこではある）</li>
-<li>Capistrano+nginx+unicornで結構ハマってそれだけで挫折しそうになった。未だにちゃんとunicornをリロード出来ない。</li>
-<li>メジャーなフレームワークのはずなのに、ちょこちょこバッドノウハウない？違う？</li>
-<li>SassやCoffeeScriptがデフォみたいなのがやだ</li>
-<li>いちいちgemファイルでほにゃららしないと上手く動かない？Bootstrapとか。そしてgemがあるかどうかをいちいちググって探さないといけない。</li>
-</ul>
-
-
-<p>なんとなくだけどRailsって先に設計とかかっちりやってから作るってやり方な感じがして、「大雑把に作って、そこから細部をつめていく」みたいなやり方には合ってないんじゃないかと思った。個人でサクサクっとWebサービス作りたい場合には大雑把にまず作りたいんだよなー。</p>
-
-<p>見当違いかもしれないけどね。とりあえず他を当たってみる？メジャーどころでDjango？同じように挫折するかもしれないけどとりあえず試してみよう。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -1193,6 +1186,10 @@ php-buildのインストールは下のような感じ</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/05/05/nunit-console-test-for-nadesiko2/">なでしこ2をubuntu Cliでテストする</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cli/">Ubuntuのcli環境でなでしこ2をビルドする</a>
       </li>
     
@@ -1206,10 +1203,6 @@ php-buildのインストールは下のような感じ</p>
     
       <li class="post">
         <a href="/blog/2015/03/05/uwsgi-memo/">Uwsgiメモ</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/03/03/error-log-make-php-error/">突然サーバエラーが頻発したので、調べてみたらエラーログが原因だった</a>
       </li>
     
   </ul>
@@ -1236,11 +1229,11 @@ php-buildのインストールは下のような感じ</p>
 <li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (7)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (8)</a></li>
 <li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (11)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (1)</a></li>
-<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (2)</a></li>
+<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (3)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>postgresql (1)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>

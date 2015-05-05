@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-05-01T09:27:00+09:00</updated>
+  <updated>2015-05-05T23:52:43+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,39 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[なでしこ2をubuntu cliでテストする]]></title>
+    <link href="http://blog.shigepon.com/blog/2015/05/05/nunit-console-test-for-nadesiko2/"/>
+    <updated>2015-05-05T23:02:32+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2015/05/05/nunit-console-test-for-nadesiko2</id>
+    <content type="html"><![CDATA[<p><a href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cli/">ubuntuのcli環境でなでしこ2をビルドする</a>の続きで、cli環境でなでしこ2のテストを実行してみる。</p>
+
+<p>cli環境でnunitを実行するには<a href="http://www.nunit.org/index.php?p=nunit-console&amp;r=2.5.10">nunit-console</a>を使う。なでしこ2のテストを実行するにはテスト関連のdllをnunitで実行すると良い。コマンドはなでしこ2をインストールしたディレクトリでこんな感じ。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>nunit-console CNako2Test/bin/Debug/CNako2Test.dll
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>プラグインのテスト(NakoPluginTest)プロジェクトでは外部ファイルを利用するので</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>nunit-console NakoPluginTest/bin/Debug/NakoPluginTest.dll
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>だと、外部ファイルを読み込むテスト（例えばTest_read）で、Could not find fileと怒られる。なので、コマンドにnoshadowオプションを付ける。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>nunit-console -noshadow NakoPluginTest/bin/Debug/NakoPluginTest.dll
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とすると、外部ファイルを読み込んでくれる。
+これでcli環境でなでしこ2をビルドからテストまで出来る。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ubuntuのcli環境でなでしこ2をビルドする]]></title>
@@ -1727,197 +1760,6 @@ from django.core.context_processors import csrf #を追加</p>
 <p>return Response({&ldquo;status&rdquo;:status,&ldquo;csrf&rdquo;:csrf(request)[&lsquo;csrf_token&rsquo;]})↲</p>
 
 <p>これでいけたみたい。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(4):djangoで作ったプロジェクトをnginx+uwsgiで使って公開する]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/11/04/use-django-with-uwsgi/"/>
-    <updated>2014-11-04T21:33:54+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/11/04/use-django-with-uwsgi</id>
-    <content type="html"><![CDATA[<p>nginxのインストールは省略。ubuntuならaptitudeでインストールすればいい。デフォルトはちょっと古いけど。
-djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いているという前提。</p>
-
-<h2>uwsgiをインストール</h2>
-
-<p>全てvirtualenv上で行うとよさげ。
-<a href="http://docs.djangoproject.jp/en/latest/howto/deployment/wsgi/uwsgi.html">uWSGI で Django を使う方法 — Django 1.4 documentation</a>ほぼそのまま</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">source </span>path/to/virtualenv/bin/activate
-</span><span class='line'><span class="k">$(</span>virtualenv<span class="k">)</span> pip install uwsgi
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>uwsgi.iniを作る</h2>
-
-<p>djangoのプロジェクトを/path/to/mysiteに置いた場合の設定。pidfile,daemonizeはプロジェクト毎に適当に設定。</p>
-
-<figure class='code'><figcaption><span>uwsgi.ini</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='ini'><span class='line'><span class="k">[uwsgi]</span>
-</span><span class='line'><span class="na">chdir</span><span class="o">=</span><span class="s">/path/to/mysite</span>
-</span><span class='line'><span class="na">module</span><span class="o">=</span><span class="s">&#39;mysite.wsgi:application&#39;</span>
-</span><span class='line'><span class="na">master</span><span class="o">=</span><span class="s">True</span>
-</span><span class='line'><span class="na">pidfile</span><span class="o">=</span><span class="s">/tmp/project-master.pid</span>
-</span><span class='line'><span class="na">vacuum</span><span class="o">=</span><span class="s">True</span>
-</span><span class='line'><span class="na">max-requests</span><span class="o">=</span><span class="s">5000</span>
-</span><span class='line'><span class="na">daemonize</span><span class="o">=</span><span class="s">/var/log/uwsgi/mysite.log</span>
-</span><span class='line'><span class="na">socket</span><span class="o">=</span><span class="s">127.0.0.1:1234 #適当なポート</span>
-</span><span class='line'><span class="na">env</span><span class="o">=</span> <span class="s">DJANGO_SETTINGS_MODULE=mysite.settings</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>virtualenvで使う場合、sudoを使わないでuwsgiを起動するので、/var/log/uwsgi/yourproject.logの権限に注意する。
-uwsgiの起動や終了のコマンドは以下の通り</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>起動
-</span><span class='line'><span class="nv">$ </span>uwsgi --ini uwsgi.ini
-</span><span class='line'>再起動
-</span><span class='line'><span class="nv">$ </span>uwsgi --reload /tmp/project-master.pid
-</span><span class='line'>終了
-</span><span class='line'><span class="nv">$ </span>uwsgi --stop /tmp/project-master.pid
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>nginxの設定</h2>
-
-<p><a href="http://uwsgi-docs.readthedocs.org/en/latest/tutorials/Django_and_nginx.html">Setting up Django and your web server with uWSGI and nginx — uWSGI 2.0 documentation</a>を参考にした。</p>
-
-<h3>uwsgi_params</h3>
-
-<p>uwsgi_paramsは/etc/nginx/uwsgi_paramsに入ってるけど、修正する可能性もあるので、/path/to/mysite/uwsgi_paramsにコピーして、それを修正する。</p>
-
-<h3>nginx.conf</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>upstream django <span class="o">{</span>
-</span><span class='line'>  server 127.0.0.1:1234; <span class="c">#uwsgi.iniで設定したポート番号</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>server <span class="o">{</span>
-</span><span class='line'>  server_name hoge.example.com; <span class="c"># substitute your machine&#39;s IP address or FQDN</span>
-</span><span class='line'>      charset     utf-8;
-</span><span class='line'><span class="c"># max upload size</span>
-</span><span class='line'>  client_max_body_size 75M;   <span class="c"># adjust to taste</span>
-</span><span class='line'><span class="c"># Django media</span>
-</span><span class='line'><span class="c"># Finally, send all non-media requests to the Django server.</span>
-</span><span class='line'>  location / <span class="o">{</span>
-</span><span class='line'>      uwsgi_pass  django;
-</span><span class='line'>      include     /path/to/mysite/uwsgi_params; <span class="c"># the uwsgi_params file you installed</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これを作成して、/etc/nginx/sites-enabledへシンボリックリンクを貼っておけば良い</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>service nginx restart <span class="c">#reloadでもいい？</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でWebアクセスできるようになる。はず。</p>
-
-<h2>静的ファイルの設定手順</h2>
-
-<p>nginx+uwsgiでプロジェクトを公開した場合、manage.py runserverの場合と違い、静的ファイルの置場を設定しないといけないっぽい</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>location ~ ^/static/ <span class="o">{</span>
-</span><span class='line'>root /path/to/mysite;
-</span><span class='line'><span class="nb">break</span>;
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>settings.pyにSTATIC_URL, STATIC_ROOTを追加</p>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">STATIC_URL</span> <span class="o">=</span> <span class="s">&#39;/static/&#39;</span>
-</span><span class='line'><span class="n">STATIC_ROOT</span> <span class="o">=</span> <span class="s">&quot;/path/to/mysite/static&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>テンプレでは次のように静的ファイルにアクセスする</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;js/hoge.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>この設定だけでは静的ファイルが/path/to/mysite/staticに入ってないので、collectstaticコマンドを使ってファイルを集める</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py collectstatic
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これで各アプリに入ってる静的ファイルとadmin関連の静的ファイル全て持って来てくれる</p>
-
-<h2>設定反映</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo service nginx reload <span class="c">#ubuntuの場合</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>deploy時に良く使うメモ</h2>
-
-<p>mysite/settings.pyを以外を設定ファイルとして読み込む場合はmanage.pyに以下のオプションを付ける
-uwsgi.iniのenvも変更しておく</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>--settings<span class="o">=</span>mysite.settings_deploy
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>設定ファイルは例えばこんな感じで書いて、元のsettings.pyを上書きする</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">pystock.settings</span> <span class="kn">import</span> <span class="o">*</span>
-</span><span class='line'><span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>  <span class="o">.......</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
 ]]></content>
   </entry>
   

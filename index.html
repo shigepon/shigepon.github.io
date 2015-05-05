@@ -9,7 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="今までmono developでなでしこ2をビルド、テストして、cli環境にアップロードしてたんだけど、面倒になってきたのでcli環境で直接ビルド、テストしてみようと思ったのでついでに開発を始める段階からメモしてみる。 環境はubuntu 12.04とするが、上位バージョンでも問題無いはず &hellip;">
+  <meta name="description" content="ubuntuのcli環境でなでしこ2をビルドするの続きで、cli環境でなでしこ2のテストを実行してみる。 cli環境でnunitを実行するにはnunit-consoleを使う。なでしこ2のテストを実行するにはテスト関連のdllをnunitで実行すると良い。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,66 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/05/05/nunit-console-test-for-nadesiko2/">なでしこ2をubuntu Cliでテストする</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-05-05T23:02:32+09:00" pubdate data-updated="true">May 5<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cli/">ubuntuのcli環境でなでしこ2をビルドする</a>の続きで、cli環境でなでしこ2のテストを実行してみる。</p>
+
+<p>cli環境でnunitを実行するには<a href="http://www.nunit.org/index.php?p=nunit-console&amp;r=2.5.10">nunit-console</a>を使う。なでしこ2のテストを実行するにはテスト関連のdllをnunitで実行すると良い。コマンドはなでしこ2をインストールしたディレクトリでこんな感じ。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>nunit-console CNako2Test/bin/Debug/CNako2Test.dll
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>プラグインのテスト(NakoPluginTest)プロジェクトでは外部ファイルを利用するので</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>nunit-console NakoPluginTest/bin/Debug/NakoPluginTest.dll
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>だと、外部ファイルを読み込むテスト（例えばTest_read）で、Could not find fileと怒られる。なので、コマンドにnoshadowオプションを付ける。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>nunit-console -noshadow NakoPluginTest/bin/Debug/NakoPluginTest.dll
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とすると、外部ファイルを読み込んでくれる。
+これでcli環境でなでしこ2をビルドからテストまで出来る。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -967,71 +1027,6 @@ Twitterでインなんとかとか言っちゃいましたが、インキャン�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/12/17/check-table-library/">Javascriptでカレンダーを書くライブラリを調べてみた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-12-17T13:37:38+09:00" pubdate data-updated="true">Dec 17<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Django使ったサイトでカレンダーを表示しようとしたんだけど、HTMLCalendarとかだとレスポンシブにならないし、カスタマイズ面倒だしということで、javascriptで生成して、イベントデータはajaxリクエストから取り出すようにしたいと思ってライブラリを調べてみたのと感想を書いておく。結論からすると、FullCalendarが汎用的で使えそう。</p>
-
-<h2>Zabuto Calendar</h2>
-
-<p><a href="https://github.com/zabuto/calendar">github</a>
-jqueryプラグイン。イベントは数字が表示される。カレンダーの表示は月毎のみ。言語設定に日本語は無い。日本語で日付表示する方法はReadmeに書かれていなかった。</p>
-
-<h2>Calendario</h2>
-
-<p><a href="http://tympanus.net/codrops/2012/11/27/calendario-a-flexible-calendar-plugin/">ダウンロードページ</a></p>
-
-<p>デモは奇麗に見えるんだけど、そもそもメインのcssが何故かdemo.cssみたいなのをインポートしてて、これは無いんじゃないと思ったのと背景画像無しだとイメージに合わなかった。あと、デモサイトがあるだけで、最初に必要なファイルとかが分かりにくかった。</p>
-
-<h2>pickadate</h2>
-
-<p><a href="http://amsul.ca/pickadate.js/">ダウンロードページ</a></p>
-
-<p>カレンダーだけじゃなく、タイムスケジュールの表示もあるライブラリ。でもパッと使ってみただけだとモーダル以外での表示方法が分からなかった。デートピッカーとして使うなら良い？</p>
-
-<h2>FullCalendar</h2>
-
-<p><a href="http://fullcalendar.io/">Home</a></p>
-
-<p>GoogleCalendarっぽいカレンダーが作れて、カスタマイズ出来て、タイムスケジュールも表示出来るライブラリ。bower使うとか書いてあるけど、zip解凍して出て来たファイルを使うことでとりあえずはいけた。jqueryと<a href="http://momentjs.com/">Moment</a>ってライブラリが要る。汎用的だけど、それだけに色々見ないといけないけど、マニュアルあるので分かるようになっている。日本語の言語ファイルは無いが、曜日等のカスタマイズ方法がマニュアルに書いてあるので、日本語化出来る。</p>
-
-<h2>bootstrap-calendar</h2>
-
-<p><a href="https://github.com/Serhioromano/bootstrap-calendar">github</a></p>
-
-<p>試してない。結構汎用的な感じ？言語ファイルに日本語は無い。曜日を日本語化する方法がReadmeに無くて良くわからん。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1057,6 +1052,10 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/05/05/nunit-console-test-for-nadesiko2/">なでしこ2をubuntu Cliでテストする</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cli/">Ubuntuのcli環境でなでしこ2をビルドする</a>
       </li>
     
@@ -1070,10 +1069,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
     
       <li class="post">
         <a href="/blog/2015/03/05/uwsgi-memo/">Uwsgiメモ</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/03/03/error-log-make-php-error/">突然サーバエラーが頻発したので、調べてみたらエラーログが原因だった</a>
       </li>
     
   </ul>
@@ -1100,11 +1095,11 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 <li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (7)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (8)</a></li>
 <li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (11)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (1)</a></li>
-<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (2)</a></li>
+<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (3)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>postgresql (1)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
