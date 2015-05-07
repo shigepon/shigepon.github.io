@@ -4,7 +4,7 @@
   <title><![CDATA[Category: nadesiko | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/nadesiko/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-05-07T19:25:39+09:00</updated>
+  <updated>2015-05-08T08:53:40+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -42,6 +42,206 @@ $ isql -v DSN (UID (PWD))
 <h2>monoを使ってアクセスする場合</h2>
 
 <p>monoというかなでしこ2でアクセスする場合に必要だった。libodbc.soが必要というエラーが出るのでunixodbc-devの追加インストールが必要。インストールすればエラー出ずに動くようになる。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[なでしこで実行ファイルを作る時のメモ]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/01/30/nadesiko-make-exe/"/>
+    <updated>2014-01-30T09:22:46+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/01/30/nadesiko-make-exe</id>
+    <content type="html"><![CDATA[<ul>
+<li>パックファイル作る時はメインになるファイルだけnadesiko.nakoというパック名にして、その他はファイル名自身をパック名とする</li>
+<li>データを埋め込む場合は、そのデータを呼び出す時にフルパスにしない。データが無いと言われる。</li>
+</ul>
+
+
+<p>何となくマニュアル見ても分かりにくかったのでメモ</p>
+
+<p>ついでにリンク</p>
+
+<p><a href="http://nadesi.com">なでしこ</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[なでしこ2のプラグインを作る方法]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/01/29/nadesiko2-make-plugin/"/>
+    <updated>2014-01-29T09:49:17+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/01/29/nadesiko2-make-plugin</id>
+    <content type="html"><![CDATA[<p>なでしこ2でプラグインを作りたい人向けというニッチすぎるネタです。現在なでしこの時期バージョンなでしこ2が開発中です(えらい長いこと開発中です)が、構文の実装がある程度終わっているので、プラグインを開発することが出来ます。try catchの実装どうするかなーとか考えて進んでないですが、それはそれ。</p>
+
+<p>なでしこ2はC#で組まれているので、プラグインもC#で組むことができます。</p>
+
+<p>まずは準備として、なでしこ2のソースをsvnでチェックアウトします。 <a href="http://code.google.com/p/nadesiko2/source/checkout">URL</a></p>
+
+<p>SharpDevelopで開発中なので、SharpDevelopでソリューションを開きます。で、中にNakoPluginXXXというプロジェクトがあるので、それを参考にすれば良いわけですが、軽く説明しておきます。</p>
+
+<p>プラグインのソースは下のようになります。</p>
+
+<p>```
+/<em>
+ * Created by SharpDevelop.
+ * User: shigepon
+ * Date: 2011/04/04
+ * Time: 9:42
+ *
+ * To change this template use Tools | Options | Coding | Edit Standard Headers.
+ </em>/
+using System;
+using System.Collections.Generic;
+using System.Text;
+using Libnako.JPNCompiler;
+using NakoPlugin;
+namespace NakoPluginSample{</p>
+
+<pre><code>public class NakoPluginSample : INakoPlugin    {
+string _description = &amp;quot;サンプルプラグイン&amp;quot;;
+    double _version = 1.0;
+    //&lt;del&gt; プラグイン共通の部分 &lt;/del&gt;
+    public double TargetNakoVersion { get { return 2.0; } }
+    public bool Used { get; set; }
+    public string Name { get { return this.GetType().FullName; } }
+    public double PluginVersion { get { return _version; } }
+    public string Description { get { return _description; } }
+    //&lt;del&gt; 関数の定義 &lt;/del&gt;
+    public void DefineFunction(INakoPluginBank bank)        {
+        bank.AddFunc({関数名}&amp;cedil; {なでしこ形式の引数}&amp;cedil; {戻り値の形式}&amp;cedil; {実際の呼び出し先}&amp;cedil;{関数の説明}&amp;cedil; {関数のよみかた});
+    }
+// プラグインの初期化処理
+    public void PluginInit(INakoInterpreter runner)        {
+    }
+    // プラグインの終了処理
+    public void PluginFin(INakoInterpreter runner)        {
+    }
+   public Object {実際の処理}(INakoFuncCallInfo info){
+        ...
+    }
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>実装時に大事なとこを説明します。</p>
+
+<p>+まずプラグイン共通部分とPluginInit、PluginFinはコピペでもかまわないと思います。私もまだ初期処理、終了処理の必要なプラグインは作っていません。
++なでしこ上での関数呼び出し方法の定義はDefineFunctionで行います。bank.AddFuncメソッドで関数を追加できます。メソッド内の引数は下のように設定します。
+++関数名はなでしこで呼び出す名前になります。（例：文字検索）なでしこで使う助詞を使わないとか、他の命令の名称とかぶらないなどの制限があります。
+++なでしこ形式の引数は「SでAを」のようになでしこで一般的に使う形式で指定します。引数を参照渡しにしたい場合は「{参照渡し}SでAを」のように指定します。助詞を複数指定したい場合は「SでAを|Sが」という形式で指定します。参照渡しを使う場合は実装が少々複雑になります。後日やり方を書こうと思います。
+++戻り値の形式はenum NakoVarTypeで指定します。(Void&cedil; Int&cedil; Double&cedil; String&cedil; Array)
+++実際の呼び出し先はそのままメソッド名を指定します。(_hogeとか)
+++関数の説明と関数のよみかたは分かりやすさの為に必要です。個人用なら適当でも良いと思います。（多分今後エディタとかそういうのにつかわれると思います）
++実際の処理は必ずINakoFuncCallInfo型のインスタンスを引数に取ります。なでしこで渡された引数はこのインスタンスから取得します。取得方法は以下</p>
+
+<p><code>
+long l = info.StackPopAsInt();
+double d = info.StackPopAsDouble();
+String s = info.StackPopAsString();
+Object o = info.StackPop();//配列の場合はこれを使う
+</code></p>
+
+<p>StackPopメソッドで得られる値はNakoVariable型なので、ちょっと扱いが難しくなります。実際の処理の実装方法はまた今度</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[C#で作ったdllをなでしこで使う]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin-cs2/"/>
+    <updated>2014-01-28T22:42:43+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin-cs2</id>
+    <content type="html"><![CDATA[<p>C#のdllを呼び出せるように、C#のdllを参照した後、Plugin.cppの一部を以下のように書き換えました</p>
+
+<p>```
+PHiValue __stdcall sample01(DWORD param) {</p>
+
+<pre><code>PHiValue result;
+ClassLibrary1::Class1::Method1();
+result = nako_var_new(NULL);
+hi_setStr(result&amp;cedil; &amp;quot;abc&amp;quot;&amp;cedil; sizeof(&amp;quot;abc&amp;quot;));
+return result;
+</code></pre>
+
+<p>}
+NAKO_API(void) ImportNakoFunction(void) {</p>
+
+<pre><code>// ユーザー命令の追加
+nako_addFunction(&amp;quot;sample01&amp;quot;&amp;cedil;&amp;quot;&amp;quot;&amp;cedil; sample01&amp;cedil; 0);
+</code></pre>
+
+<p>}
+```</p>
+
+<p>なでしこ側のソースは以下のようにして呼び出してみました</p>
+
+<p><code>
+結果=sample01
+結果を言う
+</code></p>
+
+<p>これでダイアログボックスに「method1」が表示され、続いて「abc」が表示されればOKです。</p>
+
+<p>しかし・・・結果は外部例外　E0434F4Dを出力してちゃんと動きませんでしたorz。この例外はtry&hellip;catchで掴もうとしても掴めません。どうも処理の関数（ここではsample01）に入った瞬間にエラーを返してしまうようです。ちなみにこのコードでググっても原因は理解できませんでした。ということで、クジラ飛行机氏（なでしこ作者）にメールで泣きつきました。</p>
+
+<p>すると</p>
+
+<blockquote><p>vnako.exe と同じフォルダに配置したらエラー出ませんでした。たぶん、plug-ins フォルダにパスを通さない限り、DLLがもう一方を参照できなくなるのだと思います。</p></blockquote>
+
+<p>という返事が！まじで！？と思い試してみると・・・上手くいくじゃないですか！これでC#で作ったdllもなでしこで利用できるようになりました。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[C#で作ったdllをC++/CLIで使う]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin-cs/"/>
+    <updated>2014-01-28T22:27:58+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin-cs</id>
+    <content type="html"><![CDATA[<p><strong>画像やファイルが無くなっていますがご了承下さい</strong></p>
+
+<p>なでしこでプラグインを作る時にC#を使いたかったので、本格的にdllを作る前に、C++/CLIからMessageBoxを表示する程度のC#のdllを呼び出してみました。</p>
+
+<p>C#のdllコード</p>
+
+<p>```
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
+using System.Text;
+namespace ClassLibrary1{</p>
+
+<pre><code>public class Class1
+{
+    public static void Method1()
+    {
+        MessageBox.Show(&amp;quot;method1&amp;quot;);
+    }
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>C++フォームアプリケーション</p>
+
+<p>C#で作ったdllの参照とかフォームの構成とか画像が消えちゃったので適当に想像してください。
+用はC++のアプリケーションでC#のdllを参照します。</p>
+
+<p>ボタンクリック時のコード</p>
+
+<p>```</p>
+
+<pre><code>private: System::Void button1_Click(System::Object^  sender&amp;cedil; System::EventArgs^  e) {
+     try{
+        ClassLibrary1::Class1::Method1();
+     }catch(Exception^ e){
+        System::Windows::Forms::MessageBox::Show(e-&amp;gt;Message);
+     }
+ }
+</code></pre>
+
+<p>```</p>
+
+<p>で動かしてみるときちんと動かせました。</p>
 ]]></content>
   </entry>
   

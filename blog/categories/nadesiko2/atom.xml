@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: なでしこ2 | shigeponが関心のある技術情報など]]></title>
+  <title><![CDATA[Category: nadesiko2 | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/nadesiko2/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-05-07T19:25:39+09:00</updated>
+  <updated>2015-05-08T08:53:40+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,150 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[なでしこ2をubuntu cliでテストする]]></title>
+    <link href="http://blog.shigepon.com/blog/2015/05/05/nunit-console-test-for-nadesiko2/"/>
+    <updated>2015-05-05T23:02:32+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2015/05/05/nunit-console-test-for-nadesiko2</id>
+    <content type="html"><![CDATA[<p><a href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cli/">ubuntuのcli環境でなでしこ2をビルドする</a>の続きで、cli環境でなでしこ2のテストを実行してみる。</p>
+
+<p>cli環境でnunitを実行するには<a href="http://www.nunit.org/index.php?p=nunit-console&amp;r=2.5.10">nunit-console</a>を使う。なでしこ2のテストを実行するにはテスト関連のdllをnunitで実行すると良い。コマンドはなでしこ2をインストールしたディレクトリでこんな感じ。</p>
+
+<p><code>sh
+$ nunit-console CNako2Test/bin/Debug/CNako2Test.dll
+</code></p>
+
+<p>プラグインのテスト(NakoPluginTest)プロジェクトでは外部ファイルを利用するので</p>
+
+<p><code>sh
+$ nunit-console NakoPluginTest/bin/Debug/NakoPluginTest.dll
+</code></p>
+
+<p>だと、外部ファイルを読み込むテスト（例えばTest_read）で、Could not find fileと怒られる。なので、コマンドにnoshadowオプションを付ける。</p>
+
+<p><code>sh
+$ nunit-console -noshadow NakoPluginTest/bin/Debug/NakoPluginTest.dll
+</code></p>
+
+<p>とすると、外部ファイルを読み込んでくれる。
+これでcli環境でなでしこ2をビルドからテストまで出来る。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[ubuntuのcli環境でなでしこ2をビルドする]]></title>
+    <link href="http://blog.shigepon.com/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cli/"/>
+    <updated>2015-05-01T08:23:00+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cli</id>
+    <content type="html"><![CDATA[<p>今までmono developでなでしこ2をビルド、テストして、cli環境にアップロードしてたんだけど、面倒になってきたのでcli環境で直接ビルド、テストしてみようと思ったのでついでに開発を始める段階からメモしてみる。</p>
+
+<p>環境はubuntu 12.04とするが、上位バージョンでも問題無いはず</p>
+
+<h1>mono環境の準備</h1>
+
+<p>mono-develをインストールしたらmono関連で必要なものは勝手にインストールされたような気がする。ついでに<a href="http://blog.shigepon.info/blog/2014/08/20/vb-not-work-on-ubuntu/">VisualBasicが動かない件</a>にあるように、mono-vbnc、あとはnunitのインストール</p>
+
+<p><code>sh
+$ aptitude install mono-devel mono-vbnc nunit
+</code></p>
+
+<h1>なでしこ2リポジトリを取得</h1>
+
+<p><a href="http://it.slashdot.jp/story/15/03/13/0340256/">Google Codeが2016年1月に閉鎖される</a>ので、なでしこ2のリポジトリはgithubに移動している。</p>
+
+<p>なので、リポジトリの取得はgit cloneでいける。kujirahandさんのリポジトリをcloneするなら</p>
+
+<p><code>sh
+$ git clone https://github.com/kujirahand/nadesiko2.git
+</code></p>
+
+<p>shigeponがfolkしたリポジトリなら</p>
+
+<p><code>sh
+$ git clone https://github.com/shigepon/nadesiko2.git
+</code></p>
+
+<p>で、カレントディレクトリにnadesiko2ディレクトリが出来て、その下にプロジェクト1式が入っている。中にはソリューションが3つあり、それぞれ</p>
+
+<ul>
+<li>Nako2_CNako.sln → cli環境で動かすなでしこ2(cnako)関連</li>
+<li>Nako2_Plugins.sln → なでしこ2のプラグイン関連</li>
+<li>Nako2_Plugins_Office.sln → なでしこ2のOffice関係プラグイン</li>
+</ul>
+
+
+<p>のソリューションである。今回は\/home\/usernameディレクトリ上でcloneすると考える</p>
+
+<h1>おもむろにビルド</h1>
+
+<p>kujirahandさんのリポジトリをcloneしたとして、とりあえず何もせずにCNakoのソリューションをビルドしてみると</p>
+
+<p><code>sh
+$ xbuild Nako2_CNako.sln
+...
+NakoPluginArrayTest.cs(9,7): error CS0246: The type or namespace name `NUnit' could not be found. Are you missing a using directive or an assembly reference?
+...
+</code></p>
+
+<p>みたいなエラーメッセージを出してビルド出来ない。一方でプラグイン関連のソリューションは</p>
+
+<p>```sh
+$ xbuild Nako2_Plugins.sln
+&hellip;</p>
+
+<pre><code>18 Warning(s)
+ 0 Error(s)
+</code></pre>
+
+<p>Time Elapsed 00:00:06.1095450
+```</p>
+
+<p>と出て、エラー無くビルド出来る。この違いはそれぞれのソリューションで参照しているテストプロジェクトにnunitへの参照パスが入っているかどうかの違いだったので、NakoPluginTest/NakoPluginTest.csprojを参考にしてCNakoTest/CNakoTest.csprojの</p>
+
+<p><code>
+&lt;Reference Include="nunit.framework.extensions, ..." /&gt;
+</code></p>
+
+<p>行に３行追記する</p>
+
+<p>```xml
+   <Reference Include="nunit.framework"></p>
+
+<pre><code>   &lt;HintPath&gt;..\..\..\..\usr\lib\mono\gac\nunit.framework\2.5.10.0__96d09a1eb7f44a77\nunit.framework.dll&lt;/HintPath&gt;
+</code></pre>
+
+<p>   </Reference>
+```</p>
+
+<p>で、再度ビルドするとビルド出来た。shigeponのリポジトリには修正したものをアップしておくのでそのままビルド出来ると思う。パスはリポジトリをcloneするディレクトリによっては変更しないといけないと思う。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[ubuntuのmonoでMicrosoft.VisualBasicが動かない件]]></title>
+    <link href="http://blog.shigepon.com/blog/2014/08/20/vb-not-work-on-ubuntu/"/>
+    <updated>2014-08-20T13:38:34+09:00</updated>
+    <id>http://blog.shigepon.com/blog/2014/08/20/vb-not-work-on-ubuntu</id>
+    <content type="html"><![CDATA[<p>なでしこ2にコミットしたりしつつ、実際にUbuntu 12.04で使ってみたりしているが、vb系のインポートが出来ないとか何とか言われたのでメモ</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/10071836/vb-net-not-working-on-ubuntu-10-04-with-mono">.net &ndash; VB.NET Not working on Ubuntu 10.04 With Mono &ndash; Stack Overflow</a></p>
+
+<p>要は普通にmonoをインストールしただけ</p>
+
+<p><code>sh
+$ sudo aptitude install mono-devel
+</code></p>
+
+<p>だとVB系のライブラリはインストールされないらしい。</p>
+
+<p><code>sh
+$ sudo aptitude install mono-vbnc
+</code></p>
+
+<p>を追加インストールしておこうということだった。情報無かったので結構はまった。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[なでしこ2のプラグインを作る方法]]></title>
