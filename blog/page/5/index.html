@@ -859,6 +859,86 @@
 
 
 <p>参考：<a href="http://qa.atmarkit.co.jp/q/2047">gitの指定ブランチで変更されたファイルの一覧を取得したい &ndash; QA@IT</a></p>
+
+<h2>GitHubで色々やる手順</h2>
+
+<p>参考：
++ <a href="http://kik.xii.jp/archives/179">Github で Fork してから Pull Request をするまでの流れ | けーこ in サンフランシスコ</a>
++ <a href="http://qiita.com/xtetsuji/items/555a1ef19ed21ee42873">GitHubでFork/cloneしたリポジトリを本家リポジトリに追従する &ndash; Qiita</a>
++ <a href="http://misapon.blogspot.jp/2014/10/github.html">明日に向かって昇龍拳: GitHubでプルリクエストがマージされた後にすること</a></p>
+
+<h3>1.準備</h3>
+
+<p>まずは開発に関わりたいプロジェクトのリポジトリをFork</p>
+
+<p>次にローカルにクローン</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone https://github.com/path/to/repository.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>2.開発〜Pull Request</h3>
+
+<p>Pull Request用にブランチを切る</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>repository
+</span><span class='line'><span class="nv">$ </span>git checkout -b issue
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>コード変更後、コミット</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git add -A
+</span><span class='line'><span class="nv">$ </span>git commit -m <span class="s2">&quot;commit message&quot;</span>
+</span><span class='line'><span class="nv">$ </span>git push origin issue
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>まだrebeseは良く分かってない。で、GitHub上でPull Requestを作成する。</p>
+
+<h3>3.Pull Requestが反映された後</h3>
+
+<p>GitHubでForkしたリポジトリを本家に合わせる</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git remote add honke https://github.com/honke/path/to/repository.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>リポジトリの追加は1回で良い。後は合わせたいタイミングで下のコマンドを繰り返す</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git fetch honke
+</span><span class='line'><span class="nv">$ </span>git merge honke/master
+</span><span class='line'><span class="nv">$ </span>git push origin master
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以下2〜3を繰り返す</p>
+
+<h3>別の場所に開発中のブランチをダウンロードしたい場合</h3>
+
+<p>参考：
+<a href="http://glassylamp.blogspot.jp/2010/11/git.html">GlassyLamp: git でブランチを指定してダウンロードする方法</a></p>
+
+<p>issueブランチをダウンロードしたい場合</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone https://github.com/path/to/repository.git
+</span><span class='line'><span class="nv">$ </span>git checkout -b issue-local remotes/origin/issue
+</span></code></pre></td></tr></table></div></figure>
+
+
+
 </div>
   
   

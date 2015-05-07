@@ -4,7 +4,7 @@
   <title><![CDATA[Category: memo | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/memo/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-05-05T23:52:43+09:00</updated>
+  <updated>2015-05-07T19:16:02+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -109,6 +109,72 @@ $ git diff --name-only -b parent_branch -b child_branch
 </code></p>
 
 <p>参考：<a href="http://qa.atmarkit.co.jp/q/2047">gitの指定ブランチで変更されたファイルの一覧を取得したい &ndash; QA@IT</a></p>
+
+<h2>GitHubで色々やる手順</h2>
+
+<p>参考：
++ <a href="http://kik.xii.jp/archives/179">Github で Fork してから Pull Request をするまでの流れ | けーこ in サンフランシスコ</a>
++ <a href="http://qiita.com/xtetsuji/items/555a1ef19ed21ee42873">GitHubでFork/cloneしたリポジトリを本家リポジトリに追従する &ndash; Qiita</a>
++ <a href="http://misapon.blogspot.jp/2014/10/github.html">明日に向かって昇龍拳: GitHubでプルリクエストがマージされた後にすること</a></p>
+
+<h3>1.準備</h3>
+
+<p>まずは開発に関わりたいプロジェクトのリポジトリをFork</p>
+
+<p>次にローカルにクローン</p>
+
+<p><code>sh
+$ git clone https://github.com/path/to/repository.git
+</code></p>
+
+<h3>2.開発〜Pull Request</h3>
+
+<p>Pull Request用にブランチを切る</p>
+
+<p><code>sh
+$ cd repository
+$ git checkout -b issue
+</code></p>
+
+<p>コード変更後、コミット</p>
+
+<p><code>sh
+$ git add -A
+$ git commit -m "commit message"
+$ git push origin issue
+</code></p>
+
+<p>まだrebeseは良く分かってない。で、GitHub上でPull Requestを作成する。</p>
+
+<h3>3.Pull Requestが反映された後</h3>
+
+<p>GitHubでForkしたリポジトリを本家に合わせる</p>
+
+<p><code>sh
+$ git remote add honke https://github.com/honke/path/to/repository.git
+</code></p>
+
+<p>リポジトリの追加は1回で良い。後は合わせたいタイミングで下のコマンドを繰り返す</p>
+
+<p><code>sh
+$ git fetch honke
+$ git merge honke/master
+$ git push origin master
+</code></p>
+
+<p>以下2〜3を繰り返す</p>
+
+<h3>別の場所に開発中のブランチをダウンロードしたい場合</h3>
+
+<p>参考：
+<a href="http://glassylamp.blogspot.jp/2010/11/git.html">GlassyLamp: git でブランチを指定してダウンロードする方法</a></p>
+
+<p>issueブランチをダウンロードしたい場合</p>
+
+<p><code>sh
+$ git clone https://github.com/path/to/repository.git
+$ git checkout -b issue-local remotes/origin/issue
+</code></p>
 ]]></content>
   </entry>
   
