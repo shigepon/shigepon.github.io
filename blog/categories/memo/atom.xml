@@ -4,7 +4,7 @@
   <title><![CDATA[Category: memo | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/memo/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-05-07T19:23:43+09:00</updated>
+  <updated>2015-05-07T19:25:39+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -112,10 +112,14 @@ $ git diff --name-only -b parent_branch -b child_branch
 
 <h2>GitHubで色々やる手順</h2>
 
-<p>参考：
- + <a href="http://kik.xii.jp/archives/179">Github で Fork してから Pull Request をするまでの流れ | けーこ in サンフランシスコ</a>
- + <a href="http://qiita.com/xtetsuji/items/555a1ef19ed21ee42873">GitHubでFork/cloneしたリポジトリを本家リポジトリに追従する &ndash; Qiita</a>
- + <a href="http://misapon.blogspot.jp/2014/10/github.html">明日に向かって昇龍拳: GitHubでプルリクエストがマージされた後にすること</a></p>
+<p>参考：</p>
+
+<ul>
+<li><a href="http://kik.xii.jp/archives/179">Github で Fork してから Pull Request をするまでの流れ | けーこ in サンフランシスコ</a></li>
+<li><a href="http://qiita.com/xtetsuji/items/555a1ef19ed21ee42873">GitHubでFork/cloneしたリポジトリを本家リポジトリに追従する &ndash; Qiita</a></li>
+<li><a href="http://misapon.blogspot.jp/2014/10/github.html">明日に向かって昇龍拳: GitHubでプルリクエストがマージされた後にすること</a></li>
+</ul>
+
 
 <h3>1.準備</h3>
 
