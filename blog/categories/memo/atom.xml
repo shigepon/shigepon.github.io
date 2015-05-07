@@ -4,7 +4,7 @@
   <title><![CDATA[Category: memo | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/blog/categories/memo/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-05-07T19:16:02+09:00</updated>
+  <updated>2015-05-07T19:21:36+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -125,6 +125,7 @@ $ git diff --name-only -b parent_branch -b child_branch
 
 <p><code>sh
 $ git clone https://github.com/path/to/repository.git
+$ cd repository
 </code></p>
 
 <h3>2.開発〜Pull Request</h3>
@@ -132,7 +133,6 @@ $ git clone https://github.com/path/to/repository.git
 <p>Pull Request用にブランチを切る</p>
 
 <p><code>sh
-$ cd repository
 $ git checkout -b issue
 </code></p>
 
@@ -148,7 +148,15 @@ $ git push origin issue
 
 <h3>3.Pull Requestが反映された後</h3>
 
-<p>GitHubでForkしたリポジトリを本家に合わせる</p>
+<h4>Pull Requestに使ったブランチを削除</h4>
+
+<p><code>sh
+$ git checkout master
+$ git branch -D issue
+$ git push origin :issue
+</code></p>
+
+<h4>GitHubでForkしたリポジトリを本家に合わせる</h4>
 
 <p><code>sh
 $ git remote add honke https://github.com/honke/path/to/repository.git

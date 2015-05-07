@@ -149,7 +149,9 @@ $ git diff --name-only -b parent_branch -b &hellip;">
 <p>次にローカルにクローン</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone https://github.com/path/to/repository.git
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>repository
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -158,9 +160,7 @@ $ git diff --name-only -b parent_branch -b &hellip;">
 <p>Pull Request用にブランチを切る</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>repository
-</span><span class='line'><span class="nv">$ </span>git checkout -b issue
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git checkout -b issue
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -179,7 +179,18 @@ $ git diff --name-only -b parent_branch -b &hellip;">
 
 <h3>3.Pull Requestが反映された後</h3>
 
-<p>GitHubでForkしたリポジトリを本家に合わせる</p>
+<h4>Pull Requestに使ったブランチを削除</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git checkout master
+</span><span class='line'><span class="nv">$ </span>git branch -D issue
+</span><span class='line'><span class="nv">$ </span>git push origin :issue
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>GitHubでForkしたリポジトリを本家に合わせる</h4>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git remote add honke https://github.com/honke/path/to/repository.git
