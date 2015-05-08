@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.com/"/>
-  <updated>2015-05-08T09:02:38+09:00</updated>
+  <updated>2015-05-08T09:05:59+09:00</updated>
   <id>http://blog.shigepon.com/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -14,13 +14,13 @@
 
   
   <entry>
-    <title type="html"><![CDATA[なでしこ2をubuntu cliでテストする]]></title>
+    <title type="html"><![CDATA[なでしこ2をubuntu cuiでテストする]]></title>
     <link href="http://blog.shigepon.com/blog/2015/05/05/nunit-console-test-for-nadesiko2/"/>
     <updated>2015-05-05T23:02:32+09:00</updated>
     <id>http://blog.shigepon.com/blog/2015/05/05/nunit-console-test-for-nadesiko2</id>
-    <content type="html"><![CDATA[<p><a href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cli/">ubuntuのcli環境でなでしこ2をビルドする</a>の続きで、cli環境でなでしこ2のテストを実行してみる。</p>
+    <content type="html"><![CDATA[<p><a href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">ubuntuのcui環境でなでしこ2をビルドする</a>の続きで、cui環境でなでしこ2のテストを実行してみる。</p>
 
-<p>cli環境でnunitを実行するには<a href="http://www.nunit.org/index.php?p=nunit-console&amp;r=2.5.10">nunit-console</a>を使う。なでしこ2のテストを実行するにはテスト関連のdllをnunitで実行すると良い。コマンドはなでしこ2をインストールしたディレクトリでこんな感じ。</p>
+<p>cui環境でnunitを実行するには<a href="http://www.nunit.org/index.php?p=nunit-console&amp;r=2.5.10">nunit-console</a>を使う。なでしこ2のテストを実行するにはテスト関連のdllをnunitで実行すると良い。コマンドはなでしこ2をインストールしたディレクトリでこんな感じ。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>nunit-console CNako2Test/bin/Debug/CNako2Test.dll
@@ -42,16 +42,16 @@
 
 
 <p>とすると、外部ファイルを読み込んでくれる。
-これでcli環境でなでしこ2をビルドからテストまで出来る。</p>
+これでcui環境でなでしこ2をビルドからテストまで出来る。</p>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[ubuntuのcli環境でなでしこ2をビルドする]]></title>
-    <link href="http://blog.shigepon.com/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cli/"/>
+    <title type="html"><![CDATA[ubuntuのcui環境でなでしこ2をビルドする]]></title>
+    <link href="http://blog.shigepon.com/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/"/>
     <updated>2015-05-01T08:23:00+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cli</id>
-    <content type="html"><![CDATA[<p>今までmono developでなでしこ2をビルド、テストして、cli環境にアップロードしてたんだけど、面倒になってきたのでcli環境で直接ビルド、テストしてみようと思ったのでついでに開発を始める段階からメモしてみる。</p>
+    <id>http://blog.shigepon.com/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui</id>
+    <content type="html"><![CDATA[<p>今までmono developでなでしこ2をビルド、テストして、cui環境にアップロードしてたんだけど、面倒になってきたのでcui環境で直接ビルド、テストしてみようと思ったのでついでに開発を始める段階からメモしてみる。</p>
 
 <p>環境はubuntu 12.04とするが、上位バージョンでも問題無いはず</p>
 
@@ -85,7 +85,7 @@
 <p>で、カレントディレクトリにnadesiko2ディレクトリが出来て、その下にプロジェクト1式が入っている。中にはソリューションが3つあり、それぞれ</p>
 
 <ul>
-<li>Nako2_CNako.sln → cli環境で動かすなでしこ2(cnako)関連</li>
+<li>Nako2_CNako.sln → cui環境で動かすなでしこ2(cnako)関連</li>
 <li>Nako2_Plugins.sln → なでしこ2のプラグイン関連</li>
 <li>Nako2_Plugins_Office.sln → なでしこ2のOffice関係プラグイン</li>
 </ul>
