@@ -9,7 +9,8 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="ubuntuのcui環境でなでしこ2をビルドするの続きで、cui環境でなでしこ2のテストを実行してみる。 cui環境でnunitを実行するにはnunit-consoleを使う。なでしこ2のテストを実行するにはテスト関連のdllをnunitで実行すると良い。 &hellip;">
+  <meta name="description" content="なでしこ2をubuntu cuiでテストする &ndash; shigeponが関心のある技術情報など
+までやったので、CIできると便利かなと思ってやってみた。と言いつつ、単にやってみたかっただけ。mono developとかvisual studio使って開発する場合も同じように出来ると思う。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +80,158 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/">Jenkinsでなでしこ2をCIする</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-05-08T09:19:18+09:00" pubdate data-updated="true">May 8<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://blog.shigepon.info/blog/2015/05/05/nunit-console-test-for-nadesiko2/">なでしこ2をubuntu cuiでテストする &ndash; shigeponが関心のある技術情報など</a>
+までやったので、CIできると便利かなと思ってやってみた。と言いつつ、単にやってみたかっただけ。mono developとかvisual studio使って開発する場合も同じように出来ると思う。例によって環境はUbuntu 12.04</p>
+
+<p>参考：</p>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/Crest/20121220/1356023823">.NETとJenkinsで始めるCI開発 &ndash; CREST’S WEBLOG</a></li>
+<li><a href="http://blog.bekijkhet.com/2013/01/create-mono-c-buildserver-using-jenkins.html">Create a Mono C# Buildserver using Jenkins and GitHub ~ BroersA Blog</a></li>
+</ul>
+
+
+<h2>1. Jenkinsインストール</h2>
+
+<p>(略) 追記するかも？</p>
+
+<h2>2. Jenkins設定</h2>
+
+<h3>一般</h3>
+
+<p>(略) 追記するかも？</p>
+
+<h3>C#関連</h3>
+
+<p>Jenkins > Jenkinsの管理 > プラグインの管理 > 利用可能(タブ)</p>
+
+<p>からプラグインをインストールする。インストールするプラグインは</p>
+
+<ul>
+<li>GIT Plugin</li>
+<li>MSBuild Plugin</li>
+<li>NUnit plugin</li>
+</ul>
+
+
+<p>Jenkins > Jenkinsの管理 > システム設定</p>
+
+<p>から</p>
+
+<p>MSBuildの項目を編集。</p>
+
+<ul>
+<li>インストール済みMSBuild&hellip;をクリック</li>
+<li>name</li>
+<li>適当（とりあえず「mono」とした）</li>
+<li>Path to MSBuild</li>
+<li>/usr/bin/xbuild  (Warning出るけど気にしない)</li>
+<li>Default Parameters</li>
+<li>なし(Debugでビルドするかとか指定したりするかも。)</li>
+<li>適用ボタンを押す</li>
+</ul>
+
+
+<p>Gitの項目は編集したか覚えてないけど</p>
+
+<ul>
+<li>Path to Git executable</li>
+<li>/usr/bin/git</li>
+</ul>
+
+
+<p>くらいやっとけばいいかも？　</p>
+
+<h2>3. プロジェクト作成</h2>
+
+<p>Jenkins > 新規ジョブ作成　から</p>
+
+<ul>
+<li>ジョブ名</li>
+<li>適当(nadesiko2とか付けてみた)</li>
+<li>フリースタイル・プロジェクトのビルドを選択</li>
+<li>OKボタンを押す</li>
+</ul>
+
+
+<h2>4. プロジェクト設定</h2>
+
+<p>プロジェクトの設定画面に移動するので編集。Jenkins > プロジェクト(今回はnadesiko2) > 設定　からいつでも編集可能。</p>
+
+<ul>
+<li>ソースコード管理</li>
+<li>Gitを選択</li>
+<li>Repository URL</li>
+<li> なでしこ2のリポジトリの場所。今回は<a href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">ubuntuのcui環境でなでしこ2をビルドする &ndash; shigeponが関心のある技術情報など</a>の続きなので/home/username/nadesiko2</li>
+<li>Branches to build</li>
+<li> なでしこ2では変更点はpull requestする予定なので、pull requestする時のブランチを指定した。ここは色んな設定がありえる。</li>
+<li>ビルド・トリガ</li>
+<li>SCMをポーリングを選択</li>
+<li>スケジュール</li>
+<li> H/30 * * * * (大体30分おき)</li>
+<li>ビルド</li>
+<li>ビルド手順の追加 > Build a Visual Studio project or solution using MSBuild</li>
+<li>Build a Visual Studio project or solution using MSBuildの設定</li>
+<li> MSBuild Version
+
+<ul>
+<li>monoを選択</li>
+</ul>
+</li>
+<li> MSBuild Build File
+
+<ul>
+<li>cnakoのソリューションファイルとしてNako2_CNako.slnを指定した。プラグインのソリューションファイルでも出来ると思う</li>
+</ul>
+</li>
+<li>ビルド手順の追加 > シェルの実行(Windowsだと多分Windowsバッチコマンドの実行)</li>
+<li>シェルの実行</li>
+<li> nunit-console $WORKSPACE/CNako2Test/bin/Debug/CNako2Test.dll -xml cnako2test.xml -noshadow</li>
+<li>ビルド後の処理</li>
+<li>ビルド後の処理の追加 > Publish NUnit test result report</li>
+<li>cnako2test.xml</li>
+</ul>
+
+
+<h2>5. 実行</h2>
+
+<p>Jenkins > プロジェクト(今回はnadesiko2)
+で、ビルド実行をクリックすると実行してくれる。あと、gitの指定したブランチでコミットした後もこの設定の場合30分おきにコミットをチェックしてビルドを実行してくれる。まだまだテストが通ってない部分もあるので、結果は失敗になるけど、とりあえずこれで進められる。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -918,115 +1071,6 @@ Twitterでインなんとかとか言っちゃいましたが、インキャン�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/12/18/use-bootstrap3-in-django/">Use Bootstrap3 in Django</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-12-18T08:24:56+09:00" pubdate data-updated="true">Dec 18<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>そろそろbootstrap3を使ってみたいなと思い、Djangoでbootstrap3を使う方法を調べてみた。django-bootstrap-toolkitのページを見てみるとdjango-bootstrap3を使ってねと書いてあるので、それを使ってみることにした。</p>
-
-<h2>インストール</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install django-bootstrap3
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>設定</h2>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'><span class="o">....</span>
-</span><span class='line'>    <span class="s">&#39;bootstrap3&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="o">....</span>
-</span><span class='line'><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>テンプレート</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'>
-</span><span class='line'>{% load bootstrap3 %}
-</span><span class='line'>{% bootstrap_css %}
-</span><span class='line'>{% bootstrap_javascript %}
-</span><span class='line'>{% bootstrap_messages %}
-</span><span class='line'>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これで必要ファイルがロードされる。あとはbootstrap3で使うタグで構成すれば良い。bootstrap_formとかそういうタグもあるけどまだ試していない。</p>
-
-<h2>Bootswatchにあるテーマを試す</h2>
-
-<p>まずはBootswatchのテーマcssをダウンロード</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> /static/css
-</span><span class='line'><span class="nv">$ </span>wget http://bootswatch.com/cosmo/bootstrap.min.css
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>/staticはアプリのフォルダ下に作る</p>
-
-<p>次に設定ファイルに項目を追加</p>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">STATIC_URL</span> <span class="o">=</span> <span class="s">&#39;/static/&#39;</span>
-</span><span class='line'><span class="n">BOOTSTRAP3</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>    <span class="s">&#39;css_url&#39;</span><span class="p">:</span><span class="s">&#39;/static/css/bootstrap.min.css&#39;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これだけでテンプレートいじらずに動いてくれる</p>
-
-<p>bootstrap2だとnavbar表示の時に表示が重なるとか何とかあったけど、bootstrap3だと気にしなくて良いのかな？何も追加css書かなくても特に問題無さそう。これは嬉しい。</p>
-
-<p>でも<a href="http://qiita.com/Alex_23drum/items/bbf80aff7dbb6fd1a7d9">Navbarに画像入れると下に偏った配置になる</a>とかあるみたいなので、調べてみる必要があるかも</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1052,6 +1096,10 @@ Twitterでインなんとかとか言っちゃいましたが、インキャン�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/">Jenkinsでなでしこ2をCIする</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/05/05/nunit-console-test-for-nadesiko2/">なでしこ2をubuntu Cuiでテストする</a>
       </li>
     
@@ -1065,10 +1113,6 @@ Twitterでインなんとかとか言っちゃいましたが、インキャン�
     
       <li class="post">
         <a href="/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/">Django 1.6から1.7にアップデートしてみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/03/05/uwsgi-memo/">Uwsgiメモ</a>
       </li>
     
   </ul>
@@ -1094,10 +1138,10 @@ Twitterでインなんとかとか言っちゃいましたが、インキャン�
 <li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (8)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (9)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (11)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
-<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (4)</a></li>
+<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (5)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>

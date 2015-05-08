@@ -4,7 +4,7 @@
   <title><![CDATA[Category: nadesiko2 | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/nadesiko2/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-08T09:15:20+09:00</updated>
+  <updated>2015-05-08T10:37:56+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,131 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Jenkinsでなでしこ2をCIする]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/"/>
+    <updated>2015-05-08T09:19:18+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins</id>
+    <content type="html"><![CDATA[<p><a href="http://blog.shigepon.info/blog/2015/05/05/nunit-console-test-for-nadesiko2/">なでしこ2をubuntu cuiでテストする &ndash; shigeponが関心のある技術情報など</a>
+までやったので、CIできると便利かなと思ってやってみた。と言いつつ、単にやってみたかっただけ。mono developとかvisual studio使って開発する場合も同じように出来ると思う。例によって環境はUbuntu 12.04</p>
+
+<p>参考：</p>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/Crest/20121220/1356023823">.NETとJenkinsで始めるCI開発 &ndash; CREST’S WEBLOG</a></li>
+<li><a href="http://blog.bekijkhet.com/2013/01/create-mono-c-buildserver-using-jenkins.html">Create a Mono C# Buildserver using Jenkins and GitHub ~ BroersA Blog</a></li>
+</ul>
+
+
+<h2>1. Jenkinsインストール</h2>
+
+<p>(略) 追記するかも？</p>
+
+<h2>2. Jenkins設定</h2>
+
+<h3>一般</h3>
+
+<p>(略) 追記するかも？</p>
+
+<h3>C#関連</h3>
+
+<p>Jenkins > Jenkinsの管理 > プラグインの管理 > 利用可能(タブ)</p>
+
+<p>からプラグインをインストールする。インストールするプラグインは</p>
+
+<ul>
+<li>GIT Plugin</li>
+<li>MSBuild Plugin</li>
+<li>NUnit plugin</li>
+</ul>
+
+
+<p>Jenkins > Jenkinsの管理 > システム設定</p>
+
+<p>から</p>
+
+<p>MSBuildの項目を編集。</p>
+
+<ul>
+<li>インストール済みMSBuild&hellip;をクリック</li>
+<li>name</li>
+<li>適当（とりあえず「mono」とした）</li>
+<li>Path to MSBuild</li>
+<li>/usr/bin/xbuild  (Warning出るけど気にしない)</li>
+<li>Default Parameters</li>
+<li>なし(Debugでビルドするかとか指定したりするかも。)</li>
+<li>適用ボタンを押す</li>
+</ul>
+
+
+<p>Gitの項目は編集したか覚えてないけど</p>
+
+<ul>
+<li>Path to Git executable</li>
+<li>/usr/bin/git</li>
+</ul>
+
+
+<p>くらいやっとけばいいかも？　</p>
+
+<h2>3. プロジェクト作成</h2>
+
+<p>Jenkins > 新規ジョブ作成　から</p>
+
+<ul>
+<li>ジョブ名</li>
+<li>適当(nadesiko2とか付けてみた)</li>
+<li>フリースタイル・プロジェクトのビルドを選択</li>
+<li>OKボタンを押す</li>
+</ul>
+
+
+<h2>4. プロジェクト設定</h2>
+
+<p>プロジェクトの設定画面に移動するので編集。Jenkins > プロジェクト(今回はnadesiko2) > 設定　からいつでも編集可能。</p>
+
+<ul>
+<li>ソースコード管理</li>
+<li>Gitを選択</li>
+<li>Repository URL</li>
+<li> なでしこ2のリポジトリの場所。今回は<a href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">ubuntuのcui環境でなでしこ2をビルドする &ndash; shigeponが関心のある技術情報など</a>の続きなので/home/username/nadesiko2</li>
+<li>Branches to build</li>
+<li> なでしこ2では変更点はpull requestする予定なので、pull requestする時のブランチを指定した。ここは色んな設定がありえる。</li>
+<li>ビルド・トリガ</li>
+<li>SCMをポーリングを選択</li>
+<li>スケジュール</li>
+<li> H/30 * * * * (大体30分おき)</li>
+<li>ビルド</li>
+<li>ビルド手順の追加 > Build a Visual Studio project or solution using MSBuild</li>
+<li>Build a Visual Studio project or solution using MSBuildの設定</li>
+<li> MSBuild Version
+
+<ul>
+<li>monoを選択</li>
+</ul>
+</li>
+<li> MSBuild Build File
+
+<ul>
+<li>cnakoのソリューションファイルとしてNako2_CNako.slnを指定した。プラグインのソリューションファイルでも出来ると思う</li>
+</ul>
+</li>
+<li>ビルド手順の追加 > シェルの実行(Windowsだと多分Windowsバッチコマンドの実行)</li>
+<li>シェルの実行</li>
+<li> nunit-console $WORKSPACE/CNako2Test/bin/Debug/CNako2Test.dll -xml cnako2test.xml -noshadow</li>
+<li>ビルド後の処理</li>
+<li>ビルド後の処理の追加 > Publish NUnit test result report</li>
+<li>cnako2test.xml</li>
+</ul>
+
+
+<h2>5. 実行</h2>
+
+<p>Jenkins > プロジェクト(今回はnadesiko2)
+で、ビルド実行をクリックすると実行してくれる。あと、gitの指定したブランチでコミットした後もこの設定の場合30分おきにコミットをチェックしてビルドを実行してくれる。まだまだテストが通ってない部分もあるので、結果は失敗になるけど、とりあえずこれで進められる。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[なでしこ2をubuntu cuiでテストする]]></title>

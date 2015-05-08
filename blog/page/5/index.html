@@ -9,7 +9,8 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="今までphpのrhacoというドマイナーなフレームワークを使ってきてたので、メジャーなフレームワークでも使ってみるかー。ついでにrubyの練習にもなるかーと思ってRails4をはじめたんだけど、なんかこー色々自分の開発方法に合ってないような気がするので挫折する。 &hellip;">
+  <meta name="description" content="基本はphp-buildで複数バージョンのPHP-FPMを用意する &ndash; hnwの日記を参考にして進める 1
+$ curl https://raw.github.com/CHH/phpenv/master/bin/phpenv-install.sh | bash &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +80,98 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/07/build-php-with-phpenv/">Phpenvとphp-buildを使って適当なバージョンのphpをビルドする</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-07T00:42:03+09:00" pubdate data-updated="true">Jun 7<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>基本は<a href="http://d.hatena.ne.jp/hnw/20130626">php-buildで複数バージョンのPHP-FPMを用意する &ndash; hnwの日記</a>を参考にして進める</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>curl https://raw.github.com/CHH/phpenv/master/bin/phpenv-install.sh | bash
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これが何故か上手くいかなかったので</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>wget https://raw.github.com/CHH/phpenv/master/bin/phpenv-install.sh
+</span><span class='line'><span class="nv">$ </span>chmod +x phpenv-install.sh
+</span><span class='line'><span class="nv">$ </span>./phpenv-install.sh
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こうやった。コマンド終了時のメッセージに従って.zshrcを変更して反映。
+php-buildのインストールは下のような感じ</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone git://github.com/CHH/php-build.git ~/.phpenv/plugins/php-build
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で、おもむろにphpをインストール</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>phpenv install 5.5.5
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とかやると出るわ出るわエラーが出るわ。どうもビルド用のライブラリやヘッダファイルみたいなのが何かと足りないみたいで色々出て来た。出るメッセージは人によって違うと思うので、入れるライブラリの一覧より、ライブラリが無い場合の対処法を書いておく。ubuntuにはapt-fileというアプリ？があって、これを使うとライブラリをインストールした時にインストールされるファイル名で検索することが出来る。</p>
+
+<p>例えば「configure: error: mcrypt.h not found. Please reinstall libmcrypt.」みたいなエラーが出た場合、</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>apt-file search mcrypt.h
+</span><span class='line'>libmcrypt-dev: /usr/include/mcrypt.h
+</span><span class='line'>libmcrypt-dev: /usr/include/mutils/mcrypt.h
+</span><span class='line'>libtomcrypt-dev: /usr/include/tomcrypt.h
+</span><span class='line'>php-doc: /usr/share/doc/php-doc/html/book.mcrypt.html
+</span><span class='line'>php-doc: /usr/share/doc/php-doc/html/intro.mcrypt.html
+</span><span class='line'>php-doc: /usr/share/doc/php-doc/html/ref.mcrypt.html
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいにすると、mcrypt.hを含むライブラリとインストール箇所が表示されるので、これを見ながらインストールするライブラリを選んだ（この場合だとlibmcrypt-devをインストールした）</p>
+
+<p>これを地道に何度か繰り返して何とかビルド出来た。rbenvに比べると面倒だった。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -961,80 +1054,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/04/08/update-openssl-security-patch/">Ubuntuでopensslのsecurity Patchを当てる</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-04-08T14:39:21+09:00" pubdate data-updated="true">Apr 8<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>本日、<a href="http://jp.techcrunch.com/2014/04/08/20140407massive-security-bug-in-openssl-could-effect-a-huge-chunk-of-the-internet/">OpenSSLの重大バグが発覚。インターネットの大部分に影響の可能性 | TechCrunch Japan</a>というニュースで</p>
-
-<blockquote><p>過去2年以内のあらゆるバージョンのOpenSSLが走るシステムで、システムメモリー上にある大量のデータを暴露することが可能</p></blockquote>
-
-<p>と書いてあった、これはまずいので、あわててセキュリティパッチを当てたので手順をメモ。 OSはUbuntu 12.04LTS。</p>
-
-<p>Ubuntuでは<a href="http://www.ubuntu.com/usn/usn-2165-1/">USN-2165-1: OpenSSL vulnerabilities | Ubuntu</a>にあるように、Ubuntu 13.10、12.10、12.04 LTSでセキュリティパッチが出ている（2014年4月7日現在)。ということでaptを使えばセキュリティパッチを当てることが出来る。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo apt-get update
-</span><span class='line'><span class="nv">$ </span>sudo apt-get upgrade
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>または</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude update
-</span><span class='line'><span class="nv">$ </span>sudo aptitude upgrade
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でおk。ただしopenssl versionでバージョン確認してもパッチが当たったかどうか良く分からないので以下のコマンドで確認</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>dpkg -l | grep openssl
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Ubuntu 12.04LTSの場合</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>ii  openssl                              1.0.1-4ubuntu5.12                   Secure Socket Layer <span class="o">(</span>SSL<span class="o">)</span> binary and related cryptographic tools
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と出ればおk。確認してないけど、Ubuntu 13.10なら1.0.1e-3ubuntu1.2、Ubuntu 12.10なら1.0.1c-3ubuntu2.7と出ていればおk。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -1062,6 +1081,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/">Jenkinsでなでしこ2をCIする</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/05/05/nunit-console-test-for-nadesiko2/">なでしこ2をubuntu Cuiでテストする</a>
       </li>
     
@@ -1075,10 +1098,6 @@
     
       <li class="post">
         <a href="/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/">Django 1.6から1.7にアップデートしてみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/03/05/uwsgi-memo/">Uwsgiメモ</a>
       </li>
     
   </ul>
@@ -1104,10 +1123,10 @@
 <li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (8)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (9)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (11)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
-<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (4)</a></li>
+<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (5)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>

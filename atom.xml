@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-08T09:15:20+09:00</updated>
+  <updated>2015-05-08T10:37:56+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,131 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Jenkinsでなでしこ2をCIする]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/"/>
+    <updated>2015-05-08T09:19:18+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins</id>
+    <content type="html"><![CDATA[<p><a href="http://blog.shigepon.info/blog/2015/05/05/nunit-console-test-for-nadesiko2/">なでしこ2をubuntu cuiでテストする &ndash; shigeponが関心のある技術情報など</a>
+までやったので、CIできると便利かなと思ってやってみた。と言いつつ、単にやってみたかっただけ。mono developとかvisual studio使って開発する場合も同じように出来ると思う。例によって環境はUbuntu 12.04</p>
+
+<p>参考：</p>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/Crest/20121220/1356023823">.NETとJenkinsで始めるCI開発 &ndash; CREST’S WEBLOG</a></li>
+<li><a href="http://blog.bekijkhet.com/2013/01/create-mono-c-buildserver-using-jenkins.html">Create a Mono C# Buildserver using Jenkins and GitHub ~ BroersA Blog</a></li>
+</ul>
+
+
+<h2>1. Jenkinsインストール</h2>
+
+<p>(略) 追記するかも？</p>
+
+<h2>2. Jenkins設定</h2>
+
+<h3>一般</h3>
+
+<p>(略) 追記するかも？</p>
+
+<h3>C#関連</h3>
+
+<p>Jenkins > Jenkinsの管理 > プラグインの管理 > 利用可能(タブ)</p>
+
+<p>からプラグインをインストールする。インストールするプラグインは</p>
+
+<ul>
+<li>GIT Plugin</li>
+<li>MSBuild Plugin</li>
+<li>NUnit plugin</li>
+</ul>
+
+
+<p>Jenkins > Jenkinsの管理 > システム設定</p>
+
+<p>から</p>
+
+<p>MSBuildの項目を編集。</p>
+
+<ul>
+<li>インストール済みMSBuild&hellip;をクリック</li>
+<li>name</li>
+<li>適当（とりあえず「mono」とした）</li>
+<li>Path to MSBuild</li>
+<li>/usr/bin/xbuild  (Warning出るけど気にしない)</li>
+<li>Default Parameters</li>
+<li>なし(Debugでビルドするかとか指定したりするかも。)</li>
+<li>適用ボタンを押す</li>
+</ul>
+
+
+<p>Gitの項目は編集したか覚えてないけど</p>
+
+<ul>
+<li>Path to Git executable</li>
+<li>/usr/bin/git</li>
+</ul>
+
+
+<p>くらいやっとけばいいかも？　</p>
+
+<h2>3. プロジェクト作成</h2>
+
+<p>Jenkins > 新規ジョブ作成　から</p>
+
+<ul>
+<li>ジョブ名</li>
+<li>適当(nadesiko2とか付けてみた)</li>
+<li>フリースタイル・プロジェクトのビルドを選択</li>
+<li>OKボタンを押す</li>
+</ul>
+
+
+<h2>4. プロジェクト設定</h2>
+
+<p>プロジェクトの設定画面に移動するので編集。Jenkins > プロジェクト(今回はnadesiko2) > 設定　からいつでも編集可能。</p>
+
+<ul>
+<li>ソースコード管理</li>
+<li>Gitを選択</li>
+<li>Repository URL</li>
+<li> なでしこ2のリポジトリの場所。今回は<a href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">ubuntuのcui環境でなでしこ2をビルドする &ndash; shigeponが関心のある技術情報など</a>の続きなので/home/username/nadesiko2</li>
+<li>Branches to build</li>
+<li> なでしこ2では変更点はpull requestする予定なので、pull requestする時のブランチを指定した。ここは色んな設定がありえる。</li>
+<li>ビルド・トリガ</li>
+<li>SCMをポーリングを選択</li>
+<li>スケジュール</li>
+<li> H/30 * * * * (大体30分おき)</li>
+<li>ビルド</li>
+<li>ビルド手順の追加 > Build a Visual Studio project or solution using MSBuild</li>
+<li>Build a Visual Studio project or solution using MSBuildの設定</li>
+<li> MSBuild Version
+
+<ul>
+<li>monoを選択</li>
+</ul>
+</li>
+<li> MSBuild Build File
+
+<ul>
+<li>cnakoのソリューションファイルとしてNako2_CNako.slnを指定した。プラグインのソリューションファイルでも出来ると思う</li>
+</ul>
+</li>
+<li>ビルド手順の追加 > シェルの実行(Windowsだと多分Windowsバッチコマンドの実行)</li>
+<li>シェルの実行</li>
+<li> nunit-console $WORKSPACE/CNako2Test/bin/Debug/CNako2Test.dll -xml cnako2test.xml -noshadow</li>
+<li>ビルド後の処理</li>
+<li>ビルド後の処理の追加 > Publish NUnit test result report</li>
+<li>cnako2test.xml</li>
+</ul>
+
+
+<h2>5. 実行</h2>
+
+<p>Jenkins > プロジェクト(今回はnadesiko2)
+で、ビルド実行をクリックすると実行してくれる。あと、gitの指定したブランチでコミットした後もこの設定の場合30分おきにコミットをチェックしてビルドを実行してくれる。まだまだテストが通ってない部分もあるので、結果は失敗になるけど、とりあえずこれで進められる。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[なでしこ2をubuntu cuiでテストする]]></title>
@@ -1575,191 +1700,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 <p>を書けばおk。要はタイムゾーン入れてくれってエラーなので、そんなものはない！と指定すればいいっぽい</p>
 
 <p>参考：<a href="http://stackoverflow.com/questions/18622007/runtimewarning-datetimefield-received-a-naive-datetime">django &ndash; RuntimeWarning: DateTimeField received a naive datetime &ndash; Stack Overflow</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Titanium MobileとDjangoでAjax認証を行う]]></title>
-    <link href="http://blog.shigepon.info/blog/2014/11/20/titanium-ajax-post-to-django/"/>
-    <updated>2014-11-20T09:42:26+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2014/11/20/titanium-ajax-post-to-django</id>
-    <content type="html"><![CDATA[<p>最近Titanium Mobile使ってスマホアプリを作ろうかなと思って色々試してるんだけど、ログイン認証する時にはまったので、メモ</p>
-
-<p>参考<a href="http://stackoverflow.com/questions/26022797/in-appcelerator-titanium-how-can-i-get-djangos-csrf-token">In Appcelerator Titanium, how can I get Django&rsquo;s CSRF token?(Stack Overflow)</a></p>
-
-<h2>Titanium MobileでのPOST</h2>
-
-<p>HTTPClientを使って、例えば次のように書く。UIの設計部分とかそんなのは省略。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>var <span class="nv">client</span> <span class="o">=</span> Ti.Network.createHTTPClient<span class="o">({</span>
-</span><span class='line'>    onerror: <span class="k">function</span><span class="o">(</span>e<span class="o">){</span>
-</span><span class='line'>        Ti.API.debug<span class="o">(</span>e.error<span class="o">)</span>;
-</span><span class='line'>        alert<span class="o">(</span><span class="s1">&#39;error&#39;</span><span class="o">)</span>;
-</span><span class='line'>    <span class="o">}</span>,
-</span><span class='line'>    onload: <span class="k">function</span><span class="o">(</span>e<span class="o">){</span>
-</span><span class='line'>        var <span class="nv">item</span> <span class="o">=</span> JSON.parse<span class="o">(</span>this.responseText<span class="o">)</span>;
-</span><span class='line'>        <span class="k">if</span><span class="o">(</span>item.status<span class="o">==</span>1<span class="o">){</span>//例としてstatusを返すという設定にしているのでこんな感じにしてる
-</span><span class='line'>            alert<span class="o">(</span><span class="s1">&#39;ログインしました&#39;</span><span class="o">)</span>;
-</span><span class='line'>        <span class="o">}</span><span class="k">else</span><span class="o">{</span>
-</span><span class='line'>            alert<span class="o">(</span><span class="s1">&#39;ログイン失敗しました&#39;</span><span class="o">)</span>;
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">})</span>;
-</span><span class='line'>client.open<span class="o">(</span><span class="s1">&#39;POST&#39;</span>,<span class="s1">&#39;http://url/to/login&#39;</span><span class="o">)</span>;
-</span><span class='line'>client.send<span class="o">({</span>username:<span class="s1">&#39;hoge&#39;</span>,password:<span class="s1">&#39;fuga&#39;</span><span class="o">})</span>;
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Djangoでのユーザー認証</h2>
-
-<p>Djangoでユーザー認証しようとすると例えばこんな感じ(viewだけ)
-REST API作るために、<a href="http://www.django-rest-framework.org/">Django REST framework</a>を使ってるので、そのままコピペしても使えないけど、@部分を消して、Responseとなっている箇所を自力でJSON出力すれば良いと思う。Django REST frameworkについてはどっかで書く。</p>
-
-<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">viewsets</span><span class="err">↲</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">rest_framework.response</span> <span class="kn">import</span> <span class="n">Response</span><span class="err">↲</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">rest_framework.decorators</span> <span class="kn">import</span> <span class="n">api_view</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">login</span><span class="p">,</span><span class="n">authenticate</span>
-</span><span class='line'>
-</span><span class='line'><span class="nd">@api_view</span><span class="p">([</span><span class="s">&#39;GET&#39;</span><span class="p">,</span><span class="s">&#39;POST&#39;</span><span class="p">])</span>
-</span><span class='line'><span class="k">def</span> <span class="nf">do_login</span><span class="p">(</span><span class="n">request</span><span class="p">):</span><span class="err">↲</span>
-</span><span class='line'> <span class="n">status</span> <span class="o">=</span> <span class="mi">0</span><span class="err">↲</span>
-</span><span class='line'> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">():</span><span class="err">↲</span>
-</span><span class='line'>     <span class="n">status</span> <span class="o">=</span> <span class="mi">1</span><span class="err">↲</span>
-</span><span class='line'> <span class="k">else</span><span class="p">:</span><span class="err">↲</span>
-</span><span class='line'>     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&#39;POST&#39;</span><span class="p">:</span><span class="err">↲</span>
-</span><span class='line'>         <span class="n">username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">]</span><span class="err">↲</span>
-</span><span class='line'>         <span class="n">password</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s">&#39;password&#39;</span><span class="p">]</span><span class="err">↲</span>
-</span><span class='line'>         <span class="n">user</span> <span class="o">=</span> <span class="n">authenticate</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span><span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span><span class="err">↲</span>
-</span><span class='line'>         <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span><span class="err">↲</span>
-</span><span class='line'>             <span class="n">status</span> <span class="o">=</span> <span class="mi">1</span><span class="err">↲</span>
-</span><span class='line'>             <span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="n">user</span><span class="p">)</span><span class="err">↲</span>
-</span><span class='line'>     <span class="k">else</span><span class="p">:</span><span class="err">↲</span>
-</span><span class='line'>         <span class="k">return</span> <span class="n">Response</span><span class="p">({</span><span class="s">&quot;status&quot;</span><span class="p">:</span><span class="n">status</span><span class="p">})</span><span class="err">↲</span>
-</span><span class='line'> <span class="k">return</span> <span class="n">Response</span><span class="p">({</span><span class="s">&quot;status&quot;</span><span class="p">:</span><span class="n">status</span><span class="p">})</span><span class="err">↲</span>
-</span><span class='line'><span class="err">↲</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="err">で、実際やってみるとレスポンスはこんな感じになる</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>js
-{</p>
-
-<pre><code>"detail": "CSRF Failed: CSRF token missing or incorrect."
-</code></pre>
-
-<p>}</p>
-
-<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">そういえば</span><span class="n">Django</span><span class="err">で</span><span class="n">CSRF</span><span class="err">対策してるんだった。</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>py settings.py</p>
-
-<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">MIDDLEWARE_CLASSES</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'><span class="o">....</span>
-</span><span class='line'>    <span class="s">&#39;django.middleware.csrf.CsrfViewMiddleware&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="o">....</span>
-</span><span class='line'><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ajaxでやり取りする部分だけ、MIDDLEWARE_CLASSESから削除するって手もあるけど、<a href="http://docs.djangoproject.jp/en/latest/ref/contrib/csrf.html">Django APIリファレンス</a>に書いてあるようにX-CSRFToken という独自ヘッダーに CSRF トークンの 値を設定するという対処をやってみた。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">function</span> <span class="nx">getCRSF</span><span class="p">(){</span>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">xhr</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">Network</span><span class="p">.</span><span class="nx">createHTTPClient</span><span class="p">({</span>
-</span><span class='line'>        <span class="nx">onload</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
-</span><span class='line'>            <span class="kd">var</span> <span class="nx">item</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">responseText</span><span class="p">);</span>
-</span><span class='line'>            <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">Properties</span><span class="p">.</span><span class="nx">setString</span><span class="p">(</span><span class="s2">&quot;csrf&quot;</span><span class="p">,</span> <span class="nx">item</span><span class="p">.</span><span class="nx">csrf</span><span class="p">);</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">});</span>
-</span><span class='line'>    <span class="nx">xhr</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span><span class="s1">&#39;http://url/to/login&#39;</span><span class="p">);</span>
-</span><span class='line'>    <span class="nx">xhr</span><span class="p">.</span><span class="nx">send</span><span class="p">();</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これを書いて、getCRSFを先にどこかで実行しておいて
-実際のリクエストはさっきのコードをこんな感じで修正する</p>
-
-<p> &#8220;`js</p>
-
-<pre><code>client.open('POST','http://url/to/login');
-client.setRequestHeader('X-CSRFToken', Ti.App.Properties.getString("csrf"));//これを追加
-
-client.send({username:'hoge',password:'fuga'});
-</code></pre>
-
-<p>&#8220;`</p>
-
-<p>Django側のコードはGETの時にcsrfのトークンを戻すように書き換える</p>
-
-<p> &#8220;`py views.py
-from django.core.context_processors import csrf #を追加</p>
-
-<h1>上のviews.pyの14行目をこんな感じで修正</h1>
-
-<p>return Response({&ldquo;status&rdquo;:status,&ldquo;csrf&rdquo;:csrf(request)[&lsquo;csrf_token&rsquo;]})↲</p>
-
-<p>これでいけたみたい。</p>
 ]]></content>
   </entry>
   
