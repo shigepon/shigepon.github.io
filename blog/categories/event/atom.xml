@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: event | shigeponが関心のある技術情報など]]></title>
-  <link href="http://blog.shigepon.com/blog/categories/event/atom.xml" rel="self"/>
-  <link href="http://blog.shigepon.com/"/>
-  <updated>2015-05-08T09:05:59+09:00</updated>
-  <id>http://blog.shigepon.com/</id>
+  <link href="http://blog.shigepon.info/blog/categories/event/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.info/"/>
+  <updated>2015-05-08T09:11:43+09:00</updated>
+  <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Kobe.R #15に参加しました]]></title>
-    <link href="http://blog.shigepon.com/blog/2015/03/01/kobe-dot-r-no-15/"/>
+    <link href="http://blog.shigepon.info/blog/2015/03/01/kobe-dot-r-no-15/"/>
     <updated>2015-03-01T10:57:17+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2015/03/01/kobe-dot-r-no-15</id>
+    <id>http://blog.shigepon.info/blog/2015/03/01/kobe-dot-r-no-15</id>
     <content type="html"><![CDATA[<p>勉強会の話なので丁寧語で。2/28に<a href="https://kobexr.doorkeeper.jp/events/20843">Kobe.R #15</a>があったので参加してきました。今回は三宮で開かれました。今回は珍しく（？）Rの話題が多いR勉強会でした。抜けてる点もちょいちょいあると思いますが、覚えている限りの感想を書いておきます。</p>
 
 <h2>Rによるデータ処理入門</h2>
@@ -72,9 +72,9 @@ Twitterでインなんとかとか言っちゃいましたが、インキャン�
   
   <entry>
     <title type="html"><![CDATA[Kobe.R no 13に参加してきました]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/11/25/kobe-dot-r-no-13/"/>
+    <link href="http://blog.shigepon.info/blog/2014/11/25/kobe-dot-r-no-13/"/>
     <updated>2014-11-25T23:33:42+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/11/25/kobe-dot-r-no-13</id>
+    <id>http://blog.shigepon.info/blog/2014/11/25/kobe-dot-r-no-13</id>
     <content type="html"><![CDATA[<p>勉強会の話なので丁寧語で。11/24に<a href="http://kobexr.doorkeeper.jp/events/16989">Kobe.R #13</a>があったので参加してきました。<a href="http://blog.shigepon.info/blog/2014/10/28/kobe-dot-r-no-12/">前回</a>は大阪だったのですが今回は三宮で開かれました。今回はオープンデータ特集ということで、Rのネタもちょびっとある予定だったのですが、話がいっぱいあって結局オープンデータの話のみとなりました。Rネタだけでなく、データを扱う全般を範囲としているKobe.Rならではです。</p>
 
 <p>内容盛りだくさんなので、毎度忘れてる人や内容があって申し訳ないですが、感想です。</p>
@@ -150,9 +150,9 @@ PREFIX prop-ja: <a href="http://ja.dbpedia.org/property/">http://ja.dbpedia.org/
   
   <entry>
     <title type="html"><![CDATA[Kobe.R #12に参加しました]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/10/28/kobe-dot-r-no-12/"/>
+    <link href="http://blog.shigepon.info/blog/2014/10/28/kobe-dot-r-no-12/"/>
     <updated>2014-10-28T08:13:51+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/10/28/kobe-dot-r-no-12</id>
+    <id>http://blog.shigepon.info/blog/2014/10/28/kobe-dot-r-no-12</id>
     <content type="html"><![CDATA[<p>勉強会の話なので丁寧語で。10/26に<a href="http://kobexr.doorkeeper.jp/events/16101">Kobe.R #12</a>があったので参加してきました。神戸で定期的に開催されているRの勉強会です。今回はたまたま大阪で開かれました。前回と同様誰がされたか名前を記憶していなかったりするので、とりあえず内容だけ紹介します。</p>
 
 <h2>回帰分析の基礎</h2>
@@ -191,9 +191,9 @@ PREFIX prop-ja: <a href="http://ja.dbpedia.org/property/">http://ja.dbpedia.org/
   
   <entry>
     <title type="html"><![CDATA[Kobe.R #9に参加しました]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/09/22/kobe-dot-r-number-9/"/>
+    <link href="http://blog.shigepon.info/blog/2014/09/22/kobe-dot-r-number-9/"/>
     <updated>2014-09-22T20:42:57+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/09/22/kobe-dot-r-number-9</id>
+    <id>http://blog.shigepon.info/blog/2014/09/22/kobe-dot-r-number-9</id>
     <content type="html"><![CDATA[<p>勉強会の話なので丁寧語で。9/20に<a href="http://kobexr.doorkeeper.jp/events/14808">Kobe.R #9</a>があったので参加してきました。大阪で定期的に開催されているRの勉強会です。内容はRに限らず、統計処理をやる上で大事なことを扱うという感じでした。発表は誰がされたか名前を記憶していなかったりするので、とりあえず内容だけ照会します。</p>
 
 <h2>Statistical Disclosure Controlの紹介</h2>

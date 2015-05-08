@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: PostgreSQL | shigeponが関心のある技術情報など]]></title>
-  <link href="http://blog.shigepon.com/blog/categories/postgresql/atom.xml" rel="self"/>
-  <link href="http://blog.shigepon.com/"/>
-  <updated>2015-05-08T09:05:59+09:00</updated>
-  <id>http://blog.shigepon.com/</id>
+  <link href="http://blog.shigepon.info/blog/categories/postgresql/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.info/"/>
+  <updated>2015-05-08T09:11:43+09:00</updated>
+  <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずDjangoプロジェクトとアプリを作ってみた]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/06/18/start-django-project/"/>
+    <link href="http://blog.shigepon.info/blog/2014/06/18/start-django-project/"/>
     <updated>2014-06-18T12:49:29+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/06/18/start-django-project</id>
+    <id>http://blog.shigepon.info/blog/2014/06/18/start-django-project</id>
     <content type="html"><![CDATA[<p>Djangoはプロジェクトを作っておいて、アプリ毎に細かく機能を分けて、プロジェクトで統合するみたいな形式を取るみたい。なのでまずはDjangoプロジェクトを作成</p>
 
 <p><code>sh
@@ -118,9 +118,9 @@ bocho/
   
   <entry>
     <title type="html"><![CDATA[ubuntuでodbcを用いてpostgresqlにアクセスする]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/05/12/access-postgresql-through-odbc-ubuntu/"/>
+    <link href="http://blog.shigepon.info/blog/2014/05/12/access-postgresql-through-odbc-ubuntu/"/>
     <updated>2014-05-12T22:11:33+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/05/12/access-postgresql-through-odbc-ubuntu</id>
+    <id>http://blog.shigepon.info/blog/2014/05/12/access-postgresql-through-odbc-ubuntu</id>
     <content type="html"><![CDATA[<p>なでしこ2のテストのためにubuntuにodbcドライバをインストールしたりしたのでメモ</p>
 
 <h2>odbcドライバのインストール</h2>
@@ -150,9 +150,9 @@ $ isql -v DSN (UID (PWD))
   
   <entry>
     <title type="html"><![CDATA[Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(4):ビューにBootstrapを使う]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/03/14/a-way-of-creating-rails-application4/"/>
+    <link href="http://blog.shigepon.info/blog/2014/03/14/a-way-of-creating-rails-application4/"/>
     <updated>2014-03-14T09:10:41+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/03/14/a-way-of-creating-rails-application4</id>
+    <id>http://blog.shigepon.info/blog/2014/03/14/a-way-of-creating-rails-application4</id>
     <content type="html"><![CDATA[<p>参考にした記事URL一覧</p>
 
 <ul>
@@ -213,9 +213,9 @@ body {padding-top:60px;}
   
   <entry>
     <title type="html"><![CDATA[Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データ一覧ページを作って、詳細ページへのリンクを貼る]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/03/10/a-way-of-creating-rails-application3/"/>
+    <link href="http://blog.shigepon.info/blog/2014/03/10/a-way-of-creating-rails-application3/"/>
     <updated>2014-03-10T18:10:41+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/03/10/a-way-of-creating-rails-application3</id>
+    <id>http://blog.shigepon.info/blog/2014/03/10/a-way-of-creating-rails-application3</id>
     <content type="html"><![CDATA[<p>参考にした記事URL一覧</p>
 
 <ul>
@@ -310,9 +310,9 @@ app/views/events/index.html.erbを次のように書き換える</p>
   
   <entry>
     <title type="html"><![CDATA[Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(2):データベースにPostgreSQLを使ってみた]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/03/10/a-way-of-creating-rails-application2/"/>
+    <link href="http://blog.shigepon.info/blog/2014/03/10/a-way-of-creating-rails-application2/"/>
     <updated>2014-03-10T18:10:41+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/03/10/a-way-of-creating-rails-application2</id>
+    <id>http://blog.shigepon.info/blog/2014/03/10/a-way-of-creating-rails-application2</id>
     <content type="html"><![CDATA[<p>参考にした記事URL一覧</p>
 
 <ul>

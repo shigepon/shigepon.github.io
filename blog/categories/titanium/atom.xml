@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Titanium | shigeponが関心のある技術情報など]]></title>
-  <link href="http://blog.shigepon.com/blog/categories/titanium/atom.xml" rel="self"/>
-  <link href="http://blog.shigepon.com/"/>
-  <updated>2015-05-08T09:05:59+09:00</updated>
-  <id>http://blog.shigepon.com/</id>
+  <link href="http://blog.shigepon.info/blog/categories/titanium/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.info/"/>
+  <updated>2015-05-08T09:11:43+09:00</updated>
+  <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Titanium Mobileのプロジェクトをアドホック配信する時にテストしてもらうユーザーを追加する]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/12/08/add-uuid-to-titanium-mobile-project/"/>
+    <link href="http://blog.shigepon.info/blog/2014/12/08/add-uuid-to-titanium-mobile-project/"/>
     <updated>2014-12-08T01:42:49+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/12/08/add-uuid-to-titanium-mobile-project</id>
+    <id>http://blog.shigepon.info/blog/2014/12/08/add-uuid-to-titanium-mobile-project</id>
     <content type="html"><![CDATA[<p>追記：UUIDと書いてたのはUDIDの間違いでした！恥ずかしー。ご指摘いただいた@key3さんありがとうございました！</p>
 
 <p>いやー色々ぐぐっても大変だったし、これからも結構な頻度でやりそうなのでメモ。</p>
@@ -57,9 +57,9 @@
   
   <entry>
     <title type="html"><![CDATA[Titanium Mobileメモ]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/11/23/titanium-mobile-memo/"/>
+    <link href="http://blog.shigepon.info/blog/2014/11/23/titanium-mobile-memo/"/>
     <updated>2014-11-23T09:48:44+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/11/23/titanium-mobile-memo</id>
+    <id>http://blog.shigepon.info/blog/2014/11/23/titanium-mobile-memo</id>
     <content type="html"><![CDATA[<p>Titanium Mobileに関するメモ</p>
 
 <h2>アプリ固有の設定を登録する</h2>
@@ -98,9 +98,9 @@ hoge = Ti.App.Properties.getString("hoge");//取得
   
   <entry>
     <title type="html"><![CDATA[Titanium MobileとDjangoでAjax認証を行う]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/11/20/titanium-ajax-post-to-django/"/>
+    <link href="http://blog.shigepon.info/blog/2014/11/20/titanium-ajax-post-to-django/"/>
     <updated>2014-11-20T09:42:26+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/11/20/titanium-ajax-post-to-django</id>
+    <id>http://blog.shigepon.info/blog/2014/11/20/titanium-ajax-post-to-django</id>
     <content type="html"><![CDATA[<p>最近Titanium Mobile使ってスマホアプリを作ろうかなと思って色々試してるんだけど、ログイン認証する時にはまったので、メモ</p>
 
 <p>参考<a href="http://stackoverflow.com/questions/26022797/in-appcelerator-titanium-how-can-i-get-djangos-csrf-token">In Appcelerator Titanium, how can I get Django&rsquo;s CSRF token?(Stack Overflow)</a></p>

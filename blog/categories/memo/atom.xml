@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: memo | shigeponが関心のある技術情報など]]></title>
-  <link href="http://blog.shigepon.com/blog/categories/memo/atom.xml" rel="self"/>
-  <link href="http://blog.shigepon.com/"/>
-  <updated>2015-05-08T09:05:59+09:00</updated>
-  <id>http://blog.shigepon.com/</id>
+  <link href="http://blog.shigepon.info/blog/categories/memo/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.info/"/>
+  <updated>2015-05-08T09:11:43+09:00</updated>
+  <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[uwsgiメモ]]></title>
-    <link href="http://blog.shigepon.com/blog/2015/03/05/uwsgi-memo/"/>
+    <link href="http://blog.shigepon.info/blog/2015/03/05/uwsgi-memo/"/>
     <updated>2015-03-05T10:21:54+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2015/03/05/uwsgi-memo</id>
+    <id>http://blog.shigepon.info/blog/2015/03/05/uwsgi-memo</id>
     <content type="html"><![CDATA[<p>uwsgi関連ではまった点などをメモ</p>
 
 <h2>invalid request block size</h2>
@@ -42,9 +42,9 @@ buffer-size= xxxx
   
   <entry>
     <title type="html"><![CDATA[Titanium Mobileメモ]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/11/23/titanium-mobile-memo/"/>
+    <link href="http://blog.shigepon.info/blog/2014/11/23/titanium-mobile-memo/"/>
     <updated>2014-11-23T09:48:44+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/11/23/titanium-mobile-memo</id>
+    <id>http://blog.shigepon.info/blog/2014/11/23/titanium-mobile-memo</id>
     <content type="html"><![CDATA[<p>Titanium Mobileに関するメモ</p>
 
 <h2>アプリ固有の設定を登録する</h2>
@@ -83,9 +83,9 @@ hoge = Ti.App.Properties.getString("hoge");//取得
   
   <entry>
     <title type="html"><![CDATA[git memo]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/04/09/git-memo/"/>
+    <link href="http://blog.shigepon.info/blog/2014/04/09/git-memo/"/>
     <updated>2014-04-09T12:36:49+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/04/09/git-memo</id>
+    <id>http://blog.shigepon.info/blog/2014/04/09/git-memo</id>
     <content type="html"><![CDATA[<p>git関連のメモ</p>
 
 <h3>変更履歴を見る</h3>
@@ -192,9 +192,9 @@ $ git checkout -b issue-local remotes/origin/issue
   
   <entry>
     <title type="html"><![CDATA[nginx memo]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/03/20/nginx-memo/"/>
+    <link href="http://blog.shigepon.info/blog/2014/03/20/nginx-memo/"/>
     <updated>2014-03-20T16:04:53+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/03/20/nginx-memo</id>
+    <id>http://blog.shigepon.info/blog/2014/03/20/nginx-memo</id>
     <content type="html"><![CDATA[<h2>Nginxで503コードのページをカスタマイズする</h2>
 
 <p>なるべく手軽にメンテナンスページを出すための手順</p>
@@ -240,9 +240,9 @@ server {</p>
   
   <entry>
     <title type="html"><![CDATA[rhaco3 memo]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/03/15/rhaco3-memo/"/>
+    <link href="http://blog.shigepon.info/blog/2014/03/15/rhaco3-memo/"/>
     <updated>2014-03-15T13:28:55+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/03/15/rhaco3-memo</id>
+    <id>http://blog.shigepon.info/blog/2014/03/15/rhaco3-memo</id>
     <content type="html"><![CDATA[<p>rhaco3を使ってる人なんて世界で何人居るのかなと思いつつ、あまりに情報が少ないので、メモ書きしていく。
 大きめネタは別記事にまとめるが小さいネタはここに追記する。</p>
 

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: unity | shigeponが関心のある技術情報など]]></title>
-  <link href="http://blog.shigepon.com/blog/categories/unity/atom.xml" rel="self"/>
-  <link href="http://blog.shigepon.com/"/>
-  <updated>2015-05-08T09:05:59+09:00</updated>
-  <id>http://blog.shigepon.com/</id>
+  <link href="http://blog.shigepon.info/blog/categories/unity/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.info/"/>
+  <updated>2015-05-08T09:11:43+09:00</updated>
+  <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[unity memo]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/02/10/unity-memo/"/>
+    <link href="http://blog.shigepon.info/blog/2014/02/10/unity-memo/"/>
     <updated>2014-02-10T23:25:11+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/02/10/unity-memo</id>
+    <id>http://blog.shigepon.info/blog/2014/02/10/unity-memo</id>
     <content type="html"><![CDATA[<p>unity使ってこれから何か作っていこうと思うのでめも。</p>
 
 <h3>最初にやったこと</h3>

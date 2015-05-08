@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Bootstrap | shigeponが関心のある技術情報など]]></title>
-  <link href="http://blog.shigepon.com/blog/categories/bootstrap/atom.xml" rel="self"/>
-  <link href="http://blog.shigepon.com/"/>
-  <updated>2015-05-08T09:05:59+09:00</updated>
-  <id>http://blog.shigepon.com/</id>
+  <link href="http://blog.shigepon.info/blog/categories/bootstrap/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.info/"/>
+  <updated>2015-05-08T09:11:43+09:00</updated>
+  <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[use bootstrap3 in django]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/12/18/use-bootstrap3-in-django/"/>
+    <link href="http://blog.shigepon.info/blog/2014/12/18/use-bootstrap3-in-django/"/>
     <updated>2014-12-18T08:24:56+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/12/18/use-bootstrap3-in-django</id>
+    <id>http://blog.shigepon.info/blog/2014/12/18/use-bootstrap3-in-django</id>
     <content type="html"><![CDATA[<p>そろそろbootstrap3を使ってみたいなと思い、Djangoでbootstrap3を使う方法を調べてみた。django-bootstrap-toolkitのページを見てみるとdjango-bootstrap3を使ってねと書いてあるので、それを使ってみることにした。</p>
 
 <h2>インストール</h2>
@@ -86,9 +86,9 @@ BOOTSTRAP3 = {</p>
   
   <entry>
     <title type="html"><![CDATA[javascriptでカレンダーを書くライブラリを調べてみた]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/12/17/check-table-library/"/>
+    <link href="http://blog.shigepon.info/blog/2014/12/17/check-table-library/"/>
     <updated>2014-12-17T13:37:38+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/12/17/check-table-library</id>
+    <id>http://blog.shigepon.info/blog/2014/12/17/check-table-library</id>
     <content type="html"><![CDATA[<p>Django使ったサイトでカレンダーを表示しようとしたんだけど、HTMLCalendarとかだとレスポンシブにならないし、カスタマイズ面倒だしということで、javascriptで生成して、イベントデータはajaxリクエストから取り出すようにしたいと思ってライブラリを調べてみたのと感想を書いておく。結論からすると、FullCalendarが汎用的で使えそう。</p>
 
 <h2>Zabuto Calendar</h2>
@@ -124,9 +124,9 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
   
   <entry>
     <title type="html"><![CDATA[Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/07/02/django-show-list-with-paging/"/>
+    <link href="http://blog.shigepon.info/blog/2014/07/02/django-show-list-with-paging/"/>
     <updated>2014-07-02T11:51:44+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/07/02/django-show-list-with-paging</id>
+    <id>http://blog.shigepon.info/blog/2014/07/02/django-show-list-with-paging</id>
     <content type="html"><![CDATA[<h2>データの一覧表示</h2>
 
 <p>あとで参考ページとか追記する予定。
@@ -263,9 +263,9 @@ urlpatterns = patterns(&rdquo;,</p>
   
   <entry>
     <title type="html"><![CDATA[Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(2):Bootstrapを使ってみる]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/06/25/django-with-bootstrap/"/>
+    <link href="http://blog.shigepon.info/blog/2014/06/25/django-with-bootstrap/"/>
     <updated>2014-06-25T21:41:23+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/06/25/django-with-bootstrap</id>
+    <id>http://blog.shigepon.info/blog/2014/06/25/django-with-bootstrap</id>
     <content type="html"><![CDATA[<p>テンプレートにBootstrapを当てはめたいので、Bootstrap関連のパッケージを探してみた。ググってみて<a href="https://github.com/dyve/django-bootstrap-toolkit">django-bootstrap-toolkit</a>が良さそうかなと思ったので、使ってみた。</p>
 
 <p>インストール</p>
@@ -301,9 +301,9 @@ $ pip install django-bootstrap-toolkit
   
   <entry>
     <title type="html"><![CDATA[Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(4):ビューにBootstrapを使う]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/03/14/a-way-of-creating-rails-application4/"/>
+    <link href="http://blog.shigepon.info/blog/2014/03/14/a-way-of-creating-rails-application4/"/>
     <updated>2014-03-14T09:10:41+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/03/14/a-way-of-creating-rails-application4</id>
+    <id>http://blog.shigepon.info/blog/2014/03/14/a-way-of-creating-rails-application4</id>
     <content type="html"><![CDATA[<p>参考にした記事URL一覧</p>
 
 <ul>

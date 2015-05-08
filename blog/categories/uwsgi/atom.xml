@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: uwsgi | shigeponが関心のある技術情報など]]></title>
-  <link href="http://blog.shigepon.com/blog/categories/uwsgi/atom.xml" rel="self"/>
-  <link href="http://blog.shigepon.com/"/>
-  <updated>2015-05-08T09:05:59+09:00</updated>
-  <id>http://blog.shigepon.com/</id>
+  <link href="http://blog.shigepon.info/blog/categories/uwsgi/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.info/"/>
+  <updated>2015-05-08T09:11:43+09:00</updated>
+  <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[uwsgiメモ]]></title>
-    <link href="http://blog.shigepon.com/blog/2015/03/05/uwsgi-memo/"/>
+    <link href="http://blog.shigepon.info/blog/2015/03/05/uwsgi-memo/"/>
     <updated>2015-03-05T10:21:54+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2015/03/05/uwsgi-memo</id>
+    <id>http://blog.shigepon.info/blog/2015/03/05/uwsgi-memo</id>
     <content type="html"><![CDATA[<p>uwsgi関連ではまった点などをメモ</p>
 
 <h2>invalid request block size</h2>

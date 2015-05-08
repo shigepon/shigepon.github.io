@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: PHP | shigeponが関心のある技術情報など]]></title>
-  <link href="http://blog.shigepon.com/blog/categories/php/atom.xml" rel="self"/>
-  <link href="http://blog.shigepon.com/"/>
-  <updated>2015-05-08T09:05:59+09:00</updated>
-  <id>http://blog.shigepon.com/</id>
+  <link href="http://blog.shigepon.info/blog/categories/php/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.info/"/>
+  <updated>2015-05-08T09:11:43+09:00</updated>
+  <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[突然サーバエラーが頻発したので、調べてみたらエラーログが原因だった]]></title>
-    <link href="http://blog.shigepon.com/blog/2015/03/03/error-log-make-php-error/"/>
+    <link href="http://blog.shigepon.info/blog/2015/03/03/error-log-make-php-error/"/>
     <updated>2015-03-03T09:56:56+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2015/03/03/error-log-make-php-error</id>
+    <id>http://blog.shigepon.info/blog/2015/03/03/error-log-make-php-error</id>
     <content type="html"><![CDATA[<p>参考：<a href="http://zapanet.info/blog/item/2489">PHPのエラーログが肥大してPHPが動かなくなった話</a></p>
 
 <p>ある日、運用しているサービスがサーバエラーを頻出しだしたので、調べてみた。環境はUbuntu、nginx、php-fpm、postgresql。</p>

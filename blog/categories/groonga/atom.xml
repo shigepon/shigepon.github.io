@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Groonga | shigeponが関心のある技術情報など]]></title>
-  <link href="http://blog.shigepon.com/blog/categories/groonga/atom.xml" rel="self"/>
-  <link href="http://blog.shigepon.com/"/>
-  <updated>2015-05-08T09:05:59+09:00</updated>
-  <id>http://blog.shigepon.com/</id>
+  <link href="http://blog.shigepon.info/blog/categories/groonga/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.info/"/>
+  <updated>2015-05-08T09:11:43+09:00</updated>
+  <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[全文検索エンジンGroongaユーザ勉強会＠神戸に参加しました]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/06/28/groonga-study-kobe-2014-06-27/"/>
+    <link href="http://blog.shigepon.info/blog/2014/06/28/groonga-study-kobe-2014-06-27/"/>
     <updated>2014-06-28T13:24:22+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/06/28/groonga-study-kobe-2014-06-27</id>
+    <id>http://blog.shigepon.info/blog/2014/06/28/groonga-study-kobe-2014-06-27</id>
     <content type="html"><![CDATA[<p>自分の話でなく、他人の話なので丁寧語で。
 6月27日に<a href="http://koberoonga.doorkeeper.jp/events/11578">Groongaユーザー勉強会＠神戸</a>に参加しました。ブログに書くまでが勉強会だったのを久々に思い出したので、感想書いてみます。</p>
 

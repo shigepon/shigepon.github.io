@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Rails | shigeponが関心のある技術情報など]]></title>
-  <link href="http://blog.shigepon.com/blog/categories/rails/atom.xml" rel="self"/>
-  <link href="http://blog.shigepon.com/"/>
-  <updated>2015-05-08T09:05:59+09:00</updated>
-  <id>http://blog.shigepon.com/</id>
+  <link href="http://blog.shigepon.info/blog/categories/rails/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.info/"/>
+  <updated>2015-05-08T09:11:43+09:00</updated>
+  <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[find by sqlでプリペアードステートメントを使う]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/05/28/use-prepared-statement-in-find-by-sql/"/>
+    <link href="http://blog.shigepon.info/blog/2014/05/28/use-prepared-statement-in-find-by-sql/"/>
     <updated>2014-05-28T08:19:12+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/05/28/use-prepared-statement-in-find-by-sql</id>
+    <id>http://blog.shigepon.info/blog/2014/05/28/use-prepared-statement-in-find-by-sql</id>
     <content type="html"><![CDATA[<p>ActiveRecordは便利なのかどうか知らないけど、allなどのメソッドで:conditionとかで?を使うことが出来る。だけど、sqlを直接打ちたいケースは必ず出てくるので、その時に?使いたいなと思ったけど、なかなか例文が無かった。</p>
 
 <p>んで結局こうするといいみたい。</p>
@@ -38,9 +38,9 @@ ActiveRecord::Base.connection.raw_connection.exec("select * from hoge where fuga
   
   <entry>
     <title type="html"><![CDATA[Railsでurl forを使ったらshows proxy passで設定したURLになってしまう件]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/05/05/rails-url-for-shows-proxy-pass/"/>
+    <link href="http://blog.shigepon.info/blog/2014/05/05/rails-url-for-shows-proxy-pass/"/>
     <updated>2014-05-05T14:00:54+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/05/05/rails-url-for-shows-proxy-pass</id>
+    <id>http://blog.shigepon.info/blog/2014/05/05/rails-url-for-shows-proxy-pass</id>
     <content type="html"><![CDATA[<p>Nginx, Unicorn, Rails4でurl_forを使ったら変なURLになってしまったので対処法を書いておく</p>
 
 <p>Ninxで</p>
@@ -76,9 +76,9 @@ proxy_set_header Host http://hoge.com
   
   <entry>
     <title type="html"><![CDATA[Capistrano3でbitbucketからデプロイしようとしたらハマった話]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/"/>
+    <link href="http://blog.shigepon.info/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/"/>
     <updated>2014-05-04T10:04:00+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket</id>
+    <id>http://blog.shigepon.info/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket</id>
     <content type="html"><![CDATA[<p>まだデプロイ作業を途中までしか確認していないので、とりあえずハマったポイントを書いておく。
  デプロイ作業をテストしてみたらこんなエラーが出た</p>
 
@@ -194,9 +194,9 @@ $ bundle exec unicorn_rails -E production
   
   <entry>
     <title type="html"><![CDATA[nginx,unicornをさくらvpsにインストールしてrailsアプリを手動でデプロイしてみる]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/05/02/use-nginxand-unicorn-on-sakura-vps/"/>
+    <link href="http://blog.shigepon.info/blog/2014/05/02/use-nginxand-unicorn-on-sakura-vps/"/>
     <updated>2014-05-02T15:10:23+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/05/02/use-nginxand-unicorn-on-sakura-vps</id>
+    <id>http://blog.shigepon.info/blog/2014/05/02/use-nginxand-unicorn-on-sakura-vps</id>
     <content type="html"><![CDATA[<p>さくらvpsのUbuntu12.04にnginxとunicornをインストールしてローカル環境に作ったRailsアプリを手動でアップロードして表示させてみた。何となくユニコーンって名前が好きなので、unicornを使うことにした。</p>
 
 <h2>nginxインストール</h2>
@@ -288,9 +288,9 @@ $ service nginx start
   
   <entry>
     <title type="html"><![CDATA[Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(4):ビューにBootstrapを使う]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/03/14/a-way-of-creating-rails-application4/"/>
+    <link href="http://blog.shigepon.info/blog/2014/03/14/a-way-of-creating-rails-application4/"/>
     <updated>2014-03-14T09:10:41+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/03/14/a-way-of-creating-rails-application4</id>
+    <id>http://blog.shigepon.info/blog/2014/03/14/a-way-of-creating-rails-application4</id>
     <content type="html"><![CDATA[<p>参考にした記事URL一覧</p>
 
 <ul>

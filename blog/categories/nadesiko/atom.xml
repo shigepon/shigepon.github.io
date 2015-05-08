@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: nadesiko | shigeponが関心のある技術情報など]]></title>
-  <link href="http://blog.shigepon.com/blog/categories/nadesiko/atom.xml" rel="self"/>
-  <link href="http://blog.shigepon.com/"/>
-  <updated>2015-05-08T09:05:59+09:00</updated>
-  <id>http://blog.shigepon.com/</id>
+  <link href="http://blog.shigepon.info/blog/categories/nadesiko/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.info/"/>
+  <updated>2015-05-08T09:11:43+09:00</updated>
+  <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[ubuntuでodbcを用いてpostgresqlにアクセスする]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/05/12/access-postgresql-through-odbc-ubuntu/"/>
+    <link href="http://blog.shigepon.info/blog/2014/05/12/access-postgresql-through-odbc-ubuntu/"/>
     <updated>2014-05-12T22:11:33+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/05/12/access-postgresql-through-odbc-ubuntu</id>
+    <id>http://blog.shigepon.info/blog/2014/05/12/access-postgresql-through-odbc-ubuntu</id>
     <content type="html"><![CDATA[<p>なでしこ2のテストのためにubuntuにodbcドライバをインストールしたりしたのでメモ</p>
 
 <h2>odbcドライバのインストール</h2>
@@ -47,9 +47,9 @@ $ isql -v DSN (UID (PWD))
   
   <entry>
     <title type="html"><![CDATA[なでしこで実行ファイルを作る時のメモ]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/01/30/nadesiko-make-exe/"/>
+    <link href="http://blog.shigepon.info/blog/2014/01/30/nadesiko-make-exe/"/>
     <updated>2014-01-30T09:22:46+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/01/30/nadesiko-make-exe</id>
+    <id>http://blog.shigepon.info/blog/2014/01/30/nadesiko-make-exe</id>
     <content type="html"><![CDATA[<ul>
 <li>パックファイル作る時はメインになるファイルだけnadesiko.nakoというパック名にして、その他はファイル名自身をパック名とする</li>
 <li>データを埋め込む場合は、そのデータを呼び出す時にフルパスにしない。データが無いと言われる。</li>
@@ -66,9 +66,9 @@ $ isql -v DSN (UID (PWD))
   
   <entry>
     <title type="html"><![CDATA[なでしこ2のプラグインを作る方法]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/01/29/nadesiko2-make-plugin/"/>
+    <link href="http://blog.shigepon.info/blog/2014/01/29/nadesiko2-make-plugin/"/>
     <updated>2014-01-29T09:49:17+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/01/29/nadesiko2-make-plugin</id>
+    <id>http://blog.shigepon.info/blog/2014/01/29/nadesiko2-make-plugin</id>
     <content type="html"><![CDATA[<p>なでしこ2でプラグインを作りたい人向けというニッチすぎるネタです。現在なでしこの時期バージョンなでしこ2が開発中です(えらい長いこと開発中です)が、構文の実装がある程度終わっているので、プラグインを開発することが出来ます。try catchの実装どうするかなーとか考えて進んでないですが、それはそれ。</p>
 
 <p>なでしこ2はC#で組まれているので、プラグインもC#で組むことができます。</p>
@@ -147,9 +147,9 @@ Object o = info.StackPop();//配列の場合はこれを使う
   
   <entry>
     <title type="html"><![CDATA[C#で作ったdllをなでしこで使う]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin-cs2/"/>
+    <link href="http://blog.shigepon.info/blog/2014/01/28/nadesiko-plugin-cs2/"/>
     <updated>2014-01-28T22:42:43+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin-cs2</id>
+    <id>http://blog.shigepon.info/blog/2014/01/28/nadesiko-plugin-cs2</id>
     <content type="html"><![CDATA[<p>C#のdllを呼び出せるように、C#のdllを参照した後、Plugin.cppの一部を以下のように書き換えました</p>
 
 <p>```
@@ -193,9 +193,9 @@ nako_addFunction(&amp;quot;sample01&amp;quot;&amp;cedil;&amp;quot;&amp;quot;&amp
   
   <entry>
     <title type="html"><![CDATA[C#で作ったdllをC++/CLIで使う]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin-cs/"/>
+    <link href="http://blog.shigepon.info/blog/2014/01/28/nadesiko-plugin-cs/"/>
     <updated>2014-01-28T22:27:58+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/01/28/nadesiko-plugin-cs</id>
+    <id>http://blog.shigepon.info/blog/2014/01/28/nadesiko-plugin-cs</id>
     <content type="html"><![CDATA[<p><strong>画像やファイルが無くなっていますがご了承下さい</strong></p>
 
 <p>なでしこでプラグインを作る時にC#を使いたかったので、本格的にdllを作る前に、C++/CLIからMessageBoxを表示する程度のC#のdllを呼び出してみました。</p>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: nadesiko2 | shigeponが関心のある技術情報など]]></title>
-  <link href="http://blog.shigepon.com/blog/categories/nadesiko2/atom.xml" rel="self"/>
-  <link href="http://blog.shigepon.com/"/>
-  <updated>2015-05-08T09:05:59+09:00</updated>
-  <id>http://blog.shigepon.com/</id>
+  <link href="http://blog.shigepon.info/blog/categories/nadesiko2/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.info/"/>
+  <updated>2015-05-08T09:11:43+09:00</updated>
+  <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[なでしこ2をubuntu cuiでテストする]]></title>
-    <link href="http://blog.shigepon.com/blog/2015/05/05/nunit-console-test-for-nadesiko2/"/>
+    <link href="http://blog.shigepon.info/blog/2015/05/05/nunit-console-test-for-nadesiko2/"/>
     <updated>2015-05-05T23:02:32+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2015/05/05/nunit-console-test-for-nadesiko2</id>
+    <id>http://blog.shigepon.info/blog/2015/05/05/nunit-console-test-for-nadesiko2</id>
     <content type="html"><![CDATA[<p><a href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">ubuntuのcui環境でなでしこ2をビルドする</a>の続きで、cui環境でなでしこ2のテストを実行してみる。</p>
 
 <p>cui環境でnunitを実行するには<a href="http://www.nunit.org/index.php?p=nunit-console&amp;r=2.5.10">nunit-console</a>を使う。なでしこ2のテストを実行するにはテスト関連のdllをnunitで実行すると良い。コマンドはなでしこ2をインストールしたディレクトリでこんな感じ。</p>
@@ -45,9 +45,9 @@ $ nunit-console -noshadow NakoPluginTest/bin/Debug/NakoPluginTest.dll
   
   <entry>
     <title type="html"><![CDATA[ubuntuのcui環境でなでしこ2をビルドする]]></title>
-    <link href="http://blog.shigepon.com/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/"/>
+    <link href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/"/>
     <updated>2015-05-01T08:23:00+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui</id>
+    <id>http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui</id>
     <content type="html"><![CDATA[<p>今までmono developでなでしこ2をビルド、テストして、cui環境にアップロードしてたんだけど、面倒になってきたのでcui環境で直接ビルド、テストしてみようと思ったのでついでに開発を始める段階からメモしてみる。</p>
 
 <p>環境はubuntu 12.04とするが、上位バージョンでも問題無いはず</p>
@@ -134,9 +134,9 @@ $ xbuild Nako2_Plugins.sln
   
   <entry>
     <title type="html"><![CDATA[ubuntuのmonoでMicrosoft.VisualBasicが動かない件]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/08/20/vb-not-work-on-ubuntu/"/>
+    <link href="http://blog.shigepon.info/blog/2014/08/20/vb-not-work-on-ubuntu/"/>
     <updated>2014-08-20T13:38:34+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/08/20/vb-not-work-on-ubuntu</id>
+    <id>http://blog.shigepon.info/blog/2014/08/20/vb-not-work-on-ubuntu</id>
     <content type="html"><![CDATA[<p>なでしこ2にコミットしたりしつつ、実際にUbuntu 12.04で使ってみたりしているが、vb系のインポートが出来ないとか何とか言われたのでメモ</p>
 
 <p>参考：<a href="http://stackoverflow.com/questions/10071836/vb-net-not-working-on-ubuntu-10-04-with-mono">.net &ndash; VB.NET Not working on Ubuntu 10.04 With Mono &ndash; Stack Overflow</a></p>
@@ -159,9 +159,9 @@ $ sudo aptitude install mono-vbnc
   
   <entry>
     <title type="html"><![CDATA[なでしこ2のプラグインを作る方法]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/01/29/nadesiko2-make-plugin/"/>
+    <link href="http://blog.shigepon.info/blog/2014/01/29/nadesiko2-make-plugin/"/>
     <updated>2014-01-29T09:49:17+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/01/29/nadesiko2-make-plugin</id>
+    <id>http://blog.shigepon.info/blog/2014/01/29/nadesiko2-make-plugin</id>
     <content type="html"><![CDATA[<p>なでしこ2でプラグインを作りたい人向けというニッチすぎるネタです。現在なでしこの時期バージョンなでしこ2が開発中です(えらい長いこと開発中です)が、構文の実装がある程度終わっているので、プラグインを開発することが出来ます。try catchの実装どうするかなーとか考えて進んでないですが、それはそれ。</p>
 
 <p>なでしこ2はC#で組まれているので、プラグインもC#で組むことができます。</p>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: rhaco | shigeponが関心のある技術情報など]]></title>
-  <link href="http://blog.shigepon.com/blog/categories/rhaco/atom.xml" rel="self"/>
-  <link href="http://blog.shigepon.com/"/>
-  <updated>2015-05-08T09:05:59+09:00</updated>
-  <id>http://blog.shigepon.com/</id>
+  <link href="http://blog.shigepon.info/blog/categories/rhaco/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.info/"/>
+  <updated>2015-05-08T09:11:43+09:00</updated>
+  <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[突然サーバエラーが頻発したので、調べてみたらエラーログが原因だった]]></title>
-    <link href="http://blog.shigepon.com/blog/2015/03/03/error-log-make-php-error/"/>
+    <link href="http://blog.shigepon.info/blog/2015/03/03/error-log-make-php-error/"/>
     <updated>2015-03-03T09:56:56+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2015/03/03/error-log-make-php-error</id>
+    <id>http://blog.shigepon.info/blog/2015/03/03/error-log-make-php-error</id>
     <content type="html"><![CDATA[<p>参考：<a href="http://zapanet.info/blog/item/2489">PHPのエラーログが肥大してPHPが動かなくなった話</a></p>
 
 <p>ある日、運用しているサービスがサーバエラーを頻出しだしたので、調べてみた。環境はUbuntu、nginx、php-fpm、postgresql。</p>
@@ -57,9 +57,9 @@ logrotate -dv /etc/logrotate.d/php.conf
   
   <entry>
     <title type="html"><![CDATA[rhaco3 memo]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/03/15/rhaco3-memo/"/>
+    <link href="http://blog.shigepon.info/blog/2014/03/15/rhaco3-memo/"/>
     <updated>2014-03-15T13:28:55+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/03/15/rhaco3-memo</id>
+    <id>http://blog.shigepon.info/blog/2014/03/15/rhaco3-memo</id>
     <content type="html"><![CDATA[<p>rhaco3を使ってる人なんて世界で何人居るのかなと思いつつ、あまりに情報が少ないので、メモ書きしていく。
 大きめネタは別記事にまとめるが小さいネタはここに追記する。</p>
 
@@ -125,9 +125,9 @@ $app_url = \org\rhaco\Conf::get("org.rhaco.Flow@app_url");
   
   <entry>
     <title type="html"><![CDATA[Basic認証する時に気をつけること]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/02/03/basic-auth/"/>
+    <link href="http://blog.shigepon.info/blog/2014/02/03/basic-auth/"/>
     <updated>2014-02-03T07:48:33+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/02/03/basic-auth</id>
+    <id>http://blog.shigepon.info/blog/2014/02/03/basic-auth</id>
     <content type="html"><![CDATA[<p>rhaco3で作ったWebサービス全体にBasic認証をかけた時にちょっとハマったのでメモ。</p>
 
 <h2>症状</h2>

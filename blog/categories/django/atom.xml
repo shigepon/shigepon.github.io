@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Django | shigeponが関心のある技術情報など]]></title>
-  <link href="http://blog.shigepon.com/blog/categories/django/atom.xml" rel="self"/>
-  <link href="http://blog.shigepon.com/"/>
-  <updated>2015-05-08T09:05:59+09:00</updated>
-  <id>http://blog.shigepon.com/</id>
+  <link href="http://blog.shigepon.info/blog/categories/django/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.info/"/>
+  <updated>2015-05-08T09:11:43+09:00</updated>
+  <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Django 1.6から1.7にアップデートしてみた]]></title>
-    <link href="http://blog.shigepon.com/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/"/>
+    <link href="http://blog.shigepon.info/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/"/>
     <updated>2015-03-09T22:11:02+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7</id>
+    <id>http://blog.shigepon.info/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7</id>
     <content type="html"><![CDATA[<p>Djangoが去年の9月に1.7にバージョンアップしてて、今更ながらアップデートしてみた。色々教えて頂いた<a href="https://twitter.com/key3">@key3</a>さんに感謝！</p>
 
 <p>※注　アップデートの前に必ずデータとかソースとか色々バックアップしておくこと。</p>
@@ -79,9 +79,9 @@ raise RuntimeError("South does not support Django 1.7 or higher. Please use nati
   
   <entry>
     <title type="html"><![CDATA[uwsgiメモ]]></title>
-    <link href="http://blog.shigepon.com/blog/2015/03/05/uwsgi-memo/"/>
+    <link href="http://blog.shigepon.info/blog/2015/03/05/uwsgi-memo/"/>
     <updated>2015-03-05T10:21:54+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2015/03/05/uwsgi-memo</id>
+    <id>http://blog.shigepon.info/blog/2015/03/05/uwsgi-memo</id>
     <content type="html"><![CDATA[<p>uwsgi関連ではまった点などをメモ</p>
 
 <h2>invalid request block size</h2>
@@ -106,9 +106,9 @@ buffer-size= xxxx
   
   <entry>
     <title type="html"><![CDATA[djangoのModelFormでMultiWidgetを使って見る]]></title>
-    <link href="http://blog.shigepon.com/blog/2015/01/24/django-modelform-multiwidget/"/>
+    <link href="http://blog.shigepon.info/blog/2015/01/24/django-modelform-multiwidget/"/>
     <updated>2015-01-24T17:23:07+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2015/01/24/django-modelform-multiwidget</id>
+    <id>http://blog.shigepon.info/blog/2015/01/24/django-modelform-multiwidget</id>
     <content type="html"><![CDATA[<p>ModelFormでModelの１つのカラムを複数のフォーム要素（inputとか）で表現したかったので調べてみた。フォーム要素を適当に作って、clean_xxxの時にくっつけるとかそんな実装の仕方も出来るみたいだけど、MultiWidgetを使うと、Modelの１つのカラムに対して複数のinput要素を使うことが出来るみたいなので、使ってみた。名前のカラムに対して姓、名の入力要素を作るとかそんなのが出来るみたい。</p>
 
 <p>まずはMultiWidgetを継承したクラスを作る</p>
@@ -193,9 +193,9 @@ class HogeForm(forms.ModelForm):</p>
   
   <entry>
     <title type="html"><![CDATA[pythonのデコレーターをdjangoで使って見る]]></title>
-    <link href="http://blog.shigepon.com/blog/2015/01/06/python-decorator/"/>
+    <link href="http://blog.shigepon.info/blog/2015/01/06/python-decorator/"/>
     <updated>2015-01-06T08:55:46+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2015/01/06/python-decorator</id>
+    <id>http://blog.shigepon.info/blog/2015/01/06/python-decorator</id>
     <content type="html"><![CDATA[<p>pythonのデコレーターを使ってみたらとても便利だなと思ったのでメモ</p>
 
 <p>参考にしたページを読んでいくと理解できた。要はデコレーターとして使う関数は引数に呼び出し元の関数を貰っておいて、内部で作った関数を返せば良い。内部の関数は適当に作れるみたい（今のとこそういう理解をしている）。djangoのビューで呼び出したかったので、内部の関数で可変長引数を取れるようにして下のようにしたら動いた。</p>
@@ -240,9 +240,9 @@ def hoge(request):</p>
   
   <entry>
     <title type="html"><![CDATA[use bootstrap3 in django]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/12/18/use-bootstrap3-in-django/"/>
+    <link href="http://blog.shigepon.info/blog/2014/12/18/use-bootstrap3-in-django/"/>
     <updated>2014-12-18T08:24:56+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/12/18/use-bootstrap3-in-django</id>
+    <id>http://blog.shigepon.info/blog/2014/12/18/use-bootstrap3-in-django</id>
     <content type="html"><![CDATA[<p>そろそろbootstrap3を使ってみたいなと思い、Djangoでbootstrap3を使う方法を調べてみた。django-bootstrap-toolkitのページを見てみるとdjango-bootstrap3を使ってねと書いてあるので、それを使ってみることにした。</p>
 
 <h2>インストール</h2>

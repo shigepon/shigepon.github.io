@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
-  <link href="http://blog.shigepon.com/atom.xml" rel="self"/>
-  <link href="http://blog.shigepon.com/"/>
-  <updated>2015-05-08T09:05:59+09:00</updated>
-  <id>http://blog.shigepon.com/</id>
+  <link href="http://blog.shigepon.info/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.info/"/>
+  <updated>2015-05-08T09:11:43+09:00</updated>
+  <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[なでしこ2をubuntu cuiでテストする]]></title>
-    <link href="http://blog.shigepon.com/blog/2015/05/05/nunit-console-test-for-nadesiko2/"/>
+    <link href="http://blog.shigepon.info/blog/2015/05/05/nunit-console-test-for-nadesiko2/"/>
     <updated>2015-05-05T23:02:32+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2015/05/05/nunit-console-test-for-nadesiko2</id>
+    <id>http://blog.shigepon.info/blog/2015/05/05/nunit-console-test-for-nadesiko2</id>
     <content type="html"><![CDATA[<p><a href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">ubuntuのcui環境でなでしこ2をビルドする</a>の続きで、cui環境でなでしこ2のテストを実行してみる。</p>
 
 <p>cui環境でnunitを実行するには<a href="http://www.nunit.org/index.php?p=nunit-console&amp;r=2.5.10">nunit-console</a>を使う。なでしこ2のテストを実行するにはテスト関連のdllをnunitで実行すると良い。コマンドはなでしこ2をインストールしたディレクトリでこんな感じ。</p>
@@ -48,9 +48,9 @@
   
   <entry>
     <title type="html"><![CDATA[ubuntuのcui環境でなでしこ2をビルドする]]></title>
-    <link href="http://blog.shigepon.com/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/"/>
+    <link href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/"/>
     <updated>2015-05-01T08:23:00+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui</id>
+    <id>http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui</id>
     <content type="html"><![CDATA[<p>今までmono developでなでしこ2をビルド、テストして、cui環境にアップロードしてたんだけど、面倒になってきたのでcui環境で直接ビルド、テストしてみようと思ったのでついでに開発を始める段階からメモしてみる。</p>
 
 <p>環境はubuntu 12.04とするが、上位バージョンでも問題無いはず</p>
@@ -147,9 +147,9 @@
   
   <entry>
     <title type="html"><![CDATA[PythonでSparql使ってLinked Open Dataをいじってみた]]></title>
-    <link href="http://blog.shigepon.com/blog/2015/03/19/use-sparql-with-python/"/>
+    <link href="http://blog.shigepon.info/blog/2015/03/19/use-sparql-with-python/"/>
     <updated>2015-03-19T22:07:12+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2015/03/19/use-sparql-with-python</id>
+    <id>http://blog.shigepon.info/blog/2015/03/19/use-sparql-with-python</id>
     <content type="html"><![CDATA[<p>以前<a href="http://blog.shigepon.info/blog/2014/11/25/kobe-dot-r-no-13/">Kobe.R no 13に参加してきました &ndash; shigeponが関心のある技術情報など</a>でLinked Open Dataが気になってたので、Pythonでいじれるライブラリを探してみて遊んでみた。</p>
 
 <p>Sparqlで色々試してみると面白そうなので、pip search sparqlで出た結果とググってみた結果から、SPARQLWrapperが何となく良さげかなと思い、インストールしてみた。</p>
@@ -231,9 +231,9 @@
   
   <entry>
     <title type="html"><![CDATA[Django 1.6から1.7にアップデートしてみた]]></title>
-    <link href="http://blog.shigepon.com/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/"/>
+    <link href="http://blog.shigepon.info/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/"/>
     <updated>2015-03-09T22:11:02+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7</id>
+    <id>http://blog.shigepon.info/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7</id>
     <content type="html"><![CDATA[<p>Djangoが去年の9月に1.7にバージョンアップしてて、今更ながらアップデートしてみた。色々教えて頂いた<a href="https://twitter.com/key3">@key3</a>さんに感謝！</p>
 
 <p>※注　アップデートの前に必ずデータとかソースとか色々バックアップしておくこと。</p>
@@ -300,9 +300,9 @@
   
   <entry>
     <title type="html"><![CDATA[uwsgiメモ]]></title>
-    <link href="http://blog.shigepon.com/blog/2015/03/05/uwsgi-memo/"/>
+    <link href="http://blog.shigepon.info/blog/2015/03/05/uwsgi-memo/"/>
     <updated>2015-03-05T10:21:54+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2015/03/05/uwsgi-memo</id>
+    <id>http://blog.shigepon.info/blog/2015/03/05/uwsgi-memo</id>
     <content type="html"><![CDATA[<p>uwsgi関連ではまった点などをメモ</p>
 
 <h2>invalid request block size</h2>
@@ -333,9 +333,9 @@
   
   <entry>
     <title type="html"><![CDATA[突然サーバエラーが頻発したので、調べてみたらエラーログが原因だった]]></title>
-    <link href="http://blog.shigepon.com/blog/2015/03/03/error-log-make-php-error/"/>
+    <link href="http://blog.shigepon.info/blog/2015/03/03/error-log-make-php-error/"/>
     <updated>2015-03-03T09:56:56+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2015/03/03/error-log-make-php-error</id>
+    <id>http://blog.shigepon.info/blog/2015/03/03/error-log-make-php-error</id>
     <content type="html"><![CDATA[<p>参考：<a href="http://zapanet.info/blog/item/2489">PHPのエラーログが肥大してPHPが動かなくなった話</a></p>
 
 <p>ある日、運用しているサービスがサーバエラーを頻出しだしたので、調べてみた。環境はUbuntu、nginx、php-fpm、postgresql。</p>
@@ -390,9 +390,9 @@
   
   <entry>
     <title type="html"><![CDATA[Kobe.R #15に参加しました]]></title>
-    <link href="http://blog.shigepon.com/blog/2015/03/01/kobe-dot-r-no-15/"/>
+    <link href="http://blog.shigepon.info/blog/2015/03/01/kobe-dot-r-no-15/"/>
     <updated>2015-03-01T10:57:17+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2015/03/01/kobe-dot-r-no-15</id>
+    <id>http://blog.shigepon.info/blog/2015/03/01/kobe-dot-r-no-15</id>
     <content type="html"><![CDATA[<p>勉強会の話なので丁寧語で。2/28に<a href="https://kobexr.doorkeeper.jp/events/20843">Kobe.R #15</a>があったので参加してきました。今回は三宮で開かれました。今回は珍しく（？）Rの話題が多いR勉強会でした。抜けてる点もちょいちょいあると思いますが、覚えている限りの感想を書いておきます。</p>
 
 <h2>Rによるデータ処理入門</h2>
@@ -447,9 +447,9 @@ Twitterでインなんとかとか言っちゃいましたが、インキャン�
   
   <entry>
     <title type="html"><![CDATA[djangoのModelFormでMultiWidgetを使って見る]]></title>
-    <link href="http://blog.shigepon.com/blog/2015/01/24/django-modelform-multiwidget/"/>
+    <link href="http://blog.shigepon.info/blog/2015/01/24/django-modelform-multiwidget/"/>
     <updated>2015-01-24T17:23:07+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2015/01/24/django-modelform-multiwidget</id>
+    <id>http://blog.shigepon.info/blog/2015/01/24/django-modelform-multiwidget</id>
     <content type="html"><![CDATA[<p>ModelFormでModelの１つのカラムを複数のフォーム要素（inputとか）で表現したかったので調べてみた。フォーム要素を適当に作って、clean_xxxの時にくっつけるとかそんな実装の仕方も出来るみたいだけど、MultiWidgetを使うと、Modelの１つのカラムに対して複数のinput要素を使うことが出来るみたいなので、使ってみた。名前のカラムに対して姓、名の入力要素を作るとかそんなのが出来るみたい。</p>
 
 <p>まずはMultiWidgetを継承したクラスを作る</p>
@@ -555,9 +555,9 @@ Twitterでインなんとかとか言っちゃいましたが、インキャン�
   
   <entry>
     <title type="html"><![CDATA[pythonのデコレーターをdjangoで使って見る]]></title>
-    <link href="http://blog.shigepon.com/blog/2015/01/06/python-decorator/"/>
+    <link href="http://blog.shigepon.info/blog/2015/01/06/python-decorator/"/>
     <updated>2015-01-06T08:55:46+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2015/01/06/python-decorator</id>
+    <id>http://blog.shigepon.info/blog/2015/01/06/python-decorator</id>
     <content type="html"><![CDATA[<p>pythonのデコレーターを使ってみたらとても便利だなと思ったのでメモ</p>
 
 <p>参考にしたページを読んでいくと理解できた。要はデコレーターとして使う関数は引数に呼び出し元の関数を貰っておいて、内部で作った関数を返せば良い。内部の関数は適当に作れるみたい（今のとこそういう理解をしている）。djangoのビューで呼び出したかったので、内部の関数で可変長引数を取れるようにして下のようにしたら動いた。</p>
@@ -610,9 +610,9 @@ Twitterでインなんとかとか言っちゃいましたが、インキャン�
   
   <entry>
     <title type="html"><![CDATA[use bootstrap3 in django]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/12/18/use-bootstrap3-in-django/"/>
+    <link href="http://blog.shigepon.info/blog/2014/12/18/use-bootstrap3-in-django/"/>
     <updated>2014-12-18T08:24:56+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/12/18/use-bootstrap3-in-django</id>
+    <id>http://blog.shigepon.info/blog/2014/12/18/use-bootstrap3-in-django</id>
     <content type="html"><![CDATA[<p>そろそろbootstrap3を使ってみたいなと思い、Djangoでbootstrap3を使う方法を調べてみた。django-bootstrap-toolkitのページを見てみるとdjango-bootstrap3を使ってねと書いてあるので、それを使ってみることにした。</p>
 
 <h2>インストール</h2>
@@ -692,9 +692,9 @@ Twitterでインなんとかとか言っちゃいましたが、インキャン�
   
   <entry>
     <title type="html"><![CDATA[javascriptでカレンダーを書くライブラリを調べてみた]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/12/17/check-table-library/"/>
+    <link href="http://blog.shigepon.info/blog/2014/12/17/check-table-library/"/>
     <updated>2014-12-17T13:37:38+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/12/17/check-table-library</id>
+    <id>http://blog.shigepon.info/blog/2014/12/17/check-table-library</id>
     <content type="html"><![CDATA[<p>Django使ったサイトでカレンダーを表示しようとしたんだけど、HTMLCalendarとかだとレスポンシブにならないし、カスタマイズ面倒だしということで、javascriptで生成して、イベントデータはajaxリクエストから取り出すようにしたいと思ってライブラリを調べてみたのと感想を書いておく。結論からすると、FullCalendarが汎用的で使えそう。</p>
 
 <h2>Zabuto Calendar</h2>
@@ -730,9 +730,9 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
   
   <entry>
     <title type="html"><![CDATA[Titanium Mobileのプロジェクトをアドホック配信する時にテストしてもらうユーザーを追加する]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/12/08/add-uuid-to-titanium-mobile-project/"/>
+    <link href="http://blog.shigepon.info/blog/2014/12/08/add-uuid-to-titanium-mobile-project/"/>
     <updated>2014-12-08T01:42:49+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/12/08/add-uuid-to-titanium-mobile-project</id>
+    <id>http://blog.shigepon.info/blog/2014/12/08/add-uuid-to-titanium-mobile-project</id>
     <content type="html"><![CDATA[<p>追記：UUIDと書いてたのはUDIDの間違いでした！恥ずかしー。ご指摘いただいた@key3さんありがとうございました！</p>
 
 <p>いやー色々ぐぐっても大変だったし、これからも結構な頻度でやりそうなのでメモ。</p>
@@ -772,9 +772,9 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
   
   <entry>
     <title type="html"><![CDATA[Southをすでにあるプロジェクトに適用する]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/11/30/use-south-to-existing-project/"/>
+    <link href="http://blog.shigepon.info/blog/2014/11/30/use-south-to-existing-project/"/>
     <updated>2014-11-30T23:19:26+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/11/30/use-south-to-existing-project</id>
+    <id>http://blog.shigepon.info/blog/2014/11/30/use-south-to-existing-project</id>
     <content type="html"><![CDATA[<p>Southってのを使うとモデルを変更した時に、サクッとDB(PostgreSQL)に反映出来るらしんだけど、今すでに作成中のプロジェクトに反映させたかったので、メモ</p>
 
 <h2>インストール</h2>
@@ -833,9 +833,9 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
   
   <entry>
     <title type="html"><![CDATA[djangoで国際化やってみた]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/11/27/django-locale/"/>
+    <link href="http://blog.shigepon.info/blog/2014/11/27/django-locale/"/>
     <updated>2014-11-27T13:02:12+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/11/27/django-locale</id>
+    <id>http://blog.shigepon.info/blog/2014/11/27/django-locale</id>
     <content type="html"><![CDATA[<p>Djangoで他の人が作ったモジュールを使ってると、英語のメッセージが入ってることがあるので、日本語化してみた。とりあえず英語のメッセージを日本語に変換するとこまで。</p>
 
 <h2>準備</h2>
@@ -909,9 +909,9 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
   
   <entry>
     <title type="html"><![CDATA[Kobe.R no 13に参加してきました]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/11/25/kobe-dot-r-no-13/"/>
+    <link href="http://blog.shigepon.info/blog/2014/11/25/kobe-dot-r-no-13/"/>
     <updated>2014-11-25T23:33:42+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/11/25/kobe-dot-r-no-13</id>
+    <id>http://blog.shigepon.info/blog/2014/11/25/kobe-dot-r-no-13</id>
     <content type="html"><![CDATA[<p>勉強会の話なので丁寧語で。11/24に<a href="http://kobexr.doorkeeper.jp/events/16989">Kobe.R #13</a>があったので参加してきました。<a href="http://blog.shigepon.info/blog/2014/10/28/kobe-dot-r-no-12/">前回</a>は大阪だったのですが今回は三宮で開かれました。今回はオープンデータ特集ということで、Rのネタもちょびっとある予定だったのですが、話がいっぱいあって結局オープンデータの話のみとなりました。Rネタだけでなく、データを扱う全般を範囲としているKobe.Rならではです。</p>
 
 <p>内容盛りだくさんなので、毎度忘れてる人や内容があって申し訳ないですが、感想です。</p>
@@ -993,9 +993,9 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
   
   <entry>
     <title type="html"><![CDATA[django-allauthを使ってみた]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/11/25/use-django-allauth/"/>
+    <link href="http://blog.shigepon.info/blog/2014/11/25/use-django-allauth/"/>
     <updated>2014-11-25T14:55:16+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/11/25/use-django-allauth</id>
+    <id>http://blog.shigepon.info/blog/2014/11/25/use-django-allauth</id>
     <content type="html"><![CDATA[<p>ソーシャルログインだけでなく、通常のログインもやりたかったので、django-allauthを試してみた。</p>
 
 <h2>インストール</h2>
@@ -1188,9 +1188,9 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
   
   <entry>
     <title type="html"><![CDATA[Django Memo]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/11/23/django-memo/"/>
+    <link href="http://blog.shigepon.info/blog/2014/11/23/django-memo/"/>
     <updated>2014-11-23T22:35:38+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/11/23/django-memo</id>
+    <id>http://blog.shigepon.info/blog/2014/11/23/django-memo</id>
     <content type="html"><![CDATA[<p>Djangoやってて忘れっぽいところとかをメモ</p>
 
 <h2>リクエストパラメーターをモデルに入れる</h2>
@@ -1512,9 +1512,9 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
   
   <entry>
     <title type="html"><![CDATA[Titanium Mobileメモ]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/11/23/titanium-mobile-memo/"/>
+    <link href="http://blog.shigepon.info/blog/2014/11/23/titanium-mobile-memo/"/>
     <updated>2014-11-23T09:48:44+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/11/23/titanium-mobile-memo</id>
+    <id>http://blog.shigepon.info/blog/2014/11/23/titanium-mobile-memo</id>
     <content type="html"><![CDATA[<p>Titanium Mobileに関するメモ</p>
 
 <h2>アプリ固有の設定を登録する</h2>
@@ -1557,9 +1557,9 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
   
   <entry>
     <title type="html"><![CDATA[DjangoでDateTimeField received a naive datetimeってWarningが出た]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/11/22/django-datetimefield-received-a-naive-datetime/"/>
+    <link href="http://blog.shigepon.info/blog/2014/11/22/django-datetimefield-received-a-naive-datetime/"/>
     <updated>2014-11-22T16:19:11+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/11/22/django-datetimefield-received-a-naive-datetime</id>
+    <id>http://blog.shigepon.info/blog/2014/11/22/django-datetimefield-received-a-naive-datetime</id>
     <content type="html"><![CDATA[<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'>RuntimeWarning: DateTimeField received a naive datetime
 </span></code></pre></td></tr></table></div></figure>
@@ -1580,9 +1580,9 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
   
   <entry>
     <title type="html"><![CDATA[Titanium MobileとDjangoでAjax認証を行う]]></title>
-    <link href="http://blog.shigepon.com/blog/2014/11/20/titanium-ajax-post-to-django/"/>
+    <link href="http://blog.shigepon.info/blog/2014/11/20/titanium-ajax-post-to-django/"/>
     <updated>2014-11-20T09:42:26+09:00</updated>
-    <id>http://blog.shigepon.com/blog/2014/11/20/titanium-ajax-post-to-django</id>
+    <id>http://blog.shigepon.info/blog/2014/11/20/titanium-ajax-post-to-django</id>
     <content type="html"><![CDATA[<p>最近Titanium Mobile使ってスマホアプリを作ろうかなと思って色々試してるんだけど、ログイン認証する時にはまったので、メモ</p>
 
 <p>参考<a href="http://stackoverflow.com/questions/26022797/in-appcelerator-titanium-how-can-i-get-djangos-csrf-token">In Appcelerator Titanium, how can I get Django&rsquo;s CSRF token?(Stack Overflow)</a></p>
