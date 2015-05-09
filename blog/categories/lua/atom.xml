@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Lua | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/lua/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-09T09:01:30+09:00</updated>
+  <updated>2015-05-09T09:02:56+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -21,12 +21,8 @@
     <content type="html"><![CDATA[<p>なでしこではLuaを使えるので、なでしこのGUIと組み合わせたら簡単にLuaエディタ作れるんじゃね？ということで作ってみました。（ただのネタです）</p>
 
 <p>```
-母艦は「メインフォーム」</p>
-
-<!-- more -->
-
-
-<p>そのクライアントW=640#数値
+母艦は「メインフォーム」
+そのクライアントW=640#数値
 そのクライアントH=400#数値
 そのタイトル=「なでしこ」#文字列
 ※ &mdash;&ndash;
