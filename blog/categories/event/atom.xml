@@ -4,7 +4,7 @@
   <title><![CDATA[Category: event | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/event/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-09T09:05:28+09:00</updated>
+  <updated>2015-05-09T10:11:49+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -35,6 +35,9 @@
 <li>自分でちょっといじって、packageとかfunctionを探す方法を掴まないと、関数名に略称とか使ってるケースが結構あって、探しにくいかも。使ってみないと何とも言えないけど</li>
 <li>発表でちょっと気になったけど、同じ書式の演算子でパッケージによって違う意味になったりするの？</li>
 </ul>
+
+
+<!-- more -->
 
 
 <p>データの前処理ってとても大事なので、参考にしてちょっと練習出来たらなと思います。</p>
@@ -88,6 +91,9 @@ Twitterでインなんとかとか言っちゃいましたが、インキャン�
 <p>リンクというのがあまりイメージ出来なかったけど、次の上田さんの発表で実際に動かしているところを見るとなるほどと思いました。</p>
 
 <p>ちなみに、12月7日の日曜日にOIHってとこ（グランドフロント大阪内）でLODハッカソン関西があるそうです。見てる人が居るかどうか知らないけど興味がある人は是非。</p>
+
+<!-- more -->
+
 
 <p>他にもコンテストとして</p>
 
@@ -167,6 +173,9 @@ PREFIX prop-ja: <a href="http://ja.dbpedia.org/property/">http://ja.dbpedia.org/
 
 <p>Twitter ID @Wakamatzさん</p>
 
+<!-- more -->
+
+
 <p>色んなデータをどうやってグループ分け（クラスタリング）するかという手法についての発表でした。基本は何グループに分けるかを指定して、その数に収束するまでクラスタリングするみたいですが、グループ数を決められない場合には自動的に決定する手法もあるそうです。が、なかなか難しい手法みたいです。</p>
 
 <h2>Rのこれから</h2>
@@ -208,6 +217,9 @@ PREFIX prop-ja: <a href="http://ja.dbpedia.org/property/">http://ja.dbpedia.org/
 <li>匿名化には適当なデータを混ぜたりクラスタリングする手法があるのかー。なるほどー。確かに適当なデータを混ぜると集計精度が落ちそう</li>
 <li>評価手法は何種類かあるけど、とりあえずIL1sという評価法を紹介してもらった。実際計算してみないとなんともいえないかな。</li>
 </ul>
+
+
+<!-- more -->
 
 
 <h2>カードで説明する統計的独立</h2>

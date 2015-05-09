@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Rails | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-09T09:05:28+09:00</updated>
+  <updated>2015-05-09T10:11:49+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -32,6 +32,9 @@
 ActiveRecord::Base.connection.raw_connection.exec("select * from hoge where fuga = :1", 'hage')
 </code></p>
 
+<!-- more -->
+
+
 <p>こんな書き方も出来るらしい。ActiveRecord::Base.connectionでは無理らしい。うーむ。むか〜しからRailsはちょっとレールからはずれるととたんに難しくなるんだなー。やる気が減って来た＞＜。</p>
 ]]></content>
   </entry>
@@ -55,6 +58,9 @@ proxy_pass http://upstream;
 <p><code>
 http://hoge.com
 </code></p>
+
+<!-- more -->
+
 
 <p>となってほしいところが</p>
 
@@ -101,6 +107,9 @@ DEBUG [ef8c5c38]    fatal: The remote end hung up unexpectedly
 DEBUG [ef8c5c38]    
 DEBUG [ef8c5c38] Finished in 2.287 seconds with exit status 128 (failed).
 </code></p>
+
+<!-- more -->
+
 
 <p>うげげ。gitで鍵認証のエラー出てるわ。とりあえずbitbucketに公開鍵を登録してみた。
  <a href="http://morizyun.github.io/blog/ssh-key-bitbucket-github/">SSH認証キーをBitbucket/GitHubに設定しよう！ [Mac簡単手順] &ndash; 酒と泪とRubyとRailsと</a>の通りに登録したら出来た。~/.ssh/configに秘密鍵を追加して</p>
@@ -211,6 +220,9 @@ $ sudo aptitude install nginx
 
 <h2>unicornインストール</h2>
 
+<!-- more -->
+
+
 <p>rubyとかbundlerとかが必要なので、無い場合は<a href="http://blog.shigepon.info/blog/2014/02/26/rails-startup/">Ruby on Railsを入れてみた</a>に書いた通りにインストール。unicornはGemfileに</p>
 
 <p><code>
@@ -309,6 +321,9 @@ $ service nginx start
 +gem 'execjs'
 -gem 'sass-rails'
 </code></p>
+
+<!-- more -->
+
 
 <p>以下のコマンドを実行</p>
 

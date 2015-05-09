@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Django | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/django/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-09T09:05:28+09:00</updated>
+  <updated>2015-05-09T10:11:49+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -30,7 +30,13 @@
 $ pip install django -U
 </code></p>
 
+<!-- more -->
+
+
 <p>これで本体はアップデート完了した。</p>
+
+<!-- more -->
+
 
 <h2>プロジェクトをDjango1.7で動かす</h2>
 
@@ -94,11 +100,17 @@ raise RuntimeError("South does not support Django 1.7 or higher. Please use nati
 $ uwsgi --buffer-size=xxxx
 </code></p>
 
+<!-- more -->
+
+
 <p><code>ini
 ...
 buffer-size= xxxx
 ...
 </code></p>
+
+<!-- more -->
+
 
 <p>参考：<a href="http://stackoverflow.com/questions/15878176/uwsgi-invalid-request-block-size">uwsgi invalid request block size &ndash; Stack Overflow</a></p>
 ]]></content>
@@ -121,6 +133,9 @@ from django.forms.widgets import MultiWidget</p>
 <p>```</p>
 
 <p>次にクラスに対して、__init__をオーバーライドし、widgetとしてTextInputのフォームを2つ登録してみた。コードはこんな感じ。</p>
+
+<!-- more -->
+
 
 <p>```py models.py
 class NameWidget(MultiWidget):</p>
@@ -211,7 +226,13 @@ return inner
 
 <p>```</p>
 
+<!-- more -->
+
+
 <p>この時、args[0]にHttpRequestオブジェクトが入ってるので、これをいじると適当に値を追加したり整形したりするのをビューの外部に持っていけるので、使いようによっては共通部分と個別部分の分離や、ビューに直接関係ない処理（ログとか）を分離出来るので便利な感じがする。ただ、やりすぎるとコードが分割されすぎて読みにくくなる気もする。</p>
+
+<!-- more -->
+
 
 <p>```py
 def outer(func):</p>
@@ -254,6 +275,9 @@ def hoge(request):</p>
 
 <h2>設定</h2>
 
+<!-- more -->
+
+
 <p>```py settings.py
 INSTALLED_APPS = (
 &hellip;.</p>
@@ -264,6 +288,9 @@ INSTALLED_APPS = (
 <p>&hellip;.
 )
 ```</p>
+
+<!-- more -->
+
 
 <h2>テンプレート</h2>
 

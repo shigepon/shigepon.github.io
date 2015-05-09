@@ -4,7 +4,7 @@
   <title><![CDATA[Category: memo | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/memo/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-09T09:05:28+09:00</updated>
+  <updated>2015-05-09T10:11:49+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -30,11 +30,17 @@
 $ uwsgi --buffer-size=xxxx
 </code></p>
 
+<!-- more -->
+
+
 <p><code>ini
 ...
 buffer-size= xxxx
 ...
 </code></p>
+
+<!-- more -->
+
 
 <p>参考：<a href="http://stackoverflow.com/questions/15878176/uwsgi-invalid-request-block-size">uwsgi invalid request block size &ndash; Stack Overflow</a></p>
 ]]></content>
@@ -57,6 +63,9 @@ hoge = Ti.App.Properties.getString("hoge");//取得
 </code></p>
 
 <p>stringを例にしてるが、ListとかObjectとかBoolとか色々入れられる。</p>
+
+<!-- more -->
+
 
 <h2>Titanium MobileのUIで本家以外に参考にしてるサイト</h2>
 
@@ -99,6 +108,9 @@ $ git log -p
 <p><code>sh
 $ git log -p filename
 </code></p>
+
+<!-- more -->
+
 
 <p>でfilenameの変更履歴を表示する</p>
 
@@ -231,6 +243,9 @@ server {</p>
     location /error/ {}
 </code></pre>
 
+<!-- more -->
+
+
 <p>}
 ```</p>
 
@@ -257,7 +272,13 @@ $queries = \Hoge::stop_record();
 var_dump($queries);
 </code></p>
 
+<!-- more -->
+
+
 <p>こんな感じで使う。出力は</p>
+
+<!-- more -->
+
 
 <p>```html
 array(1) {

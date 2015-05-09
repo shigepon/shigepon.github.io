@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Bootstrap | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/bootstrap/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-09T09:05:28+09:00</updated>
+  <updated>2015-05-09T10:11:49+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -29,6 +29,9 @@
 
 <h2>設定</h2>
 
+<!-- more -->
+
+
 <p>```py settings.py
 INSTALLED_APPS = (
 &hellip;.</p>
@@ -39,6 +42,9 @@ INSTALLED_APPS = (
 <p>&hellip;.
 )
 ```</p>
+
+<!-- more -->
+
 
 <h2>テンプレート</h2>
 
@@ -102,6 +108,14 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 
 <p>デモは奇麗に見えるんだけど、そもそもメインのcssが何故かdemo.cssみたいなのをインポートしてて、これは無いんじゃないと思ったのと背景画像無しだとイメージに合わなかった。あと、デモサイトがあるだけで、最初に必要なファイルとかが分かりにくかった。</p>
 
+<!-- more -->
+
+
+
+
+<!-- more -->
+
+
 <h2>pickadate</h2>
 
 <p><a href="http://amsul.ca/pickadate.js/">ダウンロードページ</a></p>
@@ -146,6 +160,9 @@ date = models.DateField()
 </code></pre>
 
 <p>```</p>
+
+<!-- more -->
+
 
 <p>モデルではフィールドとその属性を決める。このコードではクラスの中でMetaクラスを定義すると、モデルのテーブル名とかそういうのを色々定義出来るみたい。定義出来るフィールドの種類はDjangoのマニュアルに書いてあるのですぐ分かる。</p>
 
@@ -280,6 +297,9 @@ $ pip install django-bootstrap-toolkit
 'bootstrap-toolkit'
 </code></p>
 
+<!-- more -->
+
+
 <p>テンプレートを書く</p>
 
 <p><code>html
@@ -322,6 +342,9 @@ $ pip install django-bootstrap-toolkit
 +gem 'execjs'
 -gem 'sass-rails'
 </code></p>
+
+<!-- more -->
+
 
 <p>以下のコマンドを実行</p>
 

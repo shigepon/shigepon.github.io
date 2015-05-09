@@ -4,7 +4,7 @@
   <title><![CDATA[Category: unity | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/unity/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-09T09:05:28+09:00</updated>
+  <updated>2015-05-09T10:11:49+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -38,6 +38,9 @@
 <li>Audio ClipにAssetに入れた音源を入れる。</li>
 <li>Audio Sourceコンポーネント内で3D Sound Setting>Min Distanceを10くらいに設定</li>
 </ul>
+
+
+<!-- more -->
 
 
 <p>オブジェクトに設定したコードでは次のように書く。例としてスペースを押したら効果音が出るようにしてみた。<br/>

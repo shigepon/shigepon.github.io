@@ -154,32 +154,14 @@
 </span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
 
 
-<p>C++フォームアプリケーション</p>
-
-<p>C#で作ったdllの参照とかフォームの構成とか画像が消えちゃったので適当に想像してください。
-用はC++のアプリケーションでC#のdllを参照します。</p>
-
-<p>ボタンクリック時のコード</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>private: System::Void button1_Click(System::Object^  sender&cedil; System::EventArgs^  e) {
-</span><span class='line'>   try{
-</span><span class='line'>      ClassLibrary1::Class1::Method1();
-</span><span class='line'>   }catch(Exception^ e){
-</span><span class='line'>      System::Windows::Forms::MessageBox::Show(e-&gt;Message);
-</span><span class='line'>   }
-</span><span class='line'> }</span></code></pre></td></tr></table></div></figure>
 
 
-<p>で動かしてみるときちんと動かせました。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/01/28/nadesiko-plugin-cs/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -230,39 +212,12 @@
 </ol>
 
 
-<p>dnako_import.defは以下</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>EXPORTS
-</span><span class='line'>ImportNakoFunction
-</span><span class='line'>PluginInfo
-</span><span class='line'>PluginVersion
-</span><span class='line'>PluginRequire
-</span><span class='line'>PluginInit
-</span><span class='line'>PluginFin</span></code></pre></td></tr></table></div></figure>
-
-
-<p>実際こちらで試した場合は他にも4の箇所で</p>
-
-<p>全般→共通言語ランタイムサポートを「共通言語ランタイムサポートを使用しない」に
-C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘッダーの作成/使用を「プリコンパイル済みヘッダーを使用しない」に</p>
-
-<p>変更が必要でした。</p>
-
-<p>ただし、この方法だとC++/CLIを使えないので、.Netを使うことは出来ません。そこで、次のように変更しました。</p>
-
-<p>+sdkに含まれる.cファイルを全て.cppに変更
-+dnako_import\let.h内にある各GetProcAddressの第一引数hDllをstatic_castでHMODULE型にキャスト</p>
-
-<p>すると問題なくビルドが通り、.Netを使用することが出来ました。と言ってもMessageBoxを試した程度ですが。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/01/28/nadesiko-plugin/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -364,27 +319,14 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
 </span><span class='line'>      「エラー」と言う。</span></code></pre></td></tr></table></div></figure>
 
 
-<p>セーブやロードなどは全て省いてますが実装は簡単です。</p>
-
-<p>あとLUA(&quot;<del>&hellip;</del>&quot;)の箇所を変更すれば、返り値を得ることも簡単にできます。例えばこんな感じ</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>LUA(&quot;---ret=0{ソース}nako_set(&#039;結果&#039;&cedil;ret)---&quot;)結果を言う。</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Luaをちょっといじってみたいなと思う時に使えるんじゃないかと思います。</p>
-
-<p>※なぜか「LUAする」命令だとieとかexcelを立ち上げた時にvisible=trueに出来ませんでした。何かやり方が悪かったのかな。（なでしこのバージョンはデラックス版1.5322です）</p>
-
-<p>※LuaComではUTF-8を扱うので、日本語をまぜる場合はソースをUTF-8に変換しておく必要があります</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>LUA(UTF8N変換(&quot;...&quot;))</span></code></pre></td></tr></table></div></figure>
-
-
-<p>結果もnako_setでセットした値もUTF8で返ってきますのでSJIS変換命令で変換する必要があります。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/01/28/nadesiko-lua/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -436,232 +378,14 @@ C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘ
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>のようにカラムをテキストにキャストする。MySQLのvarcharをselectする時はデフォルトignore case。ついでにtrimも勝手にかける？らしい</p>
 
-<h2>show column</h2>
 
-<p>Mysqlで使えるshow columnは無いが、information_schemaの情報をselectすることで同じようなことが出来る。
-ただし、create table時にserialで指定してもinformation_schema.columnsから取得できるカラム情報はinteger(int4)のみ。
-なのでserialと判定するにはカラムがintegerであり、かつデフォルト値としてnextvalが指定されていることなど、複合的にチェックする必要がある。</p>
-
-<h2>cronでsqlを実行</h2>
-
-<p>毎日0時0分に実行する場合</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="mi">0</span> <span class="mi">0</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="k">to</span><span class="o">/</span><span class="n">psql</span> <span class="o">-</span><span class="n">U</span> <span class="n">username</span> <span class="o">-</span><span class="k">c</span> <span class="ss">&quot;sql&quot;</span> <span class="k">database</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="k">null</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>select結果でinsert, update</h2>
-
-<p>insertの場合はinsert文の後でselect文を書く。以下は一例</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">insert</span> <span class="k">into</span> <span class="k">table</span> <span class="k">select</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="k">from</span> <span class="n">table2</span> <span class="k">where</span> <span class="n">a</span> <span class="k">like</span> <span class="s1">&#39;hoge%&#39;</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>別テーブルへの一部データのバックアップ代わりにも使える</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">insert</span> <span class="k">into</span> <span class="n">backup_table</span> <span class="p">(</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="k">table</span> <span class="k">where</span> <span class="n">id</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>updateは次のように行う</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">update</span> <span class="k">table</span> <span class="k">set</span> <span class="n">a</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">a</span> <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">table2</span><span class="p">)</span> <span class="n">t</span> <span class="k">where</span> <span class="k">table</span><span class="p">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">b</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>どの範囲のデータが更新されるかに注意してwhere句を使う。上の場合、tの中でwhere句を使う場合とで異なる結果になる場合がある。</p>
-
-<h2>インデックス一覧を表示</h2>
-
-<p>インデックス一覧を表示。インデックスを2重に登録しようとするとエラーが出るので、チェックに使う</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">SELECT</span> <span class="n">tablename</span><span class="p">,</span> <span class="n">indexname</span> <span class="k">FROM</span> <span class="n">pg_indexes</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>ビューの一覧を表示</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">SELECT</span> <span class="n">viewname</span> <span class="k">FROM</span> <span class="n">pg_views</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">viewname</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>ビューの定義を調べる</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="n">definition</span> <span class="k">from</span> <span class="n">pg_views</span> <span class="k">WHERE</span> <span class="n">viewname</span> <span class="o">=</span> <span class="s1">&#39;ビュー名&#39;</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>psqlで実行結果を見やすくする</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="n">psql</span> <span class="o">=&gt;</span> <span class="err">\</span><span class="n">x</span>
-</span><span class='line'><span class="n">psql</span> <span class="o">=&gt;</span> <span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="k">table</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>カラムの数が多いと表示が崩れやすいので、これで見やすくなる</p>
-
-<h2>カラム追加時にNOT NULLを指定する手順</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="k">table_name</span> <span class="k">ADD</span> <span class="k">COLUMN</span> <span class="k">column_name</span> <span class="nb">text</span><span class="p">;</span>
-</span><span class='line'><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="k">table_name</span> <span class="k">ALTER</span> <span class="k">COLUMN</span> <span class="k">column_name</span> <span class="k">SET</span> <span class="k">DEFAULT</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
-</span><span class='line'><span class="k">UPDATE</span> <span class="k">table_name</span> <span class="k">SET</span> <span class="k">column_name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
-</span><span class='line'><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="k">table_name</span> <span class="k">ALTER</span> <span class="k">COLUMN</span> <span class="k">column_name</span> <span class="k">SET</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな感じで複数業使ってNOT NULL制約を入れる</p>
-
-<h2>テーブル（ビュー）のスキーマをファイルに書き込む</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pg_dump -s -t table_name db_name &gt; file_name
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これだけ。反映したい時は</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>cat file_name | psql db_name
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でおk</p>
-
-<h2>csvの取り込み</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>1,<span class="s2">&quot;hoge&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいなデータを/path/to/csvに保存して</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">copy</span> <span class="n">tablename</span> <span class="k">from</span> <span class="s1">&#39;/path/to/csv&#39;</span> <span class="k">with</span> <span class="n">csv</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とpsql で実行すると取り込みできる。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">copy</span> <span class="n">tablename</span> <span class="p">(</span><span class="n">column1</span><span class="p">,</span><span class="n">column2</span><span class="p">)</span> <span class="k">from</span> <span class="s1">&#39;/path/to/csv&#39;</span> <span class="k">with</span> <span class="n">csv</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とやれば、カラム名と順序の指定が可能</p>
-
-<h2>SQL結果をcsvに出力</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>psql db_name -c <span class="s2">&quot;SQL&quot;</span> -A -F, -t &gt; filename
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>IN句に複数条件を指定</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">hoge</span> <span class="k">where</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="k">from</span> <span class="n">fuga</span> <span class="k">where</span> <span class="n">hage</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">);</span>
-</span><span class='line'><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">hoge</span> <span class="k">where</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="k">in</span> <span class="p">((</span><span class="s1">&#39;fuga&#39;</span><span class="p">,</span><span class="s1">&#39;hage&#39;</span><span class="p">),(</span><span class="s1">&#39;abc&#39;</span><span class="p">,</span><span class="s1">&#39;def&#39;</span><span class="p">));</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいに指定すればおk</p>
-
-<h2>ユーザー定義関数の定義内容を表示</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="n">procsrc</span> <span class="k">from</span> <span class="n">pg_proc</span> <span class="k">where</span> <span class="n">proname</span><span class="o">=</span><span class="s1">&#39;関数名&#39;</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>結構こんな感じでシステム用テーブルとかカラムとか色々あるので大変。</p>
-
-<h2>実行中のsql確認</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">pg_stat_activity</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>実行中sqlをストップ</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="n">pg_cancel_backend</span><span class="p">(</span><span class="err">プロセス</span><span class="n">ID</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>データベースやテーブルのサイズ取得</h2>
-
-<p>データベース</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="n">pg_database_size</span><span class="p">(</span><span class="s1">&#39;dbname&#39;</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>テーブル</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="n">pg_relation_size</span><span class="p">(</span><span class="s1">&#39;tablename&#39;</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>select結果を配列にして、比較する</h2>
-
-<p>テーブル(event)に、日付(date)とイベントコード(code)カラムがあって、あるイベントコードのイベントと、全く同じ日程のイベントがあるかどうか調べる必要があったんだけど、配列使ったら上手く出来たのでメモ</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="n">array_agg</span><span class="p">(</span><span class="n">date_trunc</span><span class="p">(</span><span class="s1">&#39;day&#39;</span><span class="p">,</span><span class="nb">date</span><span class="p">))</span> <span class="k">as</span> <span class="n">d</span><span class="p">,</span> <span class="n">code</span> <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">event</span> <span class="k">where</span> <span class="k">order</span> <span class="k">by</span> <span class="nb">date</span><span class="p">)</span> <span class="n">b</span> <span class="k">group</span> <span class="k">by</span> <span class="n">code</span><span class="p">)</span> <span class="n">a</span> <span class="k">where</span> <span class="n">code</span> <span class="o">!=</span> <span class="s1">&#39;...&#39;</span> <span class="k">and</span> <span class="n">a</span><span class="p">.</span><span class="n">d</span> <span class="o">=</span> <span class="nb">ARRAY</span><span class="p">(</span><span class="k">select</span> <span class="n">date_trunc</span><span class="p">(</span><span class="s1">&#39;day&#39;</span><span class="p">,</span><span class="nb">date</span><span class="p">)</span> <span class="k">from</span> <span class="n">event</span> <span class="k">where</span> <span class="n">code</span> <span class="o">=</span><span class="s1">&#39;...&#39;</span> <span class="k">order</span> <span class="k">by</span> <span class="nb">date</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな感じで出来た。ポイントはgroup_byとarray_aggを使うとgroup化した時にそれぞれの行にあった数字をまとめて配列化できることと、配列は順序を同じにしておかないと比較出来ないので、予めorderをかけておくこと。select結果をそのまま配列にするにはARRAYでいけること。もうちょっとsqlをスッキリ出来そうだけど、とりあえずこんな感じ。</p>
-
-<h2>正規表現関連</h2>
-
-<h3>置換</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="n">regex_replace</span><span class="p">(</span><span class="n">columnname</span><span class="p">,</span><span class="s1">&#39;pattern&#39;</span><span class="p">,</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span> <span class="k">from</span> <span class="n">tablename</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>検索</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">tablename</span> <span class="k">where</span> <span class="n">columnname</span> <span class="o">~</span> <span class="s1">&#39;pattern&#39;</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>psqlでパスワードを入力しない方法</h2>
-
-<p>~HOME/.pgpassを作成する(Linuxの場合)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="n">hostname</span><span class="p">:</span><span class="n">port</span><span class="p">:</span><span class="k">database</span><span class="p">:</span><span class="n">username</span><span class="p">:</span><span class="n">password</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>参考：<a href="http://saikyoline.jp/weblog/2005/10/14/234742.html">パスワード入力なしでpsql » サイキョウライン</a></p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/01/28/postgresql/">Read on &rarr;</a>
+    </footer>
   
 
 

@@ -151,142 +151,14 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h2>Djangoでのユーザー認証</h2>
-
-<p>Djangoでユーザー認証しようとすると例えばこんな感じ(viewだけ)
-REST API作るために、<a href="http://www.django-rest-framework.org/">Django REST framework</a>を使ってるので、そのままコピペしても使えないけど、@部分を消して、Responseとなっている箇所を自力でJSON出力すれば良いと思う。Django REST frameworkについてはどっかで書く。</p>
-
-<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">viewsets</span><span class="err">↲</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">rest_framework.response</span> <span class="kn">import</span> <span class="n">Response</span><span class="err">↲</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">rest_framework.decorators</span> <span class="kn">import</span> <span class="n">api_view</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">login</span><span class="p">,</span><span class="n">authenticate</span>
-</span><span class='line'>
-</span><span class='line'><span class="nd">@api_view</span><span class="p">([</span><span class="s">&#39;GET&#39;</span><span class="p">,</span><span class="s">&#39;POST&#39;</span><span class="p">])</span>
-</span><span class='line'><span class="k">def</span> <span class="nf">do_login</span><span class="p">(</span><span class="n">request</span><span class="p">):</span><span class="err">↲</span>
-</span><span class='line'> <span class="n">status</span> <span class="o">=</span> <span class="mi">0</span><span class="err">↲</span>
-</span><span class='line'> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">():</span><span class="err">↲</span>
-</span><span class='line'>     <span class="n">status</span> <span class="o">=</span> <span class="mi">1</span><span class="err">↲</span>
-</span><span class='line'> <span class="k">else</span><span class="p">:</span><span class="err">↲</span>
-</span><span class='line'>     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&#39;POST&#39;</span><span class="p">:</span><span class="err">↲</span>
-</span><span class='line'>         <span class="n">username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">]</span><span class="err">↲</span>
-</span><span class='line'>         <span class="n">password</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s">&#39;password&#39;</span><span class="p">]</span><span class="err">↲</span>
-</span><span class='line'>         <span class="n">user</span> <span class="o">=</span> <span class="n">authenticate</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span><span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span><span class="err">↲</span>
-</span><span class='line'>         <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span><span class="err">↲</span>
-</span><span class='line'>             <span class="n">status</span> <span class="o">=</span> <span class="mi">1</span><span class="err">↲</span>
-</span><span class='line'>             <span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="n">user</span><span class="p">)</span><span class="err">↲</span>
-</span><span class='line'>     <span class="k">else</span><span class="p">:</span><span class="err">↲</span>
-</span><span class='line'>         <span class="k">return</span> <span class="n">Response</span><span class="p">({</span><span class="s">&quot;status&quot;</span><span class="p">:</span><span class="n">status</span><span class="p">})</span><span class="err">↲</span>
-</span><span class='line'> <span class="k">return</span> <span class="n">Response</span><span class="p">({</span><span class="s">&quot;status&quot;</span><span class="p">:</span><span class="n">status</span><span class="p">})</span><span class="err">↲</span>
-</span><span class='line'><span class="err">↲</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="err">で、実際やってみるとレスポンスはこんな感じになる</span>
-</span></code></pre></td></tr></table></div></figure>
 
 
-<p>js
-{</p>
-
-<pre><code>"detail": "CSRF Failed: CSRF token missing or incorrect."
-</code></pre>
-
-<p>}</p>
-
-<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">そういえば</span><span class="n">Django</span><span class="err">で</span><span class="n">CSRF</span><span class="err">対策してるんだった。</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>py settings.py</p>
-
-<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">MIDDLEWARE_CLASSES</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'><span class="o">....</span>
-</span><span class='line'>    <span class="s">&#39;django.middleware.csrf.CsrfViewMiddleware&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="o">....</span>
-</span><span class='line'><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ajaxでやり取りする部分だけ、MIDDLEWARE_CLASSESから削除するって手もあるけど、<a href="http://docs.djangoproject.jp/en/latest/ref/contrib/csrf.html">Django APIリファレンス</a>に書いてあるようにX-CSRFToken という独自ヘッダーに CSRF トークンの 値を設定するという対処をやってみた。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">function</span> <span class="nx">getCRSF</span><span class="p">(){</span>
-</span><span class='line'>    <span class="kd">var</span> <span class="nx">xhr</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">Network</span><span class="p">.</span><span class="nx">createHTTPClient</span><span class="p">({</span>
-</span><span class='line'>        <span class="nx">onload</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
-</span><span class='line'>            <span class="kd">var</span> <span class="nx">item</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">responseText</span><span class="p">);</span>
-</span><span class='line'>            <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">Properties</span><span class="p">.</span><span class="nx">setString</span><span class="p">(</span><span class="s2">&quot;csrf&quot;</span><span class="p">,</span> <span class="nx">item</span><span class="p">.</span><span class="nx">csrf</span><span class="p">);</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">});</span>
-</span><span class='line'>    <span class="nx">xhr</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span><span class="s1">&#39;http://url/to/login&#39;</span><span class="p">);</span>
-</span><span class='line'>    <span class="nx">xhr</span><span class="p">.</span><span class="nx">send</span><span class="p">();</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これを書いて、getCRSFを先にどこかで実行しておいて
-実際のリクエストはさっきのコードをこんな感じで修正する</p>
-
-<p> &#8220;`js</p>
-
-<pre><code>client.open('POST','http://url/to/login');
-client.setRequestHeader('X-CSRFToken', Ti.App.Properties.getString("csrf"));//これを追加
-
-client.send({username:'hoge',password:'fuga'});
-</code></pre>
-
-<p>&#8220;`</p>
-
-<p>Django側のコードはGETの時にcsrfのトークンを戻すように書き換える</p>
-
-<p> &#8220;`py views.py
-from django.core.context_processors import csrf #を追加</p>
-
-<h1>上のviews.pyの14行目をこんな感じで修正</h1>
-
-<p>return Response({&ldquo;status&rdquo;:status,&ldquo;csrf&rdquo;:csrf(request)[&lsquo;csrf_token&rsquo;]})↲</p>
-
-<p>これでいけたみたい。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/11/20/titanium-ajax-post-to-django/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -339,172 +211,12 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
 
 <p>djangoのプロジェクトを/path/to/mysiteに置いた場合の設定。pidfile,daemonizeはプロジェクト毎に適当に設定。</p>
 
-<figure class='code'><figcaption><span>uwsgi.ini</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='ini'><span class='line'><span class="k">[uwsgi]</span>
-</span><span class='line'><span class="na">chdir</span><span class="o">=</span><span class="s">/path/to/mysite</span>
-</span><span class='line'><span class="na">module</span><span class="o">=</span><span class="s">&#39;mysite.wsgi:application&#39;</span>
-</span><span class='line'><span class="na">master</span><span class="o">=</span><span class="s">True</span>
-</span><span class='line'><span class="na">pidfile</span><span class="o">=</span><span class="s">/tmp/project-master.pid</span>
-</span><span class='line'><span class="na">vacuum</span><span class="o">=</span><span class="s">True</span>
-</span><span class='line'><span class="na">max-requests</span><span class="o">=</span><span class="s">5000</span>
-</span><span class='line'><span class="na">daemonize</span><span class="o">=</span><span class="s">/var/log/uwsgi/mysite.log</span>
-</span><span class='line'><span class="na">socket</span><span class="o">=</span><span class="s">127.0.0.1:1234 #適当なポート</span>
-</span><span class='line'><span class="na">env</span><span class="o">=</span> <span class="s">DJANGO_SETTINGS_MODULE=mysite.settings</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>virtualenvで使う場合、sudoを使わないでuwsgiを起動するので、/var/log/uwsgi/yourproject.logの権限に注意する。
-uwsgiの起動や終了のコマンドは以下の通り</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>起動
-</span><span class='line'><span class="nv">$ </span>uwsgi --ini uwsgi.ini
-</span><span class='line'>再起動
-</span><span class='line'><span class="nv">$ </span>uwsgi --reload /tmp/project-master.pid
-</span><span class='line'>終了
-</span><span class='line'><span class="nv">$ </span>uwsgi --stop /tmp/project-master.pid
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>nginxの設定</h2>
-
-<p><a href="http://uwsgi-docs.readthedocs.org/en/latest/tutorials/Django_and_nginx.html">Setting up Django and your web server with uWSGI and nginx — uWSGI 2.0 documentation</a>を参考にした。</p>
-
-<h3>uwsgi_params</h3>
-
-<p>uwsgi_paramsは/etc/nginx/uwsgi_paramsに入ってるけど、修正する可能性もあるので、/path/to/mysite/uwsgi_paramsにコピーして、それを修正する。</p>
-
-<h3>nginx.conf</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>upstream django <span class="o">{</span>
-</span><span class='line'>  server 127.0.0.1:1234; <span class="c">#uwsgi.iniで設定したポート番号</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>server <span class="o">{</span>
-</span><span class='line'>  server_name hoge.example.com; <span class="c"># substitute your machine&#39;s IP address or FQDN</span>
-</span><span class='line'>      charset     utf-8;
-</span><span class='line'><span class="c"># max upload size</span>
-</span><span class='line'>  client_max_body_size 75M;   <span class="c"># adjust to taste</span>
-</span><span class='line'><span class="c"># Django media</span>
-</span><span class='line'><span class="c"># Finally, send all non-media requests to the Django server.</span>
-</span><span class='line'>  location / <span class="o">{</span>
-</span><span class='line'>      uwsgi_pass  django;
-</span><span class='line'>      include     /path/to/mysite/uwsgi_params; <span class="c"># the uwsgi_params file you installed</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これを作成して、/etc/nginx/sites-enabledへシンボリックリンクを貼っておけば良い</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>service nginx restart <span class="c">#reloadでもいい？</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でWebアクセスできるようになる。はず。</p>
-
-<h2>静的ファイルの設定手順</h2>
-
-<p>nginx+uwsgiでプロジェクトを公開した場合、manage.py runserverの場合と違い、静的ファイルの置場を設定しないといけないっぽい</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>location ~ ^/static/ <span class="o">{</span>
-</span><span class='line'>root /path/to/mysite;
-</span><span class='line'><span class="nb">break</span>;
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>settings.pyにSTATIC_URL, STATIC_ROOTを追加</p>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">STATIC_URL</span> <span class="o">=</span> <span class="s">&#39;/static/&#39;</span>
-</span><span class='line'><span class="n">STATIC_ROOT</span> <span class="o">=</span> <span class="s">&quot;/path/to/mysite/static&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>テンプレでは次のように静的ファイルにアクセスする</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;js/hoge.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>この設定だけでは静的ファイルが/path/to/mysite/staticに入ってないので、collectstaticコマンドを使ってファイルを集める</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py collectstatic
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これで各アプリに入ってる静的ファイルとadmin関連の静的ファイル全て持って来てくれる</p>
-
-<h2>設定反映</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo service nginx reload <span class="c">#ubuntuの場合</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>deploy時に良く使うメモ</h2>
-
-<p>mysite/settings.pyを以外を設定ファイルとして読み込む場合はmanage.pyに以下のオプションを付ける
-uwsgi.iniのenvも変更しておく</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>--settings<span class="o">=</span>mysite.settings_deploy
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>設定ファイルは例えばこんな感じで書いて、元のsettings.pyを上書きする</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">pystock.settings</span> <span class="kn">import</span> <span class="o">*</span>
-</span><span class='line'><span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>  <span class="o">.......</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/11/04/use-django-with-uwsgi/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -552,27 +264,12 @@ uwsgi.iniのenvも変更しておく</p>
 
 <p>Twitter ID @Wakamatzさん</p>
 
-<p>色んなデータをどうやってグループ分け（クラスタリング）するかという手法についての発表でした。基本は何グループに分けるかを指定して、その数に収束するまでクラスタリングするみたいですが、グループ数を決められない場合には自動的に決定する手法もあるそうです。が、なかなか難しい手法みたいです。</p>
-
-<h2>Rのこれから</h2>
-
-<p>不明(別のR勉強会を主催されていた方)</p>
-
-<p>スマホでもサーバクライアント型のサービスが増えてくるだろうから、サーバ内での解析にRが使えるんじゃないかという話でした。RDBやNOSQLとの接続が楽に出来るようになるとそうなるかも。Rをスマホにインストールするのは難しいとお話があったのですが、インストールはやろうと思えば出来るのでしょうか？脱獄したら出来るでしょうが。</p>
-
-<h2>カフェをなんとか盛り上げたい</h2>
-
-<p>不明(神戸で英会話カフェを主催されている方)</p>
-
-<p>神戸で毎週土曜日AM11:00〜PM2:00まで英会話の機会に使えるカフェを運営しているというお話と、カフェの問題点を紹介してくれました。今後何かRで分析する話になるかも？？？</p>
-
-<h2>Rで時系列データを取り扱う</h2>
-
-<p>Rで時系列データを扱い、時間に対して周期性があるデータから未来予測したりというライブラリの紹介とデモを見せて頂きました。Rのライブラリ紹介と実際に使った結果を見ることが出来ると理解が深まってとてもありがたいです。</p>
-
-<p>前回今回と大阪で参加しているのですが、今度は神戸で開催される時も参加してみようかと思います。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/10/28/kobe-dot-r-no-12/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -627,37 +324,14 @@ uwsgi.iniのenvも変更しておく</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>あとは./bin/にphantomjsが入っているので、./bin/にパスを通しておしまい</p>
-
-<h2>Seleniumをpythonから使えるようにする</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install selenium
-</span></code></pre></td></tr></table></div></figure>
 
 
-<p>これだけでおk</p>
-
-<h2>SeleniumでPhantomJSのドライバを使う</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">selenium</span> <span class="nn">import</span> <span class="nn">webdriver</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">PhantomJS</span><span class="p">()</span>
-</span><span class='line'><span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;http://www.yahoo.co.jp&quot;</span><span class="p">)</span>
-</span><span class='line'><span class="k">print</span> <span class="n">driver</span><span class="o">.</span><span class="n">current_url</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな感じ。何が出来るかは<a href="http://selenium-python.readthedocs.org/en/latest/api.html">Selenium Python BindingsのWebDriver API</a>を見ると良い。</p>
-
-<p>Javascriptをちゃんと評価してくれるので、すんげーやりやすい。昔ながらのフレームや、新規ウィンドウが出るようなものも上手く再現してくれる。すげーすげー</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/10/10/phantomjs/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -707,24 +381,12 @@ uwsgi.iniのenvも変更しておく</p>
 </ul>
 
 
-<h2>カードで説明する統計的独立</h2>
-
-<p>@florets1さん</p>
-
-<p>トランプのカードを例にして、独立とは何かを説明してくれました。なんとなくで済ませてたところを例を入れて分かりやすく説明してくれました。
-どっかの書籍で「○○が独立な場合に△△」とか書かれてイメージはしにくいのが、ざっくりですが、「計算しやすいので△△」くらいに読み替えてよさそうというのが分かった感じです。</p>
-
-<h2>Powershellいいよって話（タイトル忘れた）</h2>
-
-<p>Windows8から、常にインストールされているPowershellを使いこなすと、スクリプトで.Net使えたりして便利って話</p>
-
-<h2>他</h2>
-
-<p>Rでパイプ使う時はpipe Rが便利とかsql使ってdbアクセスするライブラリとかforループを速く便利にする方法とか教えてもらいました。まだ実際に試してないので、試してみないといかんす。</p>
-
-<p>次回参加は無理ですが、ちょこちょこ参加したいなと思いました（小並感）。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/09/22/kobe-dot-r-number-9/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -776,9 +438,14 @@ uwsgi.iniのenvも変更しておく</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>を追加インストールしておこうということだった。情報無かったので結構はまった。</p>
+
+
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/08/20/vb-not-work-on-ubuntu/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -825,46 +492,12 @@ uwsgi.iniのenvも変更しておく</p>
 
 <p>となってないかチェック。正しくは</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{'a':'b'}</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Django ImportError when importing xxx</h2>
-
-<p>ライブラリをインストールしていない場合、</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install xxx
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ライブラリ入れてる場合、xxxと同じファイル名のpythonファイル（とキャッシュ）が無いかチェックして、名前を変更するか、消す</p>
-
-<h2>locale.Error: unsupported locale setting</h2>
-
-<p>localeの設定名がおかしい。例えばこんな風だとエラー</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">locale</span>
-</span><span class='line'><span class="n">locale</span><span class="o">.</span><span class="n">setlocale</span><span class="p">(</span><span class="n">locale</span><span class="o">.</span><span class="n">LC_ALL</span><span class="p">,</span><span class="s">&#39;ja_JP&#39;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こうするとオッケー</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">locale</span>
-</span><span class='line'><span class="n">locale</span><span class="o">.</span><span class="n">setlocale</span><span class="p">(</span><span class="n">locale</span><span class="o">.</span><span class="n">LC_ALL</span><span class="p">,</span><span class="s">&#39;ja_JP.utf8&#39;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>IndexError: list index out of range</h2>
-
-<p>リストのインデックスが範囲外なので、該当する箇所のリストの添字をチェック。そもそもリストになっているかどうかもチェック。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/08/06/django-error/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -911,31 +544,12 @@ uwsgi.iniのenvも変更しておく</p>
 
 <h2>ライトニングトーク</h2>
 
-<p>メモとってないので、うろ覚えみたいになって申し訳ないですが、ざっくりこんな感じでした。抜けてるLTがあったら申し訳ありません。鳥頭です＞＜。</p>
-
-<h3>はなずきん♪さん</h3>
-
-<p>利用規約読んでる？って話でした。私はどうしても使わないといけないもの以外は読んでます。変な規約載せてるサイト時々ありますしね。</p>
-
-<h3>dragon_TAさん</h3>
-
-<p>和服い〜よって話からセキュリティに持っていくという力技のLT？でした。和服はインパクトあります。</p>
-
-<h3>黒林檎さん</h3>
-
-<p><a href="https://atnd.org/events/52714">私立プログラミングキャンプ2014</a>参加者募集の話でした。参加出来る人はぜひ！</p>
-
-<h3>ここから名前覚えてない＞＜申し訳ないです　の人</h3>
-
-<p>LibreOfficeの話がありました。オープンソースだし、コミュニティに参加しよう！って感じでした。LibreOfficeは使ってます。</p>
-
-<p>もう一つ急いでプレゼン資料作ってた方（確かすがわらさん）、今後のセキュリティ関連のイベントについてお話していました。色々あるということしか頭に残ってない・・・申し訳ないです。</p>
-
-<p>また、この勉強会は休憩時間にお菓子が食べれるとか、学生の方に交通費をカンパするとか色々凄いなと思いました（小並感）。これからも時間が合えば参加したいな〜と思えるイベントでした。</p>
-
-<p>ちなみに懇親会で渡した名刺とメインで使ってるtwitterアカウントが違ってたりします。メインは<a href="https://twitter.com/shigepon">@shigepon</a>です。以後よろしくです。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/07/29/matcha-139/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -981,76 +595,12 @@ uwsgi.iniのenvも変更しておく</p>
 
 <h2>設定</h2>
 
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'><span class="o">...</span>
-</span><span class='line'>      <span class="s">&#39;social.apps.django_app.default&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="o">...</span>
-</span><span class='line'><span class="p">)</span>
-</span><span class='line'><span class="n">AUTHENTICATION_BACKENDS</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'><span class="o">...</span>
-</span><span class='line'>      <span class="s">&#39;social.backends.twitter.TwitterOAuth&#39;</span><span class="p">,</span><span class="c">#Twitterでの認証をする場合。他の認証がある場合は該当するバックエンドを追加</span>
-</span><span class='line'>      <span class="s">&#39;django.contrib.auth.backends.ModelBackend&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="o">...</span>
-</span><span class='line'>      <span class="p">)</span>
-</span><span class='line'><span class="n">SOCIAL_AUTH_TWITTER_KEY</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="c">#これと次の行はTwitter認証用。別の認証を用いる場合は別の設定が必要</span>
-</span><span class='line'><span class="n">SOCIAL_AUTH_TWITTER_SECRET</span><span class="o">=</span><span class="s">&#39;&#39;</span>
-</span><span class='line'><span class="n">SOCIAL_AUTH_LOGIN_REDIRECT_URL</span> <span class="o">=</span> <span class="s">&#39;/&#39;</span>
-</span><span class='line'><span class="n">SOCIAL_AUTH_LOGIN_URL</span> <span class="o">=</span> <span class="s">&#39;/login/&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>注意：
-AUTH_USER_MODEL
-を加えるとエラー出たので注意(Django 1.6)</p>
-
-<figure class='code'><figcaption><span>urls.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">url</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s">&#39;social.apps.django_app.urls&#39;</span><span class="p">,</span><span class="n">namespace</span><span class="o">=</span><span class="s">&#39;social&#39;</span><span class="p">)),</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>設定後</h2>
-
-<p>syncdbしておく</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py syncdb
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これで例えばtwitter認証の場合に</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'>http://host/login/twitter
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>にアクセスすると認証を行ってくれるようになった。
-テンプレートにリンクを作りたい場合は</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;\{\% url &#39;social:base&#39; &#39;twitter&#39; \%\}&quot;</span><span class="nt">&gt;</span>login<span class="nt">&lt;/a&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とかやると作れる。
-「twitter」の部分は認証の種類によって変えるが、どういうルールで名前を決めるのかイマイチ分かってない。試行錯誤が要るかも。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/07/23/use-python-social-auth-in-django/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -1100,49 +650,12 @@ AUTH_USER_MODEL
 
 <p>現在運営しているサービス<a href="http://thoz.org">とある法律判例の全文検索</a>を作り始める時に、全文検索をサービスに入れるのを前提に考えてましたので、全文検索エンジンについて調べました。DBとしてはPostgreSQLをメインで使っているので、当時は選択肢として次のようなものがありました。</p>
 
-<ul>
-<li>Groonga（まだバージョン1になってなかったような）</li>
-<li>Senna</li>
-<li>tsvector</li>
-<li>namazu</li>
-<li>Hyper Estraier</li>
-</ul>
-
-
-<p>最初は何もアプリを入れなくていいのでtsvectorを使った全文検索を試してみたんですが、bigramで日本語が使えない。使うならソースからコンパイルというのが当時面倒だったので辞めました（当時からVagrantとかDockerとかあって、色々試せたらbigramでいってたかも）。</p>
-
-<p>なので、他4つを比較した訳なんですが、作るサービスは個人サービスだし、なるべく新しいもので、かつ日本人が作っているものを利用してみようと思い、Groongaを選択しました。あと、Groongaが「Sennaの後継」という立場だったのも大きかったと思います。Sennaの後継なら新しいアプリだとしても、それなりに信用があるだろう。すぐにメンテされなくなるようなものでも無いだろうという判断をしました。</p>
-
-<h2>実際にGroongaを使っていてよいと思っているところ</h2>
-
-<p>まずサーバ1個でかなり無茶な使い方してもちゃんと動いてくれるところです。Groonga勉強会では「データ量がメモリを超えだしたら分散を考えて」みたいな話が出たのですが、結構超えてても何の問題もなく動いてくれます。</p>
-
-<p>次は言語バインディングとかあまり考えなくてもHTTPでアクセス出来る方法を用意してくれているので、HTTPアクセスさえ出来ればどんな言語からでも利用出来る点が良いと思います。Mroongaは全く使っていませんし、Rroongaもデータのバックアップ用途以外は全く使ってません。HTTPアクセス出来る場合は、管理もHTTPで出来ます。これも便利だと思います。</p>
-
-<p>ドリルダウン、タグ検索、補完補正など、全文検索以外にも使える機能が沢山あります。沢山ありすぎて利用できていない機能が多々ありますがorz。</p>
-
-<p>機能とは関係ありませんが、TwitterでGroongaについてボヤくと@ktouさんがフォローしてくれるのがいつもとても助かっています＞＜。そういう人が居ると、使う時にとても心強いです。</p>
-
-<p>名前が好きです。Elasticなんたらは何かエラそうですが、Groongaはグルグルしてるっぽいのがいいです。</p>
-
-<h2>Groongaがこうなるともっとうれしいと思うところ</h2>
-
-<p>現在もとてもありがたいのですが、こうなると嬉しい点を箇条書きします。</p>
-
-<ul>
-<li>現在使っている機能以外でもっと色々出来るようなのですが、情報が少ない気がします。ドキュメントが充実してくるととても嬉しいです。ドキュメントが充実すればきっとTwitterでボヤく率も減る・・・かも。</li>
-<li>Rroonga使わないでGroonga単体の機能として、大容量データのバックアップを取れると嬉しいです。</li>
-<li>難しいと思いますが、複数カラム（カラムA,B)での全文検索で、CとDを検索したい時、カラムAにCが、カラムBにDが入ってる時に、検索結果として出力出来るフラグみたいなのを入れて欲しいです。</li>
-<li>もしかしたら出来るのかもしれませんが、ソースからビルドした場合にgroonga-server系の機能が使えるようにしてもらえるとHTTPから使っている身としては嬉しいです。</li>
-<li>cliでのヒストリーは特に何もアプリ入れなくても出来るようにしてくれるとまた嬉しいです。</li>
-<li>sqlのinsert文みたいな形でloadが出来ると、RDBで使っていたテーブルを丸々移動とか手軽に出来そうなので、そういうのが出来ると嬉しいです。もしくはcsvでloadが出来るとか。まぁsql使うならMroonga使えって話ですが・・・単体でも特にloadについてRDBから書き出せる形式のものを読み込めると嬉しいなーなんて思いました。</li>
-<li>勉強会の時に「ぐるーんが」なのか「むるーんが」なのか「るるーんが」なのかが発音でハッキリしませんでしたが、私の耳が悪いんですねきっと。</li>
-</ul>
-
-
-<p>以上追記するかもしれませんが、こんな感じで〜</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/07/05/groonga-qa/">Read on &rarr;</a>
+    </footer>
   
 
 

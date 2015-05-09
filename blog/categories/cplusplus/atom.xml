@@ -4,7 +4,7 @@
   <title><![CDATA[Category: CPlusPlus | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/cplusplus/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-09T09:05:28+09:00</updated>
+  <updated>2015-05-09T10:11:49+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -39,6 +39,9 @@ nako_addFunction(&amp;quot;sample01&amp;quot;&amp;cedil;&amp;quot;&amp;quot;&amp
 
 <p>}
 ```</p>
+
+<!-- more -->
+
 
 <p>なでしこ側のソースは以下のようにして呼び出してみました</p>
 
@@ -89,6 +92,9 @@ namespace ClassLibrary1{</p>
 <p>}
 ```</p>
 
+<!-- more -->
+
+
 <p>C++フォームアプリケーション</p>
 
 <p>C#で作ったdllの参照とかフォームの構成とか画像が消えちゃったので適当に想像してください。
@@ -133,6 +139,9 @@ namespace ClassLibrary1{</p>
 <li>すべての構成でプロジェクトのプロパティを修正　全般→文字セットを「マルチ バイト文字セットを使用する」に変更　リンカ→入力→モジュール定義ファイルに「dnako_import.def」と入力</li>
 <li>ビルド</li>
 </ol>
+
+
+<!-- more -->
 
 
 <p>dnako_import.defは以下</p>

@@ -127,47 +127,14 @@ $ curl https://raw.github.com/CHH/phpenv/master/bin/phpenv-install.sh | bash &he
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>こうやった。コマンド終了時のメッセージに従って.zshrcを変更して反映。
-php-buildのインストールは下のような感じ</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone git://github.com/CHH/php-build.git ~/.phpenv/plugins/php-build
-</span></code></pre></td></tr></table></div></figure>
 
 
-<p>で、おもむろにphpをインストール</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>phpenv install 5.5.5
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とかやると出るわ出るわエラーが出るわ。どうもビルド用のライブラリやヘッダファイルみたいなのが何かと足りないみたいで色々出て来た。出るメッセージは人によって違うと思うので、入れるライブラリの一覧より、ライブラリが無い場合の対処法を書いておく。ubuntuにはapt-fileというアプリ？があって、これを使うとライブラリをインストールした時にインストールされるファイル名で検索することが出来る。</p>
-
-<p>例えば「configure: error: mcrypt.h not found. Please reinstall libmcrypt.」みたいなエラーが出た場合、</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>apt-file search mcrypt.h
-</span><span class='line'>libmcrypt-dev: /usr/include/mcrypt.h
-</span><span class='line'>libmcrypt-dev: /usr/include/mutils/mcrypt.h
-</span><span class='line'>libtomcrypt-dev: /usr/include/tomcrypt.h
-</span><span class='line'>php-doc: /usr/share/doc/php-doc/html/book.mcrypt.html
-</span><span class='line'>php-doc: /usr/share/doc/php-doc/html/intro.mcrypt.html
-</span><span class='line'>php-doc: /usr/share/doc/php-doc/html/ref.mcrypt.html
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいにすると、mcrypt.hを含むライブラリとインストール箇所が表示されるので、これを見ながらインストールするライブラリを選んだ（この場合だとlibmcrypt-devをインストールした）</p>
-
-<p>これを地道に何度か繰り返して何とかビルド出来た。rbenvに比べると面倒だった。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/06/07/build-php-with-phpenv/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -219,11 +186,12 @@ php-buildのインストールは下のような感じ</p>
 </ul>
 
 
-<p>なんとなくだけどRailsって先に設計とかかっちりやってから作るってやり方な感じがして、「大雑把に作って、そこから細部をつめていく」みたいなやり方には合ってないんじゃないかと思った。個人でサクサクっとWebサービス作りたい場合には大雑把にまず作りたいんだよなー。</p>
-
-<p>見当違いかもしれないけどね。とりあえず他を当たってみる？メジャーどころでDjango？同じように挫折するかもしれないけどとりあえず試してみよう。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/06/06/difficult-to-use-rails/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -283,40 +251,14 @@ php-buildのインストールは下のような感じ</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>と書いておくとrouteで設定したパラメーターにアクセス出来る。</p>
 
-<h2>ルーティング中でURLの一部を省略可能にする</h2>
-
-<p>config/route.rbを編集する</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="n">get</span> <span class="s2">&quot;main/index/:hoge(/fuga/:hage)&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;main#index&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とやっておくと、main/index/1/fuga/2でもアクセス出来るし、main/index/1でもアクセス出来るようになる</p>
-
-<h2>ルーティング時にパラメーターの初期値を設定する</h2>
-
-<p>config/route.rbを編集する</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="n">get</span> <span class="s2">&quot;main/index/:hoge(/fuga/:hage)&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;main#index&quot;</span><span class="p">,</span><span class="ss">:defaults</span><span class="o">=&gt;</span><span class="p">{</span><span class="ss">:hage</span><span class="o">=&gt;</span><span class="mi">3</span><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と設定しておくと、app/controllers/main_controller.rb中のparams[:hage]の初期値として3を入れることが出来る。</p>
-
-<h2>Dateクラスの使い方メモ</h2>
-
-<p>個人的に文字列からDateクラスにして、1年前にするとか1ヶ月前にするとかそういう作業をすることが多いのでメモ</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'>  <span class="n">d</span> <span class="o">=</span> <span class="no">Date</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot;2014-05-24&quot;</span><span class="p">,</span><span class="s2">&quot;%Y-%m-%d&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">prev_year</span> <span class="c1">#1年前に指定</span>
-</span></code></pre></td></tr></table></div></figure>
 
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/29/rails-memo/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -366,9 +308,14 @@ php-buildのインストールは下のような感じ</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>こんな書き方も出来るらしい。ActiveRecord::Base.connectionでは無理らしい。うーむ。むか〜しからRailsはちょっとレールからはずれるととたんに難しくなるんだなー。やる気が減って来た＞＜。</p>
+
+
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/28/use-prepared-statement-in-find-by-sql/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -419,20 +366,12 @@ php-buildのインストールは下のような感じ</p>
 
 <p>odbc.iniにはサンプルの設定が入っているので、それを参考にしながら設定</p>
 
-<h2>odbcアクセスしてみる</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>isql -v DSN <span class="o">(</span>UID <span class="o">(</span>PWD<span class="o">))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でアクセスできる。あとはSQLを入力すれば結果を見たりできる。</p>
-
-<h2>monoを使ってアクセスする場合</h2>
-
-<p>monoというかなでしこ2でアクセスする場合に必要だった。libodbc.soが必要というエラーが出るのでunixodbc-devの追加インストールが必要。インストールすればエラー出ずに動くようになる。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/12/access-postgresql-through-odbc-ubuntu/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -482,23 +421,14 @@ php-buildのインストールは下のような感じ</p>
 </pre></td><td class='code'><pre><code class=''><span class='line'>http://hoge.com</span></code></pre></td></tr></table></div></figure>
 
 
-<p>となってほしいところが</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>http://upstream</span></code></pre></td></tr></table></div></figure>
 
 
-<p>となってしまうので、ググって対処を調べた。</p>
-
-<p><a href="http://stackoverflow.com/questions/5834025/how-to-preserve-request-url-with-nginx-proxy-pass">ruby &ndash; How to preserve request url with nginx proxy_pass &ndash; Stack Overflow</a>を参考にして</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>proxy_set_header Host http://hoge.com</span></code></pre></td></tr></table></div></figure>
-
-
-<p>を追記したら上手く動いた。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/05/rails-url-for-shows-proxy-pass/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -549,32 +479,14 @@ php-buildのインストールは下のような感じ</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>例えばこうしておくと一覧を配列出力しつつ、出力したいフィールドを指定出来る。viewだけで操作出来るのは楽チンだわ。
- 詳しい書式はブログ等の記事を見るよりも、英語だけど<a href="https://github.com/rails/jbuilder">rails/jbuilder · GitHub</a>を見るとよさげ。</p>
-
-<h2>jbuilderでネストした配列を出力する</h2>
-
-<p>大抵の説明では一番外側が配列で、中身はハッシュというものばかりで、配列の中が配列という形での出力方法の説明が無かったのでメモ</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">]]</span>
-</span></code></pre></td></tr></table></div></figure>
 
 
-<p>みたいなjsonを出力する場合</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="n">json</span><span class="o">.</span><span class="n">array!</span><span class="p">(</span><span class="vi">@events</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">json</span><span class="o">.</span><span class="n">array!</span><span class="p">(</span><span class="o">[</span><span class="n">item</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">to_i</span><span class="p">,</span><span class="n">item</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">to_i</span><span class="o">]</span><span class="p">)</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>という指定をする。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/05/output-json-by-rails4/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -648,113 +560,14 @@ php-buildのインストールは下のような感じ</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>うげげ。gitで鍵認証のエラー出てるわ。とりあえずbitbucketに公開鍵を登録してみた。
- <a href="http://morizyun.github.io/blog/ssh-key-bitbucket-github/">SSH認証キーをBitbucket/GitHubに設定しよう！ [Mac簡単手順] &ndash; 酒と泪とRubyとRailsと</a>の通りに登録したら出来た。~/.ssh/configに秘密鍵を追加して</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>Host bitbucket.org
-</span><span class='line'>  HostName bitbucket.org
-</span><span class='line'>  IdentityFile ~/.ssh/id_rsa
-</span><span class='line'>  User git
-</span><span class='line'>  TCPKeepAlive yes
-</span><span class='line'>  IdentitiesOnly yes
-</span></code></pre></td></tr></table></div></figure>
 
 
-<p> じゃあ再度デプロイをテストしてみたら・・・同じエラーが出た。
-色々試行錯誤して、「Error reading response length from authentication socket」でググった結果、ssh_agentが動いてないことが判明したので</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">eval</span> <span class="sb">`</span>ssh-agent -s<span class="sb">`</span>
-</span><span class='line'><span class="nv">$ </span>ssh-add ~/.ssh/id_rsa
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>としてデプロイをテストしたら無事動いた。めでたしめでたし。でも一旦ログアウトしたりするとssh-agentに接続しないとまた同じエラーが出た。ssh-agentへの接続方法は<a href="http://tipspc.blogspot.jp/2010/02/ssh-agent.html">PC便利帳: ssh-agentを使用したパスワードなしの接続</a>を参考にして</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ps ax | grep ssh-agent
-</span><span class='line'><span class="nv">$ </span>ls /tmp | grep ssh
-</span><span class='line'><span class="nv">$ SSH_AUTH_SOCK</span><span class="o">=</span>/tmp/ssh-XXXXX1111/agent.1111; <span class="nb">export </span>SSH_AUTH_SOCK;
-</span><span class='line'><span class="nv">$ SSH_AGENT_PID</span><span class="o">=</span>2222; <span class="nb">export </span>SSH_AGENT_PID;
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>`</p>
-
-<p>とやれば接続できて、デプロイできた。
- さらに実際にデプロイすると下のようにエラーでまくった。</p>
-
-<h2>capistrano3でbundle exec cap production deloyしようとしたらエラーが出まくる</h2>
-
-<p>Gemfileから色々省いてたらエラーが出まくる</p>
-
-<ul>
-<li>rubyが指定されてない（rbenvが足りない）</li>
-<li>uglifierが無いとかsassが足りないとか</li>
-<li>いちいちGemfile.lockをアップデートしないとエラー出る</li>
-</ul>
-
-
-<p>rbenvはcapistrano-rbenvをGemfileに追加して、Capfileにcapistrano/rbenvを指定して、config/deploy.rbに</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="n">set</span> <span class="ss">:rbenv_ruby</span><span class="p">,</span> <span class="s1">&#39;2.1.0&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とか何とか設定するとおk。</p>
-
-<p>uglifierとかsassとかproductionを指定した場合に使うような設定になってるみたいい（config/environments/production.rb）。とりあえずuglifierとかsassとかcofee-railsとか色々Gemfileに入れておけばエラーでなかった。</p>
-
-<h2>デプロイした後でcss関連でエラーが出た</h2>
-
-<p>sassが足らないと言われた。sass使わないので、sassが関わるファイル（app/assets/stylesheets内のscssファイル）を消すとエラーは消えた</p>
-
-<h2>productionモードでデプロイすると、cssやjsを読み込んでくれない</h2>
-
-<p>config/environments/production.rbに次の行を追記</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="n">config</span><span class="o">.</span><span class="n">assets</span><span class="o">.</span><span class="n">compile</span> <span class="o">=</span> <span class="kp">true</span>
-</span><span class='line'> <span class="n">config</span><span class="o">.</span><span class="n">assets</span><span class="o">.</span><span class="n">precompile</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;*.js&#39;</span><span class="p">,</span><span class="s1">&#39;*.css&#39;</span><span class="p">,</span><span class="s1">&#39;*.css.erb&#39;</span><span class="o">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>参考<a href="http://stackoverflow.com/questions/18700219/rails-4-assets-not-loading-in-production">ruby &ndash; Rails 4: assets not loading in production &ndash; Stack Overflow</a>
-すると解決した。なんかバッドノウハウみたいでやだ。</p>
-
-<h2>productionモードでunicornが起動してくれない</h2>
-
-<p>capistranoとは関係なかったけどcapistrano関連と思い込んでたのでメモ。capistranoの設定にミスがあると思って苦しんでたけど、単にunicornのオプションを指定してなかったのが悪かった。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle <span class="nb">exec </span>unicorn_rails -E production
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でおkだった。</p>
-
-<p>Capistranoは確かに便利なんだけど、なんかハマりポイントが多いような印象。
-バージョン変わって設定方法も変わったみたいだし。最初のハードルが高い感じがする。慣れたら楽になるのかな。</p>
-
-<h2>capistrano3でunicornの再起動に失敗する</h2>
-
-<p><a href="http://qiita.com/satococoa/items/9b0cc416ffc042680b9b">unicorn + rails 用 Capistrano 3 の設定ファイル &ndash; Qiita</a>と<a href="http://blog.dealforest.net/2014/02/failed_restart_unicorn_with_capistrano3/">Capistrano3 で Unicorn の再起動に失敗したのを対応したメモ | Supernova</a>が参考になった。</p>
-
-<p>でもrestartでちゃんと再起動して修正箇所が反映しない。stopしてstartしないと。うーん。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -803,96 +616,12 @@ php-buildのインストールは下のような感じ</p>
 
 <h2>unicornインストール</h2>
 
-<p>rubyとかbundlerとかが必要なので、無い場合は<a href="http://blog.shigepon.info/blog/2014/02/26/rails-startup/">Ruby on Railsを入れてみた</a>に書いた通りにインストール。unicornはGemfileに</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>gem <span class="s2">&quot;unicorn&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と追記して</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle install -path vendor/bundle
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でインストール出来る。要らないかもしれないけどお約束のようにインストール後はrbenv rehashしておく。</p>
-
-<h2>nginxの設定</h2>
-
-<p>設定ファイルは最低限これくらい書いておけばよさげ</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>upstream unicorn-unix-domain-socket <span class="o">{</span>
-</span><span class='line'>        server unix:/var/run/unicorn/unicorn_<span class="o">[</span>app_name<span class="o">]</span>.sock <span class="nv">fail_timeout</span><span class="o">=</span>0;
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>upstream unicorn-tcp <span class="o">{</span>
-</span><span class='line'>        server 127.0.0.1:8080;
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>server <span class="o">{</span>
-</span><span class='line'>        listen 80;
-</span><span class='line'>        server_name http://hoge;
-</span><span class='line'>
-</span><span class='line'>        root /path/to/app_root/public;
-</span><span class='line'>
-</span><span class='line'>        access_log  /var/log/nginx/access.log;
-</span><span class='line'>        error_log /var/log/nginx/error.log;
-</span><span class='line'>
-</span><span class='line'>        location / <span class="o">{</span>
-</span><span class='line'>                proxy_pass http://unicorn-tcp;
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>/var/run/unicornディレクトリは前もって作っておく。/tmpとかでも良さげなんだけど、どうなんだろう？</p>
-
-<h2>railsアプリのアップロード</h2>
-
-<p>適当にアップロード。rsyncで適当にやった。</p>
-
-<h2>unicorn起動</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle <span class="nb">exec </span>unicorn_rails -D
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>-Dはデーモンとして起動。configファイルを指定する場合は、-c path/to/config.rbを指定する。</p>
-
-<h2>nginx起動</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>service nginx start
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>以上でrailsアプリが見れるようになる。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/02/use-nginxand-unicorn-on-sakura-vps/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -942,113 +671,14 @@ php-buildのインストールは下のような感じ</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>でfilenameの変更履歴を表示する</p>
-
-<h3>ブランチ間の変更ファイル一覧を取得</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git diff --name-only -b parent_branch -b child_branch
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>参考：<a href="http://qa.atmarkit.co.jp/q/2047">gitの指定ブランチで変更されたファイルの一覧を取得したい &ndash; QA@IT</a></p>
-
-<h2>GitHubで色々やる手順</h2>
-
-<p>参考：</p>
-
-<ul>
-<li><a href="http://kik.xii.jp/archives/179">Github で Fork してから Pull Request をするまでの流れ | けーこ in サンフランシスコ</a></li>
-<li><a href="http://qiita.com/xtetsuji/items/555a1ef19ed21ee42873">GitHubでFork/cloneしたリポジトリを本家リポジトリに追従する &ndash; Qiita</a></li>
-<li><a href="http://misapon.blogspot.jp/2014/10/github.html">明日に向かって昇龍拳: GitHubでプルリクエストがマージされた後にすること</a></li>
-</ul>
-
-
-<h3>1.準備</h3>
-
-<p>まずは開発に関わりたいプロジェクトのリポジトリをFork</p>
-
-<p>次にローカルにクローン</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone https://github.com/path/to/repository.git
-</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>repository
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>2.開発〜Pull Request</h3>
-
-<p>Pull Request用にブランチを切る</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git checkout -b issue
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>コード変更後、コミット</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git add -A
-</span><span class='line'><span class="nv">$ </span>git commit -m <span class="s2">&quot;commit message&quot;</span>
-</span><span class='line'><span class="nv">$ </span>git push origin issue
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>まだrebeseは良く分かってない。で、GitHub上でPull Requestを作成する。</p>
-
-<h3>3.Pull Requestが反映された後</h3>
-
-<h4>Pull Requestに使ったブランチを削除</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git checkout master
-</span><span class='line'><span class="nv">$ </span>git branch -D issue
-</span><span class='line'><span class="nv">$ </span>git push origin :issue
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>GitHubでForkしたリポジトリを本家に合わせる</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git remote add honke https://github.com/honke/path/to/repository.git
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>リポジトリの追加は1回で良い。後は合わせたいタイミングで下のコマンドを繰り返す</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git fetch honke
-</span><span class='line'><span class="nv">$ </span>git merge honke/master
-</span><span class='line'><span class="nv">$ </span>git push origin master
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>以下2〜3を繰り返す</p>
-
-<h3>別の場所に開発中のブランチをダウンロードしたい場合</h3>
-
-<p>参考：
-<a href="http://glassylamp.blogspot.jp/2010/11/git.html">GlassyLamp: git でブランチを指定してダウンロードする方法</a></p>
-
-<p>issueブランチをダウンロードしたい場合</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone https://github.com/path/to/repository.git
-</span><span class='line'><span class="nv">$ </span>git checkout -b issue-local remotes/origin/issue
-</span></code></pre></td></tr></table></div></figure>
-
 
 
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/04/09/git-memo/">Read on &rarr;</a>
+    </footer>
   
 
 

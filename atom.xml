@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-09T09:05:28+09:00</updated>
+  <updated>2015-05-09T10:11:49+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -33,7 +33,13 @@
 
 <p>(略) 追記するかも？</p>
 
+<!-- more -->
+
+
 <h2>2. Jenkins設定</h2>
+
+<!-- more -->
+
 
 <h3>一般</h3>
 
@@ -147,11 +153,6 @@
 
 <p>cui環境でnunitを実行するには<a href="http://www.nunit.org/index.php?p=nunit-console&amp;r=2.5.10">nunit-console</a>を使う。なでしこ2のテストを実行するにはテスト関連のdllをnunitで実行すると良い。コマンドはなでしこ2をインストールしたディレクトリでこんな感じ。</p>
 
-<!-- more -->
-
-
-
-
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>nunit-console CNako2Test/bin/Debug/CNako2Test.dll
 </span></code></pre></td></tr></table></div></figure>
@@ -162,6 +163,11 @@
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>nunit-console NakoPluginTest/bin/Debug/NakoPluginTest.dll
 </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!-- more -->
 
 
 <p>だと、外部ファイルを読み込むテスト（例えばTest_read）で、Could not find fileと怒られる。なので、コマンドにnoshadowオプションを付ける。</p>
@@ -192,6 +198,16 @@
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>aptitude install mono-devel mono-vbnc nunit
 </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!-- more -->
+
+
+
+
+<!-- more -->
 
 
 <h1>なでしこ2リポジトリを取得</h1>
@@ -293,6 +309,11 @@
 
 <p>djangoのshellから使ってみる</p>
 
+<!-- more -->
+
+
+
+
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -306,6 +327,8 @@
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
 </pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">$</span> <span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">shell</span>
 </span><span class='line'><span class="kn">from</span> <span class="nn">SPARQLWrapper</span> <span class="kn">import</span> <span class="n">SPARQLWrapper</span><span class="p">,</span> <span class="n">JSON</span>
 </span><span class='line'><span class="n">sparql</span> <span class="o">=</span> <span class="n">SPARQLWrapper</span><span class="p">(</span><span class="s">&quot;http://dbpedia.org/sparql&quot;</span><span class="p">)</span>
@@ -316,6 +339,8 @@
 </span><span class='line'><span class="s">&quot;&quot;&quot;</span><span class="p">)</span>
 </span><span class='line'><span class="n">sparql</span><span class="o">.</span><span class="n">setReturnFormat</span><span class="p">(</span><span class="n">JSON</span><span class="p">)</span>
 </span><span class='line'><span class="n">results</span> <span class="o">=</span> <span class="n">sparql</span><span class="o">.</span><span class="n">query</span><span class="p">()</span><span class="o">.</span><span class="n">convert</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="err">!</span><span class="o">--</span> <span class="n">more</span> <span class="o">--&gt;</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="s">&quot;results&quot;</span><span class="p">][</span><span class="s">&quot;bindings&quot;</span><span class="p">]:</span>
 </span><span class='line'>    <span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s">&quot;label][&quot;</span><span class="n">value</span><span class="s">&quot;])</span>
@@ -377,7 +402,15 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
+<!-- more -->
+
+
 <p>これで本体はアップデート完了した。</p>
+
+<!-- more -->
+
 
 <h2>プロジェクトをDjango1.7で動かす</h2>
 
@@ -448,6 +481,11 @@
 
 
 
+<!-- more -->
+
+
+
+
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -455,6 +493,11 @@
 </span><span class='line'><span class="na">buffer-size</span><span class="o">=</span> <span class="s">xxxx</span>
 </span><span class='line'><span class="err">...</span>
 </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!-- more -->
 
 
 <p>参考：<a href="http://stackoverflow.com/questions/15878176/uwsgi-invalid-request-block-size">uwsgi invalid request block size &ndash; Stack Overflow</a></p>
@@ -482,6 +525,9 @@
 
 
 <p>メモがてらローテーション設定を書いておく</p>
+
+<!-- more -->
+
 
 <p>/etc/logrotate.d/php.conf</p>
 
@@ -542,6 +588,9 @@
 </ul>
 
 
+<!-- more -->
+
+
 <p>データの前処理ってとても大事なので、参考にしてちょっと練習出来たらなと思います。</p>
 
 <h2>R in Life Science</h2>
@@ -596,6 +645,11 @@ Twitterでインなんとかとか言っちゃいましたが、インキャン�
 
 
 <p>次にクラスに対して、__init__をオーバーライドし、widgetとしてTextInputのフォームを2つ登録してみた。コードはこんな感じ。</p>
+
+<!-- more -->
+
+
+
 
 <figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -705,7 +759,17 @@ Twitterでインなんとかとか言っちゃいましたが、インキャン�
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
+<!-- more -->
+
+
 <p>この時、args[0]にHttpRequestオブジェクトが入ってるので、これをいじると適当に値を追加したり整形したりするのをビューの外部に持っていけるので、使いようによっては共通部分と個別部分の分離や、ビューに直接関係ない処理（ログとか）を分離出来るので便利な感じがする。ただ、やりすぎるとコードが分割されすぎて読みにくくなる気もする。</p>
+
+<!-- more -->
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -754,6 +818,11 @@ Twitterでインなんとかとか言っちゃいましたが、インキャン�
 
 <h2>設定</h2>
 
+<!-- more -->
+
+
+
+
 <figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -765,6 +834,11 @@ Twitterでインなんとかとか言っちゃいましたが、インキャン�
 </span><span class='line'><span class="o">....</span>
 </span><span class='line'><span class="p">)</span>
 </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!-- more -->
 
 
 <h2>テンプレート</h2>
@@ -838,6 +912,14 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 
 <p>デモは奇麗に見えるんだけど、そもそもメインのcssが何故かdemo.cssみたいなのをインポートしてて、これは無いんじゃないと思ったのと背景画像無しだとイメージに合わなかった。あと、デモサイトがあるだけで、最初に必要なファイルとかが分かりにくかった。</p>
 
+<!-- more -->
+
+
+
+
+<!-- more -->
+
+
 <h2>pickadate</h2>
 
 <p><a href="http://amsul.ca/pickadate.js/">ダウンロードページ</a></p>
@@ -877,6 +959,9 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 <li>左メニューのProvisioning Profiles->AllからUDIDを追加したいプロビジョニングファイルを探してクリック->Editをクリック</li>
 <li>Devicesの一覧で、追加したDevice名をチェックしてGenerateボタンを押す</li>
 </ul>
+
+
+<!-- more -->
 
 
 <h2>ぐぐると古い情報が結構あって混乱した箇所（Xcode使ってローカルのプロビジョニングファイルを最新にする）</h2>
@@ -925,6 +1010,11 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 </span><span class='line'>    <span class="s">&#39;south&#39;</span><span class="p">,</span>
 </span><span class='line'><span class="p">)</span>
 </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!-- more -->
 
 
 <h2>作成中のアプリをsouthに追加</h2>
@@ -979,7 +1069,13 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 
 <p>プロジェクトにlocaleフォルダを作る。無いと後のコマンドでエラーが出た</p>
 
+<!-- more -->
+
+
 <h2>poファイル作成</h2>
+
+<!-- more -->
+
 
 <p>おもむろにpoファイルを作るコマンドを実行</p>
 
@@ -1055,6 +1151,9 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 <p>リンクというのがあまりイメージ出来なかったけど、次の上田さんの発表で実際に動かしているところを見るとなるほどと思いました。</p>
 
 <p>ちなみに、12月7日の日曜日にOIHってとこ（グランドフロント大阪内）でLODハッカソン関西があるそうです。見てる人が居るかどうか知らないけど興味がある人は是非。</p>
+
+<!-- more -->
+
 
 <p>他にもコンテストとして</p>
 
@@ -1140,6 +1239,11 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 <h2>ファイルでの設定</h2>
 
 <p>settings.pyとurls.pyを設定</p>
+
+<!-- more -->
+
+
+
 
 <figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1337,6 +1441,9 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 
 
 <p>instance=xxxとやるのを何度か忘れた＞＜</p>
+
+<!-- more -->
+
 
 <h2>forms.DateFieldでISO-8601フォーマットの入力を受入れる</h2>
 
@@ -1660,6 +1767,9 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 
 <p>stringを例にしてるが、ListとかObjectとかBoolとか色々入れられる。</p>
 
+<!-- more -->
+
+
 <h2>Titanium MobileのUIで本家以外に参考にしてるサイト</h2>
 
 <p><a href="https://code.google.com/p/titanium-mobile-doc-ja/w/list">Wiki Pages &ndash; titanium-mobile-doc-ja &ndash; Appcelerator Titanium Mobileに関するドキュメントを日本語でまとめていくプロジェクト &ndash; Google Project Hosting</a></p>
@@ -1703,6 +1813,9 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 
 
 <p>を書けばおk。要はタイムゾーン入れてくれってエラーなので、そんなものはない！と指定すればいいっぽい</p>
+
+<!-- more -->
+
 
 <p>参考：<a href="http://stackoverflow.com/questions/18622007/runtimewarning-datetimefield-received-a-naive-datetime">django &ndash; RuntimeWarning: DateTimeField received a naive datetime &ndash; Stack Overflow</a></p>
 ]]></content>

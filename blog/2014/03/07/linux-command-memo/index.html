@@ -122,6 +122,11 @@
 </pre></td><td class='code'><pre><code class=''><span class='line'>$ cat access.log | grep -v -i "bot" | grep "referer:-" | grep "status:200" | awk '{print $3}' | sort | uniq -c</span></code></pre></td></tr></table></div></figure>
 
 
+
+
+<!-- more -->
+
+
 <p>軽くbot避けを入れてるけど、crawlerとかspiderとかを避けておくとより正確になるかも。
 これだけだと一杯出てくるので100回以上アクセスあったIPだけ取り出してみた。</p>
 

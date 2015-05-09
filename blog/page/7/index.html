@@ -138,35 +138,14 @@ let &hellip;">
 </span><span class='line'>let dbext_default_port="port"</span></code></pre></td></tr></table></div></figure>
 
 
-<p>と入力してvimを再起動して</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="p">:</span><span class="k">Select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">hoge</span> <span class="k">limit</span> <span class="mi">1</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
 
 
-<p>と何かのテーブルから１行だけ出力してみようとしてみたけど</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="n">dbext</span><span class="p">:</span><span class="n">PostgreSQL</span> <span class="n">requires</span> <span class="n">a</span> <span class="s1">&#39;$HOME/.pgpass&#39;</span> <span class="n">file</span> <span class="k">in</span> <span class="k">order</span> <span class="k">to</span> <span class="n">authenticate</span><span class="p">.</span> <span class="n">This</span> <span class="n">file</span> <span class="k">is</span> <span class="n">missing</span><span class="p">.</span> <span class="n">If</span> <span class="n">you</span> <span class="k">are</span> <span class="k">using</span> <span class="n">a</span> <span class="k">local</span> <span class="k">connection</span><span class="p">,</span> <span class="n">you</span> <span class="n">can</span> <span class="k">create</span> <span class="n">an</span> <span class="n">empty</span> <span class="p">.</span><span class="n">pgpass</span> <span class="n">file</span><span class="p">.</span>  <span class="n">The</span> <span class="n">b</span>
-</span><span class='line'><span class="n">inary</span> <span class="s1">&#39;psql&#39;</span> <span class="n">does</span> <span class="k">not</span> <span class="n">accept</span> <span class="n">commandline</span> <span class="n">passwords</span><span class="p">.</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>というエラーメッセージが！
-どうもpsqlがコマンドラインでパスワードを受け付けないので、パスワード設定しても意味ないみたい。
-なので、~/.pgpassに</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">host</span><span class="p">:</span><span class="n">port</span><span class="p">:</span><span class="n">dbname</span><span class="p">:</span><span class="n">username</span><span class="p">:</span><span class="n">password</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>を入力したらエラー無く動いた。良かった良かった。
-ちなみに.vimrcに書いたパスワード設定を消すと、それはそれでパスワード聞かれるので残しておいた方がいい。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/02/28/vim-dbext-postgresql/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -213,259 +192,12 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
 
 <blockquote><p>sugamasao: @shigepon しがらみがなければ、最新の4.0.2が良いと思います。お試しで触って見るなら、4.1のbeta版を使って見ても良いかもしれません〜</p></blockquote>
 
-<p>という話が！そうなるとrubyも2系入れないとダメじゃん！と思いつつ</p>
-
-<blockquote><p>shigepon: @sugamasao ただ、うちのubuntuのrubyが1.8なので、まずは2.0にしないといけないっすね。</p></blockquote>
-
-<p>とボヤいたら、やっぱり</p>
-
-<blockquote><p>sugamasao: @shigepon なるほど〜！1.8系はもうオワコンなので、2系を入れたほうが良いですねwちなみに、いまは2.1がリリースされてます！</p></blockquote>
-
-<p>とのお達しが。んじゃ2系入れるかとググりながらインストールしてみた。
-参考にしたページは次のとおり</p>
-
-<ul>
-<li><a href="http://qiita.com/emadurandal/items/a60886152a4c99ce1017">Rails開発環境の構築（rbenvでRuby導入からBundler、Rails導入まで） &ndash; Qiita</a></li>
-<li><a href="http://stackoverflow.com/questions/19031633/starting-the-rails-sqlite3-error">Starting the rails, sqlite3 Error &ndash; Stack Overflow</a></li>
-<li><a href="http://kiyotakagoto.hatenablog.com/entry/2013/05/28/235727">rails server 時に `autodetect&#8217;: Could not find a JavaScript runtime が出たら。 &ndash; 人生ずっと勉強</a></li>
-</ul>
-
-
-<h3>手順</h3>
-
-<p>行ったり来たりしてるからこんな感じでスッと出来てないけど、だいたいこんな感じ</p>
-
-<h4>rbenvインストール</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git clone git://github.com/sstephenson/rbenv.git ~/.rbenv
-</span><span class='line'>mkdir -p ~/.rbenv/plugins
-</span><span class='line'>git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build</span></code></pre></td></tr></table></div></figure>
-
-
-<p>~/.profileに以下を追加</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;$HOME/.rbenv/bin:$PATH&quot;</span>
-</span><span class='line'><span class="nb">eval</span> <span class="s2">&quot;$(rbenv init -)&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>んで</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">source</span> ~/.profile
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>opensslは入ってたから特に何もしなかったけど必要なら</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo aptitude install openssl
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>iconv, readlineは最初から入ってるんじゃないかな？
-んでインストール</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo rbenv install -l
-</span><span class='line'>rbenv install 2.1.0
-</span><span class='line'>rbenv global 2.1.0
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>rbenvで何かやったら</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>rbenv rehash
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>を忘れずに</p>
-
-<h3>Bundlerインストール</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>rbenv <span class="nb">exec </span>gem install bundler
-</span><span class='line'>rbenv rehash
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Railsインストール</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>bundle init
-</span><span class='line'>vim Gemfile
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Gemfile内に</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>gem <span class="s2">&quot;rails&quot;</span>, <span class="s2">&quot;4.0.2&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>を追加。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>bundle install --path vendor/bundle
-</span><span class='line'>bundle <span class="nb">exec </span>rails new hoge --skip-bundle
-</span><span class='line'>rm -f Gemfile
-</span><span class='line'>rm -f Gemfile.lock
-</span><span class='line'>rm -rf .bundle
-</span><span class='line'>rm -rf vendor/bundle
-</span><span class='line'><span class="nb">cd </span>hoge
-</span><span class='line'>bundle install --path vendor/bundle
-</span><span class='line'><span class="nb">echo</span> <span class="s1">&#39;/vendor/bundle&#39;</span> &gt;&gt; .gitignore
-</span><span class='line'>bundle <span class="nb">exec </span>rails server
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>で途中下のようにハマりながら起動を確認した。</p>
-
-<h3>はまったポイント</h3>
-
-<p>Ruby on Railsをインストールする時にプロジェクトのディレクトリで</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>bundle install -path vendor/bundle
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>すると、</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>Gem::Installer::ExtensionBuildError: ERROR: Failed to build gem native extension.
-</span><span class='line'>
-</span><span class='line'>        /usr/bin/ruby1.9.1 extconf.rb
-</span><span class='line'>checking <span class="k">for </span>sqlite3.h... no
-</span><span class='line'>sqlite3.h is missing. Try <span class="s1">&#39;port install sqlite3 +universal&#39;</span>
-</span><span class='line'>or <span class="s1">&#39;yum install sqlite-devel&#39;</span> and check your shared library search path <span class="o">(</span>the
-</span><span class='line'>location where your sqlite3 shared library is located<span class="o">)</span>.
-</span><span class='line'>*** extconf.rb failed ***
-</span><span class='line'>Could not create Makefile due to some reason, probably lack of
-</span><span class='line'>necessary libraries and/or headers.  Check the mkmf.log file <span class="k">for </span>more
-</span><span class='line'>details.  You may need configuration options.
-</span><span class='line'>
-</span><span class='line'>Provided configuration options:
-</span><span class='line'>    --with-opt-dir
-</span><span class='line'>    --without-opt-dir
-</span><span class='line'>    --with-opt-include
-</span><span class='line'>    --without-opt-include<span class="o">=</span><span class="k">${</span><span class="nv">opt</span><span class="p">-dir</span><span class="k">}</span>/include
-</span><span class='line'>    --with-opt-lib
-</span><span class='line'>    --without-opt-lib<span class="o">=</span><span class="k">${</span><span class="nv">opt</span><span class="p">-dir</span><span class="k">}</span>/lib
-</span><span class='line'>    --with-make-prog
-</span><span class='line'>    --without-make-prog
-</span><span class='line'>    --srcdir<span class="o">=</span>.
-</span><span class='line'>    --curdir
-</span><span class='line'>    --ruby<span class="o">=</span>/usr/bin/ruby1.9.1
-</span><span class='line'>    --with-sqlite3-dir
-</span><span class='line'>    --without-sqlite3-dir
-</span><span class='line'>    --with-sqlite3-include
-</span><span class='line'>    --without-sqlite3-include<span class="o">=</span><span class="k">${</span><span class="nv">sqlite3</span><span class="p">-dir</span><span class="k">}</span>/include
-</span><span class='line'>    --with-sqlite3-lib
-</span><span class='line'>    --without-sqlite3-lib<span class="o">=</span><span class="k">${</span><span class="nv">sqlite3</span><span class="p">-dir</span><span class="k">}</span>/lib
-</span><span class='line'>    --enable-local
-</span><span class='line'>    --disable-local
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>Gem files will remain installed in /home/helio/.bundler/tmp/23089/gems/sqlite3-1.3.8 <span class="k">for </span>inspection.
-</span><span class='line'>Results logged to /home/helio/.bundler/tmp/23089/gems/sqlite3-1.3.8/ext/sqlite3/gem_make.out
-</span><span class='line'>
-</span><span class='line'>An error occurred <span class="k">while </span>installing sqlite3 <span class="o">(</span>1.3.8<span class="o">)</span>, and Bundler
-</span><span class='line'>cannot <span class="k">continue</span>.
-</span><span class='line'>Make sure that <span class="sb">`</span>gem install sqlite3 -v <span class="s1">&#39;1.3.8&#39;</span><span class="sb">`</span> succeeds before
-</span><span class='line'>bundling.
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>というエラーが出たのは</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo aptitude install sqlite3 libsqlite3-dev
-</span><span class='line'>bundle install --path vendor/bundle
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>で出なくなった。インストールパスの指定が無ければpathオプションは要らない。</p>
-
-<p>bundle exec rails serverで</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>autodetect<span class="err">&#39;</span>: Could not find a JavaScript runtime. See https://github.com/sstephenson/execjs <span class="k">for </span>a list of available runtimes. <span class="o">(</span>ExecJS::RuntimeUnavailable<span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>というエラーが出て、サーバを起動出来なかった。これは
-プロジェクトに入っているGemfileに書いてあるtherubyracerに関する行をコメントアウトして</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>bundle install --path vendor/bundle
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とすれば起動出来るようになった。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/02/26/rails-startup/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -515,27 +247,14 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>でいける。</p>
-
-<h2>コミットするファイルを、ファイルで指定する</h2>
-
-<p>fuga.htmlとhage.htmlを変更しててfuga.htmlだけコミットしたい場合</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>fuga.html
-</span></code></pre></td></tr></table></div></figure>
 
 
-<p>というファイル(hoge.txt)を作っておいて、</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>svn commit -m <span class="s2">&quot;コメント&quot;</span> --targets hoge.txt
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でおk</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/02/11/svn-memo/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -636,145 +355,12 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
 </ul>
 
 
-<p>オブジェクトに設定したコードでは次のように書く。例としてスペースを押したら効果音が出るようにしてみた。<br/>
-コードの設定部分でこの例の場合clipに音源を入れる（でないと聞こえなかったような）</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="n">AudioClip</span> <span class="n">clip</span><span class="p">;</span>
-</span><span class='line'><span class="k">public</span> <span class="n">function</span> <span class="nf">Update</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="n">GetButton</span><span class="p">(</span><span class="s">&quot;Jump&quot;</span><span class="p">))</span> <span class="p">{</span>
-</span><span class='line'>        <span class="n">audio</span><span class="p">.</span><span class="n">PlayOneShot</span><span class="p">(</span><span class="n">clip</span><span class="p">);</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>BGMをかける</h3>
-
-<p>Assetに追加したBGMをHiearchyに追加して、InspectorのLoopをチェックしたらOK</p>
-
-<h3>位置移動</h3>
-
-<p>transform.positionにVectorオブジェクトを代入すればOK<br/>
-transform.position.xに直接値を入れるとC#では怒られた。</p>
-
-<h3>トリガで衝突判定</h3>
-
-<p>Collider2Dでis Triggerにチェックを入れるとTriggerを用いて衝突判定できる。衝突しないケースと衝突するケースを使い分けられるので便利。
-イベントとして2Dの場合は、</p>
-
-<ul>
-<li>OnTriggerEnter2D</li>
-<li>OnTriggerStay2D</li>
-<li>OntriggerExit2D</li>
-</ul>
-
-
-<p>が使える。2Dで物理エンジン使わない時とか使える。なんか使える条件があるような情報があった。</p>
-
-<h3>時間待ちの作法</h3>
-
-<p>コルーチンを使うらしい。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="n">function</span> <span class="nf">Update</span><span class="p">(){</span>
-</span><span class='line'><span class="p">...</span>
-</span><span class='line'>  <span class="n">StartCoroutine</span><span class="p">(</span><span class="s">&quot;GameOver&quot;</span><span class="p">);</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="k">private</span> <span class="n">IENumerator</span> <span class="nf">GameOver</span><span class="p">(){</span>
-</span><span class='line'>  <span class="k">yield</span> <span class="k">return</span> <span class="k">new</span> <span class="nf">WaitForSeconds</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
-</span><span class='line'>  <span class="n">Application</span><span class="p">.</span><span class="n">LoadLevel</span><span class="p">(</span><span class="s">&quot;GameOver&quot;</span><span class="p">);</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな感じ。時間待ちとは言え、動きが止まったりするわけじゃない。</p>
-
-<h3>座標変換</h3>
-
-<p>タップやクリックの座標とUnity内での座標の場合は座標変換が必要。カメラのScreenToWorldPointメソッドを使うが2Dの場合直感的に行かなく、次のようにする</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="n">Vector3</span> <span class="n">screenPosition</span> <span class="p">=</span> <span class="n">Camera</span><span class="p">.</span><span class="n">main</span><span class="p">.</span><span class="n">ScreenToWorldPoint</span><span class="p">(</span><span class="n">transform</span><span class="p">.</span><span class="n">position</span><span class="p">);</span>
-</span><span class='line'><span class="n">Vector2</span> <span class="n">clickPosition</span> <span class="p">=</span> <span class="n">Camera</span><span class="p">.</span><span class="n">main</span><span class="p">.</span><span class="n">ScreenToWorldPoint</span><span class="p">(</span><span class="k">new</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="n">mousePosition</span><span class="p">.</span><span class="n">x</span><span class="p">,</span><span class="n">Input</span><span class="p">.</span><span class="n">mousePosition</span><span class="p">.</span><span class="n">y</span><span class="p">,</span><span class="n">screenPosition</span><span class="p">.</span><span class="n">z</span><span class="p">));</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と2DなのにVector3（３次元座標）で指定する。</p>
-
-<h3>デバッグ</h3>
-
-<p>Unity Remoteを使う。Free Aspectだと上手く表示できないとか上手く行かないケースがあるので注意。かならずアスペクト比？を設定。</p>
-
-<h3>Androidへの実装</h3>
-
-<p>実機に実装する場合はBuild and Runをすれば良い。ただしXperia SO-01Bに実装すると初期の設定ではエラーがポコポコ出たので対処をメモしておく</p>
-
-<h3>iPhoneへの実装</h3>
-
-<p>iPhoneへの実装はios Developer Programへの登録など色々面倒で複数サイトを参考にした。
-ios Developer Programへの登録などUnity関係なくやらないといけない作業は、<a href="http://r-dimension.xsrv.jp/classes_j/ios_test/">iOSデバイス（iPhone・iPad）実機テスト | Yasushi Noguchi Class</a>が参考になった<br/>
-unity側での作業は<a href="http://tech.gmo-media.jp/post/54095871491/running-unity-app-on-iphone">iPhone実機でUnityを動かしてみた &ndash; unity部 | GMOメディア エンジニアブログ</a>を参考にすれば上手くいった。
-バージョンが変わったりすると、また画面構成とか変わるんだろうけど。</p>
-
-<p>あとiPhone初心者だったせいで、マナーモードになっているのに気づかず、音が出ないと１時間くらい悩んでた。（これでハマる人は少ないと思うけど一応メモ）</p>
-
-<h3>iPhoneへのadhocビルドと配布</h3>
-
-<p>やること色々あるので、参考にしたサイトの一覧を紹介する程度。</p>
-
-<ul>
-<li><a href="http://dev.classmethod.jp/smartphone/iphone/ios-app-how-to-release/#toc-xcode-">よく分かる！iOS アプリのリリース手順のまとめ ｜ Developers.IO</a>←App Storeでの配布についてのページだけどこのページが一番参考になった。多分画面が最新のものに対応してるから。</li>
-<li><a href="http://plus.vc/iphone/4357/">iPhoneアプリのAd Hoc配信方法まとめ完全版 [Xcode4対応] | PLUS</a> 上のページで分からないところはこのページを参考にした。Xcodeのビルド設定以降は参考になる。</li>
-</ul>
-
-
-<p>adhocで端末を追加したい場合に、またもハマった</p>
-
-<ul>
-<li><a href="http://d.hatena.ne.jp/mswar/20090303/1236087158">iPhone Developper Programingに 新しくデバイス追加する方法(２台目、３台目～) &ndash; mswar的電網日誌</a> adhocじゃないけど、それ以外の部分は参考になった</li>
-<li><a href="http://plus.vc/iphone/7015/">Adhocでデバイスを追加したものの、インストールできない場合のチェック方法 | PLUS</a>これはチェックしておかないといけない感じ</li>
-</ul>
-
-
-<h4>EGL_BAD_MATCH</h4>
-
-<p>まずは<strong>EGL_BAD_MATCH</strong>というエラーが出た。ググっでも答えが出ないので、ddmsを使ってログを取ってみると、どうも32bit Display Bufferとか24bit Display Bufferの処理をした後にエラーが出てたので、Player Setting > Android > Resolution and Presentationにある32bit Dispay Bufferと24bit Display Bufferのチェックをはずした。するとEGL_BAD_MATCHは消えた。</p>
-
-<h4>Profiler is only supported in Unity Pro</h4>
-
-<p>次にProfilerも使ってないのに<br/>
-<strong>Profiler is only supported in Unity Pro</strong><br/>
-というメッセージが出た。結局分からなかった。私が実装した時の問題点は画像が表示されないことだったのでこれは関係ないだろうと考えて無視。</p>
-
-<h4>結局画面が表示されない</h4>
-
-<p>Build Setting画面のTexture CompressionをDon&rsquo;t overrideからETC1 or RGB16に変更すると動いた！
-なんかどっかにこの話があったんだけど、どこか忘れたのでまた思い出したらリンクする。</p>
-
-<h3>その他</h3>
-
-<ul>
-<li>位置のScaleを-1にして反転するとアニメーションもそのまま反転した。すごい。</li>
-<li>StartよりAwakeが先に呼び出される。初期化に使える。</li>
-<li>MonoDevelop-UnityをMacにインストールしてて、C#の通常アプリが作れると思ったら大間違い。C#のアプリ作ろうと思ったらXamarin Studio入れた方がよさげ。NUnitが無いって怒られて散々だった。</li>
-</ul>
-
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/02/10/unity-memo/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -824,61 +410,12 @@ unity側での作業は<a href="http://tech.gmo-media.jp/post/54095871491/runnin
 
 <p>というケースが見られました。Webサーバにはnginxを使いました。</p>
 
-<h2>原因</h2>
-
-<p>nginx側の設定が悪いのかなとか色々試行錯誤しましたが、結論としてrhaco3の認証部分が401のレスポンスを吐いてたのが問題でした。</p>
-
-<p><a href="http://www.slogical.co.jp/tech/http_basicauth.html">Basic認証の動作</a>というページで詳しく書かれています（以下に引用します）が</p>
-
-<blockquote><ol>
-<li>ユーザーがクライアント（IE等のWebブラウザ）に目的のURLを入力する。</li>
-<li>クライアントが、Authorization: ヘッダを付加しないで、
-目的のコンテンツにアクセスする。</li>
-<li>サーバーは、401 Authorization Required のレスポンスを返して、
-クライアントに認証が必要である旨を伝える。</li>
-<li>クライアントがユーザーに ID/PW の入力を求める
-（IE等のブラウザが、ポップアップウインドウを出して、
-　ID/PW の入力をユーザーに求めるアレです。）</li>
-<li>ユーザーが ID/PW を入力する。</li>
-<li>クライアントが、Authorization: ヘッダに ID/PW の情報を付加
-して目的のコンテンツに再度アクセスする。</li>
-<li>サーバが ID/PW を解析して、認証OKであればコンテンツをクライ
-アントに返す。</li>
-<li>クライアントがコンテンツを表示して、ユーザーがそれを閲覧する。</li>
-</ol>
-</blockquote>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>    +------+  1---&gt;  +--------+  2---&gt;  +-------+
-</span><span class='line'>    |      |  &lt;---4  |        |  &lt;---3  |       |
-</span><span class='line'>    | User |         | Client |         | httpd |
-</span><span class='line'>    |      |  5---&gt;  |        |  6---&gt;  |       |
-</span><span class='line'>    +------+  &lt;---8  +--------+  &lt;---7  +-------+</span></code></pre></td></tr></table></div></figure>
-
-
-<blockquote><p>（コンテンツデータを１つ取得するために、リクエスト・レスポンスの
-　やりとりが２回行われています。）</p>
-
-<p>なお、
-Authorization: ヘッダには、
-Basic認証の ID と PW とを :（半角のコロン）でつなげた文字列を、
-base64した値が格納さています。
-（例えば、
-　Authorization: Basic dXNlcjAxOnBhc3N3b3JkCg==　といったようになります。）</p></blockquote>
-
-<p>ように、Basic認証ではサーバが401のレスポンスを返すことで、ブラウザ側にポップアップを出させているようです。その為rhaco3の認証部分で401のレスポンスを出した時に認証の情報がリセットされてしまったのではないかと思われます。</p>
-
-<h2>対処</h2>
-
-<p>rhaco3の認証部分(\org\rhaco\flow\parts\RequestFlow::do_login)で401を送信していた部分で200を送信することで対処できました。</p>
-
-<p>rhaco3で見られた症状でしたが、他のフレームワークでも特に何も考えてなかったら引っかかる可能性があります。というかBasic認証とフレームワークの認証両方掛けるとか普通無いですよねそうですよね。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/02/03/basic-auth/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -931,9 +468,14 @@ base64した値が格納さています。
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>のようにJavascriptで対応します</p>
+
+
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/01/31/octpress-tips/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -1101,30 +643,14 @@ base64した値が格納さています。
 </span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
 
 
-<p>実装時に大事なとこを説明します。</p>
-
-<p>+まずプラグイン共通部分とPluginInit、PluginFinはコピペでもかまわないと思います。私もまだ初期処理、終了処理の必要なプラグインは作っていません。
-+なでしこ上での関数呼び出し方法の定義はDefineFunctionで行います。bank.AddFuncメソッドで関数を追加できます。メソッド内の引数は下のように設定します。
-++関数名はなでしこで呼び出す名前になります。（例：文字検索）なでしこで使う助詞を使わないとか、他の命令の名称とかぶらないなどの制限があります。
-++なでしこ形式の引数は「SでAを」のようになでしこで一般的に使う形式で指定します。引数を参照渡しにしたい場合は「{参照渡し}SでAを」のように指定します。助詞を複数指定したい場合は「SでAを|Sが」という形式で指定します。参照渡しを使う場合は実装が少々複雑になります。後日やり方を書こうと思います。
-++戻り値の形式はenum NakoVarTypeで指定します。(Void&cedil; Int&cedil; Double&cedil; String&cedil; Array)
-++実際の呼び出し先はそのままメソッド名を指定します。(_hogeとか)
-++関数の説明と関数のよみかたは分かりやすさの為に必要です。個人用なら適当でも良いと思います。（多分今後エディタとかそういうのにつかわれると思います）
-+実際の処理は必ずINakoFuncCallInfo型のインスタンスを引数に取ります。なでしこで渡された引数はこのインスタンスから取得します。取得方法は以下</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>long l = info.StackPopAsInt();
-</span><span class='line'>double d = info.StackPopAsDouble();
-</span><span class='line'>String s = info.StackPopAsString();
-</span><span class='line'>Object o = info.StackPop();//配列の場合はこれを使う</span></code></pre></td></tr></table></div></figure>
 
 
-<p>StackPopメソッドで得られる値はNakoVariable型なので、ちょっと扱いが難しくなります。実際の処理の実装方法はまた今度</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/01/29/nadesiko2-make-plugin/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -1184,25 +710,14 @@ base64した値が格納さています。
 </span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
 
 
-<p>なでしこ側のソースは以下のようにして呼び出してみました</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>結果=sample01
-</span><span class='line'>結果を言う</span></code></pre></td></tr></table></div></figure>
 
 
-<p>これでダイアログボックスに「method1」が表示され、続いて「abc」が表示されればOKです。</p>
-
-<p>しかし・・・結果は外部例外　E0434F4Dを出力してちゃんと動きませんでしたorz。この例外はtry&hellip;catchで掴もうとしても掴めません。どうも処理の関数（ここではsample01）に入った瞬間にエラーを返してしまうようです。ちなみにこのコードでググっても原因は理解できませんでした。ということで、クジラ飛行机氏（なでしこ作者）にメールで泣きつきました。</p>
-
-<p>すると</p>
-
-<blockquote><p>vnako.exe と同じフォルダに配置したらエラー出ませんでした。たぶん、plug-ins フォルダにパスを通さない限り、DLLがもう一方を参照できなくなるのだと思います。</p></blockquote>
-
-<p>という返事が！まじで！？と思い試してみると・・・上手くいくじゃないですか！これでC#で作ったdllもなでしこで利用できるようになりました。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/01/28/nadesiko-plugin-cs2/">Read on &rarr;</a>
+    </footer>
   
 
 

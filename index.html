@@ -124,110 +124,12 @@
 
 <p>(略) 追記するかも？</p>
 
-<h2>2. Jenkins設定</h2>
-
-<h3>一般</h3>
-
-<p>(略) 追記するかも？</p>
-
-<h3>C#関連</h3>
-
-<p>Jenkins > Jenkinsの管理 > プラグインの管理 > 利用可能(タブ)</p>
-
-<p>からプラグインをインストールする。インストールするプラグインは</p>
-
-<ul>
-<li>GIT Plugin</li>
-<li>MSBuild Plugin</li>
-<li>NUnit plugin</li>
-</ul>
-
-
-<p>Jenkins > Jenkinsの管理 > システム設定</p>
-
-<p>から</p>
-
-<p>MSBuildの項目を編集。</p>
-
-<ul>
-<li>インストール済みMSBuild&hellip;をクリック</li>
-<li>name</li>
-<li>適当（とりあえず「mono」とした）</li>
-<li>Path to MSBuild</li>
-<li>/usr/bin/xbuild  (Warning出るけど気にしない)</li>
-<li>Default Parameters</li>
-<li>なし(Debugでビルドするかとか指定したりするかも。)</li>
-<li>適用ボタンを押す</li>
-</ul>
-
-
-<p>Gitの項目は編集したか覚えてないけど</p>
-
-<ul>
-<li>Path to Git executable</li>
-<li>/usr/bin/git</li>
-</ul>
-
-
-<p>くらいやっとけばいいかも？　</p>
-
-<h2>3. プロジェクト作成</h2>
-
-<p>Jenkins > 新規ジョブ作成　から</p>
-
-<ul>
-<li>ジョブ名</li>
-<li>適当(nadesiko2とか付けてみた)</li>
-<li>フリースタイル・プロジェクトのビルドを選択</li>
-<li>OKボタンを押す</li>
-</ul>
-
-
-<h2>4. プロジェクト設定</h2>
-
-<p>プロジェクトの設定画面に移動するので編集。Jenkins > プロジェクト(今回はnadesiko2) > 設定　からいつでも編集可能。</p>
-
-<ul>
-<li>ソースコード管理</li>
-<li>Gitを選択</li>
-<li>Repository URL</li>
-<li> なでしこ2のリポジトリの場所。今回は<a href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">ubuntuのcui環境でなでしこ2をビルドする &ndash; shigeponが関心のある技術情報など</a>の続きなので/home/username/nadesiko2</li>
-<li>Branches to build</li>
-<li> なでしこ2では変更点はpull requestする予定なので、pull requestする時のブランチを指定した。ここは色んな設定がありえる。</li>
-<li>ビルド・トリガ</li>
-<li>SCMをポーリングを選択</li>
-<li>スケジュール</li>
-<li> H/30 * * * * (大体30分おき)</li>
-<li>ビルド</li>
-<li>ビルド手順の追加 > Build a Visual Studio project or solution using MSBuild</li>
-<li>Build a Visual Studio project or solution using MSBuildの設定</li>
-<li> MSBuild Version
-
-<ul>
-<li>monoを選択</li>
-</ul>
-</li>
-<li> MSBuild Build File
-
-<ul>
-<li>cnakoのソリューションファイルとしてNako2_CNako.slnを指定した。プラグインのソリューションファイルでも出来ると思う</li>
-</ul>
-</li>
-<li>ビルド手順の追加 > シェルの実行(Windowsだと多分Windowsバッチコマンドの実行)</li>
-<li>シェルの実行</li>
-<li> nunit-console $WORKSPACE/CNako2Test/bin/Debug/CNako2Test.dll -xml cnako2test.xml -noshadow</li>
-<li>ビルド後の処理</li>
-<li>ビルド後の処理の追加 > Publish NUnit test result report</li>
-<li>cnako2test.xml</li>
-</ul>
-
-
-<h2>5. 実行</h2>
-
-<p>Jenkins > プロジェクト(今回はnadesiko2)
-で、ビルド実行をクリックすると実行してくれる。あと、gitの指定したブランチでコミットした後もこの設定の場合30分おきにコミットをチェックしてビルドを実行してくれる。まだまだテストが通ってない部分もあるので、結果は失敗になるけど、とりあえずこれで進められる。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -264,6 +166,20 @@
   <div class="entry-content"><p><a href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">ubuntuのcui環境でなでしこ2をビルドする</a>の続きで、cui環境でなでしこ2のテストを実行してみる。</p>
 
 <p>cui環境でnunitを実行するには<a href="http://www.nunit.org/index.php?p=nunit-console&amp;r=2.5.10">nunit-console</a>を使う。なでしこ2のテストを実行するにはテスト関連のdllをnunitで実行すると良い。コマンドはなでしこ2をインストールしたディレクトリでこんな感じ。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>nunit-console CNako2Test/bin/Debug/CNako2Test.dll
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>プラグインのテスト(NakoPluginTest)プロジェクトでは外部ファイルを利用するので</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>nunit-console NakoPluginTest/bin/Debug/NakoPluginTest.dll
+</span></code></pre></td></tr></table></div></figure>
+
+
+
 
 </div>
   
@@ -317,86 +233,14 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h1>なでしこ2リポジトリを取得</h1>
-
-<p><a href="http://it.slashdot.jp/story/15/03/13/0340256/">Google Codeが2016年1月に閉鎖される</a>ので、なでしこ2のリポジトリはgithubに移動している。</p>
-
-<p>なので、リポジトリの取得はgit cloneでいける。kujirahandさんのリポジトリをcloneするなら</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone https://github.com/kujirahand/nadesiko2.git
-</span></code></pre></td></tr></table></div></figure>
 
 
-<p>shigeponがfolkしたリポジトリなら</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone https://github.com/shigepon/nadesiko2.git
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>で、カレントディレクトリにnadesiko2ディレクトリが出来て、その下にプロジェクト1式が入っている。中にはソリューションが3つあり、それぞれ</p>
-
-<ul>
-<li>Nako2_CNako.sln → cui環境で動かすなでしこ2(cnako)関連</li>
-<li>Nako2_Plugins.sln → なでしこ2のプラグイン関連</li>
-<li>Nako2_Plugins_Office.sln → なでしこ2のOffice関係プラグイン</li>
-</ul>
-
-
-<p>のソリューションである。今回は\/home\/usernameディレクトリ上でcloneすると考える</p>
-
-<h1>おもむろにビルド</h1>
-
-<p>kujirahandさんのリポジトリをcloneしたとして、とりあえず何もせずにCNakoのソリューションをビルドしてみると</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>xbuild Nako2_CNako.sln
-</span><span class='line'>...
-</span><span class='line'>NakoPluginArrayTest.cs<span class="o">(</span>9,7<span class="o">)</span>: error CS0246: The <span class="nb">type </span>or namespace name <span class="sb">`</span>NUnit<span class="err">&#39;</span> could not be found. Are you missing a using directive or an assembly reference?
-</span><span class='line'>...
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいなエラーメッセージを出してビルド出来ない。一方でプラグイン関連のソリューションは</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>xbuild Nako2_Plugins.sln
-</span><span class='line'>...
-</span><span class='line'>    18 Warning<span class="o">(</span>s<span class="o">)</span>
-</span><span class='line'>     0 Error<span class="o">(</span>s<span class="o">)</span>
-</span><span class='line'>Time Elapsed 00:00:06.1095450
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と出て、エラー無くビルド出来る。この違いはそれぞれのソリューションで参照しているテストプロジェクトにnunitへの参照パスが入っているかどうかの違いだったので、NakoPluginTest/NakoPluginTest.csprojを参考にしてCNakoTest/CNakoTest.csprojの</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;Reference <span class="nv">Include</span><span class="o">=</span><span class="s2">&quot;nunit.framework.extensions, ...&quot;</span> /&gt;
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>行に３行追記する</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'>   <span class="nt">&lt;Reference</span> <span class="na">Include=</span><span class="s">&quot;nunit.framework&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>       <span class="nt">&lt;HintPath&gt;</span>..\..\..\..\usr\lib\mono\gac\nunit.framework\2.5.10.0__96d09a1eb7f44a77\nunit.framework.dll<span class="nt">&lt;/HintPath&gt;</span>
-</span><span class='line'>   <span class="nt">&lt;/Reference&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>で、再度ビルドするとビルド出来た。shigeponのリポジトリには修正したものをアップしておくのでそのままビルド出来ると思う。パスはリポジトリをcloneするディレクトリによっては変更しないといけないと思う。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -443,71 +287,12 @@
 
 <p>djangoのshellから使ってみる</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">$</span> <span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">shell</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">SPARQLWrapper</span> <span class="kn">import</span> <span class="n">SPARQLWrapper</span><span class="p">,</span> <span class="n">JSON</span>
-</span><span class='line'><span class="n">sparql</span> <span class="o">=</span> <span class="n">SPARQLWrapper</span><span class="p">(</span><span class="s">&quot;http://dbpedia.org/sparql&quot;</span><span class="p">)</span>
-</span><span class='line'><span class="n">sparql</span><span class="o">.</span><span class="n">setQuery</span><span class="p">(</span><span class="s">&quot;&quot;&quot;</span>
-</span><span class='line'><span class="s">  PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;</span>
-</span><span class='line'><span class="s">  SELECT ?label</span>
-</span><span class='line'><span class="s">  WHERE { &lt;http://dbpedia.org/resource/Asturias&gt; rdfs:label ?label }</span>
-</span><span class='line'><span class="s">&quot;&quot;&quot;</span><span class="p">)</span>
-</span><span class='line'><span class="n">sparql</span><span class="o">.</span><span class="n">setReturnFormat</span><span class="p">(</span><span class="n">JSON</span><span class="p">)</span>
-</span><span class='line'><span class="n">results</span> <span class="o">=</span> <span class="n">sparql</span><span class="o">.</span><span class="n">query</span><span class="p">()</span><span class="o">.</span><span class="n">convert</span><span class="p">()</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="s">&quot;results&quot;</span><span class="p">][</span><span class="s">&quot;bindings&quot;</span><span class="p">]:</span>
-</span><span class='line'>    <span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s">&quot;label][&quot;</span><span class="n">value</span><span class="s">&quot;])</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とやるとこんな感じの結果が出た</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>Asturias
-</span><span class='line'>منطقة أستورياس
-</span><span class='line'>Asturien
-</span><span class='line'>Asturias
-</span><span class='line'>Asturies
-</span><span class='line'>Asturie
-</span><span class='line'>アストゥリアス州
-</span><span class='line'>Asturië <span class="o">(</span>regio<span class="o">)</span>
-</span><span class='line'>Asturia
-</span><span class='line'>Astúrias
-</span><span class='line'>Астурия
-</span><span class='line'>阿斯图里亚斯
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>参考：<a href="http://rdflib.github.io/sparqlwrapper/">SPARQL Endpoint interface to Python</a></p>
-
-<p>Sparqlの書き方は<a href="http://kobexr.blogspot.jp/2014/12/kober-13-open-data.html">Kobe.R: Kobe.R #13 + Open Data</a>に載っているスライドが参考になる。</p>
-
-<p>Linked Open Dataで１つ気になるのが、エンドポイントをどうやって探すかなんだけど、今の所ググってみるくらいしかやり方が分からない。ここらへん何か良い方法無いのかなー。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/03/19/use-sparql-with-python/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -554,56 +339,14 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>これで本体はアップデート完了した。</p>
-
-<h2>プロジェクトをDjango1.7で動かす</h2>
-
-<p>何も変更せずにおもむろに</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py runserver
-</span></code></pre></td></tr></table></div></figure>
 
 
-<p>とするとエラー出て動かなかった。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>raise AppRegistryNotReady<span class="o">(</span><span class="s2">&quot;Models aren&#39;t loaded yet.&quot;</span><span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Tracebackを見てみるとどうもmodels.pyの中で</p>
-
-<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Model</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とかやってたのがまずかったみたいで、管理サイトで使うモデル定義などのコードをadmin.pyに移動したら上のエラーは出なくなった。何となくで書いてたらいかんな。ちなみにアップデートには関係無いけど、Django1.7で@admin.register(Model)というデコレーターが使えるようになったので、そっちに変えた方がスマートな気がする。</p>
-
-<p>次はSouthでマイグレーションやってるプロジェクトだったので、下のようなエラーが出た。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>raise RuntimeError<span class="o">(</span><span class="s2">&quot;South does not support Django 1.7 or higher. Please use native Django migrations.&quot;</span><span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>要はSouthはもうサポートしてないからDjango自身のマイグレーションでやってねということらしい。</p>
-
-<p><a href="https://docs.djangoproject.com/en/1.7/topics/migrations/#upgrading-from-south">Migrations | Django documentation | Django</a>を見ながらやってみる。ざっくり手順を日本語で書いておく</p>
-
-<ul>
-<li>マイグレーションの状態がちゃんと最新になっているか確認する</li>
-<li>settings.pyのINSTALLED_APPSの行から&#8217;south&#8217;を取り除く</li>
-<li>数字の付いたマイグレーションファイルを全て削除する。ディレクトリと__init__.pyは残す。.pycファイルも削除すること。</li>
-<li>python manage.py makemigrasionsを実行する。Djangoが空のマイグレーションディレクトリに新しい初期マイグレーションを作る。</li>
-<li>python manage.py migrateを実行する。Djangoは初期マイグレーションをチェックして、実行しないで適用済みにする。</li>
-</ul>
-
-
-<p>以上やってみたら、エラーは出ずにプロジェクトをDjango1.7に対応できた。めでたしめでたし。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -652,18 +395,12 @@
 
 
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ini'><span class='line'><span class="err">...</span>
-</span><span class='line'><span class="na">buffer-size</span><span class="o">=</span> <span class="s">xxxx</span>
-</span><span class='line'><span class="err">...</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>参考：<a href="http://stackoverflow.com/questions/15878176/uwsgi-invalid-request-block-size">uwsgi invalid request block size &ndash; Stack Overflow</a></p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/03/05/uwsgi-memo/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -714,40 +451,12 @@
 
 <p>メモがてらローテーション設定を書いておく</p>
 
-<p>/etc/logrotate.d/php.conf</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>/path/to/php5-fpm.log {
-</span><span class='line'>  daily
-</span><span class='line'>  missingok
-</span><span class='line'>  rotate 52
-</span><span class='line'>  compress
-</span><span class='line'>  delaycompress
-</span><span class='line'>  notifyempty
-</span><span class='line'>  create 0644 group username
-</span><span class='line'>  dateext
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>エラーチェックテストはこんな感じ</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>logrotate -dv /etc/logrotate.d/php.conf
-</span></code></pre></td></tr></table></div></figure>
-
-
-
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/03/03/error-log-make-php-error/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -800,38 +509,12 @@
 </ul>
 
 
-<p>データの前処理ってとても大事なので、参考にしてちょっと練習出来たらなと思います。</p>
-
-<h2>R in Life Science</h2>
-
-<p>Tomitaさんの発表。生物系の学生さんだそうで、研究で使いそうなヒートマップ表示について教えてくれました。
-車のデータを利用して燃費をベースにしてグルーピングしながら、各項目についてヒートマップ表示して傾向が見やすくなってました。
-最初バイオ系なのでSDS-PAGEか何かかと思いましたががが。あと、ggplot（だったかな？）でのヒートマップ関数としてheatmap.2ってのを紹介されていましたが、関数名に2とか入るの久しぶりに見ました。これはん〜〜〜〜〜〜、ちょっとな〜〜〜。でも機能は多いみたいです。</p>
-
-<h2>Incanterチョットシッテル</h2>
-
-<p>@tnoda_さんの発表
-<a href="http://sssslide.com/www.slideshare.net/tnoda/kober-15-incanter">スライドはこちら</a>。
-Twitterでインなんとかとか言っちゃいましたが、インキャンターです。「ノリを間違えたかも！（意訳）」とおっしゃっていましたが、とても楽しい発表でした。リアルタイムに突っ込み入れたかったのですが、出来なかったので、ここで突っ込みしておきます。</p>
-
-<ul>
-<li>Clojureってカッコだらけだ！Lis(ry (*)</li>
-<li>3D pie chart以外はRと同じことは出来るらしい</li>
-<li>インストールはLeiningen（らいにんげん）からやるらしい。プロジェクト作ったりライブラリ管理とかやってくれるらしい。pipとかmagage.pyみたいなもん？</li>
-<li>Incanterの公式ダウンロードリンクからインストールしてはいけない。インストールしてしまった後のことは知らない。</li>
-<li>Rの話は8ページ目で終了と言ってたけど、dplyr出て来たよ（25ページ目）</li>
-<li>マクロという言葉に拒否感ががが（C的Excel的意味で）。でもきっと慣れると便利なんだろう。きっと。多分。</li>
-<li>Clojureが並列処理に向いているらしいので、並列処理＋統計処理に良さげ</li>
-<li>javaベースなので、javaベースのものと統合しやすいらしい。javaで開発してないからさっぱり分かんないけど。</li>
-<li>Incanterで3D pie chart書きたかったら、RserveってのでIncanterとRをつないだらいいらしい。3D pie chartの為だけにそこまでやるとか変態すぐる</li>
-</ul>
-
-
-<h2>分析実践</h2>
-
-<p>残った時間で実際にやってみましょうということで、弁当屋のデータを元にして売り上げ予測をやるという目的でRを触ってみるということをやっていました。R勉強会とは言え、実際にRをバリバリ使ってる人とかほとんど居ないと思うので、とても良い試みだと思いました。が、私はパソコン持ってなかったので読書しながら他の人がハマっているのを見たりしてました（悪趣味）。どうも文字コード周りでハマるケースが結構あるっぽいです。うむむむむ。ハマりポイントはハッキリさせたいところです。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/03/01/kobe-dot-r-no-15/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -882,91 +565,12 @@ Twitterでインなんとかとか言っちゃいましたが、インキャン�
 
 <p>次にクラスに対して、__init__をオーバーライドし、widgetとしてTextInputのフォームを2つ登録してみた。コードはこんな感じ。</p>
 
-<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">class</span> <span class="nc">NameWidget</span><span class="p">(</span><span class="n">MultiWidget</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-</span><span class='line'>        <span class="n">widgets</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'>                <span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&quot;placeholder&quot;</span><span class="p">:</span><span class="s">&quot;姓&quot;</span><span class="p">})),</span>
-</span><span class='line'>                <span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&quot;placeholder&quot;</span><span class="p">:</span><span class="s">&quot;名&quot;</span><span class="p">}))</span>
-</span><span class='line'>                <span class="p">)</span>
-</span><span class='line'>        <span class="nb">super</span><span class="p">(</span><span class="n">NameWidget</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">widgets</span><span class="p">,</span><span class="n">attrs</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>widgetsはリストでもタプルでも良さげ？ともかくやることはwidgetのリストかタプルを作って、親クラス(MultiWidget)のinitを呼び出すこと。</p>
-
-<p>次に、decompress、value_from_datadictメソッドを書く。decompressはカラムの値を複数のフォームに振り分ける手順、value_from_datadictはModelFormの入力データからModelのカラムに入れる値を作る手順を記述する。姓名を半角スペースで繋げて、半角スペースで分割するように作ってみた。</p>
-
-<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">class</span> <span class="nc">NameWidget</span><span class="p">(</span><span class="n">MultiWidget</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">attrs</span><span class="o">=</span><span class="p">{}):</span>
-</span><span class='line'>        <span class="n">attrsSei</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-</span><span class='line'>        <span class="n">attrsMei</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-</span><span class='line'>        <span class="n">widgets</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'>                <span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="n">attrsSei</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&quot;placeholder&quot;</span><span class="p">:</span><span class="s">&quot;姓&quot;</span><span class="p">})),</span>
-</span><span class='line'>                <span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="n">attrsMei</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&quot;placeholder&quot;</span><span class="p">:</span><span class="s">&quot;名&quot;</span><span class="p">}))</span>
-</span><span class='line'>                <span class="p">)</span>
-</span><span class='line'>        <span class="nb">super</span><span class="p">(</span><span class="n">NameWidget</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">widgets</span><span class="p">,</span><span class="n">attrs</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">decompress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
-</span><span class='line'>        <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
-</span><span class='line'>            <span class="n">names</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">)</span>
-</span><span class='line'>            <span class="k">return</span> <span class="p">(</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">names</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-</span><span class='line'>        <span class="k">return</span> <span class="p">(</span><span class="bp">None</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">value_from_datadict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">files</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
-</span><span class='line'>        <span class="n">ulist</span> <span class="o">=</span> <span class="p">[</span><span class="n">widget</span><span class="o">.</span><span class="n">value_from_datadict</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">files</span><span class="p">,</span><span class="n">name</span><span class="o">+</span><span class="s">&#39;_{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">widget</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">widgets</span><span class="p">)]</span>
-</span><span class='line'>        <span class="k">return</span> <span class="s">u&quot;{0} {1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">u&#39; &#39;</span><span class="p">,</span><span class="s">&#39;&#39;</span><span class="p">),</span><span class="n">ulist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">u&#39; &#39;</span><span class="p">,</span><span class="s">&#39;&#39;</span><span class="p">))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>あとはこのWidgetを使いたい要素にwidgetとして指定すればおk</p>
-
-<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">forms</span>
-</span><span class='line'><span class="o">...</span><span class="err">（上のコードなど）</span><span class="o">...</span>
-</span><span class='line'><span class="k">class</span> <span class="nc">HogeForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
-</span><span class='line'>    <span class="n">name</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s">u&#39;名前&#39;</span><span class="p">,</span><span class="n">widget</span><span class="o">=</span><span class="n">NameWidget</span><span class="p">())</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>このコードだと姓、名のフォームが2行に表示されている。1行にしたい場合はインライン指定とかそんなのを付けたクラスをattrsで指定して後はcssでやっちゃえばいいんじゃないかなと</p>
-
-<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">name</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s">u&#39;名前&#39;</span><span class="p">,</span><span class="n">widget</span><span class="o">=</span><span class="n">NameWidget</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;class&quot;</span><span class="p">:</span><span class="s">&quot;inline&quot;</span><span class="p">}))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とかそんな感じ</p>
-
-<p>他にももっと細かくhtmlを記述出来るformat_outputとかあるみたいだけど、試してないので省略。なくても取りあえず出来る。</p>
-
-<p>参考：<a href="https://docs.djangoproject.com/en/1.7/ref/forms/widgets/#django.forms.MultiWidget">Django英語ドキュメント</a></p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/01/24/django-modelform-multiwidget/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -1017,38 +621,14 @@ Twitterでインなんとかとか言っちゃいましたが、インキャン�
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>この時、args[0]にHttpRequestオブジェクトが入ってるので、これをいじると適当に値を追加したり整形したりするのをビューの外部に持っていけるので、使いようによっては共通部分と個別部分の分離や、ビューに直接関係ない処理（ログとか）を分離出来るので便利な感じがする。ただ、やりすぎるとコードが分割されすぎて読みにくくなる気もする。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">outer</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-</span><span class='line'>        <span class="n">request</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span class='line'>        <span class="n">request</span><span class="o">.</span><span class="n">hoge</span> <span class="o">=</span> <span class="s">&quot;fuga&quot;</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">inner</span>
-</span><span class='line'>
-</span><span class='line'><span class="nd">@outer</span>
-</span><span class='line'><span class="k">def</span> <span class="nf">hoge</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">print</span> <span class="n">request</span><span class="o">.</span><span class="n">hoge</span>
-</span><span class='line'>    <span class="o">....</span>
-</span></code></pre></td></tr></table></div></figure>
 
 
-<p>とやったりすることが出来る。個人的にはWebサービスでサイドメニューに必要な情報をデコレーターでやって、メインコンテンツに必要な情報をビューでやるとかそんな感じで使ってみようと思う。</p>
-
-<p>参考：<a href="http://qiita.com/_rdtr/items/d3bc1a8d4b7eb375c368">Pythonのデコレータを理解するための12Step &ndash; Qiita</a></p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/01/06/python-decorator/">Read on &rarr;</a>
+    </footer>
   
 
 

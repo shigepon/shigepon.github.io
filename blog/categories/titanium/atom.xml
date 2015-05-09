@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Titanium | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/titanium/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-09T09:05:28+09:00</updated>
+  <updated>2015-05-09T10:11:49+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -32,6 +32,9 @@
 <li>左メニューのProvisioning Profiles->AllからUDIDを追加したいプロビジョニングファイルを探してクリック->Editをクリック</li>
 <li>Devicesの一覧で、追加したDevice名をチェックしてGenerateボタンを押す</li>
 </ul>
+
+
+<!-- more -->
 
 
 <h2>ぐぐると古い情報が結構あって混乱した箇所（Xcode使ってローカルのプロビジョニングファイルを最新にする）</h2>
@@ -72,6 +75,9 @@ hoge = Ti.App.Properties.getString("hoge");//取得
 </code></p>
 
 <p>stringを例にしてるが、ListとかObjectとかBoolとか色々入れられる。</p>
+
+<!-- more -->
+
 
 <h2>Titanium MobileのUIで本家以外に参考にしてるサイト</h2>
 
@@ -130,6 +136,9 @@ client.send({username:'hoge',password:'fuga'});
 </code></pre>
 
 <p>```</p>
+
+<!-- more -->
+
 
 <h2>Djangoでのユーザー認証</h2>
 

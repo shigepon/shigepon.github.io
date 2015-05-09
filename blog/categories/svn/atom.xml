@@ -4,7 +4,7 @@
   <title><![CDATA[Category: svn | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/svn/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-09T09:05:28+09:00</updated>
+  <updated>2015-05-09T10:11:49+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -31,6 +31,9 @@ Password for ‘(null)’ GNOME keyring:
 <p><code>sh
 rm ~/.gnome2/keyrings/login.keyring
 </code></p>
+
+<!-- more -->
+
 
 <p>でいける。</p>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: uwsgi | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/uwsgi/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-09T09:05:28+09:00</updated>
+  <updated>2015-05-09T10:11:49+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -30,11 +30,17 @@
 $ uwsgi --buffer-size=xxxx
 </code></p>
 
+<!-- more -->
+
+
 <p><code>ini
 ...
 buffer-size= xxxx
 ...
 </code></p>
+
+<!-- more -->
+
 
 <p>参考：<a href="http://stackoverflow.com/questions/15878176/uwsgi-invalid-request-block-size">uwsgi invalid request block size &ndash; Stack Overflow</a></p>
 ]]></content>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: PostgreSQL | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/postgresql/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-09T09:05:28+09:00</updated>
+  <updated>2015-05-09T10:11:49+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -38,6 +38,9 @@ wsgi.py
 </code></pre>
 
 <p>```</p>
+
+<!-- more -->
+
 
 <p>となっている。myprojectフォルダ内のファイルに共通設定を書くという感じになりそうだ。PostgreSQLに接続するので、settings.pyを修正</p>
 
@@ -134,6 +137,9 @@ $ vim /etc/odbc.ini
 
 <p>odbc.iniにはサンプルの設定が入っているので、それを参考にしながら設定</p>
 
+<!-- more -->
+
+
 <h2>odbcアクセスしてみる</h2>
 
 <p><code>sh
@@ -171,6 +177,9 @@ $ isql -v DSN (UID (PWD))
 +gem 'execjs'
 -gem 'sass-rails'
 </code></p>
+
+<!-- more -->
+
 
 <p>以下のコマンドを実行</p>
 
@@ -233,6 +242,9 @@ def index
   @events = Event.all
 end
 </code></p>
+
+<!-- more -->
+
 
 <p>と書くとテーブルにあるデータ全て取ってくるらしい（DAOで良くある書式）。
 ビューでは@eventsに対してループさせる必要があるので次のような書式になる。
@@ -330,6 +342,9 @@ app/views/events/index.html.erbを次のように書き換える</p>
 <p><code>sh
 $ rails g model event name:string date:timestamp
 </code></p>
+
+<!-- more -->
+
 
 <p>モデルは単数型の英語で書くのが良いらしい。idは書かなくても自動で設定してくれるらしい。コマンドを実行すると次のようなファイルが出来る</p>
 

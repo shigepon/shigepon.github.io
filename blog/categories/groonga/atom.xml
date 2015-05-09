@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Groonga | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/groonga/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-09T09:05:28+09:00</updated>
+  <updated>2015-05-09T10:11:49+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -31,6 +31,9 @@
 
 <h3>Groonga全般の話</h3>
 
+<!-- more -->
+
+
 <ul>
 <li>@ktoさんについに会えた！Twitterでいつも質問してすいません＞＜</li>
 <li>cliで&mdash;output_type=xmlとかやると整形をよろしくやってくれる</li>
@@ -41,6 +44,9 @@
 <li>gqtpはこれから非推奨になるかも。</li>
 <li>bigramとmecabのインデックスは同時に使える。インデックスをそれぞれ用意して、mecabの方を重み付けてやると吉</li>
 </ul>
+
+
+<!-- more -->
 
 
 <h3>事例紹介の話</h3>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rhaco | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/rhaco/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-09T09:05:28+09:00</updated>
+  <updated>2015-05-09T10:11:49+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -34,6 +34,9 @@
 
 
 <p>メモがてらローテーション設定を書いておく</p>
+
+<!-- more -->
+
 
 <p>/etc/logrotate.d/php.conf
 <code>
@@ -74,7 +77,13 @@ $queries = \Hoge::stop_record();
 var_dump($queries);
 </code></p>
 
+<!-- more -->
+
+
 <p>こんな感じで使う。出力は</p>
+
+<!-- more -->
+
 
 <p>```html
 array(1) {
@@ -144,9 +153,15 @@ $app_url = \org\rhaco\Conf::get("org.rhaco.Flow@app_url");
 
 <p>というケースが見られました。Webサーバにはnginxを使いました。</p>
 
+<!-- more -->
+
+
 <h2>原因</h2>
 
 <p>nginx側の設定が悪いのかなとか色々試行錯誤しましたが、結論としてrhaco3の認証部分が401のレスポンスを吐いてたのが問題でした。</p>
+
+<!-- more -->
+
 
 <p><a href="http://www.slogical.co.jp/tech/http_basicauth.html">Basic認証の動作</a>というページで詳しく書かれています（以下に引用します）が</p>
 

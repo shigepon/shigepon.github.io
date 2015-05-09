@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Analytics | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/analytics/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-09T09:05:28+09:00</updated>
+  <updated>2015-05-09T10:11:49+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -34,6 +34,9 @@
 
 <h3>設定は以下の通り</h3>
 
+<!-- more -->
+
+
 <ul>
 <li>新しいフィルタを作成</li>
 <li>フィルタ名：適当（Smart Bot 除外）とか？</li>
@@ -41,8 +44,15 @@
 <li>除外</li>
 <li>フィルタフィールド：ISPドメインからのトラフィック</li>
 <li>フィルタパターン：<sup>microsoft corp(oration)?|inktomi corporation|yahoo! inc.|google inc.|stumbleupon inc.</sup>$|gomez</li>
-<li><p>大文字小文字を区別：いいえ</p></li>
-<li><p>「保存」をクリック</p></li>
+<li>大文字小文字を区別：いいえ</li>
+</ul>
+
+
+<!-- more -->
+
+
+<ul>
+<li>「保存」をクリック</li>
 </ul>
 
 

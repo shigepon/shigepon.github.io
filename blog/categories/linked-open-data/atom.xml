@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linked Open Data | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/linked-open-data/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-09T09:05:28+09:00</updated>
+  <updated>2015-05-09T10:11:49+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -30,6 +30,9 @@ $ pip install SPARQLWrapper
 
 <p>djangoのshellから使ってみる</p>
 
+<!-- more -->
+
+
 <p>```py
 $ python manage.py shell
 from SPARQLWrapper import SPARQLWrapper, JSON
@@ -41,6 +44,9 @@ sparql.setQuery(&ldquo;&rdquo;&ldquo;
 &rdquo;&ldquo;&rdquo;)
 sparql.setReturnFormat(JSON)
 results = sparql.query().convert()</p>
+
+<!-- more -->
+
 
 <p>for result in results[&ldquo;results&rdquo;][&ldquo;bindings&rdquo;]:</p>
 

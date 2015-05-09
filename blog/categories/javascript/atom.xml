@@ -4,7 +4,7 @@
   <title><![CDATA[Category: javascript | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/javascript/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-09T09:05:28+09:00</updated>
+  <updated>2015-05-09T10:11:49+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -30,6 +30,14 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 <p><a href="http://tympanus.net/codrops/2012/11/27/calendario-a-flexible-calendar-plugin/">ダウンロードページ</a></p>
 
 <p>デモは奇麗に見えるんだけど、そもそもメインのcssが何故かdemo.cssみたいなのをインポートしてて、これは無いんじゃないと思ったのと背景画像無しだとイメージに合わなかった。あと、デモサイトがあるだけで、最初に必要なファイルとかが分かりにくかった。</p>
+
+<!-- more -->
+
+
+
+
+<!-- more -->
+
 
 <h2>pickadate</h2>
 

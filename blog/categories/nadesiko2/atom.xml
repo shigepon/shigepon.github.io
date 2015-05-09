@@ -4,7 +4,7 @@
   <title><![CDATA[Category: nadesiko2 | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/nadesiko2/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-09T09:05:28+09:00</updated>
+  <updated>2015-05-09T10:11:49+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -33,7 +33,13 @@
 
 <p>(略) 追記するかも？</p>
 
+<!-- more -->
+
+
 <h2>2. Jenkins設定</h2>
+
+<!-- more -->
+
 
 <h3>一般</h3>
 
@@ -147,9 +153,6 @@
 
 <p>cui環境でnunitを実行するには<a href="http://www.nunit.org/index.php?p=nunit-console&amp;r=2.5.10">nunit-console</a>を使う。なでしこ2のテストを実行するにはテスト関連のdllをnunitで実行すると良い。コマンドはなでしこ2をインストールしたディレクトリでこんな感じ。</p>
 
-<!-- more -->
-
-
 <p><code>sh
 $ nunit-console CNako2Test/bin/Debug/CNako2Test.dll
 </code></p>
@@ -159,6 +162,9 @@ $ nunit-console CNako2Test/bin/Debug/CNako2Test.dll
 <p><code>sh
 $ nunit-console NakoPluginTest/bin/Debug/NakoPluginTest.dll
 </code></p>
+
+<!-- more -->
+
 
 <p>だと、外部ファイルを読み込むテスト（例えばTest_read）で、Could not find fileと怒られる。なので、コマンドにnoshadowオプションを付ける。</p>
 
@@ -187,6 +193,14 @@ $ nunit-console -noshadow NakoPluginTest/bin/Debug/NakoPluginTest.dll
 <p><code>sh
 $ aptitude install mono-devel mono-vbnc nunit
 </code></p>
+
+<!-- more -->
+
+
+
+
+<!-- more -->
+
 
 <h1>なでしこ2リポジトリを取得</h1>
 
@@ -281,6 +295,9 @@ $ sudo aptitude install mono-devel
 $ sudo aptitude install mono-vbnc
 </code></p>
 
+<!-- more -->
+
+
 <p>を追加インストールしておこうということだった。情報無かったので結構はまった。</p>
 ]]></content>
   </entry>
@@ -343,6 +360,9 @@ string _description = &amp;quot;サンプルプラグイン&amp;quot;;
 
 <p>}
 ```</p>
+
+<!-- more -->
+
 
 <p>実装時に大事なとこを説明します。</p>
 
