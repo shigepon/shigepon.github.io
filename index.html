@@ -265,31 +265,12 @@
 
 <p>cui環境でnunitを実行するには<a href="http://www.nunit.org/index.php?p=nunit-console&amp;r=2.5.10">nunit-console</a>を使う。なでしこ2のテストを実行するにはテスト関連のdllをnunitで実行すると良い。コマンドはなでしこ2をインストールしたディレクトリでこんな感じ。</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>nunit-console CNako2Test/bin/Debug/CNako2Test.dll
-</span><span class='line'>&lt;!-- more --&gt;
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>プラグインのテスト(NakoPluginTest)プロジェクトでは外部ファイルを利用するので</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>nunit-console NakoPluginTest/bin/Debug/NakoPluginTest.dll
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>だと、外部ファイルを読み込むテスト（例えばTest_read）で、Could not find fileと怒られる。なので、コマンドにnoshadowオプションを付ける。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>nunit-console -noshadow NakoPluginTest/bin/Debug/NakoPluginTest.dll
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とすると、外部ファイルを読み込んでくれる。
-これでcui環境でなでしこ2をビルドからテストまで出来る。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/05/05/nunit-console-test-for-nadesiko2/">Read on &rarr;</a>
+    </footer>
   
 
 

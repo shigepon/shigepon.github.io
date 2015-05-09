@@ -4,7 +4,7 @@
   <title><![CDATA[Category: nadesiko2 | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/nadesiko2/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-09T09:02:56+09:00</updated>
+  <updated>2015-05-09T09:03:51+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -147,13 +147,12 @@
 
 <p>cui環境でnunitを実行するには<a href="http://www.nunit.org/index.php?p=nunit-console&amp;r=2.5.10">nunit-console</a>を使う。なでしこ2のテストを実行するにはテスト関連のdllをnunitで実行すると良い。コマンドはなでしこ2をインストールしたディレクトリでこんな感じ。</p>
 
-<p>```sh
-$ nunit-console CNako2Test/bin/Debug/CNako2Test.dll</p>
-
 <!-- more -->
 
 
-<p>```</p>
+<p><code>sh
+$ nunit-console CNako2Test/bin/Debug/CNako2Test.dll
+</code></p>
 
 <p>プラグインのテスト(NakoPluginTest)プロジェクトでは外部ファイルを利用するので</p>
 
