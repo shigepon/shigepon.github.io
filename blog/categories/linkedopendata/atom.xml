@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Linked Open Data | shigeponが関心のある技術情報など]]></title>
-  <link href="http://blog.shigepon.info/blog/categories/linked-open-data/atom.xml" rel="self"/>
+  <title><![CDATA[Category: LinkedOpenData | shigeponが関心のある技術情報など]]></title>
+  <link href="http://blog.shigepon.info/blog/categories/linkedopendata/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-09T10:11:49+09:00</updated>
+  <updated>2015-05-12T08:33:49+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
