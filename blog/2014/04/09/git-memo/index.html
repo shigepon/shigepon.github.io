@@ -233,6 +233,22 @@ $ git diff --name-only -b parent_branch -b &hellip;">
 </span></code></pre></td></tr></table></div></figure>
 
 
+<h3>masterブランチの変更を別ブランチに反映する</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git checkout hoge
+</span><span class='line'><span class="nv">$ </span>git merge master
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>mergeでコンフリクトしたファイルの一覧</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git ls-files -u
+</span></code></pre></td></tr></table></div></figure>
+
+
 
 </div>
 

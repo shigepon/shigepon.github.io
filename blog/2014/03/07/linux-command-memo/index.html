@@ -238,6 +238,13 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
+<h3>sshでポートフォワーディング</h3>
+
+<p>例えばPostgreSQLのポート5432をローカルの6542にポートフォワードする場合は</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ssh -N -f -L 6543:localhost:5432 username@hostname
+</span></code></pre></td></tr></table></div></figure>
 
 </div>
 

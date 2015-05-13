@@ -4,7 +4,7 @@
   <title><![CDATA[Category: git | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/git/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-12T21:30:23+09:00</updated>
+  <updated>2015-05-13T12:43:36+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -121,6 +121,19 @@ $ git push origin master
 <p><code>sh
 $ git clone https://github.com/path/to/repository.git
 $ git checkout -b issue-local remotes/origin/issue
+</code></p>
+
+<h3>masterブランチの変更を別ブランチに反映する</h3>
+
+<p><code>sh
+$ git checkout hoge
+$ git merge master
+</code></p>
+
+<h3>mergeでコンフリクトしたファイルの一覧</h3>
+
+<p><code>sh
+$ git ls-files -u
 </code></p>
 ]]></content>
   </entry>
