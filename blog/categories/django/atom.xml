@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Django | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/django/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-13T12:46:03+09:00</updated>
+  <updated>2015-07-01T10:16:41+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,181 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[djangoをプロファイリングする]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/07/01/profiling-django/"/>
+    <updated>2015-07-01T09:06:13+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/07/01/profiling-django</id>
+    <content type="html"><![CDATA[<p>作ってるWebサービスが条件によってえらい重くなるので、ボトルネックを探すためにプロファイラを動かしてみようと考えてやってみたらそこそこハマった。</p>
+
+<p>先に結論：</p>
+
+<p><strong>Middleware使ってブラウザに表示させるのが楽だった</strong></p>
+
+<p>条件</p>
+
+<ul>
+<li>cui環境なので、プロファイル結果は画像作るかブラウザ表示するかのどちらか</li>
+<li>コードに埋めこまない形</li>
+</ul>
+
+
+<p>まず参考にしたのは公式ページの<a href="https://code.djangoproject.com/wiki/ProfilingDjango">ProfilingDjango – Django</a>。ざっくりとした結果が知りたかったのでrunprofileserverを試してみることにした。</p>
+
+<h2>開発サーバでやってみる（runprofileserver）</h2>
+
+<p>django-extensionの一機能で</p>
+
+<p><code>sh
+$ pip install django-extensions
+</code></p>
+
+<p>でインストールして、</p>
+
+<p><code>py settings.py
+INSTALLED_APP = (...
+   'django_extensions',
+)
+</code></p>
+
+<p>で設定して</p>
+
+<p><code>sh
+$ python manage.py runprofileserver
+</code></p>
+
+<p>とすると、よしなに/tmpフォルダ内にプロファイル結果を吐き出してくれる開発用サーバだそうで、これは便利そうと思い、やってみた。</p>
+
+<h3>結果を画像にしようとしてハマる</h3>
+
+<p>プロファイル結果からgraphviz通して画像にしたらブラウザから確認出来るし楽なんじゃね？とか良く考えると不毛なことを考えたのが間違いのもと。普通にKCacheGrind使ってろって話なんだけど、やってみた</p>
+
+<p>ツールとして使ったもの</p>
+
+<ul>
+<li><a href="https://github.com/jrfonseca/gprof2dot">gprof2dot</a>、プロファイル結果をdotファイルに変換する</li>
+<li>graphviz、dotファイルを画像に変換する</li>
+</ul>
+
+
+<p>話にならなかったもの（良く考えるとこのケースで使えないの当たり前なのに使おうとして失敗したもの）</p>
+
+<ul>
+<li>xdebugtoolkit、単純にxdebugの結果でないとそりゃ使えないよねと納得した</li>
+</ul>
+
+
+<p>あまり良く分かってなかったので、KCacheGrind互換で出力しておけば、色んなソフト使ってよしなに出来るんじゃね？と思ってみた。んでKCacheGrind互換出力ってcallgrind形式ってことだよね！と勝手に思い込んでた</p>
+
+<p><code>sh
+$ python manage.py runprofileserver --kcachegrind
+</code></p>
+
+<p>おもむろにdotファイルに変換!</p>
+
+<p><code>sh
+$ path/to/gprof2dot -o out.dot -f callgrind /tmp/xxx.prof
+....
+AssertionError
+</code></p>
+
+<p>うまくいかない。何かの計算値がこうなるはずなのにならないよ！とか怒られてる。って良く考えたらKCacheGrind互換の出力がcallgrind形式って保証がどこにもない！</p>
+
+<p>ってことで、あれこれドキュメント読んでたら、runprofileserverはhotshot使ってるとか何とか書いてあるから、何も指定しなかったらhotshotでの形式になる・・・ってことは全然説明されてないけど-fのオプションはpstatsで良いんじゃね？</p>
+
+<p>と勝手に予想して</p>
+
+<p><code>sh
+$ python manage.py runprofileserver
+</code></p>
+
+<p><code>sh
+$ path/to/gprof2dot -o out.dot -f pstats /tmp/xxx.prof
+</code></p>
+
+<p>とやるとout.dotが出来ましたとさ。あとは色んなとこに書いてある（例えば<a href="http://stackoverflow.com/questions/9279144/interpreting-callgrind-data">ここ</a>）ように、dotファイルを画像ファイルに変換すると、ちゃんと画像が出来上がった。</p>
+
+<p>ただ・・・・、まだ設定分かってないからだと思うんだけど、出来上がった画像にはviewやmodelのメソッドが一切書かれておらず、この情報だけからボトルネック探すのかなりキツイんじゃね？ということだけが分かった。</p>
+
+<h3>同一ドメインのurlを内部で呼び出してハマる</h3>
+
+<p>何故かURLによってプロファイル作るのが途中で止まって、サーバもレスポンスを返してくれなくなった。問題箇所を調べると、どうも内部で同じrunprofileserverで管理しているurlにアクセスすると止まっちゃう模様。別サーバを立てて、そこにアクセスするようにすれば、問題無く動作した。</p>
+
+<h2>手間なのでMiddlewareでプロファイルすることにした</h2>
+
+<p>いちいち開発中の状態なのにサーバ2つ立てて面倒だったり、結局作った画像見ても良く分からなかったので、今度はMiddlewareに埋め込むタイプを試してみた。</p>
+
+<h3>取りあえず動かなくてハマる</h3>
+
+<p>Extendedって書いてあるしということで<a href="https://djangosnippets.org/snippets/605/">djangosnippets: Extended Profiling Middleware</a>を試してみた。</p>
+
+<p>手順は</p>
+
+<ul>
+<li>↑のページのファイルをダウンロード（コード右上にダウンロードボタンがある）</li>
+<li>適当な名前を付けてimport出来る適当な場所に配置。（オラはmodulesってとこにprofiler.pyという名前を付けて置いてみた）</li>
+<li>settings.pyにmiddlewareを登録する</li>
+<li>プロファイルしたいURLにprof=というパラメータを付けてブラウザでアクセスする</li>
+</ul>
+
+
+<p>って感じ。settings.pyは</p>
+
+<p>```py settings.py
+MIDDLEWARE_CLASSES = (
+&hellip;</p>
+
+<pre><code>'modules.profiler.ProfileMiddleware',
+</code></pre>
+
+<p>)
+```</p>
+
+<p>こんな感じ。で、上のようにブラウザでアクセスするとエラー・・・</p>
+
+<p><code>
+AttributeError: 'WSGIRequest' object has no attribute 'has_key'
+</code></p>
+
+<p>なので、コード上で</p>
+
+<p><code>py
+request.has_key
+</code></p>
+
+<p>となっているところを</p>
+
+<p><code>py
+request.GET.has_key
+</code></p>
+
+<p>と変更すると上手く動いた。ProfileMiddlewareのページ内コメントを見ると</p>
+
+<p><code>py
+'prof' in request.GET
+</code></p>
+
+<p>と変更しても動くらしい。んで、プロファイルしたいurlにprof=をパラメータとして付けてアクセスすると、ブラウザ上に</p>
+
+<p>```
+47793 function calls (42681 primitive calls) in 0.907 seconds</p>
+
+<p>   Ordered by: internal time, call count</p>
+
+<p>   ncalls  tottime  percall  cumtime  percall filename:lineno(function)</p>
+
+<pre><code>    3    0.608    0.203    0.608    0.203 /path/to/python/local/lib/python/site-packages/django/db/backends/utils.py:58(execute)
+   30    0.112    0.004    0.112    0.004 /usr/lib/python/socket.py:406(readline)
+   12    0.050    0.004    0.050    0.004 /usr/lib/python/socket.py:223(meth)
+</code></pre>
+
+<p>&hellip;.
+```</p>
+
+<p>という形でプロファイルが表示出来た。もーこれでいーや。ということでやったのはここまで。まだまだだけど、取りあえずプロファイル結果を出すまでだけでハマったし、次回やっても同じようにハマりそうなのでメモしておく。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Django 1.6から1.7にアップデートしてみた]]></title>
@@ -256,83 +431,6 @@ def hoge(request):</p>
 <p>とやったりすることが出来る。個人的にはWebサービスでサイドメニューに必要な情報をデコレーターでやって、メインコンテンツに必要な情報をビューでやるとかそんな感じで使ってみようと思う。</p>
 
 <p>参考：<a href="http://qiita.com/_rdtr/items/d3bc1a8d4b7eb375c368">Pythonのデコレータを理解するための12Step &ndash; Qiita</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[use bootstrap3 in django]]></title>
-    <link href="http://blog.shigepon.info/blog/2014/12/18/use-bootstrap3-in-django/"/>
-    <updated>2014-12-18T08:24:56+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2014/12/18/use-bootstrap3-in-django</id>
-    <content type="html"><![CDATA[<p>そろそろbootstrap3を使ってみたいなと思い、Djangoでbootstrap3を使う方法を調べてみた。django-bootstrap-toolkitのページを見てみるとdjango-bootstrap3を使ってねと書いてあるので、それを使ってみることにした。</p>
-
-<h2>インストール</h2>
-
-<p>```sh</p>
-
-<p>$ pip install django-bootstrap3
-```</p>
-
-<h2>設定</h2>
-
-<!-- more -->
-
-
-<p>```py settings.py
-INSTALLED_APPS = (
-&hellip;.</p>
-
-<pre><code>'bootstrap3',
-</code></pre>
-
-<p>&hellip;.
-)
-```</p>
-
-<!-- more -->
-
-
-<h2>テンプレート</h2>
-
-<p><code>html
-
-{% load bootstrap3 %}
-{% bootstrap_css %}
-{% bootstrap_javascript %}
-{% bootstrap_messages %}
-
-</code></p>
-
-<p>これで必要ファイルがロードされる。あとはbootstrap3で使うタグで構成すれば良い。bootstrap_formとかそういうタグもあるけどまだ試していない。</p>
-
-<h2>Bootswatchにあるテーマを試す</h2>
-
-<p>まずはBootswatchのテーマcssをダウンロード</p>
-
-<p><code>sh
-$ cd /static/css
-$ wget http://bootswatch.com/cosmo/bootstrap.min.css
-</code></p>
-
-<p>/staticはアプリのフォルダ下に作る</p>
-
-<p>次に設定ファイルに項目を追加</p>
-
-<p>```py settings.py
-STATIC_URL = &lsquo;/static/&rsquo;
-BOOTSTRAP3 = {</p>
-
-<pre><code>'css_url':'/static/css/bootstrap.min.css'
-</code></pre>
-
-<p>}
-```</p>
-
-<p>これだけでテンプレートいじらずに動いてくれる</p>
-
-<p>bootstrap2だとnavbar表示の時に表示が重なるとか何とかあったけど、bootstrap3だと気にしなくて良いのかな？何も追加css書かなくても特に問題無さそう。これは嬉しい。</p>
-
-<p>でも<a href="http://qiita.com/Alex_23drum/items/bbf80aff7dbb6fd1a7d9">Navbarに画像入れると下に偏った配置になる</a>とかあるみたいなので、調べてみる必要があるかも</p>
 ]]></content>
   </entry>
   

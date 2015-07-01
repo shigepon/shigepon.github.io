@@ -9,8 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="そろそろbootstrap3を使ってみたいなと思い、Djangoでbootstrap3を使う方法を調べてみた。django-bootstrap-toolkitのページを見てみるとdjango-bootstrap3を使ってねと書いてあるので、それを使ってみることにした。 インストール 1
-$ pip &hellip;">
+  <meta name="description" content="pythonのデコレーターを使ってみたらとても便利だなと思ったのでメモ 参考にしたページを読んでいくと理解できた。要はデコレーターとして使う関数は引数に呼び出し元の関数を貰っておいて、内部で作った関数を返せば良い。内部の関数は適当に作れるみたい（今のとこそういう理解をしている）。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +79,64 @@ $ pip &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/06/python-decorator/">Pythonのデコレーターをdjangoで使って見る</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-01-06T08:55:46+09:00" pubdate data-updated="true">Jan 6<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>pythonのデコレーターを使ってみたらとても便利だなと思ったのでメモ</p>
+
+<p>参考にしたページを読んでいくと理解できた。要はデコレーターとして使う関数は引数に呼び出し元の関数を貰っておいて、内部で作った関数を返せば良い。内部の関数は適当に作れるみたい（今のとこそういう理解をしている）。djangoのビューで呼び出したかったので、内部の関数で可変長引数を取れるようにして下のようにしたら動いた。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">outer</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">print</span> <span class="s">&quot;hoge&quot;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">inner</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/01/06/python-decorator/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -570,59 +627,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/22/django-datetimefield-received-a-naive-datetime/">DjangoでDateTimeField Received a Naive datetimeってWarningが出た</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-11-22T16:19:11+09:00" pubdate data-updated="true">Nov 22<span>nd</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>RuntimeWarning: DateTimeField received a naive datetime
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ってWarningが出るのに対する対処</p>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">USE_TZ</span> <span class="o">=</span> <span class="bp">False</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>を書けばおk。要はタイムゾーン入れてくれってエラーなので、そんなものはない！と指定すればいいっぽい</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/11/22/django-datetimefield-received-a-naive-datetime/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -654,6 +658,10 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/01/profiling-django/">Djangoをプロファイリングする</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/">Jenkinsでなでしこ2をCIする</a>
       </li>
     
@@ -667,10 +675,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
     
       <li class="post">
         <a href="/blog/2015/03/19/use-sparql-with-python/">PythonでSparql使ってLinked Open Dataをいじってみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/">Django 1.6から1.7にアップデートしてみた</a>
       </li>
     
   </ul>
@@ -699,14 +703,14 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (4)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (15)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (16)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (8)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (16)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (17)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>

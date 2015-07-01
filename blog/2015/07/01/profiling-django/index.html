@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>shigeponが関心のある技術情報など</title>
+  <title>djangoをプロファイリングする - shigeponが関心のある技術情報など</title>
   <meta name="author" content="shigepon">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.shigepon.info">
+  <link rel="canonical" href="http://blog.shigepon.info/blog/2015/07/01/profiling-django">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -77,15 +77,12 @@
 </nav> -->
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2015/07/01/profiling-django/">Djangoをプロファイリングする</a></h1>
+      <h1 class="entry-title">Djangoをプロファイリングする</h1>
     
     
       <p class="meta">
@@ -108,7 +105,7 @@
   </header>
 
 
-  <div class="entry-content"><p>作ってるWebサービスが条件によってえらい重くなるので、ボトルネックを探すためにプロファイラを動かしてみようと考えてやってみたらそこそこハマった。</p>
+<div class="entry-content"><p>作ってるWebサービスが条件によってえらい重くなるので、ボトルネックを探すためにプロファイラを動かしてみようと考えてやってみたらそこそこハマった。</p>
 
 <p>先に結論：</p>
 
@@ -300,76 +297,16 @@
 
 <p>という形でプロファイルが表示出来た。もーこれでいーや。ということでやったのはここまで。まだまだだけど、取りあえずプロファイル結果を出すまでだけでハマったし、次回やっても同じようにハマりそうなのでメモしておく。</p>
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/">Jenkinsでなでしこ2をCIする</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
   
 
+<span class="byline author vcard">Posted by <span class="fn">shigepon</span></span>
 
-<time datetime="2015-05-08T09:19:18+09:00" pubdate data-updated="true">May 8<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://blog.shigepon.info/blog/2015/05/05/nunit-console-test-for-nadesiko2/">なでしこ2をubuntu cuiでテストする &ndash; shigeponが関心のある技術情報など</a>
-までやったので、CIできると便利かなと思ってやってみた。と言いつつ、単にやってみたかっただけ。mono developとかvisual studio使って開発する場合も同じように出来ると思う。例によって環境はUbuntu 12.04</p>
-
-<p>参考：</p>
-
-<ul>
-<li><a href="http://d.hatena.ne.jp/Crest/20121220/1356023823">.NETとJenkinsで始めるCI開発 &ndash; CREST’S WEBLOG</a></li>
-<li><a href="http://blog.bekijkhet.com/2013/01/create-mono-c-buildserver-using-jenkins.html">Create a Mono C# Buildserver using Jenkins and GitHub ~ BroersA Blog</a></li>
-</ul>
-
-
-<h2>1. Jenkinsインストール</h2>
-
-<p>(略) 追記するかも？</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/05/05/nunit-console-test-for-nadesiko2/">なでしこ2をubuntu Cuiでテストする</a></h1>
-    
-    
-      <p class="meta">
-        
 
 
 
@@ -381,434 +318,49 @@
   
 
 
-<time datetime="2015-05-05T23:02:32+09:00" pubdate data-updated="true">May 5<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">ubuntuのcui環境でなでしこ2をビルドする</a>の続きで、cui環境でなでしこ2のテストを実行してみる。</p>
-
-<p>cui環境でnunitを実行するには<a href="http://www.nunit.org/index.php?p=nunit-console&amp;r=2.5.10">nunit-console</a>を使う。なでしこ2のテストを実行するにはテスト関連のdllをnunitで実行すると良い。コマンドはなでしこ2をインストールしたディレクトリでこんな感じ。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>nunit-console CNako2Test/bin/Debug/CNako2Test.dll
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>プラグインのテスト(NakoPluginTest)プロジェクトでは外部ファイルを利用するので</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>nunit-console NakoPluginTest/bin/Debug/NakoPluginTest.dll
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/05/05/nunit-console-test-for-nadesiko2/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
+<time datetime="2015-07-01T09:06:13+09:00" pubdate data-updated="true">Jul 1<span>st</span>, 2015</time>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">Ubuntuのcui環境でなでしこ2をビルドする</a></h1>
-    
-    
-      <p class="meta">
-        
 
-
-
-
-
-
-
-
+<span class="categories">
   
+    <a class='category' href='/blog/categories/django/'>Django</a>, <a class='category' href='/blog/categories/python/'>Python</a>
+  
+</span>
 
 
-<time datetime="2015-05-01T08:23:00+09:00" pubdate data-updated="true">May 1<span>st</span>, 2015</time>
-        
-      </p>
+    </p>
     
-  </header>
-
-
-  <div class="entry-content"><p>今までmono developでなでしこ2をビルド、テストして、cui環境にアップロードしてたんだけど、面倒になってきたのでcui環境で直接ビルド、テストしてみようと思ったのでついでに開発を始める段階からメモしてみる。</p>
-
-<p>環境はubuntu 12.04とするが、上位バージョンでも問題無いはず</p>
-
-<h1>mono環境の準備</h1>
-
-<p>mono-develをインストールしたらmono関連で必要なものは勝手にインストールされたような気がする。ついでに<a href="http://blog.shigepon.info/blog/2014/08/20/vb-not-work-on-ubuntu/">VisualBasicが動かない件</a>にあるように、mono-vbnc、あとはnunitのインストール</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>aptitude install mono-devel mono-vbnc nunit
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.info/blog/2015/07/01/profiling-django/" data-via="shigepon" data-counturl="http://blog.shigepon.info/blog/2015/07/01/profiling-django/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">Read on &rarr;</a>
-    </footer>
-  
 
+    
+    
+      <div class="related_posts">
+	<h1>Related Posts</h1>
+	<ul>
+		
+	</ul>
+</div>
 
-    </article>
-  
-  
-    <article>
+    
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/03/19/use-sparql-with-python/">PythonでSparql使ってLinked Open Dataをいじってみた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-03-19T22:07:12+09:00" pubdate data-updated="true">Mar 19<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>以前<a href="http://blog.shigepon.info/blog/2014/11/25/kobe-dot-r-no-13/">Kobe.R no 13に参加してきました &ndash; shigeponが関心のある技術情報など</a>でLinked Open Dataが気になってたので、Pythonでいじれるライブラリを探してみて遊んでみた。</p>
-
-<p>Sparqlで色々試してみると面白そうなので、pip search sparqlで出た結果とググってみた結果から、SPARQLWrapperが何となく良さげかなと思い、インストールしてみた。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install SPARQLWrapper
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これだけでおk</p>
-
-<p>djangoのshellから使ってみる</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/03/19/use-sparql-with-python/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
+        <a class="basic-alignment left" href="/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/" title="Previous Post: Jenkinsでなでしこ2をCIする">&laquo; Jenkinsでなでしこ2をCIする</a>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/">Django 1.6から1.7にアップデートしてみた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-03-09T22:11:02+09:00" pubdate data-updated="true">Mar 9<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Djangoが去年の9月に1.7にバージョンアップしてて、今更ながらアップデートしてみた。色々教えて頂いた<a href="https://twitter.com/key3">@key3</a>さんに感謝！</p>
-
-<p>※注　アップデートの前に必ずデータとかソースとか色々バックアップしておくこと。</p>
-
-<h2>Django本体のアップデート</h2>
-
-<p>Djangoはpipで管理してるので、pipコマンドでアップデート出来る</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install django -U
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/03/05/uwsgi-memo/">Uwsgiメモ</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-03-05T10:21:54+09:00" pubdate data-updated="true">Mar 5<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>uwsgi関連ではまった点などをメモ</p>
-
-<h2>invalid request block size</h2>
-
-<p>ajaxでサーバ側からデータを読み込むライブラリを使ってると、条件によって502エラーが出てる(=大体djangoとかのプログラム側のエラーで出る)ので、uwsgiのログを調べると、invalid request block sizeというエラーが出てた。</p>
-
-<p>んで、調べてみると、uwsgiがリクエストのサイズが大きすぎるとエラーを吐いているらしい。ライブラリ側で勝手にパラメーター付けて送られてリクエストのサイズが大きくなっているので、こりゃ調整しないとなということで調べてみた。起動時にオプション設定するか、iniファイルで設定したらいけるらしい</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>uwsgi --buffer-size<span class="o">=</span>xxxx
-</span></code></pre></td></tr></table></div></figure>
-
-
-
+    </p>
+  </footer>
+</article>
 
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/03/05/uwsgi-memo/">Read on &rarr;</a>
-    </footer>
-  
 
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/03/03/error-log-make-php-error/">突然サーバエラーが頻発したので、調べてみたらエラーログが原因だった</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-03-03T09:56:56+09:00" pubdate data-updated="true">Mar 3<span>rd</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>参考：<a href="http://zapanet.info/blog/item/2489">PHPのエラーログが肥大してPHPが動かなくなった話</a></p>
-
-<p>ある日、運用しているサービスがサーバエラーを頻出しだしたので、調べてみた。環境はUbuntu、nginx、php-fpm、postgresql。</p>
-
-<ul>
-<li>他のサーバへのdbアクセスがおかしくなったのかと思い、他の方法でdbアクセス→問題無し</li>
-<li>サービスを色々再起動してみた。→変化なし</li>
-<li>サーバを再起動。しばらくエラーでないが、しばらくするとエラーががが</li>
-<li>php-fpmを再起動。しばらくエラーでないが、しばらくするとエラーががが</li>
-<li>php周りかなと思ったので、phpのログを開く→開かない！</li>
-<li>良く見たらphp-fpmのログが2GB超えてた。ナンテコッタイ。</li>
-<li>ログを退避して、ローテーション設定して改めてphp-fpmを再起動したら直った。めでたしめでたし。</li>
-</ul>
-
-
-<p>メモがてらローテーション設定を書いておく</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/03/03/error-log-make-php-error/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/03/01/kobe-dot-r-no-15/">Kobe.R #15に参加しました</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-03-01T10:57:17+09:00" pubdate data-updated="true">Mar 1<span>st</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>勉強会の話なので丁寧語で。2/28に<a href="https://kobexr.doorkeeper.jp/events/20843">Kobe.R #15</a>があったので参加してきました。今回は三宮で開かれました。今回は珍しく（？）Rの話題が多いR勉強会でした。抜けてる点もちょいちょいあると思いますが、覚えている限りの感想を書いておきます。</p>
-
-<h2>Rによるデータ処理入門</h2>
-
-<p>Kobe Rの主催者の河原さん（@h_kawahara）による発表でした。 データ読み込み、加工、表示までのRで解析する前に絶対必要な操作をまとめてくれました。大事なことはデータ加工≠データ整形ということかなと。何となく突っ込みどころを箇条書きにします</p>
-
-<ul>
-<li>strがstructureの略称とか、stringの略称じゃないんだ！</li>
-<li>何度も言うけどforは遅い</li>
-<li>db接続がodbcだけだとちょっと今後辛い気がする</li>
-<li>大きいファイルはRDataファイルにしておくと容量小さい</li>
-<li>データ加工に便利なのはdplyr(でぃーぷらいやーと読むらしい）</li>
-<li>dplyrのソート命令がarrange！sortとかorderじゃないのか。</li>
-<li>dplyrだとカラムの結合や分解も手軽に出来そう</li>
-<li>自分でちょっといじって、packageとかfunctionを探す方法を掴まないと、関数名に略称とか使ってるケースが結構あって、探しにくいかも。使ってみないと何とも言えないけど</li>
-<li>発表でちょっと気になったけど、同じ書式の演算子でパッケージによって違う意味になったりするの？</li>
-</ul>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/03/01/kobe-dot-r-no-15/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/01/24/django-modelform-multiwidget/">djangoのModelFormでMultiWidgetを使って見る</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-01-24T17:23:07+09:00" pubdate data-updated="true">Jan 24<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>ModelFormでModelの１つのカラムを複数のフォーム要素（inputとか）で表現したかったので調べてみた。フォーム要素を適当に作って、clean_xxxの時にくっつけるとかそんな実装の仕方も出来るみたいだけど、MultiWidgetを使うと、Modelの１つのカラムに対して複数のinput要素を使うことが出来るみたいなので、使ってみた。名前のカラムに対して姓、名の入力要素を作るとかそんなのが出来るみたい。</p>
-
-<p>まずはMultiWidgetを継承したクラスを作る</p>
-
-<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">django.forms.widgets</span> <span class="kn">import</span> <span class="n">MultiWidget</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">NameWidget</span><span class="p">(</span><span class="n">MultiWidget</span><span class="p">):</span>
-</span><span class='line'>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>次にクラスに対して、__init__をオーバーライドし、widgetとしてTextInputのフォームを2つ登録してみた。コードはこんな感じ。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/01/24/django-modelform-multiwidget/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  <div class="pagination">
-    
-      <a class="prev" href="/blog/page/2/">&larr; Older</a>
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
 <aside class="sidebar">
   
     <section>
@@ -855,7 +407,7 @@
 <section>
   <h1>Latest Tweets</h1>
   <ul id="tweets">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   <script type="text/javascript">
     $(document).ready(function(){
@@ -909,7 +461,7 @@
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   
   <a href="https://github.com/shigepon">@shigepon</a> on GitHub
@@ -941,6 +493,7 @@
 
   
 </aside>
+
 
     </div>
   </div>

@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-05-13T12:46:03+09:00</updated>
+  <updated>2015-07-01T10:16:41+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,205 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[djangoをプロファイリングする]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/07/01/profiling-django/"/>
+    <updated>2015-07-01T09:06:13+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/07/01/profiling-django</id>
+    <content type="html"><![CDATA[<p>作ってるWebサービスが条件によってえらい重くなるので、ボトルネックを探すためにプロファイラを動かしてみようと考えてやってみたらそこそこハマった。</p>
+
+<p>先に結論：</p>
+
+<p><strong>Middleware使ってブラウザに表示させるのが楽だった</strong></p>
+
+<p>条件</p>
+
+<ul>
+<li>cui環境なので、プロファイル結果は画像作るかブラウザ表示するかのどちらか</li>
+<li>コードに埋めこまない形</li>
+</ul>
+
+
+<p>まず参考にしたのは公式ページの<a href="https://code.djangoproject.com/wiki/ProfilingDjango">ProfilingDjango – Django</a>。ざっくりとした結果が知りたかったのでrunprofileserverを試してみることにした。</p>
+
+<h2>開発サーバでやってみる（runprofileserver）</h2>
+
+<p>django-extensionの一機能で</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install django-extensions
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でインストールして、</p>
+
+<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">INSTALLED_APP</span> <span class="o">=</span> <span class="p">(</span><span class="o">...</span>
+</span><span class='line'>   <span class="s">&#39;django_extensions&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で設定して</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py runprofileserver
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とすると、よしなに/tmpフォルダ内にプロファイル結果を吐き出してくれる開発用サーバだそうで、これは便利そうと思い、やってみた。</p>
+
+<h3>結果を画像にしようとしてハマる</h3>
+
+<p>プロファイル結果からgraphviz通して画像にしたらブラウザから確認出来るし楽なんじゃね？とか良く考えると不毛なことを考えたのが間違いのもと。普通にKCacheGrind使ってろって話なんだけど、やってみた</p>
+
+<p>ツールとして使ったもの</p>
+
+<ul>
+<li><a href="https://github.com/jrfonseca/gprof2dot">gprof2dot</a>、プロファイル結果をdotファイルに変換する</li>
+<li>graphviz、dotファイルを画像に変換する</li>
+</ul>
+
+
+<p>話にならなかったもの（良く考えるとこのケースで使えないの当たり前なのに使おうとして失敗したもの）</p>
+
+<ul>
+<li>xdebugtoolkit、単純にxdebugの結果でないとそりゃ使えないよねと納得した</li>
+</ul>
+
+
+<p>あまり良く分かってなかったので、KCacheGrind互換で出力しておけば、色んなソフト使ってよしなに出来るんじゃね？と思ってみた。んでKCacheGrind互換出力ってcallgrind形式ってことだよね！と勝手に思い込んでた</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py runprofileserver --kcachegrind
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>おもむろにdotファイルに変換!</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>path/to/gprof2dot -o out.dot -f callgrind /tmp/xxx.prof
+</span><span class='line'>....
+</span><span class='line'>AssertionError
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>うまくいかない。何かの計算値がこうなるはずなのにならないよ！とか怒られてる。って良く考えたらKCacheGrind互換の出力がcallgrind形式って保証がどこにもない！</p>
+
+<p>ってことで、あれこれドキュメント読んでたら、runprofileserverはhotshot使ってるとか何とか書いてあるから、何も指定しなかったらhotshotでの形式になる・・・ってことは全然説明されてないけど-fのオプションはpstatsで良いんじゃね？</p>
+
+<p>と勝手に予想して</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py runprofileserver
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>path/to/gprof2dot -o out.dot -f pstats /tmp/xxx.prof
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とやるとout.dotが出来ましたとさ。あとは色んなとこに書いてある（例えば<a href="http://stackoverflow.com/questions/9279144/interpreting-callgrind-data">ここ</a>）ように、dotファイルを画像ファイルに変換すると、ちゃんと画像が出来上がった。</p>
+
+<p>ただ・・・・、まだ設定分かってないからだと思うんだけど、出来上がった画像にはviewやmodelのメソッドが一切書かれておらず、この情報だけからボトルネック探すのかなりキツイんじゃね？ということだけが分かった。</p>
+
+<h3>同一ドメインのurlを内部で呼び出してハマる</h3>
+
+<p>何故かURLによってプロファイル作るのが途中で止まって、サーバもレスポンスを返してくれなくなった。問題箇所を調べると、どうも内部で同じrunprofileserverで管理しているurlにアクセスすると止まっちゃう模様。別サーバを立てて、そこにアクセスするようにすれば、問題無く動作した。</p>
+
+<h2>手間なのでMiddlewareでプロファイルすることにした</h2>
+
+<p>いちいち開発中の状態なのにサーバ2つ立てて面倒だったり、結局作った画像見ても良く分からなかったので、今度はMiddlewareに埋め込むタイプを試してみた。</p>
+
+<h3>取りあえず動かなくてハマる</h3>
+
+<p>Extendedって書いてあるしということで<a href="https://djangosnippets.org/snippets/605/">djangosnippets: Extended Profiling Middleware</a>を試してみた。</p>
+
+<p>手順は</p>
+
+<ul>
+<li>↑のページのファイルをダウンロード（コード右上にダウンロードボタンがある）</li>
+<li>適当な名前を付けてimport出来る適当な場所に配置。（オラはmodulesってとこにprofiler.pyという名前を付けて置いてみた）</li>
+<li>settings.pyにmiddlewareを登録する</li>
+<li>プロファイルしたいURLにprof=というパラメータを付けてブラウザでアクセスする</li>
+</ul>
+
+
+<p>って感じ。settings.pyは</p>
+
+<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">MIDDLEWARE_CLASSES</span> <span class="o">=</span> <span class="p">(</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'>    <span class="s">&#39;modules.profiler.ProfileMiddleware&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じ。で、上のようにブラウザでアクセスするとエラー・・・</p>
+
+<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="ne">AttributeError</span><span class="p">:</span> <span class="s">&#39;WSGIRequest&#39;</span> <span class="nb">object</span> <span class="n">has</span> <span class="n">no</span> <span class="n">attribute</span> <span class="s">&#39;has_key&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>なので、コード上で</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">request</span><span class="o">.</span><span class="n">has_key</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>となっているところを</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">has_key</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と変更すると上手く動いた。ProfileMiddlewareのページ内コメントを見ると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="s">&#39;prof&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と変更しても動くらしい。んで、プロファイルしたいurlにprof=をパラメータとして付けてアクセスすると、ブラウザ上に</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="mi">47793</span> <span class="n">function</span> <span class="n">calls</span> <span class="p">(</span><span class="mi">42681</span> <span class="n">primitive</span> <span class="n">calls</span><span class="p">)</span> <span class="ow">in</span> <span class="mf">0.907</span> <span class="n">seconds</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="n">Ordered</span> <span class="n">by</span><span class="p">:</span> <span class="n">internal</span> <span class="n">time</span><span class="p">,</span> <span class="n">call</span> <span class="n">count</span>
+</span><span class='line'>
+</span><span class='line'>   <span class="n">ncalls</span>  <span class="n">tottime</span>  <span class="n">percall</span>  <span class="n">cumtime</span>  <span class="n">percall</span> <span class="n">filename</span><span class="p">:</span><span class="n">lineno</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
+</span><span class='line'>        <span class="mi">3</span>    <span class="mf">0.608</span>    <span class="mf">0.203</span>    <span class="mf">0.608</span>    <span class="mf">0.203</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">db</span><span class="o">/</span><span class="n">backends</span><span class="o">/</span><span class="n">utils</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">58</span><span class="p">(</span><span class="n">execute</span><span class="p">)</span>
+</span><span class='line'>       <span class="mi">30</span>    <span class="mf">0.112</span>    <span class="mf">0.004</span>    <span class="mf">0.112</span>    <span class="mf">0.004</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">socket</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">406</span><span class="p">(</span><span class="n">readline</span><span class="p">)</span>
+</span><span class='line'>       <span class="mi">12</span>    <span class="mf">0.050</span>    <span class="mf">0.004</span>    <span class="mf">0.050</span>    <span class="mf">0.004</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">socket</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">223</span><span class="p">(</span><span class="n">meth</span><span class="p">)</span>
+</span><span class='line'><span class="o">....</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>という形でプロファイルが表示出来た。もーこれでいーや。ということでやったのはここまで。まだまだだけど、取りあえずプロファイル結果を出すまでだけでハマったし、次回やっても同じようにハマりそうなのでメモしておく。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Jenkinsでなでしこ2をCIする]]></title>
@@ -1792,32 +1991,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 <p>もしくは文字サイズをdpで指定</p>
 
 <p>参考：<a href="http://www.fujimotohajime.net/pukiwiki/index.php?TitaniumMobile%2FAndroid%E3%81%A7%E5%AE%9F%E6%A9%9F%E3%83%86%E3%82%B9%E3%83%88%E3%81%99%E3%82%8B%E3%81%A8%E6%96%87%E5%AD%97%E3%81%8C%E5%B0%8F%E3%81%95%E3%81%84">TitaniumMobile/Androidで実機テストすると文字が小さい &ndash; Wiki</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[DjangoでDateTimeField received a naive datetimeってWarningが出た]]></title>
-    <link href="http://blog.shigepon.info/blog/2014/11/22/django-datetimefield-received-a-naive-datetime/"/>
-    <updated>2014-11-22T16:19:11+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2014/11/22/django-datetimefield-received-a-naive-datetime</id>
-    <content type="html"><![CDATA[<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>RuntimeWarning: DateTimeField received a naive datetime
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ってWarningが出るのに対する対処</p>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">USE_TZ</span> <span class="o">=</span> <span class="bp">False</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>を書けばおk。要はタイムゾーン入れてくれってエラーなので、そんなものはない！と指定すればいいっぽい</p>
-
-<!-- more -->
-
-
-<p>参考：<a href="http://stackoverflow.com/questions/18622007/runtimewarning-datetimefield-received-a-naive-datetime">django &ndash; RuntimeWarning: DateTimeField received a naive datetime &ndash; Stack Overflow</a></p>
 ]]></content>
   </entry>
   

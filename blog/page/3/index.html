@@ -9,7 +9,9 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="最近Titanium Mobile使ってスマホアプリを作ろうかなと思って色々試してるんだけど、ログイン認証する時にはまったので、メモ 参考In Appcelerator Titanium, how can I get Django&rsquo;s CSRF token?(Stack &hellip;">
+  <meta name="description" content="1
+RuntimeWarning: DateTimeField received a naive datetime ってWarningが出るのに対する対処 settings.py1
+USE_TZ = False を書けばおk。要はタイムゾーン入れてくれってエラーなので、そんなものはない！ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +81,59 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/22/django-datetimefield-received-a-naive-datetime/">DjangoでDateTimeField Received a Naive datetimeってWarningが出た</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-11-22T16:19:11+09:00" pubdate data-updated="true">Nov 22<span>nd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>RuntimeWarning: DateTimeField received a naive datetime
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ってWarningが出るのに対する対処</p>
+
+<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">USE_TZ</span> <span class="o">=</span> <span class="bp">False</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>を書けばおk。要はタイムゾーン入れてくれってエラーなので、そんなものはない！と指定すればいいっぽい</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/11/22/django-datetimefield-received-a-naive-datetime/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -606,61 +661,6 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/07/05/groonga-qa/">Groongaアンケート？</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-07-05T13:52:55+09:00" pubdate data-updated="true">Jul 5<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>今回は他の人からの話があるので丁寧語で。
-@ktouさんからGroongaについて「Groongaについてのいくつかの質問について答えて欲しい」との話がありましたので、ブログに載せておきます。</p>
-
-<p>質問は以下の3点</p>
-
-<ul>
-<li>Groongaを選んだ決め手</li>
-<li>実際にGroongaを使っていてよいと思っているところ</li>
-<li>Groongaがこうなるともっとうれしいと思うところ</li>
-</ul>
-
-
-<h2>Groongaを選んだ決め手</h2>
-
-<p>現在運営しているサービス<a href="http://thoz.org">とある法律判例の全文検索</a>を作り始める時に、全文検索をサービスに入れるのを前提に考えてましたので、全文検索エンジンについて調べました。DBとしてはPostgreSQLをメインで使っているので、当時は選択肢として次のようなものがありました。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/07/05/groonga-qa/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -692,6 +692,10 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/01/profiling-django/">Djangoをプロファイリングする</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/">Jenkinsでなでしこ2をCIする</a>
       </li>
     
@@ -705,10 +709,6 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
     
       <li class="post">
         <a href="/blog/2015/03/19/use-sparql-with-python/">PythonでSparql使ってLinked Open Dataをいじってみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/">Django 1.6から1.7にアップデートしてみた</a>
       </li>
     
   </ul>
@@ -737,14 +737,14 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (4)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (15)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (16)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (8)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (16)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (17)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
