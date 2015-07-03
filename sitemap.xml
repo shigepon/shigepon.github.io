@@ -317,16 +317,20 @@
         <lastmod>2015-07-01T10:16:13+09:00</lastmod>
     </url>
     <url>
+        <loc>http://blog.shigepon.info/blog/2015/07/03/make-admin-page-using-django/</loc>
+        <lastmod>2015-07-04T00:11:43+09:00</lastmod>
+    </url>
+    <url>
         <loc>http://blog.shigepon.info/blog/archives/</loc>
-        <lastmod>2015-07-01T21:41:13+09:00</lastmod>
+        <lastmod>2015-07-04T00:11:43+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.info/archives/</loc>
-        <lastmod>2015-07-01T21:41:13+09:00</lastmod>
+        <lastmod>2015-07-04T00:11:43+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.info/</loc>
-        <lastmod>2015-07-01T21:41:13+09:00</lastmod>
+        <lastmod>2015-07-04T00:11:43+09:00</lastmod>
     </url>
     <url>
         <loc>http://blog.shigepon.info/robots.txt</loc>

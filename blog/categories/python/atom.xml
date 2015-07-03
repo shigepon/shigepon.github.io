@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-07-01T21:42:15+09:00</updated>
+  <updated>2015-07-04T08:15:22+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,88 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Django1.7でPostgreSQLとBootstrap使ったアプリを作ってみた(1.5):管理ページを作ってみた]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/07/03/make-admin-page-using-django/"/>
+    <updated>2015-07-03T21:59:10+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/07/03/make-admin-page-using-django</id>
+    <content type="html"><![CDATA[<p>Django1.6.5でアプリを作ってみたってネタをやってたけど、Django1.7にバージョンアップしたので、タイトルを変えた。ついでにDjango1.7だとINSTALLED_APPにdjango.contrib.authを入れておかないとエラーが出るケースがある（例えば<a href="http://www.django-rest-framework.org/">Django REST framework</a>でエラーが出た）ので、エラー出ないように最初に管理ページを用意しておくと良いと思う。</p>
+
+<p>管理ページを用意する手順はこんな感じ</p>
+
+<h2>settings.pyに設定を書く</h2>
+
+<p>```py settings.py
+INSTALLED_APPS = (</p>
+
+<pre><code>'django.contrib.admin',
+'django.contrib.auth',
+...
+</code></pre>
+
+<p>)
+MIDDLEWARE_CLASSES = (</p>
+
+<pre><code>'django.contrib.auth.middleware.AuthenticationMiddleware',
+...
+</code></pre>
+
+<p>)
+TEMPLATE_CONTEXT_PROCESSORS = (</p>
+
+<pre><code>'django.contrib.auth.context_processors.auth',
+...
+</code></pre>
+
+<p>)
+```</p>
+
+<h2>migrate</h2>
+
+<p>マイグレーションしておく</p>
+
+<p><code>sh
+$ python manage.py makemigrations
+$ python manage.py migrate
+</code></p>
+
+<p>マルチデータベースでやろうとして反映されずにハマったりしたけど、それはまた別の記事で書くかも</p>
+
+<h2>管理アカウントを作る</h2>
+
+<p><code>sh
+$ python manage.py createsuperuser
+Username: hoge
+Email address: hoge@example.com
+Password: ********
+Password (again): ********
+Superuser created successfully.
+</code></p>
+
+<p>って出来るとおk</p>
+
+<h2>urls.pyを書く</h2>
+
+<p>`&ldquo;py urls.py
+urlpatterns = patterns(&rdquo;,</p>
+
+<pre><code>url(r'^admin/', include(admin.site.urls)),
+...
+</code></pre>
+
+<p>)
+```</p>
+
+<p>こんな感じで作って</p>
+
+<p><code>sh
+$ python manage.py runserver
+</code></p>
+
+<p>とすると、127.0.0.1/adminにアクセスすると管理画面へのログイン画面が出る。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[djangoをプロファイリングする]]></title>
@@ -412,59 +494,6 @@ class HogeForm(forms.ModelForm):</p>
 <p>他にももっと細かくhtmlを記述出来るformat_outputとかあるみたいだけど、試してないので省略。なくても取りあえず出来る。</p>
 
 <p>参考：<a href="https://docs.djangoproject.com/en/1.7/ref/forms/widgets/#django.forms.MultiWidget">Django英語ドキュメント</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[pythonのデコレーターをdjangoで使って見る]]></title>
-    <link href="http://blog.shigepon.info/blog/2015/01/06/python-decorator/"/>
-    <updated>2015-01-06T08:55:46+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2015/01/06/python-decorator</id>
-    <content type="html"><![CDATA[<p>pythonのデコレーターを使ってみたらとても便利だなと思ったのでメモ</p>
-
-<p>参考にしたページを読んでいくと理解できた。要はデコレーターとして使う関数は引数に呼び出し元の関数を貰っておいて、内部で作った関数を返せば良い。内部の関数は適当に作れるみたい（今のとこそういう理解をしている）。djangoのビューで呼び出したかったので、内部の関数で可変長引数を取れるようにして下のようにしたら動いた。</p>
-
-<p>```py
-def outer(func):</p>
-
-<pre><code>def inner(*args,**kwargs):
-    print "hoge"
-    return func(*args,**kwargs)
-return inner
-</code></pre>
-
-<p>```</p>
-
-<!-- more -->
-
-
-<p>この時、args[0]にHttpRequestオブジェクトが入ってるので、これをいじると適当に値を追加したり整形したりするのをビューの外部に持っていけるので、使いようによっては共通部分と個別部分の分離や、ビューに直接関係ない処理（ログとか）を分離出来るので便利な感じがする。ただ、やりすぎるとコードが分割されすぎて読みにくくなる気もする。</p>
-
-<!-- more -->
-
-
-<p>```py
-def outer(func):</p>
-
-<pre><code>def inner(*args,**kwargs):
-    request = args[0]
-    request.hoge = "fuga"
-    return func(*args,**kwargs)
-return inner
-</code></pre>
-
-<p>@outer
-def hoge(request):</p>
-
-<pre><code>print request.hoge
-....
-</code></pre>
-
-<p>```</p>
-
-<p>とやったりすることが出来る。個人的にはWebサービスでサイドメニューに必要な情報をデコレーターでやって、メインコンテンツに必要な情報をビューでやるとかそんな感じで使ってみようと思う。</p>
-
-<p>参考：<a href="http://qiita.com/_rdtr/items/d3bc1a8d4b7eb375c368">Pythonのデコレータを理解するための12Step &ndash; Qiita</a></p>
 ]]></content>
   </entry>
   
