@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-07-04T08:15:22+09:00</updated>
+  <updated>2015-07-07T13:04:48+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,131 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Djangoで複数データベースを使用する]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/07/07/use-multiple-databases-in-django/"/>
+    <updated>2015-07-07T12:33:37+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/07/07/use-multiple-databases-in-django</id>
+    <content type="html"><![CDATA[<p>Djangoでは複数データベースを扱える。でも色々コーディングや設定が必要なのでメモしておく。参考：<a href="https://docs.djangoproject.com/en/1.7/topics/db/multi-db/">Multiple databases | Django documentation | Django</a>。対応バージョンはDjango 1.7。使ったデータベースはPostgreSQL。</p>
+
+<h2>settings.py</h2>
+
+<p>settings.pyで複数データベースの接続設定をする</p>
+
+<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="s">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>        <span class="s">&#39;NAME&#39;</span><span class="p">:</span> <span class="s">&#39;app_data&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s">&#39;ENGINE&#39;</span><span class="p">:</span> <span class="s">&#39;django.db.backends.postgresql_psycopg2&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s">&#39;USER&#39;</span><span class="p">:</span> <span class="s">&#39;postgres_user&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s">&#39;PASSWORD&#39;</span><span class="p">:</span> <span class="s">&#39;s3krit&#39;</span>
+</span><span class='line'>    <span class="p">},</span>
+</span><span class='line'>    <span class="s">&#39;users&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>        <span class="s">&#39;NAME&#39;</span><span class="p">:</span> <span class="s">&#39;user_data&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s">&#39;ENGINE&#39;</span><span class="p">:</span> <span class="s">&#39;django.db.backends.mysql&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s">&#39;USER&#39;</span><span class="p">:</span> <span class="s">&#39;mysql_user&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s">&#39;PASSWORD&#39;</span><span class="p">:</span> <span class="s">&#39;priv4te&#39;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考ページのをそのまま使った。さらに追加も出来る。</p>
+
+<h2>ここまでの設定でのマイグレーション</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py migrate
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>だとdefault設定のデータベースへのマイグレーション、</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py migrate --database<span class="o">=</span>users
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とするとusersで設定したデータベースへのマイグレーションとなる。
+何も設定していないと、それぞれのデータベースに全アプリケーションの全てのモデルが反映される。</p>
+
+<h2>データベースに保存するアプリ、モデルを限定したい</h2>
+
+<p>ルーティング設定をする。</p>
+
+<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">DATABASE_ROUTERS</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;myproject.routers.Router&#39;</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>settings.pyはこんな感じ。んでmyprojectフォルダにrouters.pyを作成して例えばuserアプリのものだけusersデータベースを使うという設定の場合次のように書く</p>
+
+<figure class='code'><figcaption><span>routers.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">class</span> <span class="nc">Router</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">db_for_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="o">**</span><span class="n">hints</span><span class="p">):</span>
+</span><span class='line'>        <span class="c">#ここでランダムに選択すると、dbの負荷分散っぽいことが出来る</span>
+</span><span class='line'>        <span class="c">#例：return random.choice[&#39;default&#39;,&#39;users&#39;]</span>
+</span><span class='line'>        <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span> <span class="o">==</span> <span class="s">&quot;user&quot;</span><span class="p">:</span>
+</span><span class='line'>            <span class="k">return</span> <span class="s">&quot;users&quot;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="s">&quot;default&quot;</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">db_for_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="o">**</span><span class="n">hints</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span> <span class="o">==</span> <span class="s">&quot;user&quot;</span><span class="p">:</span>
+</span><span class='line'>            <span class="k">return</span> <span class="s">&quot;users&quot;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="s">&quot;default&quot;</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">allow_relation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj1</span><span class="p">,</span> <span class="n">obj2</span><span class="p">,</span> <span class="o">**</span><span class="n">hints</span><span class="p">):</span>
+</span><span class='line'>        <span class="c">#Trueはリレーションを認める、Falseは認めない、Noneはこのコードでは関知しないという意味</span>
+</span><span class='line'>        <span class="k">return</span> <span class="bp">None</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">allow_migrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+</span><span class='line'>        <span class="c">#userアプリの場合はusers設定のデータベースへmigrate。</span>
+</span><span class='line'>        <span class="c">#他のアプリはusers以外のデータベースへmigrateする設定</span>
+</span><span class='line'>        <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span> <span class="o">==</span> <span class="s">&quot;user&quot;</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">db</span> <span class="o">==</span> <span class="s">&quot;users&quot;</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
+</span><span class='line'>            <span class="k">return</span> <span class="bp">True</span>
+</span><span class='line'>        <span class="k">return</span> <span class="bp">False</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>routers.pyをちゃんと書かないと、色々不具合が出る（例：管理用のモデルがmigrateできないとか）ので気をつけた方が良い。</p>
+
+<p>上に紹介した参考ページには色々コードが書いてあるので、参考になる。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Django1.7でPostgreSQLとBootstrap使ったアプリを作ってみた(1.5):管理ページを作ってみた]]></title>
@@ -1712,360 +1837,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 
 
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Django Memo]]></title>
-    <link href="http://blog.shigepon.info/blog/2014/11/23/django-memo/"/>
-    <updated>2014-11-23T22:35:38+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2014/11/23/django-memo</id>
-    <content type="html"><![CDATA[<p>Djangoやってて忘れっぽいところとかをメモ</p>
-
-<h2>リクエストパラメーターをモデルに入れる</h2>
-
-<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">a_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-</span><span class='line'>    <span class="n">hoge</span> <span class="o">=</span> <span class="n">Fuga</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">)</span> <span class="c">#新たにインスタンス作る場合</span>
-</span><span class='line'>    <span class="n">fuga</span> <span class="o">=</span> <span class="n">Fuga</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">hage</span> <span class="o">=</span> <span class="n">Fuga</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span><span class="n">instance</span><span class="o">=</span><span class="n">fuga</span><span class="p">)</span> <span class="c">#既にあるインスタンスに入れる場合</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>instance=xxxとやるのを何度か忘れた＞＜</p>
-
-<!-- more -->
-
-
-<h2>forms.DateFieldでISO-8601フォーマットの入力を受入れる</h2>
-
-<p>html5でdatetime-localとか扱おうとすると、入力値がISO-8601形式になって、そのままだとDateFieldが入力をdatetimeの正しい形式として認識してくれない。</p>
-
-<p>で、input_formatsを設定するといけるらしいんだけど、あまりマニュアルでちゃんと説明してない。Stack Overflowの情報とかをググると設定方法が間違ってるコードとかあって、正しいのが良く分からない。で、結局色々調べたら</p>
-
-<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">date</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">DateField</span><span class="p">(</span><span class="n">input_formats</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;%Y-%m-</span><span class="si">%d</span><span class="s">T%H:%M:%S&#39;</span><span class="p">,))</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とタプルで渡す必要があるらしい</p>
-
-<p>参考：<a href="http://labs.uechoco.com/blog/2011/08/django-dateform-inputs_format-wrong.html">うえちょこ＠ぼろぐ» [Django]forms.DateFieldのinputs_formatではまった</a></p>
-
-<h2>ModelForm使ってフォーム出力する時にrequeied属性をテンプレートで参照するとか</h2>
-
-<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">hoge</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">widget</span><span class="o">=</span><span class="n">TextInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;required&quot;</span><span class="p">:</span><span class="s">&quot;true&quot;</span><span class="p">}))</span><span class="err">↲</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな感じで定義したフィールドの属性取ってきたい場合、</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'>\{\% for field in form \%\}
-</span><span class='line'>  \{\% if field.field.required \%\}<span class="nt">&lt;p&gt;</span>必須<span class="nt">&lt;/p&gt;</span>\{\% endif \%\}
-</span><span class='line'>\{\% endfor \%\}
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>適当だけど、こんな感じでアクセスできる。</p>
-
-<h2>DjangoでGroup By</h2>
-
-<p>DjangoでGroup Byして何個かのフィールドのデータで例えば、日付とその日に登録したデータの件数だけ欲しい時</p>
-
-<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">q</span> <span class="o">=</span> <span class="n">Hoge</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span> <span class="o">=</span> <span class="n">date</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__lt</span> <span class="o">=</span> <span class="n">dto</span><span class="p">)</span><span class="o">.</span><span class="n">extra</span><span class="p">({</span><span class="s">&#39;date&#39;</span><span class="p">:</span><span class="s">&quot;date_trunc(&#39;day&#39;,date)&quot;</span><span class="p">})</span>
-</span><span class='line'><span class="n">q</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">group_by</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">]</span>
-</span><span class='line'><span class="n">values</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s">&#39;date&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">()</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">c</span> <span class="o">=</span> <span class="n">Count</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">))</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="err">こんな感じでいける。ちなみに</span><span class="n">PostgreSQL</span><span class="err">。</span><span class="n">date</span><span class="err">が時間の情報も持っているので</span><span class="n">PostgreSQL</span><span class="err">の</span><span class="n">date_trunc</span><span class="err">関数を使って</span><span class="n">date</span><span class="err">を日付の情報だけにしてから、</span><span class="n">group_by</span><span class="err">する。</span>
-</span><span class='line'><span class="n">annotate</span><span class="err">は集計した値を新しいフィールド（ここだと</span><span class="n">c</span><span class="err">）に入れる。</span>
-</span><span class='line'><span class="err">例えば</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">c</span><span class="err">でアクセスできる。このコードで、日付とその日に登録したデータ件数が入った辞書のリストを得ることが出来る</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>QuerySetで吐いたクエリを出力</h2>
-
-<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">h</span> <span class="o">=</span> <span class="n">Hoge</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-</span><span class='line'><span class="k">print</span> <span class="n">h</span><span class="o">.</span><span class="n">query</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でおk。でもクエリが例外出す時には出せないような・・・</p>
-
-<p>参考：<a href="http://programmer-jobs.blogspot.jp/2013/01/djangosql.html">Djangoで、デバック用のSQLクエリの表示 一言多いプログラマーの独り言</a></p>
-
-<h2>ModelFormでcleanを使ってデータの検証する時に、updateしようとしてるかcreateしようとしてるか判断する</h2>
-
-<p>createの時だけチェックしたかったので、色々調べてみたらclean(self)内で、self.instanceでチェックすると良いみたい。例えばプライマリーキーでidがある場合こんな感じ</p>
-
-<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">class</span> <span class="nc">Hoge</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">clean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span class='line'>        <span class="n">cleaned_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span>
-</span><span class='line'>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">id</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-</span><span class='line'>            <span class="c">#create用の処理</span>
-</span><span class='line'>            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;例外出すのはこんな感じ&#39;</span><span class="p">)</span>
-</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
-</span><span class='line'>            <span class="c">#update用の処理</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">cleaned_data</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>instanceの型チェックする方が正攻法かも。例外のメッセージは</p>
-
-<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-</span><span class='line'>    <span class="n">form</span> <span class="o">=</span> <span class="n">Hoge</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
-</span><span class='line'>        <span class="c">#例外が無かった場合</span>
-</span><span class='line'>    <span class="k">else</span><span class="p">:</span>
-</span><span class='line'>        <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">item</span><span class="p">():</span>
-</span><span class='line'>            <span class="c">#kが例外のフィールド。cleanの場合は__all__</span>
-</span><span class='line'>            <span class="c">#vが例外のメッセージ</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいな感じで取り出せる。</p>
-
-<h2>runserver実行時にコンソールにスタックとレースを出力する</h2>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">LOGGING</span><span class="o">=</span><span class="p">{</span>
-</span><span class='line'>    <span class="s">&#39;version&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
-</span><span class='line'>    <span class="s">&#39;handlers&#39;</span><span class="p">:{</span>
-</span><span class='line'>        <span class="s">&#39;console&#39;</span><span class="p">:{</span>
-</span><span class='line'>            <span class="s">&#39;level&#39;</span><span class="p">:</span><span class="s">&#39;DEBUG&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;class&#39;</span><span class="p">:</span><span class="s">&#39;logging.StreamHandler&#39;</span><span class="p">,</span>
-</span><span class='line'>        <span class="p">},</span>
-</span><span class='line'>    <span class="p">},</span>
-</span><span class='line'>    <span class="s">&#39;loggers&#39;</span><span class="p">:{</span>
-</span><span class='line'>        <span class="s">&#39;django.request&#39;</span><span class="p">:{</span>
-</span><span class='line'>            <span class="s">&#39;handlers&#39;</span><span class="p">:[</span><span class="s">&#39;console&#39;</span><span class="p">],</span>
-</span><span class='line'>            <span class="s">&#39;propagate&#39;</span><span class="p">:</span><span class="bp">True</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;level&#39;</span><span class="p">:</span><span class="s">&#39;DEBUG&#39;</span><span class="p">,</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">},</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これを書いておけばコンソールにスタックトレースを出力してくれる。apiのコード書いてる時とかajaxで呼び出してる場合とかに便利。</p>
-
-<p>参考：<a href="http://stackoverflow.com/questions/5886275/print-a-stack-trace-to-stdout-on-errors-in-django-while-using-manage-py-runserve">python &ndash; Print a stack trace to stdout on errors in Django while using manage.py runserver &ndash; Stack Overflow</a>というかここのコード丸コピー</p>
-
-<h2>Gmail送信</h2>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">EMAIL_USE_TLS</span><span class="o">=</span><span class="bp">True</span>
-</span><span class='line'><span class="n">EMAIL_HOST</span><span class="o">=</span><span class="s">&#39;smpt.gmail.com&#39;</span>
-</span><span class='line'><span class="n">EMAIL_HOST_USER</span><span class="o">=</span><span class="s">&#39;mymail@gmail.com&#39;</span>
-</span><span class='line'><span class="n">EMAIL_HOST_PASSWORD</span><span class="o">=</span><span class="s">&#39;mypassword&#39;</span>
-</span><span class='line'><span class="n">EMAIL_PORT</span><span class="o">=</span><span class="mi">587</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">django.core.mail</span> <span class="kn">import</span> <span class="n">send_mail</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">def</span> <span class="nf">mail</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-</span><span class='line'>    <span class="n">send_mail</span><span class="p">(</span><span class="s">&#39;Subject&#39;</span><span class="p">,</span><span class="s">&#39;message&#39;</span><span class="p">,</span><span class="s">&#39;mymail.gmail.com&#39;</span><span class="p">,[</span><span class="s">&#39;to@mail.address&#39;</span><span class="p">],</span><span class="n">fail_silently</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんだけ</p>
-
-<p>参考：<a href="http://d.hatena.ne.jp/yuheiomori0718/20120714/1342266647">DjangoでGmailを使ってメール送信 &ndash; brainstorm</a>、</p>
-
-<h2>MultiValueDictKeyError</h2>
-
-<p>モデルをgetする時にキーに何も値が指定されてなかったりすると起こる。例えば</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">instance</span> <span class="o">=</span> <span class="n">SampleModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でkeyに何も設定されてないと起こるみたい。出た時に何回かイチイチぐぐったのでメモ</p>
-
-<h2>PostgreSQLでDateTimeFieldの値を日付に対してグルーピングしたい</h2>
-
-<p>PostgreSQLではタイムゾーン入りのタイムスタンプで登録されるので、</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">q</span> <span class="o">=</span> <span class="n">Hoge</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">extra</span><span class="p">({</span><span class="s">&quot;date&quot;</span><span class="p">:</span><span class="s">&quot;date_trunc(&#39;day&#39;,date)&quot;</span><span class="p">})</span>
-</span><span class='line'><span class="n">q</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">group_by</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいな構文で日付だけ取り出して、グルーピングしようとすると、PostgreSQLの設定でタイムゾーンがUTCになっていた場合に、2014/12/17 00:00:00+9のデータは2014/12/16 15:00:00+0と認識されるので12/16のデータとしてグルーピングされてしまう。日本のタイムゾーンでやってると、これはまずいので、以下のようなコードにすると良い</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">q</span> <span class="o">=</span> <span class="n">Hoge</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">extra</span><span class="p">({</span><span class="s">&quot;date&quot;</span><span class="p">:</span><span class="s">&quot;date_trunc(&#39;day&#39;,date AT TIME ZONE &#39;JST&#39;)&quot;</span><span class="p">})</span>
-</span><span class='line'><span class="n">q</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">group_by</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>django+uwsgi+nginxで502エラーが出た原因の１つ</h2>
-
-<p>djangoはあまり関係無いけどuwsgiの設定の問題だったので、こちらに。django+uwsgi+nginxで502エラーが出て、runserverでは普通に動いたので、しばらくググって解答が得られたのでメモ</p>
-
-<p><a href="http://datatables.net/">DataTables</a>を使って動的にテーブルデータをロードしようとしたら、runserverでは上手く行くのにuwsgiだと502エラーが出てロード出来なかった。最初にnginxのログを見てみると、uwsgiのとこでエラーと書いてあったので、uwsgiのログをチェックした。すると</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">invalid</span> <span class="n">request</span> <span class="n">block</span> <span class="n">size</span><span class="p">:</span> <span class="n">xxxxx</span> <span class="p">(</span><span class="nb">max</span> <span class="mi">4096</span><span class="p">)</span><span class="o">...</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいなエラーが出ていた。リクエストが大きすぎるのかなと思い、リクエストの一部を削ってみたらエラーが出なかった。んで、対策をググってみたら書いてあったので、そのまま下のコードを実装してみた。</p>
-
-<figure class='code'><figcaption><span>uwsgi.ini</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ini'><span class='line'><span class="na">buffer-size</span><span class="o">=</span><span class="s">65535</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいにバッファーサイズを大きく(例では64k)した。これでエラーが消えたのでめでたしめでたし。</p>
-
-<p>参考：<a href="http://stackoverflow.com/questions/22697584/nginx-uwsgi-104-connection-reset-by-peer-while-reading-response-header-from-u">django &ndash; Nginx uwsgi (104: Connection reset by peer) while reading response header from upstream &ndash; Stack Overflow</a></p>
-
-<h2>運用環境と開発環境で設定を切り分ける</h2>
-
-<p>開発環境用にlocalアプリを作って、local/settings.pyを作成し、開発環境での設定を書いて、プロジェクトのsettings.pyの最後に以下を追加すると良い</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">try</span><span class="p">:</span>
-</span><span class='line'>    <span class="kn">from</span> <span class="nn">local.settings</span> <span class="kn">import</span> <span class="o">*</span>
-</span><span class='line'><span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-</span><span class='line'>    <span class="k">pass</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>参考：<a href="http://surgo.jp/2010/02/django.html">パーフェクトな Django の設定ファイル &mdash; Kosei Kitahara&rsquo;s Blog</a></p>
-
-<h2>テンプレートの読み込まれ順</h2>
-
-<ul>
-<li>TEMPLATE_DIRSで指定されたディレクトリの順番で、そこを起点にした全てのテンプレート</li>
-<li>INSTALLED_APPSに指定した順にアプリケーション直下のtemplatesディレクトリを調べる</li>
-</ul>
-
-
-<p>hogeアプリでテンプレートを指定した場合に、hogeアプリ直下のtemplatesディレクトリを調べてくれる訳ではないので注意が必要。</p>
-
-<p>例えば</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">TEMPLATE_DIRS</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/home/hoge/templates&#39;</span><span class="p">,]</span>
-</span><span class='line'><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'>    <span class="s">&#39;hoge&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="s">&#39;fuga&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と書いてあり、プロジェクトが/www/a_project/に置いてある場合、</p>
-
-<ul>
-<li>/home/hoge/templates</li>
-<li>/www/a_project/hoge/templates</li>
-<li>/www/a_project/fuga/templates</li>
-</ul>
-
-
-<p>の順でテンプレートの存在を調べる</p>
-
-<p>参考：<a href="http://www.tsuyukimakoto.com/blog/2006/11/22/django-template-loader/">DjangoのTemplateローダ | tsuyuki.makoto</a></p>
-
-<h2>Many to manyなモデルで中間テーブルをthroughで指定、かつ自己参照な場合の設定</h2>
-
-<p>参考：<a href="http://stackoverflow.com/questions/3880489/how-do-i-write-a-django-model-with-manytomany-relationsship-with-self-through-a">How do I write a Django model with ManyToMany relationsship with self through a Model &ndash; Stack Overflow</a></p>
-
-<p>symmetrical設定をすると良いらしい</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">class</span> <span class="nc">Member</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-</span><span class='line'>    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">friends</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="s">&#39;self&#39;</span><span class="p">,</span> <span class="n">through</span> <span class="o">=</span> <span class="s">&#39;MemberFriends&#39;</span><span class="p">,</span> <span class="n">symmetrical</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">MemberFriends</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-</span><span class='line'>    <span class="n">f</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Member</span><span class="p">,</span> <span class="n">related_name</span> <span class="o">=</span> <span class="s">&#39;f&#39;</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">t</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Member</span><span class="p">,</span> <span class="n">related_name</span> <span class="o">=</span> <span class="s">&#39;t&#39;</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">comment</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな感じ</p>
 ]]></content>
   </entry>
   

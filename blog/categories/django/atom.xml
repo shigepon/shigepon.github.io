@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Django | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/django/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-07-04T08:15:22+09:00</updated>
+  <updated>2015-07-07T13:04:48+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,98 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Djangoで複数データベースを使用する]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/07/07/use-multiple-databases-in-django/"/>
+    <updated>2015-07-07T12:33:37+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/07/07/use-multiple-databases-in-django</id>
+    <content type="html"><![CDATA[<p>Djangoでは複数データベースを扱える。でも色々コーディングや設定が必要なのでメモしておく。参考：<a href="https://docs.djangoproject.com/en/1.7/topics/db/multi-db/">Multiple databases | Django documentation | Django</a>。対応バージョンはDjango 1.7。使ったデータベースはPostgreSQL。</p>
+
+<h2>settings.py</h2>
+
+<p>settings.pyで複数データベースの接続設定をする</p>
+
+<p>```py settings.py
+DATABASES = {</p>
+
+<pre><code>'default': {
+    'NAME': 'app_data',
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'USER': 'postgres_user',
+    'PASSWORD': 's3krit'
+},
+'users': {
+    'NAME': 'user_data',
+    'ENGINE': 'django.db.backends.mysql',
+    'USER': 'mysql_user',
+    'PASSWORD': 'priv4te'
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>参考ページのをそのまま使った。さらに追加も出来る。</p>
+
+<h2>ここまでの設定でのマイグレーション</h2>
+
+<p><code>sh
+$ python manage.py migrate
+</code></p>
+
+<p>だとdefault設定のデータベースへのマイグレーション、</p>
+
+<p><code>sh
+$ python manage.py migrate --database=users
+</code></p>
+
+<p>とするとusersで設定したデータベースへのマイグレーションとなる。
+何も設定していないと、それぞれのデータベースに全アプリケーションの全てのモデルが反映される。</p>
+
+<h2>データベースに保存するアプリ、モデルを限定したい</h2>
+
+<p>ルーティング設定をする。</p>
+
+<p><code>py settings.py
+DATABASE_ROUTERS = ['myproject.routers.Router']
+</code></p>
+
+<p>settings.pyはこんな感じ。んでmyprojectフォルダにrouters.pyを作成して例えばuserアプリのものだけusersデータベースを使うという設定の場合次のように書く</p>
+
+<p>```py routers.py
+class Router(object):</p>
+
+<pre><code>def db_for_read(self, model, **hints):
+    #ここでランダムに選択すると、dbの負荷分散っぽいことが出来る
+    #例：return random.choice['default','users']
+    if model._meta.app_label == "user":
+        return "users"
+    return "default"
+def db_for_write(self, model, **hints):
+    if model._meta.app_label == "user":
+        return "users"
+    return "default"
+def allow_relation(self, obj1, obj2, **hints):
+    #Trueはリレーションを認める、Falseは認めない、Noneはこのコードでは関知しないという意味
+    return None
+def allow_migrate(self, db, model):
+    #userアプリの場合はusers設定のデータベースへmigrate。
+    #他のアプリはusers以外のデータベースへmigrateする設定
+    if model._meta.app_label == "user"
+        return db == "users":
+    else:
+        return True
+    return False
+</code></pre>
+
+<p>```</p>
+
+<p>routers.pyをちゃんと書かないと、色々不具合が出る（例：管理用のモデルがmigrateできないとか）ので気をつけた方が良い。</p>
+
+<p>上に紹介した参考ページには色々コードが書いてあるので、参考になる。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Django1.7でPostgreSQLとBootstrap使ったアプリを作ってみた(1.5):管理ページを作ってみた]]></title>
@@ -370,96 +462,6 @@ buffer-size= xxxx
 
 
 <p>参考：<a href="http://stackoverflow.com/questions/15878176/uwsgi-invalid-request-block-size">uwsgi invalid request block size &ndash; Stack Overflow</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[djangoのModelFormでMultiWidgetを使って見る]]></title>
-    <link href="http://blog.shigepon.info/blog/2015/01/24/django-modelform-multiwidget/"/>
-    <updated>2015-01-24T17:23:07+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2015/01/24/django-modelform-multiwidget</id>
-    <content type="html"><![CDATA[<p>ModelFormでModelの１つのカラムを複数のフォーム要素（inputとか）で表現したかったので調べてみた。フォーム要素を適当に作って、clean_xxxの時にくっつけるとかそんな実装の仕方も出来るみたいだけど、MultiWidgetを使うと、Modelの１つのカラムに対して複数のinput要素を使うことが出来るみたいなので、使ってみた。名前のカラムに対して姓、名の入力要素を作るとかそんなのが出来るみたい。</p>
-
-<p>まずはMultiWidgetを継承したクラスを作る</p>
-
-<p>```py models.py
-from django.forms.widgets import MultiWidget</p>
-
-<p>class NameWidget(MultiWidget):</p>
-
-<p>```</p>
-
-<p>次にクラスに対して、__init__をオーバーライドし、widgetとしてTextInputのフォームを2つ登録してみた。コードはこんな感じ。</p>
-
-<!-- more -->
-
-
-<p>```py models.py
-class NameWidget(MultiWidget):</p>
-
-<pre><code>def __init__(self,attrs=None):
-    widgets = (
-            forms.TextInput(attrs=attrs.update({"placeholder":"姓"})),
-            forms.TextInput(attrs=attrs.update({"placeholder":"名"}))
-            )
-    super(NameWidget,self).__init__(widgets,attrs)
-</code></pre>
-
-<p>```</p>
-
-<p>widgetsはリストでもタプルでも良さげ？ともかくやることはwidgetのリストかタプルを作って、親クラス(MultiWidget)のinitを呼び出すこと。</p>
-
-<p>次に、decompress、value_from_datadictメソッドを書く。decompressはカラムの値を複数のフォームに振り分ける手順、value_from_datadictはModelFormの入力データからModelのカラムに入れる値を作る手順を記述する。姓名を半角スペースで繋げて、半角スペースで分割するように作ってみた。</p>
-
-<p>```py models.py
-class NameWidget(MultiWidget):</p>
-
-<pre><code>def __init__(self,attrs={}):
-    attrsSei = attrs.copy()
-    attrsMei = attrs.copy()
-    widgets = (
-            forms.TextInput(attrs=attrsSei.update({"placeholder":"姓"})),
-            forms.TextInput(attrs=attrsMei.update({"placeholder":"名"}))
-            )
-    super(NameWidget,self).__init__(widgets,attrs)
-def decompress(self,value):
-    if value:
-        names = value.split(' ')
-        return (names[0],names[1])
-    return (None,None)
-def value_from_datadict(self,data,files,name):
-    ulist = [widget.value_from_datadict(data,files,name+'_{0}'.format(i)) for i, widget in enumerate(self.widgets)]
-    return u"{0} {1}".format(ulist[0].replace(u' ',''),ulist[1].replace(u' ',''))
-</code></pre>
-
-<p>```</p>
-
-<p>あとはこのWidgetを使いたい要素にwidgetとして指定すればおk</p>
-
-<p>```py models.py
-from django import forms
-&hellip;（上のコードなど）&hellip;
-class HogeForm(forms.ModelForm):</p>
-
-<pre><code>name = forms.CharField(max_length=100,label=u'名前',widget=NameWidget())
-</code></pre>
-
-<p>```</p>
-
-<p>このコードだと姓、名のフォームが2行に表示されている。1行にしたい場合はインライン指定とかそんなのを付けたクラスをattrsで指定して後はcssでやっちゃえばいいんじゃないかなと</p>
-
-<p>```py models.py</p>
-
-<pre><code>name = forms.CharField(max_length=100,label=u'名前',widget=NameWidget(attrs={"class":"inline"}))
-</code></pre>
-
-<p>```</p>
-
-<p>とかそんな感じ</p>
-
-<p>他にももっと細かくhtmlを記述出来るformat_outputとかあるみたいだけど、試してないので省略。なくても取りあえず出来る。</p>
-
-<p>参考：<a href="https://docs.djangoproject.com/en/1.7/ref/forms/widgets/#django.forms.MultiWidget">Django英語ドキュメント</a></p>
 ]]></content>
   </entry>
   

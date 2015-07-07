@@ -9,7 +9,24 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="さくらvpsのUbuntu12.04にnginxとunicornをインストールしてローカル環境に作ったRailsアプリを手動でアップロードして表示させてみた。何となくユニコーンって名前が好きなので、unicornを使うことにした。 nginxインストール &hellip;">
+  <meta name="description" content="まだデプロイ作業を途中までしか確認していないので、とりあえずハマったポイントを書いておく。 デプロイ作業をテストしてみたらこんなエラーが出た 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+$ bundle exec cap production deploy: &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +96,87 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/">Capistrano3でbitbucketからデプロイしようとしたらハマった話</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-04T10:04:00+09:00" pubdate data-updated="true">May 4<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>まだデプロイ作業を途中までしか確認していないので、とりあえずハマったポイントを書いておく。
+ デプロイ作業をテストしてみたらこんなエラーが出た</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle <span class="nb">exec </span>cap production deploy:check
+</span><span class='line'> INFO <span class="o">[</span>5f874a7e<span class="o">]</span> Running /usr/bin/env mkdir -p /tmp/hoge/ on fuga
+</span><span class='line'>DEBUG <span class="o">[</span>5f874a7e<span class="o">]</span> Command: /usr/bin/env mkdir -p /tmp/hoge/
+</span><span class='line'> INFO <span class="o">[</span>5f874a7e<span class="o">]</span> Finished in 0.321 seconds with <span class="nb">exit </span>status 0 <span class="o">(</span>successful<span class="o">)</span>.
+</span><span class='line'>DEBUG Uploading /tmp/hoge/git-ssh.sh 0.0%
+</span><span class='line'> INFO Uploading /tmp/hoge/git-ssh.sh 100.0%
+</span><span class='line'> INFO <span class="o">[</span>c2bf6ab8<span class="o">]</span> Running /usr/bin/env chmod +x /tmp/hoge/git-ssh.sh on fuga
+</span><span class='line'>DEBUG <span class="o">[</span>c2bf6ab8<span class="o">]</span> Command: /usr/bin/env chmod +x /tmp/hoge/git-ssh.sh
+</span><span class='line'> INFO <span class="o">[</span>c2bf6ab8<span class="o">]</span> Finished in 0.031 seconds with <span class="nb">exit </span>status 0 <span class="o">(</span>successful<span class="o">)</span>.
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span> Running /usr/bin/env git ls-remote -h git@bitbucket.org:fuga/hoge.git on fuga
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span> Command: <span class="o">(</span> <span class="nv">GIT_ASKPASS</span><span class="o">=</span>/bin/echo <span class="nv">GIT_SSH</span><span class="o">=</span>/tmp/hoge/git-ssh.sh /usr/bin/env git ls-remote -h git@bitbucket.org:fuga/hoge.git <span class="o">)</span>
+</span><span class='line'>DEBUG <span class="o">[</span>cb27da31<span class="o">]</span>    Error reading response length from authentication socket
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span>    Permission denied <span class="o">(</span>publickey<span class="o">)</span>.
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span>    
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span>    fatal: The remote end hung up unexpectedly
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span>    
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span> Finished in 2.287 seconds with <span class="nb">exit </span>status 128 <span class="o">(</span>failed<span class="o">)</span>.
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -651,61 +749,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/09/how-to-block-bot-access-from-google-analytics/">Google Analyticsからbotアクセスを取り除く</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-09T21:53:40+09:00" pubdate data-updated="true">Mar 9<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>参考ページ<a href="http://www.lunametrics.com/blog/2013/09/05/filter-bots-google-analytics/#sr=d&amp;m=n&amp;cp=d&amp;ct=-tmc&amp;ts=1394369739">How to Block Bots from Your Google Analytics</a></p>
-
-<p>ここ数日Google Analyticsにアメリカからリファラ無し直帰率100%近くのアクセスを大量に発見。
-どう考えてもbotですどうも(ry
-本当はGoogle Analyticsに自動でフィルタして欲しいけど、どうもフィルタしてないので、自力でフィルタ設定しないといけないみたい。</p>
-
-<p>上のリンクを参考に設定してみる</p>
-
-<ul>
-<li>アナリティクス設定→ ビュー→フィルタと移動</li>
-<li>「新しいボタン」をクリック</li>
-</ul>
-
-
-<h3>設定は以下の通り</h3>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/03/09/how-to-block-bot-access-from-google-analytics/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -737,6 +780,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/07/use-multiple-databases-in-django/">Djangoで複数データベースを使用する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/03/make-admin-page-using-django/">Django1.7でPostgreSQLとBootstrap使ったアプリを作ってみた(1.5):管理ページを作ってみた</a>
       </li>
     
@@ -750,10 +797,6 @@
     
       <li class="post">
         <a href="/blog/2015/05/05/nunit-console-test-for-nadesiko2/">なでしこ2をubuntu Cuiでテストする</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">Ubuntuのcui環境でなでしこ2をビルドする</a>
       </li>
     
   </ul>
@@ -782,14 +825,14 @@
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (4)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (17)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (18)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
-<li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (8)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (18)</a></li>
+<li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (9)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (19)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>

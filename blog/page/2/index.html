@@ -9,7 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="ModelFormでModelの１つのカラムを複数のフォーム要素（inputとか）で表現したかったので調べてみた。フォーム要素を適当に作って、clean_xxxの時にくっつけるとかそんな実装の仕方も出来るみたいだけど、MultiWidgetを使うと、 &hellip;">
+  <meta name="description" content="勉強会の話なので丁寧語で。2/28にKobe.R #15があったので参加してきました。今回は三宮で開かれました。今回は珍しく（？）Rの話題が多いR勉強会でした。抜けてる点もちょいちょいあると思いますが、覚えている限りの感想を書いておきます。 Rによるデータ処理入門 Kobe Rの主催者の河原さん &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,64 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/03/01/kobe-dot-r-no-15/">Kobe.R #15に参加しました</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-03-01T10:57:17+09:00" pubdate data-updated="true">Mar 1<span>st</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>勉強会の話なので丁寧語で。2/28に<a href="https://kobexr.doorkeeper.jp/events/20843">Kobe.R #15</a>があったので参加してきました。今回は三宮で開かれました。今回は珍しく（？）Rの話題が多いR勉強会でした。抜けてる点もちょいちょいあると思いますが、覚えている限りの感想を書いておきます。</p>
+
+<h2>Rによるデータ処理入門</h2>
+
+<p>Kobe Rの主催者の河原さん（@h_kawahara）による発表でした。 データ読み込み、加工、表示までのRで解析する前に絶対必要な操作をまとめてくれました。大事なことはデータ加工≠データ整形ということかなと。何となく突っ込みどころを箇条書きにします</p>
+
+<ul>
+<li>strがstructureの略称とか、stringの略称じゃないんだ！</li>
+<li>何度も言うけどforは遅い</li>
+<li>db接続がodbcだけだとちょっと今後辛い気がする</li>
+<li>大きいファイルはRDataファイルにしておくと容量小さい</li>
+<li>データ加工に便利なのはdplyr(でぃーぷらいやーと読むらしい）</li>
+<li>dplyrのソート命令がarrange！sortとかorderじゃないのか。</li>
+<li>dplyrだとカラムの結合や分解も手軽に出来そう</li>
+<li>自分でちょっといじって、packageとかfunctionを探す方法を掴まないと、関数名に略称とか使ってるケースが結構あって、探しにくいかも。使ってみないと何とも言えないけど</li>
+<li>発表でちょっと気になったけど、同じ書式の演算子でパッケージによって違う意味になったりするの？</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/03/01/kobe-dot-r-no-15/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -573,62 +631,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/23/django-memo/">Django Memo</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-11-23T22:35:38+09:00" pubdate data-updated="true">Nov 23<span>rd</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Djangoやってて忘れっぽいところとかをメモ</p>
-
-<h2>リクエストパラメーターをモデルに入れる</h2>
-
-<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">a_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-</span><span class='line'>    <span class="n">hoge</span> <span class="o">=</span> <span class="n">Fuga</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">)</span> <span class="c">#新たにインスタンス作る場合</span>
-</span><span class='line'>    <span class="n">fuga</span> <span class="o">=</span> <span class="n">Fuga</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">hage</span> <span class="o">=</span> <span class="n">Fuga</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span><span class="n">instance</span><span class="o">=</span><span class="n">fuga</span><span class="p">)</span> <span class="c">#既にあるインスタンスに入れる場合</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>instance=xxxとやるのを何度か忘れた＞＜</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/11/23/django-memo/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -660,6 +662,10 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/07/use-multiple-databases-in-django/">Djangoで複数データベースを使用する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/03/make-admin-page-using-django/">Django1.7でPostgreSQLとBootstrap使ったアプリを作ってみた(1.5):管理ページを作ってみた</a>
       </li>
     
@@ -673,10 +679,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
     
       <li class="post">
         <a href="/blog/2015/05/05/nunit-console-test-for-nadesiko2/">なでしこ2をubuntu Cuiでテストする</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">Ubuntuのcui環境でなでしこ2をビルドする</a>
       </li>
     
   </ul>
@@ -705,14 +707,14 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (4)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (17)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (18)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
-<li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (8)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (18)</a></li>
+<li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (9)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (19)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>

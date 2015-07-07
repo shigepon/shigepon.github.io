@@ -9,9 +9,11 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Titanium Mobileに関するメモ アプリ固有の設定を登録する アプリを終了して、再起動させた時も保存される設定をしたい時はTitanium.App.Propertiesを使う 1
+  <meta name="description" content="Djangoやってて忘れっぽいところとかをメモ リクエストパラメーターをモデルに入れる views.py1
 2
-Ti.App.Properties.setString(&quot;hoge&quot;,&quot; &hellip;">
+3
+4
+def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る場合 fuga = Fuga.objects.get(pk=1 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +83,62 @@ Ti.App.Properties.setString(&quot;hoge&quot;,&quot; &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/23/django-memo/">Django Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-11-23T22:35:38+09:00" pubdate data-updated="true">Nov 23<span>rd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Djangoやってて忘れっぽいところとかをメモ</p>
+
+<h2>リクエストパラメーターをモデルに入れる</h2>
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">a_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">hoge</span> <span class="o">=</span> <span class="n">Fuga</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">)</span> <span class="c">#新たにインスタンス作る場合</span>
+</span><span class='line'>    <span class="n">fuga</span> <span class="o">=</span> <span class="n">Fuga</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">hage</span> <span class="o">=</span> <span class="n">Fuga</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span><span class="n">instance</span><span class="o">=</span><span class="n">fuga</span><span class="p">)</span> <span class="c">#既にあるインスタンスに入れる場合</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>instance=xxxとやるのを何度か忘れた＞＜</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/11/23/django-memo/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -612,58 +670,6 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/07/29/matcha-139/">まっちゃ139勉強会に参加しました</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-07-29T00:36:54+09:00" pubdate data-updated="true">Jul 29<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>まっちゃ勉強会はITカレンダーで結構気になってたんですが、なかなか日が合わずに参加出来なかったのですが、<a href="http://www.matcha139.jp/workshop/28thworkshop">あまりに面白そうな内容</a>だったので初参加してきました。</p>
-
-<h2>ネット違法有害情報規制の最新状況－児童ポルノ法改正を中心に</h2>
-
-<p>会場に着いた時にはもうすでに始まっていました。
-とても楽しい？怖い？濃い？話ばかりだったんですが、セッション内容は公開できないそうなので、一言だけ。</p>
-
-<p>奥村弁護士、園田弁護士は<em>児童ポルノに詳しい人</em>ではなくて<em>児童ポルノ法に詳しい人</em>なのでTVで紹介されても勘違いしないで下さい。</p>
-
-<p>もう一言だけ、セッションとは関係ないですが、岡村先生、JPCERT/CC理事就任おめでとうございます！</p>
-
-<h2>ライトニングトーク</h2>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/07/29/matcha-139/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -695,6 +701,10 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/07/use-multiple-databases-in-django/">Djangoで複数データベースを使用する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/03/make-admin-page-using-django/">Django1.7でPostgreSQLとBootstrap使ったアプリを作ってみた(1.5):管理ページを作ってみた</a>
       </li>
     
@@ -708,10 +718,6 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
     
       <li class="post">
         <a href="/blog/2015/05/05/nunit-console-test-for-nadesiko2/">なでしこ2をubuntu Cuiでテストする</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">Ubuntuのcui環境でなでしこ2をビルドする</a>
       </li>
     
   </ul>
@@ -740,14 +746,14 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (4)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (17)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (18)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
-<li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (8)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (18)</a></li>
+<li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (9)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (19)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
