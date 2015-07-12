@@ -353,6 +353,17 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 
 
 <p>参考：<a href="http://saikyoline.jp/weblog/2005/10/14/234742.html">パスワード入力なしでpsql » サイキョウライン</a></p>
+
+<h2>全データベースの物理ファイルサイズ</h2>
+
+<p><a href="http://readit.l8r.in/post-289/">[Postgres]全データベースの物理ファイルサイズを取得 | Read it later.</a>をそのまま使えば良い</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="n">datname</span><span class="p">,</span> <span class="n">pg_size_pretty</span><span class="p">(</span><span class="n">pg_database_size</span><span class="p">(</span><span class="n">datname</span><span class="p">))</span> <span class="k">from</span> <span class="n">pg_database</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
 </div>
 
 
