@@ -363,7 +363,27 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 </span></code></pre></td></tr></table></div></figure>
 
 
+<h2>psqlでsqlにパラメータを渡す</h2>
 
+<p>vオプションを用いる</p>
+
+<p><a href="http://stackoverflow.com/questions/7389416/postgresql-how-to-pass-parameters-from-command-line">PostgreSQL: How to pass parameters from command line? &ndash; Stack Overflow</a></p>
+
+<figure class='code'><figcaption><span>a.sql</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="p">:</span><span class="n">vint</span><span class="p">,</span> <span class="p">:</span><span class="n">vstr</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>psql -v <span class="nv">vint</span><span class="o">=</span>10 -v <span class="nv">vstr</span><span class="o">=</span><span class="s2">&quot;&#39;hoge&#39;&quot;</span> -f a.sql dbname
+</span><span class='line'>10  hoge
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>-cオプションで実行するsqlを指定する場合は無理っぽい</p>
 </div>
 
 
@@ -450,6 +470,10 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/19/record-radiko-with-nadesiko2/">なでしこ2でradikoの録音をやってみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/07/use-multiple-databases-in-django/">Djangoで複数データベースを使用する</a>
       </li>
     
@@ -463,10 +487,6 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
     
       <li class="post">
         <a href="/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/">Jenkinsでなでしこ2をCIする</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/05/05/nunit-console-test-for-nadesiko2/">なでしこ2をubuntu Cuiでテストする</a>
       </li>
     
   </ul>
@@ -509,10 +529,10 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 <li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (9)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (10)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (11)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
-<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (5)</a></li>
+<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (6)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>

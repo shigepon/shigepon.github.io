@@ -4,7 +4,7 @@
   <title><![CDATA[Category: linux | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-07-13T08:12:50+09:00</updated>
+  <updated>2015-07-19T17:45:19+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,44 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[なでしこ2でradikoの録音をやってみた]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/07/19/record-radiko-with-nadesiko2/"/>
+    <updated>2015-07-19T17:22:00+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/07/19/record-radiko-with-nadesiko2</id>
+    <content type="html"><![CDATA[<p>ネット上でラジオを聞けるサービス<a href="http://radiko.jp/">radiko</a>の録音ソフトが調子悪くなったので、自分で作ってみるかーとやってみたら出来たのでメモ。OSはUbuntu 12.04で、cui環境で行った。</p>
+
+<p>参考：</p>
+
+<ul>
+<li><a href="https://gist.github.com/matchy2/3956266">簡易Radiko録音スクリプト</a></li>
+<li><a href="http://d.hatena.ne.jp/zariganitosh/20130124/rtmpdump_radiko_access">rtmpdumpでradikoにアクセスする手順 &ndash; ザリガニが見ていた&hellip;。</a></li>
+<li><a href="http://lifeonubuntu.com/ubuntu-missing-add-apt-repository-command/">Ubuntu Missing add-apt-repository command</a></li>
+<li><a href="http://www.ubuntugeek.com/how-to-install-swftools-in-ubuntu-12-0411-10-using-ppa.html">How to install SWFTools in ubuntu 12.04/11.10 using PPA | Ubuntu Geek</a></li>
+</ul>
+
+
+<p>Radiko録音スクリプトをまず参考にしたが、実際に手順を手作業で追いたかったので、参考記事を見ながら再現してみた。するとまずswfextractコマンドが無くてつまずく。ぐぐるとaptのリポジトリを追加してインストールする必要があるらしい。しかもリポジトリ追加用コマンドも無いのでインストールする必要があった。swfextractを使えるようになるまでの手順は以下の通り</p>
+
+<p><code>sh
+$ sudo aptitude install software-properties-common python-software-properties
+$ sudo add-apt-repository ppa:guilhem-fr/swftools
+$ sudo aptitude update
+$ sudo aptitude install swftools
+</code></p>
+
+<p>あとは参考ページの手順通りで録音出来た。<a href="http://www.dcc-jpl.com/foltia/wiki/radikomemo">radikomemo &ndash; foltia &ndash; Trac</a>で放送局のid（xml取得に使ったりする）をチェックした。</p>
+
+<p>で、あとは一連の処理をなぞるスクリプトを書くだけ。pythonとかはググればあるので、なでしこ2でやってみた。</p>
+
+<p><a href="https://gist.github.com/shigepon/01acb8686e6df6accce2">record_radiko.nako</a></p>
+
+<p>gistを初めて使うので、こんなやり方で良いのかちょっと分からないけどこんな感じ。wgetとかddとかコマンドをそのまま使ってるので、windowsでは動かないはず。なでしこ2では7/19時点ではpostでヘッダー指定するとか出来ないので、こうせざるを得ない。</p>
+
+<p>なでしこ2の一例ということで。ちなみにこれ作るのに3時間かかった。うち1時間半がググってインストールして手作業で動作確認に使って、1時間は休憩に使った。エラー処理とかtmpファイルの処理とか全然やってない適当コードですんません＞＜。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Jenkinsでなでしこ2をCIする]]></title>
@@ -316,34 +354,6 @@ $ xbuild Nako2_Plugins.sln
 <code>sh
 logrotate -dv /etc/logrotate.d/php.conf
 </code></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ubuntuのmonoでMicrosoft.VisualBasicが動かない件]]></title>
-    <link href="http://blog.shigepon.info/blog/2014/08/20/vb-not-work-on-ubuntu/"/>
-    <updated>2014-08-20T13:38:34+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2014/08/20/vb-not-work-on-ubuntu</id>
-    <content type="html"><![CDATA[<p>なでしこ2にコミットしたりしつつ、実際にUbuntu 12.04で使ってみたりしているが、vb系のインポートが出来ないとか何とか言われたのでメモ</p>
-
-<p>参考：<a href="http://stackoverflow.com/questions/10071836/vb-net-not-working-on-ubuntu-10-04-with-mono">.net &ndash; VB.NET Not working on Ubuntu 10.04 With Mono &ndash; Stack Overflow</a></p>
-
-<p>要は普通にmonoをインストールしただけ</p>
-
-<p><code>sh
-$ sudo aptitude install mono-devel
-</code></p>
-
-<p>だとVB系のライブラリはインストールされないらしい。</p>
-
-<p><code>sh
-$ sudo aptitude install mono-vbnc
-</code></p>
-
-<!-- more -->
-
-
-<p>を追加インストールしておこうということだった。情報無かったので結構はまった。</p>
 ]]></content>
   </entry>
   

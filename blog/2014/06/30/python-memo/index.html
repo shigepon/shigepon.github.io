@@ -117,6 +117,15 @@ $ sudo pip install --upgrade distribute &hellip;">
 
 <p>でおk</p>
 
+<h2>pipで一気にインストールする</h2>
+
+<p>pip freezeで出てくる出力をファイルに書き出したものを使うと、別の環境で同じ状態にもっていける。ファイルからバージョン情報を消すと最新の状態でインストール出来る。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install -r freezed.txt
+</span></code></pre></td></tr></table></div></figure>
+
+
 <h2>for文でループカウント取得</h2>
 
 <p>参考<a href="http://fujishinko.exblog.jp/7669024">Python 配列をfor文でまわしているときのループカウント取得 : fujishinko 雑記帳</a></p>
@@ -249,6 +258,53 @@ subprocessを使う。何か昔は別の手法だったらしい。</p>
 
 
 <p>としておくと、2002-12-04と表示される</p>
+
+<h2>lxmlをインストールしようとしたら、fatal error: libxml/xmlversion.h: No such file or directory</h2>
+
+<p>ライブラリが足らないのでインストールすればおk
+<a href="http://stackoverflow.com/questions/15759150/src-lxml-etree-defs-h931-fatal-error-libxml-xmlversion-h-no-such-file-or-di">python 2.7 &ndash; src/lxml/etree_defs.h:9:31: fatal error: libxml/xmlversion.h: No such file or directory &ndash; Stack Overflow</a></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install libxml2-dev libxslt1-dev
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>pythonでsudoを付けたコマンドを実行する</h2>
+
+<p>パスワードをリダイレクトすればおk
+<a href="http://stackoverflow.com/questions/13045593/using-sudo-with-python-script">shell &ndash; Using sudo with Python script &ndash; Stack Overflow</a></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">os</span>
+</span><span class='line'><span class="n">p</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s">&#39;echo pass | sudo -S ...&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">os</span><span class="o">.</span><span class="n">popen</span><span class="p">(</span><span class="s">&quot;sudo -S ...&quot;</span><span class="p">,</span><span class="s">&quot;w&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;pass&quot;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>django rest frameworkでBasic認証のあるサイトを扱う</h2>
+
+<p>basic認証のあるサイトでdjango rest frameworkを使ったjson apiみたいなのを作ろうと思った時に、認証してアクセスしても</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="p">{</span><span class="s">&quot;detail&quot;</span><span class="p">:</span> <span class="s">&quot;Invalid username/password&quot;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいなメッセージが帰ってきてうまく情報を取って来れなかった。</p>
+
+<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">REST_FRAMEWORK</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="s">&#39;DEFAULT_AUTHENTICATION_CLASSES&#39;</span><span class="p">:</span> <span class="p">()</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と認証を削除するといけた
+<a href="http://stackoverflow.com/questions/19693433/django-rest-framework-behind-http-basic-authentication">nginx &ndash; Django Rest Framework behind HTTP Basic Authentication &ndash; Stack Overflow</a></p>
 </div>
 
 
@@ -337,6 +393,10 @@ subprocessを使う。何か昔は別の手法だったらしい。</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/19/record-radiko-with-nadesiko2/">なでしこ2でradikoの録音をやってみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/07/use-multiple-databases-in-django/">Djangoで複数データベースを使用する</a>
       </li>
     
@@ -350,10 +410,6 @@ subprocessを使う。何か昔は別の手法だったらしい。</p>
     
       <li class="post">
         <a href="/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/">Jenkinsでなでしこ2をCIする</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/05/05/nunit-console-test-for-nadesiko2/">なでしこ2をubuntu Cuiでテストする</a>
       </li>
     
   </ul>
@@ -396,10 +452,10 @@ subprocessを使う。何か昔は別の手法だったらしい。</p>
 <li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (9)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (10)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (11)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
-<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (5)</a></li>
+<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (6)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>
