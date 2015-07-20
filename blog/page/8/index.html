@@ -9,12 +9,10 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Octopressのインストール後に行ったカスタマイズをまとめておきます。 外部リンクを別ウィンドウで開く 下のコードを追加します :source/_inclides/custom/head.html1
-2
-3
-4
-5
-&lt;script language=&quot;JavaScript& &hellip;">
+  <meta name="description" content="rhaco3で作ったWebサービス全体にBasic認証をかけた時にちょっとハマったのでメモ。 症状 rhaco3の認証が入っているサービスで全体にBasic認証をかけると、 トップページに入る時にBasic認証がかかる
+認証完了
+ログインページに移動
+またBasic認証がかかる &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,6 +82,61 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/03/basic-auth/">Basic認証する時に気をつけること</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-03T07:48:33+09:00" pubdate data-updated="true">Feb 3<span>rd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>rhaco3で作ったWebサービス全体にBasic認証をかけた時にちょっとハマったのでメモ。</p>
+
+<h2>症状</h2>
+
+<p>rhaco3の認証が入っているサービスで全体にBasic認証をかけると、</p>
+
+<ol>
+<li>トップページに入る時にBasic認証がかかる</li>
+<li>認証完了</li>
+<li>ログインページに移動</li>
+<li>またBasic認証がかかる</li>
+</ol>
+
+
+<p>というケースが見られました。Webサーバにはnginxを使いました。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/02/03/basic-auth/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -715,6 +768,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/19/record-radiko-with-nadesiko2/">なでしこ2でradikoの録音をやってみた</a>
       </li>
     
@@ -728,10 +785,6 @@
     
       <li class="post">
         <a href="/blog/2015/07/01/profiling-django/">Djangoをプロファイリングする</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/">Jenkinsでなでしこ2をCIする</a>
       </li>
     
   </ul>
@@ -759,7 +812,7 @@
 	<li class='category'><a href='/blog/categories/analytics/'>Analytics (1)</a></li>
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
-<li class='category'><a href='/blog/categories/csharp/'>CSharp (4)</a></li>
+<li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
 <li class='category'><a href='/blog/categories/django/'>Django (18)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
@@ -777,7 +830,7 @@
 <li class='category'><a href='/blog/categories/linux/'>linux (10)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (11)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
-<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (6)</a></li>
+<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>

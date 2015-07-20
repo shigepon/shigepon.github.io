@@ -9,9 +9,12 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Ubuntu 12.04 LTS に Jenkins をインストール &ndash; MELODIC-Xを参考にして設定した。
-Jenkins本体でアップグレード可能らしいので、aptitudeでインストール 1
-$ sudo aptitude install jenkins Nginx設定 1 &hellip;">
+  <meta name="description" content="詳細ページを作って表示するには models.pyでモデルを作る
+urls.pyを作る
+views.pyでビューを作る
+テンプレを作る
+Webサーバーを立ち上げる
+アクセスして確認 くらいの手順が必要。 models.pyでモデルを作る とりあえずおもむろにmodels.pyを編集。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +84,63 @@ $ sudo aptitude install jenkins Nginx設定 1 &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/19/make-detail-page-using-django-2/">詳細ページを作る：DjangoでPostgreSQLとBootstrapを使ったアプリを作ってみた(2)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-19T17:58:11+09:00" pubdate data-updated="true">Jun 19<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>詳細ページを作って表示するには</p>
+
+<ul>
+<li>models.pyでモデルを作る</li>
+<li>urls.pyを作る</li>
+<li>views.pyでビューを作る</li>
+<li>テンプレを作る</li>
+<li>Webサーバーを立ち上げる</li>
+<li>アクセスして確認</li>
+</ul>
+
+
+<p>くらいの手順が必要。</p>
+
+<h2>models.pyでモデルを作る</h2>
+
+<p>とりあえずおもむろにmodels.pyを編集。Railsの時と同様にテーブル名にeventを使う</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/06/19/make-detail-page-using-django-2/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -644,63 +704,6 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/05/05/rails-url-for-shows-proxy-pass/">Railsでurl forを使ったらshows proxy passで設定したURLになってしまう件</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-05T14:00:54+09:00" pubdate data-updated="true">May 5<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Nginx, Unicorn, Rails4でurl_forを使ったら変なURLになってしまったので対処法を書いておく</p>
-
-<p>Ninxで</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>server hoge.com;
-</span><span class='line'>proxy_pass http://upstream;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>のような設定をしているとurl_forで</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>http://hoge.com</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/05/05/rails-url-for-shows-proxy-pass/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -732,6 +735,10 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/19/record-radiko-with-nadesiko2/">なでしこ2でradikoの録音をやってみた</a>
       </li>
     
@@ -745,10 +752,6 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
     
       <li class="post">
         <a href="/blog/2015/07/01/profiling-django/">Djangoをプロファイリングする</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/">Jenkinsでなでしこ2をCIする</a>
       </li>
     
   </ul>
@@ -776,7 +779,7 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 	<li class='category'><a href='/blog/categories/analytics/'>Analytics (1)</a></li>
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
-<li class='category'><a href='/blog/categories/csharp/'>CSharp (4)</a></li>
+<li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
 <li class='category'><a href='/blog/categories/django/'>Django (18)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
@@ -794,7 +797,7 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 <li class='category'><a href='/blog/categories/linux/'>linux (10)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (11)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
-<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (6)</a></li>
+<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>

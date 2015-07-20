@@ -11,8 +11,7 @@
   
   <meta name="description" content="参考にした記事URL一覧 小学生でもわかるRuby on Rails入門 | OpenBook
 データベースとの接続（PostgreSQL編） &ndash; Ruby on Rails with OIAX
-[Rails]既存のMySQLテーブルに接続する方法 &ndash; Qiita
-Ruby &hellip;">
+[Rails]既存のMySQLテーブルに接続する方法 &ndash; Qiita &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +81,66 @@ Ruby &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/10/a-way-of-creating-rails-application2/">Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(2):データベースにPostgreSQLを使ってみた</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-10T18:10:41+09:00" pubdate data-updated="true">Mar 10<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>参考にした記事URL一覧</p>
+
+<ul>
+<li><a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a></li>
+<li><a href="http://www.oiax.jp/rails3book/setup_postgresql.html">データベースとの接続（PostgreSQL編） &ndash; Ruby on Rails with OIAX</a></li>
+<li><a href="http://qiita.com/stkn_bb/items/72d06c149d3e6f315f8c">[Rails]既存のMySQLテーブルに接続する方法 &ndash; Qiita</a></li>
+</ul>
+
+
+<p>前回に引き続き<a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a>を参考にしているが、色々すっとばしてデータベースを作るところをなぞる。
+どうもモデルを作って、コマンド打ったら自動的にテーブル作ってくれてよしなにしてくれるらしい。</p>
+
+<p>ではモデルを作る。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>rails g model event name:string date:timestamp
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/03/10/a-way-of-creating-rails-application2/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -617,61 +676,6 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/03/basic-auth/">Basic認証する時に気をつけること</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-03T07:48:33+09:00" pubdate data-updated="true">Feb 3<span>rd</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>rhaco3で作ったWebサービス全体にBasic認証をかけた時にちょっとハマったのでメモ。</p>
-
-<h2>症状</h2>
-
-<p>rhaco3の認証が入っているサービスで全体にBasic認証をかけると、</p>
-
-<ol>
-<li>トップページに入る時にBasic認証がかかる</li>
-<li>認証完了</li>
-<li>ログインページに移動</li>
-<li>またBasic認証がかかる</li>
-</ol>
-
-
-<p>というケースが見られました。Webサーバにはnginxを使いました。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/02/03/basic-auth/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/8/">&larr; Older</a>
@@ -703,6 +707,10 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/19/record-radiko-with-nadesiko2/">なでしこ2でradikoの録音をやってみた</a>
       </li>
     
@@ -716,10 +724,6 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
     
       <li class="post">
         <a href="/blog/2015/07/01/profiling-django/">Djangoをプロファイリングする</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/">Jenkinsでなでしこ2をCIする</a>
       </li>
     
   </ul>
@@ -747,7 +751,7 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
 	<li class='category'><a href='/blog/categories/analytics/'>Analytics (1)</a></li>
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
-<li class='category'><a href='/blog/categories/csharp/'>CSharp (4)</a></li>
+<li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
 <li class='category'><a href='/blog/categories/django/'>Django (18)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
@@ -765,7 +769,7 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
 <li class='category'><a href='/blog/categories/linux/'>linux (10)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (11)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
-<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (6)</a></li>
+<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>

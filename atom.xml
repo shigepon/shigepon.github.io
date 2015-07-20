@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-07-19T17:45:19+09:00</updated>
+  <updated>2015-07-20T20:32:43+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,75 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[なでしこ2でssl使うとthe authentication or decription has failedエラーが出る件]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/"/>
+    <updated>2015-07-20T20:12:34+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed</id>
+    <content type="html"><![CDATA[<p>結論から言うとmonoの問題だった。</p>
+
+<p>参考：</p>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/unarist/20110601/1306945858">MonoでSSL接続しようとしたら怒られた &ndash; うなてっくろぐ</a></li>
+<li><a href="https://ramorenoc.wordpress.com/2012/12/05/the-authentication-or-decryption-has-failed-mono/">The authentication or decryption has failed – Mono | Code Adventures</a></li>
+<li><a href="http://ubuntuforums.org/showthread.php?t=1841740">Problems using SSL in C#</a></li>
+</ul>
+
+
+<p>なでしこ2でsslにアクセスするとエラーが出る</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>「https://どこかhttpsでアクセスするurl」からHTTPデータ取得してそれを表示</span></code></pre></td></tr></table></div></figure>
+
+
+<p>エラーメッセージはこんな感じ</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[SystemError]Error getting response stream (Write: The authentication or decryption has failed.): SendFailure  at System.Net.HttpWebRequest.EndGetResponse (IAsyncResult asyncResult) [0x00000] in &lt;filename unknown&gt;:0 
+</span><span class='line'>  at System.Net.HttpWebRequest.GetResponse () [0x00000] in &lt;filename unknown&gt;:0 
+</span><span class='line'>  at System.Net.WebClient.GetWebResponse (System.Net.WebRequest request) [0x00000] in &lt;filename unknown&gt;:0 
+</span><span class='line'>  at System.Net.WebClient.ReadAll (System.Net.WebRequest request, System.Object userToken) [0x00000] in &lt;filename unknown&gt;:0 
+</span><span class='line'>  at System.Net.WebClient.DownloadDataCore (System.Uri address, System.Object userToken) [0x00000] in &lt;filename unknown&gt;:0</span></code></pre></td></tr></table></div></figure>
+
+
+<p>調べてみると、コードで何とかなるというのがまず出て来たので、試してみたら対処出来た。C#のコードはこんな感じ</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="n">Object</span> <span class="nf">_dataGet</span><span class="p">(</span><span class="n">INakoFuncCallInfo</span> <span class="n">info</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">System</span><span class="p">.</span><span class="n">Net</span><span class="p">.</span><span class="n">ServicePointManager</span><span class="p">.</span><span class="n">ServerCertificateValidationCallback</span> <span class="p">+=</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">ce</span><span class="p">,</span><span class="n">ca</span><span class="p">,</span><span class="n">p</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="k">true</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">....</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ただし、この対処だとhttpアクセスとhttpsアクセスが大差なくなるみたいなことが書いてあったので、これじゃいかんなともうちょっと調べてみると、要はmonoにルート証明書がインストールされてなかったのが原因らしかった。対処法は参考にしたページほぼそのままで</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>mozroots --import --sync
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>サードパーティーの認証を受入れる場合は</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>certmgr -ssl https://どこかhttpsでアクセスするドメイン
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この認証本当に受入れていいの？みたいなメッセージが出たら「y」を押せばおk</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[なでしこ2でradikoの録音をやってみた]]></title>
@@ -1592,93 +1661,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 <p>参考：<a href="http://docs.djangoproject.jp/en/latest/topics/i18n/translation.html">翻訳 — Django 1.4 documentation</a></p>
 
 <p>翻訳したい文字列をマークする方法とかはリンク見れば分かる。あと、使いたい言語を選択出来るようにするとかそういう場合はLocaleMiddlewareを使うとかなんとかあるみたいだけどやってない。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Kobe.R no 13に参加してきました]]></title>
-    <link href="http://blog.shigepon.info/blog/2014/11/25/kobe-dot-r-no-13/"/>
-    <updated>2014-11-25T23:33:42+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2014/11/25/kobe-dot-r-no-13</id>
-    <content type="html"><![CDATA[<p>勉強会の話なので丁寧語で。11/24に<a href="http://kobexr.doorkeeper.jp/events/16989">Kobe.R #13</a>があったので参加してきました。<a href="http://blog.shigepon.info/blog/2014/10/28/kobe-dot-r-no-12/">前回</a>は大阪だったのですが今回は三宮で開かれました。今回はオープンデータ特集ということで、Rのネタもちょびっとある予定だったのですが、話がいっぱいあって結局オープンデータの話のみとなりました。Rネタだけでなく、データを扱う全般を範囲としているKobe.Rならではです。</p>
-
-<p>内容盛りだくさんなので、毎度忘れてる人や内容があって申し訳ないですが、感想です。</p>
-
-<h2>オープンデータとLinked Open Data</h2>
-
-<p>古崎さん</p>
-
-<p>Open Dataは今色々イベントやハッカソン、コンテストなどやってますよという話とオープンデータは誰でも自由に使える形で、さらに自分のデータにURI用意したり、他のデータにリンクしたりするともっとデータとしていいよという話でした。あとLinked Open DataはLODと略すそうです。</p>
-
-<p>リンクというのがあまりイメージ出来なかったけど、次の上田さんの発表で実際に動かしているところを見るとなるほどと思いました。</p>
-
-<p>ちなみに、12月7日の日曜日にOIHってとこ（グランドフロント大阪内）でLODハッカソン関西があるそうです。見てる人が居るかどうか知らないけど興味がある人は是非。</p>
-
-<!-- more -->
-
-
-<p>他にもコンテストとして</p>
-
-<ul>
-<li><a href="http://lod.sfc.keio.ac.jp">LODチャレンジ2015</a></li>
-<li><a href="http://aigid.jp/?p=825">アーバンデータチャレンジ2014</a></li>
-</ul>
-
-
-<p>とか直近でやってるそうです。</p>
-
-<h2>SPARQLについて</h2>
-
-<p>@uedayouさん</p>
-
-<p>Linked Open Dataにすると、SQLっぽい言語で色んな形式で色んな条件でデータが取って来れるよという話でした。何となくイメージはWebが巨大なデータベースになって、そのデータベースにアクセスするような感じがしました。んで、リンクがデータ間のリレーションになってて、リレーショナルデータベースみたいな感じでのアクセスが可能になるんじゃないかとイメージ出来ました。SPARQL知らなかったけど、凄いですね。</p>
-
-<p>Google様にアクセスしたりするのとは訳が違うので、実際にこういうのを利用したサービスとかアプリとか作る場合はアクセス頻度を気にする必要がありそうですが、それは普通のデータベースでもそうですし、普通のことかなと思いました。</p>
-
-<p>それよりも</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">PREFIX</span> <span class="n">rdfs</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="p">.</span><span class="n">w3</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="mi">2000</span><span class="o">/</span><span class="mi">01</span><span class="o">/</span><span class="n">rdf</span><span class="o">-</span><span class="k">schema</span><span class="o">#&gt;</span>
-</span><span class='line'><span class="k">PREFIX</span> <span class="n">dbpedia</span><span class="o">-</span><span class="n">ja</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">ja</span><span class="p">.</span><span class="n">dbpedia</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">resource</span><span class="o">/&gt;</span>
-</span><span class='line'><span class="k">PREFIX</span> <span class="n">prop</span><span class="o">-</span><span class="n">ja</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">ja</span><span class="p">.</span><span class="n">dbpedia</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">property</span><span class="o">/&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">SELECT</span> <span class="k">DISTINCT</span> <span class="o">?</span><span class="n">pref</span> <span class="o">?</span><span class="n">label</span> <span class="k">WHERE</span>
-</span><span class='line'><span class="err">{</span>
-</span><span class='line'>    <span class="n">dbpedia</span><span class="o">-</span><span class="n">ja</span><span class="p">:</span><span class="err">東京都</span>  <span class="n">prop</span><span class="o">-</span><span class="n">ja</span><span class="p">:</span><span class="err">隣接都道府県</span>  <span class="o">?</span><span class="n">pref</span> <span class="p">.</span>
-</span><span class='line'>    <span class="o">?</span><span class="n">pref</span>  <span class="n">rdfs</span><span class="p">:</span><span class="n">label</span>  <span class="o">?</span><span class="n">label</span> <span class="p">.</span>
-</span><span class='line'><span class="err">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな感じのクエリを実行すれば、2つの異なるデータソース（エンドポイントと呼ぶらしい）で関連付けされているデータを取って来たり出来るとかすげーなと思いました。実際に例えばUbuntuで使うならどうするかとかは時間が無かったので、自分で調べて使ってみようと思いますです。</p>
-
-<h2>LOD Challengeについて</h2>
-
-<p>和田さん</p>
-
-<p>LOD Challengeというイベントについてのお話でした。ちょっと聞き疲れしてた時間帯だったので、頭を素通りしてしまいました＞＜すいませんです。</p>
-
-<h2>時系列データ分析・予測の方法（コンペ結果報告）</h2>
-
-<p>河原さん</p>
-
-<p>売り上げ予測のコンペ結果の報告をして頂きました。関連度と忘却度のマトリックスを作るという手法は面白そうでした。初心者なので実際にやってみるまでは道のりが長そうですが・・・・</p>
-
-<h2>OpenDataLabの活動紹介</h2>
-
-<p>毎度のことですが、最後らへんはどうしても名前を忘れてしまったりしてます。すいません＞＜。</p>
-
-<p>神戸でOpenDataLabというのをやっているという紹介でした。上手くやっておられるなぁという感じです。デジタルだけじゃないことも出来ることが強みだとおっしゃられていたような気がします。</p>
-
-<p>最後に、今回でずっと運営の中心をされていた@floretsさんが東京へ行かれるということで、送別会みたいな感じで懇親会へ行ってきました。@floretsさんは勉強会の雰囲気をとても良く作ってくれる方で、Kobe.Rで今後お見かけ出来なくなるのは残念ですが、東京でのご活躍をお祈りしております。</p>
 ]]></content>
   </entry>
   

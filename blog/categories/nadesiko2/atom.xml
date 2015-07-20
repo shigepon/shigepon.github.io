@@ -4,7 +4,7 @@
   <title><![CDATA[Category: nadesiko2 | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/nadesiko2/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-07-19T17:45:19+09:00</updated>
+  <updated>2015-07-20T20:32:43+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,67 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[なでしこ2でssl使うとthe authentication or decription has failedエラーが出る件]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/"/>
+    <updated>2015-07-20T20:12:34+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed</id>
+    <content type="html"><![CDATA[<p>結論から言うとmonoの問題だった。</p>
+
+<p>参考：</p>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/unarist/20110601/1306945858">MonoでSSL接続しようとしたら怒られた &ndash; うなてっくろぐ</a></li>
+<li><a href="https://ramorenoc.wordpress.com/2012/12/05/the-authentication-or-decryption-has-failed-mono/">The authentication or decryption has failed – Mono | Code Adventures</a></li>
+<li><a href="http://ubuntuforums.org/showthread.php?t=1841740">Problems using SSL in C#</a></li>
+</ul>
+
+
+<p>なでしこ2でsslにアクセスするとエラーが出る</p>
+
+<p><code>
+「https://どこかhttpsでアクセスするurl」からHTTPデータ取得してそれを表示
+</code></p>
+
+<p>エラーメッセージはこんな感じ</p>
+
+<p><code>
+[SystemError]Error getting response stream (Write: The authentication or decryption has failed.): SendFailure  at System.Net.HttpWebRequest.EndGetResponse (IAsyncResult asyncResult) [0x00000] in &lt;filename unknown&gt;:0
+  at System.Net.HttpWebRequest.GetResponse () [0x00000] in &lt;filename unknown&gt;:0
+  at System.Net.WebClient.GetWebResponse (System.Net.WebRequest request) [0x00000] in &lt;filename unknown&gt;:0
+  at System.Net.WebClient.ReadAll (System.Net.WebRequest request, System.Object userToken) [0x00000] in &lt;filename unknown&gt;:0
+  at System.Net.WebClient.DownloadDataCore (System.Uri address, System.Object userToken) [0x00000] in &lt;filename unknown&gt;:0
+</code></p>
+
+<p>調べてみると、コードで何とかなるというのがまず出て来たので、試してみたら対処出来た。C#のコードはこんな感じ</p>
+
+<p>```c#
+public Object _dataGet(INakoFuncCallInfo info)
+{</p>
+
+<pre><code>System.Net.ServicePointManager.ServerCertificateValidationCallback += (s,ce,ca,p) =&gt; true;
+....
+</code></pre>
+
+<p>}
+```</p>
+
+<p>ただし、この対処だとhttpアクセスとhttpsアクセスが大差なくなるみたいなことが書いてあったので、これじゃいかんなともうちょっと調べてみると、要はmonoにルート証明書がインストールされてなかったのが原因らしかった。対処法は参考にしたページほぼそのままで</p>
+
+<p><code>sh
+$ mozroots --import --sync
+</code></p>
+
+<p>サードパーティーの認証を受入れる場合は</p>
+
+<p><code>sh
+$ certmgr -ssl https://どこかhttpsでアクセスするドメイン
+</code></p>
+
+<p>この認証本当に受入れていいの？みたいなメッセージが出たら「y」を押せばおk</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[なでしこ2でradikoの録音をやってみた]]></title>
@@ -309,34 +370,6 @@ $ xbuild Nako2_Plugins.sln
 ```</p>
 
 <p>で、再度ビルドするとビルド出来た。shigeponのリポジトリには修正したものをアップしておくのでそのままビルド出来ると思う。パスはリポジトリをcloneするディレクトリによっては変更しないといけないと思う。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ubuntuのmonoでMicrosoft.VisualBasicが動かない件]]></title>
-    <link href="http://blog.shigepon.info/blog/2014/08/20/vb-not-work-on-ubuntu/"/>
-    <updated>2014-08-20T13:38:34+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2014/08/20/vb-not-work-on-ubuntu</id>
-    <content type="html"><![CDATA[<p>なでしこ2にコミットしたりしつつ、実際にUbuntu 12.04で使ってみたりしているが、vb系のインポートが出来ないとか何とか言われたのでメモ</p>
-
-<p>参考：<a href="http://stackoverflow.com/questions/10071836/vb-net-not-working-on-ubuntu-10-04-with-mono">.net &ndash; VB.NET Not working on Ubuntu 10.04 With Mono &ndash; Stack Overflow</a></p>
-
-<p>要は普通にmonoをインストールしただけ</p>
-
-<p><code>sh
-$ sudo aptitude install mono-devel
-</code></p>
-
-<p>だとVB系のライブラリはインストールされないらしい。</p>
-
-<p><code>sh
-$ sudo aptitude install mono-vbnc
-</code></p>
-
-<!-- more -->
-
-
-<p>を追加インストールしておこうということだった。情報無かったので結構はまった。</p>
 ]]></content>
   </entry>
   

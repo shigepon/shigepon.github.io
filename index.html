@@ -9,8 +9,9 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="ネット上でラジオを聞けるサービスradikoの録音ソフトが調子悪くなったので、自分で作ってみるかーとやってみたら出来たのでメモ。OSはUbuntu 12.04で、cui環境で行った。 参考： 簡易Radiko録音スクリプト
-rtmpdumpでradikoにアクセスする手順 &ndash; &hellip;">
+  <meta name="description" content="結論から言うとmonoの問題だった。 参考： MonoでSSL接続しようとしたら怒られた &ndash; うなてっくろぐ
+The authentication or decryption has failed – Mono | Code Adventures
+Problems using SSL &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +81,102 @@ rtmpdumpでradikoにアクセスする手順 &ndash; &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-07-20T20:12:34+09:00" pubdate data-updated="true">Jul 20<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>結論から言うとmonoの問題だった。</p>
+
+<p>参考：</p>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/unarist/20110601/1306945858">MonoでSSL接続しようとしたら怒られた &ndash; うなてっくろぐ</a></li>
+<li><a href="https://ramorenoc.wordpress.com/2012/12/05/the-authentication-or-decryption-has-failed-mono/">The authentication or decryption has failed – Mono | Code Adventures</a></li>
+<li><a href="http://ubuntuforums.org/showthread.php?t=1841740">Problems using SSL in C#</a></li>
+</ul>
+
+
+<p>なでしこ2でsslにアクセスするとエラーが出る</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>「https://どこかhttpsでアクセスするurl」からHTTPデータ取得してそれを表示</span></code></pre></td></tr></table></div></figure>
+
+
+<p>エラーメッセージはこんな感じ</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[SystemError]Error getting response stream (Write: The authentication or decryption has failed.): SendFailure  at System.Net.HttpWebRequest.EndGetResponse (IAsyncResult asyncResult) [0x00000] in &lt;filename unknown&gt;:0 
+</span><span class='line'>  at System.Net.HttpWebRequest.GetResponse () [0x00000] in &lt;filename unknown&gt;:0 
+</span><span class='line'>  at System.Net.WebClient.GetWebResponse (System.Net.WebRequest request) [0x00000] in &lt;filename unknown&gt;:0 
+</span><span class='line'>  at System.Net.WebClient.ReadAll (System.Net.WebRequest request, System.Object userToken) [0x00000] in &lt;filename unknown&gt;:0 
+</span><span class='line'>  at System.Net.WebClient.DownloadDataCore (System.Uri address, System.Object userToken) [0x00000] in &lt;filename unknown&gt;:0</span></code></pre></td></tr></table></div></figure>
+
+
+<p>調べてみると、コードで何とかなるというのがまず出て来たので、試してみたら対処出来た。C#のコードはこんな感じ</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="n">Object</span> <span class="nf">_dataGet</span><span class="p">(</span><span class="n">INakoFuncCallInfo</span> <span class="n">info</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">System</span><span class="p">.</span><span class="n">Net</span><span class="p">.</span><span class="n">ServicePointManager</span><span class="p">.</span><span class="n">ServerCertificateValidationCallback</span> <span class="p">+=</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">ce</span><span class="p">,</span><span class="n">ca</span><span class="p">,</span><span class="n">p</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="k">true</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">....</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ただし、この対処だとhttpアクセスとhttpsアクセスが大差なくなるみたいなことが書いてあったので、これじゃいかんなともうちょっと調べてみると、要はmonoにルート証明書がインストールされてなかったのが原因らしかった。対処法は参考にしたページほぼそのままで</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>mozroots --import --sync
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>サードパーティーの認証を受入れる場合は</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>certmgr -ssl https://どこかhttpsでアクセスするドメイン
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この認証本当に受入れていいの？みたいなメッセージが出たら「y」を押せばおk</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -922,60 +1019,6 @@ rtmpdumpでradikoにアクセスする手順 &ndash; &hellip;">
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/03/05/uwsgi-memo/">Uwsgiメモ</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-03-05T10:21:54+09:00" pubdate data-updated="true">Mar 5<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>uwsgi関連ではまった点などをメモ</p>
-
-<h2>invalid request block size</h2>
-
-<p>ajaxでサーバ側からデータを読み込むライブラリを使ってると、条件によって502エラーが出てる(=大体djangoとかのプログラム側のエラーで出る)ので、uwsgiのログを調べると、invalid request block sizeというエラーが出てた。</p>
-
-<p>んで、調べてみると、uwsgiがリクエストのサイズが大きすぎるとエラーを吐いているらしい。ライブラリ側で勝手にパラメーター付けて送られてリクエストのサイズが大きくなっているので、こりゃ調整しないとなということで調べてみた。起動時にオプション設定するか、iniファイルで設定したらいけるらしい</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>uwsgi --buffer-size<span class="o">=</span>xxxx
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/03/05/uwsgi-memo/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1005,6 +1048,10 @@ rtmpdumpでradikoにアクセスする手順 &ndash; &hellip;">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/19/record-radiko-with-nadesiko2/">なでしこ2でradikoの録音をやってみた</a>
       </li>
     
@@ -1018,10 +1065,6 @@ rtmpdumpでradikoにアクセスする手順 &ndash; &hellip;">
     
       <li class="post">
         <a href="/blog/2015/07/01/profiling-django/">Djangoをプロファイリングする</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/">Jenkinsでなでしこ2をCIする</a>
       </li>
     
   </ul>
@@ -1049,7 +1092,7 @@ rtmpdumpでradikoにアクセスする手順 &ndash; &hellip;">
 	<li class='category'><a href='/blog/categories/analytics/'>Analytics (1)</a></li>
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
-<li class='category'><a href='/blog/categories/csharp/'>CSharp (4)</a></li>
+<li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
 <li class='category'><a href='/blog/categories/django/'>Django (18)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
@@ -1067,7 +1110,7 @@ rtmpdumpでradikoにアクセスする手順 &ndash; &hellip;">
 <li class='category'><a href='/blog/categories/linux/'>linux (10)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (11)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
-<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (6)</a></li>
+<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>
