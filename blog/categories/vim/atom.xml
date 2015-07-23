@@ -4,7 +4,7 @@
   <title><![CDATA[Category: vim | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/vim/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-07-20T20:32:43+09:00</updated>
+  <updated>2015-07-23T23:16:36+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -58,6 +58,16 @@ endif
 いいね〜！！</p>
 
 <p>現在、デフォルトのsnippetとしてneosnippet-snippetsをインストールしないとデフォルトのsnippetを出してくれないことに注意。</p>
+
+<h2>巨大なファイルを開いて遅くなったりフリーズしない方法</h2>
+
+<p><a href="http://qiita.com/shoyan/items/529cf863a0d191be036e">Vimで巨大なファイルを開く方法 &ndash; Qiita</a>をそのまま</p>
+
+<p><code>sh
+$ vim -u NONE filename
+</code></p>
+
+<p>でおk</p>
 ]]></content>
   </entry>
   
