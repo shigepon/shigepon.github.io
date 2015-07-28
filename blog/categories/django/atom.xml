@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Django | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/django/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-07-28T20:31:49+09:00</updated>
+  <updated>2015-07-28T20:34:24+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -43,6 +43,7 @@
 
 <p>import sys
 sys.path.append(&lsquo;/path/to/django/project&rsquo;)
+import os
 os.environ[&lsquo;DJANGO_SETTINGS_MODULE&rsquo;] = &lsquo;project.settings&rsquo;</p>
 
 <p>from django.core.wsgi import get_wsgi_application

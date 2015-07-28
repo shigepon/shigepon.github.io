@@ -140,9 +140,11 @@ python &ndash; Django 1.7 throws django.core.exceptions.AppRegistryNotReady: Mod
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
+<span class='line-number'>13</span>
 </pre></td><td class='code'><pre><code class='py'><span class='line'><span class="c"># encoding: UTF-8</span>
 </span><span class='line'><span class="kn">import</span> <span class="nn">sys</span>
 </span><span class='line'><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;/path/to/django/project&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">os</span>
 </span><span class='line'><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;DJANGO_SETTINGS_MODULE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;project.settings&#39;</span>
 </span><span class='line'>
 </span><span class='line'><span class="kn">from</span> <span class="nn">django.core.wsgi</span> <span class="kn">import</span> <span class="n">get_wsgi_application</span>
