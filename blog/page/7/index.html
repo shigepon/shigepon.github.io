@@ -10,8 +10,7 @@
 
   
   <meta name="description" content="参考にした記事URL一覧 小学生でもわかるRuby on Rails入門 | OpenBook
-データベースとの接続（PostgreSQL編） &ndash; Ruby on Rails with OIAX
-[Rails]既存のMySQLテーブルに接続する方法 &ndash; Qiita &hellip;">
+Rails &ndash; link_to の引数と展開の違いまとめ &ndash; Qiita 前回に引き続き小学生でもわかるRuby on Rails入門 | OpenBookを参考にしているが、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +80,68 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/10/a-way-of-creating-rails-application3/">Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データ一覧ページを作って、詳細ページへのリンクを貼る</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-10T18:10:41+09:00" pubdate data-updated="true">Mar 10<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>参考にした記事URL一覧</p>
+
+<ul>
+<li><a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a></li>
+<li><a href="http://qiita.com/somewhatgood@github/items/9890e75b4c195d47715a">Rails &ndash; link_to の引数と展開の違いまとめ &ndash; Qiita</a></li>
+</ul>
+
+
+<p>前回に引き続き<a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a>を参考にしているが、色々すっとばして16章から適当に確認しながら適当に実装する。</p>
+
+<h3>一覧表示</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">def</span> <span class="nf">index</span>
+</span><span class='line'>  <span class="vi">@events</span> <span class="o">=</span> <span class="no">Event</span><span class="o">.</span><span class="n">all</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/03/10/a-way-of-creating-rails-application3/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -615,67 +676,6 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/10/unity-memo/">Unity Memo</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-10T23:25:11+09:00" pubdate data-updated="true">Feb 10<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>unity使ってこれから何か作っていこうと思うのでめも。</p>
-
-<h3>最初にやったこと</h3>
-
-<p><a href="http://uinyan.com/unity_7days_kusoge_challenge/">【Unity】素人が7日間クソゲーを作り続けてわかったこと – uinyan. com</a>に載っていた<a href="http://japan.unity3d.com/developer/document/tutorial/my-first-unity/01.html">UNITY &ndash; Developer &ndash; はじめての Unity &ndash; 第1回 世界の「骨格」をつくろう</a>に沿ってブロックとボールを作ってみた。<br/>
-実際にどう操作するかは<a href="https://www.google.com/url?q=http://dotinstall.com/&amp;usd=2&amp;usg=AFQjCNHZtbpqtTDbVeGhAQfx3_H-UUYI1Q">ドットインストールのUnity講座</a>を参考にした。</p>
-
-<h3>物をバウンドさせる</h3>
-
-<p> physicalMaterialでBouncinessに数値を入れる。1とか。1でバウンド時の力のロスが無い。</p>
-
-<h3>効果音を鳴らす</h3>
-
-<ul>
-<li><a href="http://www.senses-circuit.com/material/se_game.html">フリー効果音素材HP</a>などから音源をダウンロード</li>
-<li>Assetに音源をドラッグアンドドロップして追加</li>
-<li>追加したいオブジェクトでAddComponentボタンからComponent>Audio>Audio Sourceを選択</li>
-<li>Audio ClipにAssetに入れた音源を入れる。</li>
-<li>Audio Sourceコンポーネント内で3D Sound Setting>Min Distanceを10くらいに設定</li>
-</ul>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/02/10/unity-memo/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/8/">&larr; Older</a>
@@ -707,6 +707,10 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/28/use-django-model-outside-django-project/">DjangoモデルをDjangoプロジェクトの外から使う</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a>
       </li>
     
@@ -720,10 +724,6 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
     
       <li class="post">
         <a href="/blog/2015/07/03/make-admin-page-using-django/">Django1.7でPostgreSQLとBootstrap使ったアプリを作ってみた(1.5):管理ページを作ってみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/01/profiling-django/">Djangoをプロファイリングする</a>
       </li>
     
   </ul>
@@ -752,14 +752,14 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (18)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (19)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (9)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (19)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (20)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Django | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/django/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-07-23T23:16:36+09:00</updated>
+  <updated>2015-07-28T20:31:49+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,49 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[DjangoモデルをDjangoプロジェクトの外から使う]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/07/28/use-django-model-outside-django-project/"/>
+    <updated>2015-07-28T16:43:55+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/07/28/use-django-model-outside-django-project</id>
+    <content type="html"><![CDATA[<p>参考：</p>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/shobonengine/20120103/1325535420">外部から Django プロジェクトのデータベースを操作する &ndash; ShobonEngineの日記</a></li>
+<li><a href="http://stackoverflow.com/questions/25537905/django-1-7-throws-django-core-exceptions-appregistrynotready-models-arent-load">python &ndash; Django 1.7 throws django.core.exceptions.AppRegistryNotReady: Models aren&rsquo;t loaded yet &ndash; Stack Overflow</a></li>
+</ul>
+
+
+<p>モデルインポート前に以下の手順が必要</p>
+
+<ul>
+<li>プロジェクトをsys.pathに追加</li>
+<li>DJANGO_SETTINGS_MODULE環境変数がプロジェクトのsettings.pyを指すように指定</li>
+<li>applicationのロードが必要? (上2つだけだとModels aren&rsquo;t loaded yetというエラーが出た)</li>
+</ul>
+
+
+<p>sys.pathにはフルパスを入れれば確実。必要なコードは下のような感じになる。</p>
+
+<p>```py</p>
+
+<h1>encoding: UTF-8</h1>
+
+<p>import sys
+sys.path.append(&lsquo;/path/to/django/project&rsquo;)
+os.environ[&lsquo;DJANGO_SETTINGS_MODULE&rsquo;] = &lsquo;project.settings&rsquo;</p>
+
+<p>from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()</p>
+
+<p>from application.models import AModel</p>
+
+<p>list = AModel.objects.all()
+&hellip;
+```</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Djangoで複数データベースを使用する]]></title>
@@ -429,39 +472,6 @@ raise RuntimeError("South does not support Django 1.7 or higher. Please use nati
 
 
 <p>以上やってみたら、エラーは出ずにプロジェクトをDjango1.7に対応できた。めでたしめでたし。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[uwsgiメモ]]></title>
-    <link href="http://blog.shigepon.info/blog/2015/03/05/uwsgi-memo/"/>
-    <updated>2015-03-05T10:21:54+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2015/03/05/uwsgi-memo</id>
-    <content type="html"><![CDATA[<p>uwsgi関連ではまった点などをメモ</p>
-
-<h2>invalid request block size</h2>
-
-<p>ajaxでサーバ側からデータを読み込むライブラリを使ってると、条件によって502エラーが出てる(=大体djangoとかのプログラム側のエラーで出る)ので、uwsgiのログを調べると、invalid request block sizeというエラーが出てた。</p>
-
-<p>んで、調べてみると、uwsgiがリクエストのサイズが大きすぎるとエラーを吐いているらしい。ライブラリ側で勝手にパラメーター付けて送られてリクエストのサイズが大きくなっているので、こりゃ調整しないとなということで調べてみた。起動時にオプション設定するか、iniファイルで設定したらいけるらしい</p>
-
-<p><code>sh
-$ uwsgi --buffer-size=xxxx
-</code></p>
-
-<!-- more -->
-
-
-<p><code>ini
-...
-buffer-size= xxxx
-...
-</code></p>
-
-<!-- more -->
-
-
-<p>参考：<a href="http://stackoverflow.com/questions/15878176/uwsgi-invalid-request-block-size">uwsgi invalid request block size &ndash; Stack Overflow</a></p>
 ]]></content>
   </entry>
   

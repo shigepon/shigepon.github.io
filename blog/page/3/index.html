@@ -9,7 +9,8 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="勉強会の話なので丁寧語で。11/24にKobe.R #13があったので参加してきました。前回は大阪だったのですが今回は三宮で開かれました。今回はオープンデータ特集ということで、Rのネタもちょびっとある予定だったのですが、話がいっぱいあって結局オープンデータの話のみとなりました。Rネタだけでなく、 &hellip;">
+  <meta name="description" content="Djangoで他の人が作ったモジュールを使ってると、英語のメッセージが入ってることがあるので、日本語化してみた。とりあえず英語のメッセージを日本語に変換するとこまで。 準備 gettextが無かったらインストール。Ubuntuの場合 1
+$ sudo aptitude install &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +80,58 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/27/django-locale/">Djangoで国際化やってみた</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-11-27T13:02:12+09:00" pubdate data-updated="true">Nov 27<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Djangoで他の人が作ったモジュールを使ってると、英語のメッセージが入ってることがあるので、日本語化してみた。とりあえず英語のメッセージを日本語に変換するとこまで。</p>
+
+<h2>準備</h2>
+
+<p>gettextが無かったらインストール。Ubuntuの場合</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install gettext
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>プロジェクトにlocaleフォルダを作る。無いと後のコマンドでエラーが出た</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/11/27/django-locale/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -607,61 +660,6 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/09/22/kobe-dot-r-number-9/">Kobe.R #9に参加しました</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-09-22T20:42:57+09:00" pubdate data-updated="true">Sep 22<span>nd</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>勉強会の話なので丁寧語で。9/20に<a href="http://kobexr.doorkeeper.jp/events/14808">Kobe.R #9</a>があったので参加してきました。大阪で定期的に開催されているRの勉強会です。内容はRに限らず、統計処理をやる上で大事なことを扱うという感じでした。発表は誰がされたか名前を記憶していなかったりするので、とりあえず内容だけ照会します。</p>
-
-<h2>Statistical Disclosure Controlの紹介</h2>
-
-<p>Twitter ID @Wakamatzさん</p>
-
-<p>個人情報を含むデータや、他の情報と組み合わせると個人情報になるデータをどのように匿名化するかという話でした。どうしても匿名化すると、実際に欲しいデータの精度とのトレードオフになるので、それをどう評価するかが重要なようです。
-オォっと思った点を羅列します。</p>
-
-<ul>
-<li>開示リスク（どの程度特定されやすいデータになっているか?）を評価出来るライブラリがRにある。Rすげー。</li>
-<li>匿名化には適当なデータを混ぜたりクラスタリングする手法があるのかー。なるほどー。確かに適当なデータを混ぜると集計精度が落ちそう</li>
-<li>評価手法は何種類かあるけど、とりあえずIL1sという評価法を紹介してもらった。実際計算してみないとなんともいえないかな。</li>
-</ul>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/09/22/kobe-dot-r-number-9/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -693,6 +691,10 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/28/use-django-model-outside-django-project/">DjangoモデルをDjangoプロジェクトの外から使う</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a>
       </li>
     
@@ -706,10 +708,6 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
     
       <li class="post">
         <a href="/blog/2015/07/03/make-admin-page-using-django/">Django1.7でPostgreSQLとBootstrap使ったアプリを作ってみた(1.5):管理ページを作ってみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/01/profiling-django/">Djangoをプロファイリングする</a>
       </li>
     
   </ul>
@@ -738,14 +736,14 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (18)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (19)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (9)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (19)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (20)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>

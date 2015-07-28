@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-07-23T23:16:36+09:00</updated>
+  <updated>2015-07-28T20:31:49+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,61 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[DjangoモデルをDjangoプロジェクトの外から使う]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/07/28/use-django-model-outside-django-project/"/>
+    <updated>2015-07-28T16:43:55+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/07/28/use-django-model-outside-django-project</id>
+    <content type="html"><![CDATA[<p>参考：</p>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/shobonengine/20120103/1325535420">外部から Django プロジェクトのデータベースを操作する &ndash; ShobonEngineの日記</a></li>
+<li><a href="http://stackoverflow.com/questions/25537905/django-1-7-throws-django-core-exceptions-appregistrynotready-models-arent-load">python &ndash; Django 1.7 throws django.core.exceptions.AppRegistryNotReady: Models aren&rsquo;t loaded yet &ndash; Stack Overflow</a></li>
+</ul>
+
+
+<p>モデルインポート前に以下の手順が必要</p>
+
+<ul>
+<li>プロジェクトをsys.pathに追加</li>
+<li>DJANGO_SETTINGS_MODULE環境変数がプロジェクトのsettings.pyを指すように指定</li>
+<li>applicationのロードが必要? (上2つだけだとModels aren&rsquo;t loaded yetというエラーが出た)</li>
+</ul>
+
+
+<p>sys.pathにはフルパスを入れれば確実。必要なコードは下のような感じになる。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="c"># encoding: UTF-8</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">sys</span>
+</span><span class='line'><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;/path/to/django/project&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;DJANGO_SETTINGS_MODULE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;project.settings&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">from</span> <span class="nn">django.core.wsgi</span> <span class="kn">import</span> <span class="n">get_wsgi_application</span>
+</span><span class='line'><span class="n">application</span> <span class="o">=</span> <span class="n">get_wsgi_application</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">from</span> <span class="nn">application.models</span> <span class="kn">import</span> <span class="n">AModel</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">list</span> <span class="o">=</span> <span class="n">AModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</span><span class='line'><span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[なでしこ2でssl使うとthe authentication or decription has failedエラーが出る件]]></title>
@@ -1579,88 +1634,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 <p>この時にデータベース内の値が変更した制約等に引っ掛かる場合は途中で止まったりするので、制約に合うようにデータを変更するとか修正する。</p>
 
 <p>参考：<a href="http://yu-write.blogspot.jp/2014/01/django-south.html">Yura YuWrite: [django] 既存のプロジェクトにsouthを追加する方法</a>、<a href="http://stackoverflow.com/questions/22236029/trouble-getting-django-set-up-on-heroku-using-south-keep-getting-programminger">postgresql &ndash; Trouble getting Django set up on Heroku using South &ndash; keep getting ProgrammingError: relation does not exist &ndash; Stack Overflow</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[djangoで国際化やってみた]]></title>
-    <link href="http://blog.shigepon.info/blog/2014/11/27/django-locale/"/>
-    <updated>2014-11-27T13:02:12+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2014/11/27/django-locale</id>
-    <content type="html"><![CDATA[<p>Djangoで他の人が作ったモジュールを使ってると、英語のメッセージが入ってることがあるので、日本語化してみた。とりあえず英語のメッセージを日本語に変換するとこまで。</p>
-
-<h2>準備</h2>
-
-<p>gettextが無かったらインストール。Ubuntuの場合</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install gettext
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>プロジェクトにlocaleフォルダを作る。無いと後のコマンドでエラーが出た</p>
-
-<!-- more -->
-
-
-<h2>poファイル作成</h2>
-
-<!-- more -->
-
-
-<p>おもむろにpoファイルを作るコマンドを実行</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>django-admin.py makemessages -l ja
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>するとpath/to/locale/ja/LC_MESSAGES/django.poってファイルが出来るので、それを修正していく。ただ、このコマンドプロジェクト内だけ捜査してファイルを作るみたいで、外部モジュールの場合、上手く読み取ってくれなかった。</p>
-
-<p>今回はvirtualenvでpipしたdjango-allauthのテンプレートを日本語化したかったので、path/to/virtualenv/dir/lib/python2.7/site-packages/allauth/templates/account/内のファイルを全部path/to/project/templates/account/にコピーしてからコマンド実行すると上手く読み取ってくれた。</p>
-
-<h2>翻訳</h2>
-
-<p>出来たpoファイルを編集すればオッケー。ファイル内でmsgid以下に書いてあるのが元の文、その次のmsgstr以下に文章書くと、翻訳文になる。元の英文に何かパラメーター付いてる場合は必ずパラメーターを翻訳文に設定しないとエラーが出る。</p>
-
-<figure class='code'><figcaption><span>例</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="c">#: path/to/python/module.py:23</span>
-</span><span class='line'><span class="n">msgid</span> <span class="s">&quot;Welcome to my site.&quot;</span>
-</span><span class='line'><span class="n">msgstr</span> <span class="s">&quot;いらっしゃーい&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>moファイル作成</h2>
-
-<p>おもむろにコマンドを実行するとmoファイルが出来る</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>django-admin.py compilemessages
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>settings.pyの設定</h2>
-
-<p>これだけで動くと思ったら動かなかったので色々調べてみたらLOCALE_PATHSを設定しないといけなかった。</p>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">LOCALE_PATHS</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'>    <span class="s">&quot;path/to/locale&quot;</span><span class="p">,</span>
-</span><span class='line'><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これ設定しておいたらちゃんと動いた。</p>
-
-<p>あとは普通にrunserverとかでサーバ起動したら翻訳されてる</p>
-
-<p>参考：<a href="http://docs.djangoproject.jp/en/latest/topics/i18n/translation.html">翻訳 — Django 1.4 documentation</a></p>
-
-<p>翻訳したい文字列をマークする方法とかはリンク見れば分かる。あと、使いたい言語を選択出来るようにするとかそういう場合はLocaleMiddlewareを使うとかなんとかあるみたいだけどやってない。</p>
 ]]></content>
   </entry>
   

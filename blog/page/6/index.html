@@ -9,11 +9,12 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Nginx, Unicorn, Rails4でurl_forを使ったら変なURLになってしまったので対処法を書いておく Ninxで 1
+  <meta name="description" content="なでしこ2のテストのためにubuntuにodbcドライバをインストールしたりしたのでメモ odbcドライバのインストール 1
 2
-server hoge.com;
-proxy_pass http://upstream; のような設定をしているとurl_forで 1
-http://hoge &hellip;">
+3
+4
+$ sudo aptitude install unixodbc, odbc-postgresql
+$ sudo odbcinst -i -d -f /usr/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +84,62 @@ http://hoge &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/12/access-postgresql-through-odbc-ubuntu/">Ubuntuでodbcを用いてpostgresqlにアクセスする</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-12T22:11:33+09:00" pubdate data-updated="true">May 12<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>なでしこ2のテストのためにubuntuにodbcドライバをインストールしたりしたのでメモ</p>
+
+<h2>odbcドライバのインストール</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install unixodbc, odbc-postgresql
+</span><span class='line'><span class="nv">$ </span>sudo odbcinst -i -d -f /usr/share/psqlodbc/odbcinst.ini.template
+</span><span class='line'><span class="nv">$ </span>sudo odbcinst -i -s -l  -n adyoung-pg -f /usr/share/doc/odbc-postgresql/examples/odbc.ini.template
+</span><span class='line'><span class="nv">$ </span>vim /etc/odbc.ini
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>odbc.iniにはサンプルの設定が入っているので、それを参考にしながら設定</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/12/access-postgresql-through-odbc-ubuntu/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -668,68 +725,6 @@ http://hoge &hellip;">
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/10/a-way-of-creating-rails-application3/">Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データ一覧ページを作って、詳細ページへのリンクを貼る</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-10T18:10:41+09:00" pubdate data-updated="true">Mar 10<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>参考にした記事URL一覧</p>
-
-<ul>
-<li><a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a></li>
-<li><a href="http://qiita.com/somewhatgood@github/items/9890e75b4c195d47715a">Rails &ndash; link_to の引数と展開の違いまとめ &ndash; Qiita</a></li>
-</ul>
-
-
-<p>前回に引き続き<a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a>を参考にしているが、色々すっとばして16章から適当に確認しながら適当に実装する。</p>
-
-<h3>一覧表示</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">def</span> <span class="nf">index</span>
-</span><span class='line'>  <span class="vi">@events</span> <span class="o">=</span> <span class="no">Event</span><span class="o">.</span><span class="n">all</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/03/10/a-way-of-creating-rails-application3/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -761,6 +756,10 @@ http://hoge &hellip;">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/28/use-django-model-outside-django-project/">DjangoモデルをDjangoプロジェクトの外から使う</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a>
       </li>
     
@@ -774,10 +773,6 @@ http://hoge &hellip;">
     
       <li class="post">
         <a href="/blog/2015/07/03/make-admin-page-using-django/">Django1.7でPostgreSQLとBootstrap使ったアプリを作ってみた(1.5):管理ページを作ってみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/01/profiling-django/">Djangoをプロファイリングする</a>
       </li>
     
   </ul>
@@ -806,14 +801,14 @@ http://hoge &hellip;">
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (18)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (19)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (9)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (19)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (20)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>

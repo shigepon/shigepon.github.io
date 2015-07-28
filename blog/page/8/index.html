@@ -9,10 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="rhaco3で作ったWebサービス全体にBasic認証をかけた時にちょっとハマったのでメモ。 症状 rhaco3の認証が入っているサービスで全体にBasic認証をかけると、 トップページに入る時にBasic認証がかかる
-認証完了
-ログインページに移動
-またBasic認証がかかる &hellip;">
+  <meta name="description" content="unity使ってこれから何か作っていこうと思うのでめも。 最初にやったこと 【Unity】素人が7日間クソゲーを作り続けてわかったこと – uinyan. comに載っていたUNITY &ndash; Developer &ndash; はじめての Unity &ndash; 第1回 世界の「骨格 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +79,67 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/10/unity-memo/">Unity Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-10T23:25:11+09:00" pubdate data-updated="true">Feb 10<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>unity使ってこれから何か作っていこうと思うのでめも。</p>
+
+<h3>最初にやったこと</h3>
+
+<p><a href="http://uinyan.com/unity_7days_kusoge_challenge/">【Unity】素人が7日間クソゲーを作り続けてわかったこと – uinyan. com</a>に載っていた<a href="http://japan.unity3d.com/developer/document/tutorial/my-first-unity/01.html">UNITY &ndash; Developer &ndash; はじめての Unity &ndash; 第1回 世界の「骨格」をつくろう</a>に沿ってブロックとボールを作ってみた。<br/>
+実際にどう操作するかは<a href="https://www.google.com/url?q=http://dotinstall.com/&amp;usd=2&amp;usg=AFQjCNHZtbpqtTDbVeGhAQfx3_H-UUYI1Q">ドットインストールのUnity講座</a>を参考にした。</p>
+
+<h3>物をバウンドさせる</h3>
+
+<p> physicalMaterialでBouncinessに数値を入れる。1とか。1でバウンド時の力のロスが無い。</p>
+
+<h3>効果音を鳴らす</h3>
+
+<ul>
+<li><a href="http://www.senses-circuit.com/material/se_game.html">フリー効果音素材HP</a>などから音源をダウンロード</li>
+<li>Assetに音源をドラッグアンドドロップして追加</li>
+<li>追加したいオブジェクトでAddComponentボタンからComponent>Audio>Audio Sourceを選択</li>
+<li>Audio ClipにAssetに入れた音源を入れる。</li>
+<li>Audio Sourceコンポーネント内で3D Sound Setting>Min Distanceを10くらいに設定</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/02/10/unity-memo/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -768,6 +826,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/28/use-django-model-outside-django-project/">DjangoモデルをDjangoプロジェクトの外から使う</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a>
       </li>
     
@@ -781,10 +843,6 @@
     
       <li class="post">
         <a href="/blog/2015/07/03/make-admin-page-using-django/">Django1.7でPostgreSQLとBootstrap使ったアプリを作ってみた(1.5):管理ページを作ってみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/01/profiling-django/">Djangoをプロファイリングする</a>
       </li>
     
   </ul>
@@ -813,14 +871,14 @@
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (18)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (19)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (9)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (19)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (20)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>

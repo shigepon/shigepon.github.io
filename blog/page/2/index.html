@@ -9,7 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="uwsgi関連ではまった点などをメモ invalid request block size ajaxでサーバ側からデータを読み込むライブラリを使ってると、条件によって502エラーが出てる(=大体djangoとかのプログラム側のエラーで出る)ので、uwsgiのログを調べると、invalid &hellip;">
+  <meta name="description" content="Djangoが去年の9月に1.7にバージョンアップしてて、今更ながらアップデートしてみた。色々教えて頂いた@key3さんに感謝！ ※注　アップデートの前に必ずデータとかソースとか色々バックアップしておくこと。 Django本体のアップデート Djangoはpipで管理してるので、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,60 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/">Django 1.6から1.7にアップデートしてみた</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-03-09T22:11:02+09:00" pubdate data-updated="true">Mar 9<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Djangoが去年の9月に1.7にバージョンアップしてて、今更ながらアップデートしてみた。色々教えて頂いた<a href="https://twitter.com/key3">@key3</a>さんに感謝！</p>
+
+<p>※注　アップデートの前に必ずデータとかソースとか色々バックアップしておくこと。</p>
+
+<h2>Django本体のアップデート</h2>
+
+<p>Djangoはpipで管理してるので、pipコマンドでアップデート出来る</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install django -U
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -582,58 +636,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/27/django-locale/">Djangoで国際化やってみた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-11-27T13:02:12+09:00" pubdate data-updated="true">Nov 27<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Djangoで他の人が作ったモジュールを使ってると、英語のメッセージが入ってることがあるので、日本語化してみた。とりあえず英語のメッセージを日本語に変換するとこまで。</p>
-
-<h2>準備</h2>
-
-<p>gettextが無かったらインストール。Ubuntuの場合</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install gettext
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>プロジェクトにlocaleフォルダを作る。無いと後のコマンドでエラーが出た</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/11/27/django-locale/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -665,6 +667,10 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/28/use-django-model-outside-django-project/">DjangoモデルをDjangoプロジェクトの外から使う</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a>
       </li>
     
@@ -678,10 +684,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
     
       <li class="post">
         <a href="/blog/2015/07/03/make-admin-page-using-django/">Django1.7でPostgreSQLとBootstrap使ったアプリを作ってみた(1.5):管理ページを作ってみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/01/profiling-django/">Djangoをプロファイリングする</a>
       </li>
     
   </ul>
@@ -710,14 +712,14 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (18)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (19)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (9)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (19)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (20)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
