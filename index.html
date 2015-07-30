@@ -9,8 +9,15 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="参考： 外部から Django プロジェクトのデータベースを操作する &ndash; ShobonEngineの日記
-python &ndash; Django 1.7 throws django.core.exceptions.AppRegistryNotReady: Models aren& &hellip;">
+  <meta name="description" content="リレーションの理解が悪くて酷いコードを組んでいて、それを直した話。 article key
+title
+content
+author_key 1
+DjangoでHello World作ってみた
+出来なかった！
+1| author key
+name 1
+shigepon| こんなテーブルがあって、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +87,162 @@ python &ndash; Django 1.7 throws django.core.exceptions.AppRegistryNotReady: Mod
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/07/30/add-relation-to-existing-table-using-django/">Djangoで作成済みテーブルに手動でリレーションを追加する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-07-30T10:46:15+09:00" pubdate data-updated="true">Jul 30<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>リレーションの理解が悪くて酷いコードを組んでいて、それを直した話。</p>
+
+<p>article</p>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th align="left">key</th>
+<th align="right">title</th>
+<th align="right">content</th>
+<th align="right">author_key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td align="left">1</td>
+<td align="right">DjangoでHello World作ってみた</td>
+<td align="right">出来なかった！</td>
+<td align="right">1|</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>author</p>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th align="left">key</th>
+<th align="right">name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td align="left">1</td>
+<td align="right">shigepon|</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>こんなテーブルがあって、author.keyとarticle.author_keyが繋がっている場合に
+ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
+
+<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">class</span> <span class="nc">Article</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">key</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">title</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">content</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">author_key</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">author</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">Author</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">author_key</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Author</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">key</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">name</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>いやー改めて見ると酷い。Articleを100個読み込んで、そのAuthorを出力するだけで、100回以上dbにアクセスしないといけない。という訳でこの酷いコードからリレーションを貼って、さらにdbアクセスが少なくなるように修正したらこうなった</p>
+
+<p>参考：</p>
+
+<ul>
+<li><a href="https://docs.djangoproject.com/en/1.8/ref/models/fields/">Model field reference | Django documentation | Django</a></li>
+<li><a href="https://docs.djangoproject.com/en/1.8/ref/models/querysets/">QuerySet API reference | Django documentation | Django</a></li>
+</ul>
+
+
+<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">class</span> <span class="nc">Article</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">key</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">title</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">content</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">author</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s">&#39;Author&#39;</span><span class="p">,</span> <span class="n">db_column</span><span class="o">=</span><span class="s">&#39;author_key&#39;</span><span class="p">,</span> <span class="n">to_field</span><span class="o">=</span><span class="s">&#39;key&#39;</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s">&#39;articles&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Author</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">key</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">name</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じで適切にForeignKeyフィールドを設定することで、上の構成のテーブルにもリレーションを貼ることが出来た。db_columnでArticle側のリレーションキーになるカラムを指定して、to_fieldでAuthor側のリレーションキーになるカラムを指定する。related_nameは指定しないとエラーが出た。</p>
+
+<p>んで、dbアクセスがなるべく少なくなるように（sqlでjoinを組んでくれるように）views.pyを書いてみると</p>
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">app.models</span> <span class="kn">import</span> <span class="n">Article</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">articles</span> <span class="o">=</span> <span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s">&#39;author&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</span><span class='line'>    <span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいにselect_relatedメソッドを使うとjoinしてくれた。prefetch_relatedってメソッドでも同じように出来る（ちょっと役割は違う）らしいが試していない。ざっくりドキュメントを読むと、ForeignKeyと１対１リレーションにはselect_relatedが良く、Many to ManyやMany to Oneにはprefetch_relatedが良いらしい。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -996,58 +1159,6 @@ python &ndash; Django 1.7 throws django.core.exceptions.AppRegistryNotReady: Mod
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/03/19/use-sparql-with-python/">PythonでSparql使ってLinked Open Dataをいじってみた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-03-19T22:07:12+09:00" pubdate data-updated="true">Mar 19<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>以前<a href="http://blog.shigepon.info/blog/2014/11/25/kobe-dot-r-no-13/">Kobe.R no 13に参加してきました &ndash; shigeponが関心のある技術情報など</a>でLinked Open Dataが気になってたので、Pythonでいじれるライブラリを探してみて遊んでみた。</p>
-
-<p>Sparqlで色々試してみると面白そうなので、pip search sparqlで出た結果とググってみた結果から、SPARQLWrapperが何となく良さげかなと思い、インストールしてみた。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install SPARQLWrapper
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これだけでおk</p>
-
-<p>djangoのshellから使ってみる</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/03/19/use-sparql-with-python/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1077,6 +1188,10 @@ python &ndash; Django 1.7 throws django.core.exceptions.AppRegistryNotReady: Mod
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/30/add-relation-to-existing-table-using-django/">Djangoで作成済みテーブルに手動でリレーションを追加する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/28/use-django-model-outside-django-project/">DjangoモデルをDjangoプロジェクトの外から使う</a>
       </li>
     
@@ -1090,10 +1205,6 @@ python &ndash; Django 1.7 throws django.core.exceptions.AppRegistryNotReady: Mod
     
       <li class="post">
         <a href="/blog/2015/07/07/use-multiple-databases-in-django/">Djangoで複数データベースを使用する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/03/make-admin-page-using-django/">Django1.7でPostgreSQLとBootstrap使ったアプリを作ってみた(1.5):管理ページを作ってみた</a>
       </li>
     
   </ul>
@@ -1122,14 +1233,14 @@ python &ndash; Django 1.7 throws django.core.exceptions.AppRegistryNotReady: Mod
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (19)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (20)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (9)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (20)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (21)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>

@@ -9,7 +9,8 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="unity使ってこれから何か作っていこうと思うのでめも。 最初にやったこと 【Unity】素人が7日間クソゲーを作り続けてわかったこと – uinyan. comに載っていたUNITY &ndash; Developer &ndash; はじめての Unity &ndash; 第1回 世界の「骨格 &hellip;">
+  <meta name="description" content="SQLiteでたまに使う操作をメモ テーブルの存在チェック 1
+SELECT COUNT(*) FROM sqlite_master WHERE type=&#39;table&#39; AND name=&#39;テーブル名&#39;; ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +80,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/11/sqlite-memo/">Sqlite Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-11T11:48:39+09:00" pubdate data-updated="true">Feb 11<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>SQLiteでたまに使う操作をメモ</p>
+
+<h2>テーブルの存在チェック</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">sqlite_master</span> <span class="k">WHERE</span> <span class="k">type</span><span class="o">=</span><span class="s1">&#39;table&#39;</span> <span class="k">AND</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;テーブル名&#39;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -738,66 +784,9 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/28/postgresql/">PostgreSQLメモ</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-28T21:24:42+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>rhaco2をPostgreSQL8.3で使えるように色々調べていくうちに学んだメモ。</p>
-
-<h2>insert時に「デフォルト値を入れる」だけの処理をしたい場合</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">insert</span> <span class="k">into</span> <span class="err">テーブル名</span> <span class="k">default</span> <span class="n">value</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でOK</p>
-
-<h2>integerのカラムとかにlikeを適用したい場合</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="err">テーブル名</span> <span class="k">where</span> <span class="n">id</span><span class="p">::</span><span class="nb">text</span> <span class="k">like</span> <span class="o">&amp;#</span><span class="mi">039</span><span class="p">;</span><span class="o">%</span><span class="n">abc</span><span class="o">%&amp;#</span><span class="mi">039</span><span class="p">;;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/01/28/postgresql/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/9/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -826,6 +815,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/30/add-relation-to-existing-table-using-django/">Djangoで作成済みテーブルに手動でリレーションを追加する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/28/use-django-model-outside-django-project/">DjangoモデルをDjangoプロジェクトの外から使う</a>
       </li>
     
@@ -839,10 +832,6 @@
     
       <li class="post">
         <a href="/blog/2015/07/07/use-multiple-databases-in-django/">Djangoで複数データベースを使用する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/03/make-admin-page-using-django/">Django1.7でPostgreSQLとBootstrap使ったアプリを作ってみた(1.5):管理ページを作ってみた</a>
       </li>
     
   </ul>
@@ -871,14 +860,14 @@
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (19)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (20)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (9)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (20)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (21)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>

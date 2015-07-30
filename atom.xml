@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-07-28T20:34:24+09:00</updated>
+  <updated>2015-07-30T11:35:53+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,135 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Djangoで作成済みテーブルに手動でリレーションを追加する]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/07/30/add-relation-to-existing-table-using-django/"/>
+    <updated>2015-07-30T10:46:15+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/07/30/add-relation-to-existing-table-using-django</id>
+    <content type="html"><![CDATA[<p>リレーションの理解が悪くて酷いコードを組んでいて、それを直した話。</p>
+
+<p>article</p>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th align="left">key</th>
+<th align="right">title</th>
+<th align="right">content</th>
+<th align="right">author_key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td align="left">1</td>
+<td align="right">DjangoでHello World作ってみた</td>
+<td align="right">出来なかった！</td>
+<td align="right">1|</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>author</p>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th align="left">key</th>
+<th align="right">name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td align="left">1</td>
+<td align="right">shigepon|</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>こんなテーブルがあって、author.keyとarticle.author_keyが繋がっている場合に
+ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
+
+<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">class</span> <span class="nc">Article</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">key</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">title</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">content</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">author_key</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">author</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">Author</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">author_key</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Author</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">key</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">name</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>いやー改めて見ると酷い。Articleを100個読み込んで、そのAuthorを出力するだけで、100回以上dbにアクセスしないといけない。という訳でこの酷いコードからリレーションを貼って、さらにdbアクセスが少なくなるように修正したらこうなった</p>
+
+<p>参考：</p>
+
+<ul>
+<li><a href="https://docs.djangoproject.com/en/1.8/ref/models/fields/">Model field reference | Django documentation | Django</a></li>
+<li><a href="https://docs.djangoproject.com/en/1.8/ref/models/querysets/">QuerySet API reference | Django documentation | Django</a></li>
+</ul>
+
+
+<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">class</span> <span class="nc">Article</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">key</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">title</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">content</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">author</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s">&#39;Author&#39;</span><span class="p">,</span> <span class="n">db_column</span><span class="o">=</span><span class="s">&#39;author_key&#39;</span><span class="p">,</span> <span class="n">to_field</span><span class="o">=</span><span class="s">&#39;key&#39;</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s">&#39;articles&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Author</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">key</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">name</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じで適切にForeignKeyフィールドを設定することで、上の構成のテーブルにもリレーションを貼ることが出来た。db_columnでArticle側のリレーションキーになるカラムを指定して、to_fieldでAuthor側のリレーションキーになるカラムを指定する。related_nameは指定しないとエラーが出た。</p>
+
+<p>んで、dbアクセスがなるべく少なくなるように（sqlでjoinを組んでくれるように）views.pyを書いてみると</p>
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">app.models</span> <span class="kn">import</span> <span class="n">Article</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">articles</span> <span class="o">=</span> <span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s">&#39;author&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</span><span class='line'>    <span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいにselect_relatedメソッドを使うとjoinしてくれた。prefetch_relatedってメソッドでも同じように出来る（ちょっと役割は違う）らしいが試していない。ざっくりドキュメントを読むと、ForeignKeyと１対１リレーションにはselect_relatedが良く、Many to ManyやMany to Oneにはprefetch_relatedが良いらしい。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[DjangoモデルをDjangoプロジェクトの外から使う]]></title>
@@ -1570,72 +1699,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 
 
 <p>あまり良く分かってないけど、Titanium Mobileで配布する時のプロビジョングファイルと、デバッグ時のRun Configurationで指定するプロビジョングファイルは選択肢として違うものが出てくるので、結構混乱した。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Southをすでにあるプロジェクトに適用する]]></title>
-    <link href="http://blog.shigepon.info/blog/2014/11/30/use-south-to-existing-project/"/>
-    <updated>2014-11-30T23:19:26+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2014/11/30/use-south-to-existing-project</id>
-    <content type="html"><![CDATA[<p>Southってのを使うとモデルを変更した時に、サクッとDB(PostgreSQL)に反映出来るらしんだけど、今すでに作成中のプロジェクトに反映させたかったので、メモ</p>
-
-<h2>インストール</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install south
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>設定</h2>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'><span class="o">....</span>
-</span><span class='line'>    <span class="s">&#39;south&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<!-- more -->
-
-
-<h2>作成中のアプリをsouthに追加</h2>
-
-<p>データベースが関連しているモデルが作成されているアプリにコマンドを実行すればおk</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py schemamigration アプリ名 --init
-</span><span class='line'><span class="nv">$ </span>python manage.py syncdb --all
-</span><span class='line'><span class="nv">$ </span>python manage.py migrate アプリ名 --fake
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>syncdbしないでmigrateすると、PostgreSQLだとエラーが出たので、先にsyncdbするのが必要みたい</p>
-
-<p>実際にモデル変更した時の作業を追記</p>
-
-<h2>モデル変更</h2>
-
-<p>モデルを変更したら次のコマンドでデータベースに反映する</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py schemamigration アプリ名 --auto
-</span><span class='line'><span class="nv">$ </span>python manage.py migrate アプリ名
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>この時にデータベース内の値が変更した制約等に引っ掛かる場合は途中で止まったりするので、制約に合うようにデータを変更するとか修正する。</p>
-
-<p>参考：<a href="http://yu-write.blogspot.jp/2014/01/django-south.html">Yura YuWrite: [django] 既存のプロジェクトにsouthを追加する方法</a>、<a href="http://stackoverflow.com/questions/22236029/trouble-getting-django-set-up-on-heroku-using-south-keep-getting-programminger">postgresql &ndash; Trouble getting Django set up on Heroku using South &ndash; keep getting ProgrammingError: relation does not exist &ndash; Stack Overflow</a></p>
 ]]></content>
   </entry>
   

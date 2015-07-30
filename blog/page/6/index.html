@@ -9,12 +9,8 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="なでしこ2のテストのためにubuntuにodbcドライバをインストールしたりしたのでメモ odbcドライバのインストール 1
-2
-3
-4
-$ sudo aptitude install unixodbc, odbc-postgresql
-$ sudo odbcinst -i -d -f /usr/ &hellip;">
+  <meta name="description" content="ActiveRecordは便利なのかどうか知らないけど、allなどのメソッドで:conditionとかで?を使うことが出来る。だけど、sqlを直接打ちたいケースは必ず出てくるので、その時に?使いたいなと思ったけど、なかなか例文が無かった。 んで結局こうするといいみたい。 1
+@results = &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,6 +80,63 @@ $ sudo odbcinst -i -d -f /usr/ &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/28/use-prepared-statement-in-find-by-sql/">Find by sqlでプリペアードステートメントを使う</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-28T08:19:12+09:00" pubdate data-updated="true">May 28<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ActiveRecordは便利なのかどうか知らないけど、allなどのメソッドで:conditionとかで?を使うことが出来る。だけど、sqlを直接打ちたいケースは必ず出てくるので、その時に?使いたいなと思ったけど、なかなか例文が無かった。</p>
+
+<p>んで結局こうするといいみたい。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="vi">@results</span> <span class="o">=</span> <span class="no">Model</span><span class="o">.</span><span class="n">find_by_sql</span><span class="p">(</span><span class="o">[</span><span class="s2">&quot;select * from hoge where fuga=?&quot;</span><span class="p">,</span><span class="s2">&quot;hage&quot;</span><span class="o">]</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>しかし他にも直接sqlを実行する方法があって、</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">raw_connection</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;select * from hoge where fuga = :1&quot;</span><span class="p">,</span> <span class="s1">&#39;hage&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/28/use-prepared-statement-in-find-by-sql/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -662,69 +715,6 @@ $ sudo odbcinst -i -d -f /usr/ &hellip;">
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/14/a-way-of-creating-rails-application4/">Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(4):ビューにBootstrapを使う</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-14T09:10:41+09:00" pubdate data-updated="true">Mar 14<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>参考にした記事URL一覧</p>
-
-<ul>
-<li><a href="http://ubiqlog.com/archives/8749">Ruby on Rails 4.0正式リリースとBootstrapの正しい設定法 | ユービックログ研究所</a></li>
-<li><a href="http://railscasts.com/episodes/328-twitter-bootstrap-basics?language=ja&amp;view=asciicast">#328 Twitter Bootstrap Basics &ndash; RailsCasts</a></li>
-</ul>
-
-
-<p>今回はそっけない表示画面をそれっぽくするためにビューにBootstrapを当てはめる。</p>
-
-<p>Gemfileを編集</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>+gem 'less-rails'
-</span><span class='line'>+gem 'twitter-bootstrap-rails'
-</span><span class='line'>+gem 'execjs'
-</span><span class='line'>-gem 'sass-rails'</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/03/14/a-way-of-creating-rails-application4/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -756,6 +746,10 @@ $ sudo odbcinst -i -d -f /usr/ &hellip;">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/30/add-relation-to-existing-table-using-django/">Djangoで作成済みテーブルに手動でリレーションを追加する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/28/use-django-model-outside-django-project/">DjangoモデルをDjangoプロジェクトの外から使う</a>
       </li>
     
@@ -769,10 +763,6 @@ $ sudo odbcinst -i -d -f /usr/ &hellip;">
     
       <li class="post">
         <a href="/blog/2015/07/07/use-multiple-databases-in-django/">Djangoで複数データベースを使用する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/03/make-admin-page-using-django/">Django1.7でPostgreSQLとBootstrap使ったアプリを作ってみた(1.5):管理ページを作ってみた</a>
       </li>
     
   </ul>
@@ -801,14 +791,14 @@ $ sudo odbcinst -i -d -f /usr/ &hellip;">
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (19)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (20)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (9)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (20)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (21)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>

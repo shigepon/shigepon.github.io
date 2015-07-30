@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-07-28T20:34:24+09:00</updated>
+  <updated>2015-07-30T11:35:53+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,124 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Djangoで作成済みテーブルに手動でリレーションを追加する]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/07/30/add-relation-to-existing-table-using-django/"/>
+    <updated>2015-07-30T10:46:15+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/07/30/add-relation-to-existing-table-using-django</id>
+    <content type="html"><![CDATA[<p>リレーションの理解が悪くて酷いコードを組んでいて、それを直した話。</p>
+
+<p>article</p>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th align="left">key</th>
+<th align="right">title</th>
+<th align="right">content</th>
+<th align="right">author_key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td align="left">1</td>
+<td align="right">DjangoでHello World作ってみた</td>
+<td align="right">出来なかった！</td>
+<td align="right">1|</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>author</p>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th align="left">key</th>
+<th align="right">name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td align="left">1</td>
+<td align="right">shigepon|</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>こんなテーブルがあって、author.keyとarticle.author_keyが繋がっている場合に
+ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
+
+<p>```py models.py
+class Article(models.Model):</p>
+
+<pre><code>key=models.IntegerField(primary_key=True)
+title=models.TextField()
+content=models.TextField()
+author_key=models.IntegerField()
+def author(self):
+    return Author.objects.get(key=self.author_key)
+</code></pre>
+
+<p>class Author(models.Model):</p>
+
+<pre><code>key=models.IntegerField(primary_key=True)
+name=models.TextField()
+</code></pre>
+
+<p>```</p>
+
+<p>いやー改めて見ると酷い。Articleを100個読み込んで、そのAuthorを出力するだけで、100回以上dbにアクセスしないといけない。という訳でこの酷いコードからリレーションを貼って、さらにdbアクセスが少なくなるように修正したらこうなった</p>
+
+<p>参考：</p>
+
+<ul>
+<li><a href="https://docs.djangoproject.com/en/1.8/ref/models/fields/">Model field reference | Django documentation | Django</a></li>
+<li><a href="https://docs.djangoproject.com/en/1.8/ref/models/querysets/">QuerySet API reference | Django documentation | Django</a></li>
+</ul>
+
+
+<p>```py models.py
+class Article(models.Model):</p>
+
+<pre><code>key=models.IntegerField(primary_key=True)
+title=models.TextField()
+content=models.TextField()
+author=models.ForeignKey('Author', db_column='author_key', to_field='key', related_name='articles')
+</code></pre>
+
+<p>class Author(models.Model):</p>
+
+<pre><code>key=models.IntegerField(primary_key=True)
+name=models.TextField()
+</code></pre>
+
+<p>```</p>
+
+<p>こんな感じで適切にForeignKeyフィールドを設定することで、上の構成のテーブルにもリレーションを貼ることが出来た。db_columnでArticle側のリレーションキーになるカラムを指定して、to_fieldでAuthor側のリレーションキーになるカラムを指定する。related_nameは指定しないとエラーが出た。</p>
+
+<p>んで、dbアクセスがなるべく少なくなるように（sqlでjoinを組んでくれるように）views.pyを書いてみると</p>
+
+<p>```py views.py
+from app.models import Article
+def index(request):</p>
+
+<pre><code>articles = Article.objects.select_related('author').all()
+...
+</code></pre>
+
+<p>```</p>
+
+<p>みたいにselect_relatedメソッドを使うとjoinしてくれた。prefetch_relatedってメソッドでも同じように出来る（ちょっと役割は違う）らしいが試していない。ざっくりドキュメントを読むと、ForeignKeyと１対１リレーションにはselect_relatedが良く、Many to ManyやMany to Oneにはprefetch_relatedが良いらしい。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[DjangoモデルをDjangoプロジェクトの外から使う]]></title>
@@ -403,73 +521,6 @@ request.GET.has_key
 ```</p>
 
 <p>という形でプロファイルが表示出来た。もーこれでいーや。ということでやったのはここまで。まだまだだけど、取りあえずプロファイル結果を出すまでだけでハマったし、次回やっても同じようにハマりそうなのでメモしておく。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[PythonでSparql使ってLinked Open Dataをいじってみた]]></title>
-    <link href="http://blog.shigepon.info/blog/2015/03/19/use-sparql-with-python/"/>
-    <updated>2015-03-19T22:07:12+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2015/03/19/use-sparql-with-python</id>
-    <content type="html"><![CDATA[<p>以前<a href="http://blog.shigepon.info/blog/2014/11/25/kobe-dot-r-no-13/">Kobe.R no 13に参加してきました &ndash; shigeponが関心のある技術情報など</a>でLinked Open Dataが気になってたので、Pythonでいじれるライブラリを探してみて遊んでみた。</p>
-
-<p>Sparqlで色々試してみると面白そうなので、pip search sparqlで出た結果とググってみた結果から、SPARQLWrapperが何となく良さげかなと思い、インストールしてみた。</p>
-
-<p><code>sh
-$ pip install SPARQLWrapper
-</code></p>
-
-<p>これだけでおk</p>
-
-<p>djangoのshellから使ってみる</p>
-
-<!-- more -->
-
-
-<p>```py
-$ python manage.py shell
-from SPARQLWrapper import SPARQLWrapper, JSON
-sparql = SPARQLWrapper(&ldquo;<a href="http://dbpedia.org/sparql">http://dbpedia.org/sparql</a>&rdquo;)
-sparql.setQuery(&ldquo;&rdquo;&ldquo;
-  PREFIX rdfs: <a href="http://www.w3.org/2000/01/rdf-schema#">http://www.w3.org/2000/01/rdf-schema#</a>
-  SELECT ?label
-  WHERE { <a href="http://dbpedia.org/resource/Asturias">http://dbpedia.org/resource/Asturias</a> rdfs:label ?label }
-&rdquo;&ldquo;&rdquo;)
-sparql.setReturnFormat(JSON)
-results = sparql.query().convert()</p>
-
-<!-- more -->
-
-
-<p>for result in results[&ldquo;results&rdquo;][&ldquo;bindings&rdquo;]:</p>
-
-<pre><code>print(result["label]["value"])
-</code></pre>
-
-<p>```</p>
-
-<p>とやるとこんな感じの結果が出た</p>
-
-<p><code>sh
-Asturias
-منطقة أستورياس
-Asturien
-Asturias
-Asturies
-Asturie
-アストゥリアス州
-Asturië (regio)
-Asturia
-Astúrias
-Астурия
-阿斯图里亚斯
-</code></p>
-
-<p>参考：<a href="http://rdflib.github.io/sparqlwrapper/">SPARQL Endpoint interface to Python</a></p>
-
-<p>Sparqlの書き方は<a href="http://kobexr.blogspot.jp/2014/12/kober-13-open-data.html">Kobe.R: Kobe.R #13 + Open Data</a>に載っているスライドが参考になる。</p>
-
-<p>Linked Open Dataで１つ気になるのが、エンドポイントをどうやって探すかなんだけど、今の所ググってみるくらいしかやり方が分からない。ここらへん何か良い方法無いのかなー。</p>
 ]]></content>
   </entry>
   

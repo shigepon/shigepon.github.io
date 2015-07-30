@@ -9,7 +9,12 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="勉強会の話なので丁寧語で。9/20にKobe.R #9があったので参加してきました。大阪で定期的に開催されているRの勉強会です。内容はRに限らず、統計処理をやる上で大事なことを扱うという感じでした。発表は誰がされたか名前を記憶していなかったりするので、とりあえず内容だけ照会します。 &hellip;">
+  <meta name="description" content="スクレーピングするのに便利な方法を調べてる内に、PhantomJSが良さげだなと思ったので、軽く使ってみた。参考Python+Selenium+PhantomJSが快適すぎる PhantomJSのインストール Ubuntuを使ってるのでPhantomJSのページを参考に 1
+2
+3
+4
+5
+6 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +84,68 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/10/10/phantomjs/">PhantomJSとSeleniumをpythonから使ってみる</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-10-10T13:33:48+09:00" pubdate data-updated="true">Oct 10<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>スクレーピングするのに便利な方法を調べてる内に、PhantomJSが良さげだなと思ったので、軽く使ってみた。参考<a href="http://blog.kzfmix.com/entry/1379417397">Python+Selenium+PhantomJSが快適すぎる</a></p>
+
+<h2>PhantomJSのインストール</h2>
+
+<p>Ubuntuを使ってるので<a href="http://phantomjs.org/build.html">PhantomJSのページ</a>を参考に</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude update
+</span><span class='line'><span class="nv">$ </span>sudo aptitude install build-essential chrpath git-core libssl-dev libfontconfig1-dev libxft-dev
+</span><span class='line'><span class="nv">$ </span>git clone git://github.com/ariya/phantomjs.git
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>phantomjs
+</span><span class='line'><span class="nv">$ </span>git checkout 1.9
+</span><span class='line'><span class="nv">$ </span>./build.sh
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/10/10/phantomjs/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -588,58 +655,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/06/28/groonga-study-kobe-2014-06-27/">全文検索エンジンGroongaユーザ勉強会＠神戸に参加しました</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-06-28T13:24:22+09:00" pubdate data-updated="true">Jun 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>自分の話でなく、他人の話なので丁寧語で。
-6月27日に<a href="http://koberoonga.doorkeeper.jp/events/11578">Groongaユーザー勉強会＠神戸</a>に参加しました。ブログに書くまでが勉強会だったのを久々に思い出したので、感想書いてみます。</p>
-
-<p>正直あまり回数行ったことがない神戸で、さらに行ったこと無い区域で、さらに入り口に「Closed」と書いてあったので、見事に迷いました。スマホくらい持たないといかんかなー。</p>
-
-<p>で、勉強会の内容は全員の自己紹介の後、@naoa_yさんが、Groongaについて全般的な紹介と事例紹介として<a href="http://patentfield.com/%E3%83%A1%E3%82%A4%E3%83%B3%E3%83%9A%E3%83%BC%E3%82%B8">特許検索のウェブサービスPatentField</a>を紹介する間に、途中気づいた点をどんどん質問していく形式となりました。</p>
-
-<p>LTも時間があればやるはずだったのですが、開始時間が30分遅れたこともあり、出来ませんでした。遅れてすいません＞＜。</p>
-
-<p>以下、色々感想書くと言いつつ、やっぱ感想を書くの苦手なので、自分が気になったポイントを箇条書きで〜</p>
-
-<h3>Groonga全般の話</h3>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/06/28/groonga-study-kobe-2014-06-27/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -671,6 +686,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/30/add-relation-to-existing-table-using-django/">Djangoで作成済みテーブルに手動でリレーションを追加する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/28/use-django-model-outside-django-project/">DjangoモデルをDjangoプロジェクトの外から使う</a>
       </li>
     
@@ -684,10 +703,6 @@
     
       <li class="post">
         <a href="/blog/2015/07/07/use-multiple-databases-in-django/">Djangoで複数データベースを使用する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/03/make-admin-page-using-django/">Django1.7でPostgreSQLとBootstrap使ったアプリを作ってみた(1.5):管理ページを作ってみた</a>
       </li>
     
   </ul>
@@ -716,14 +731,14 @@
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (19)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (20)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (9)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (20)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (21)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>

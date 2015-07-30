@@ -9,7 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Djangoが去年の9月に1.7にバージョンアップしてて、今更ながらアップデートしてみた。色々教えて頂いた@key3さんに感謝！ ※注　アップデートの前に必ずデータとかソースとか色々バックアップしておくこと。 Django本体のアップデート Djangoはpipで管理してるので、 &hellip;">
+  <meta name="description" content="以前Kobe.R no 13に参加してきました &ndash; shigeponが関心のある技術情報などでLinked Open Dataが気になってたので、Pythonでいじれるライブラリを探してみて遊んでみた。 Sparqlで色々試してみると面白そうなので、pip search &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,58 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/03/19/use-sparql-with-python/">PythonでSparql使ってLinked Open Dataをいじってみた</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-03-19T22:07:12+09:00" pubdate data-updated="true">Mar 19<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>以前<a href="http://blog.shigepon.info/blog/2014/11/25/kobe-dot-r-no-13/">Kobe.R no 13に参加してきました &ndash; shigeponが関心のある技術情報など</a>でLinked Open Dataが気になってたので、Pythonでいじれるライブラリを探してみて遊んでみた。</p>
+
+<p>Sparqlで色々試してみると面白そうなので、pip search sparqlで出た結果とググってみた結果から、SPARQLWrapperが何となく良さげかなと思い、インストールしてみた。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install SPARQLWrapper
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これだけでおk</p>
+
+<p>djangoのshellから使ってみる</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/03/19/use-sparql-with-python/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -573,69 +625,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/30/use-south-to-existing-project/">Southをすでにあるプロジェクトに適用する</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-11-30T23:19:26+09:00" pubdate data-updated="true">Nov 30<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Southってのを使うとモデルを変更した時に、サクッとDB(PostgreSQL)に反映出来るらしんだけど、今すでに作成中のプロジェクトに反映させたかったので、メモ</p>
-
-<h2>インストール</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install south
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>設定</h2>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'><span class="o">....</span>
-</span><span class='line'>    <span class="s">&#39;south&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/11/30/use-south-to-existing-project/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -667,6 +656,10 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/30/add-relation-to-existing-table-using-django/">Djangoで作成済みテーブルに手動でリレーションを追加する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/28/use-django-model-outside-django-project/">DjangoモデルをDjangoプロジェクトの外から使う</a>
       </li>
     
@@ -680,10 +673,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
     
       <li class="post">
         <a href="/blog/2015/07/07/use-multiple-databases-in-django/">Djangoで複数データベースを使用する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/03/make-admin-page-using-django/">Django1.7でPostgreSQLとBootstrap使ったアプリを作ってみた(1.5):管理ページを作ってみた</a>
       </li>
     
   </ul>
@@ -712,14 +701,14 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (19)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (20)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (9)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (20)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (21)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
