@@ -465,7 +465,30 @@ def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る
 </span></code></pre></td></tr></table></div></figure>
 
 
+<h2>Django rest apiで日時としてタイムスタンプを出力する</h2>
 
+<p>参考：<a href="http://stackoverflow.com/questions/26083583/serialize-a-datetime-as-an-integer-timestamp">django rest framework &ndash; serialize a datetime as an integer timestamp &ndash; Stack Overflow</a></p>
+
+<p>どうもDjango rest frameworkのDateTimeFieldで指定するformatパラメータだとタイムスタンプが指定出来ないみたいなのでこんな感じにすると出来る。</p>
+
+<figure class='code'><figcaption><span>serialize.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">serializers</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">time</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">HogeSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">Serializer</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">date</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">SerializerMethodField</span><span class="p">()</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">get_timestamp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">mktime</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">timetuple</span><span class="p">())</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>javascriptのタイムスタンプに対応するためにはget_timestampの返り値を1000倍すればおk</p>
 </div>
 
 
@@ -493,7 +516,7 @@ def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/django/'>Django</a>, <a class='category' href='/blog/categories/python/'>Python</a>
+    <a class='category' href='/blog/categories/django/'>Django</a>, <a class='category' href='/blog/categories/python/'>Python</a>, <a class='category' href='/blog/categories/memo/'>memo</a>
   
 </span>
 
@@ -614,7 +637,7 @@ def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linux/'>linux (10)</a></li>
-<li class='category'><a href='/blog/categories/memo/'>memo (11)</a></li>
+<li class='category'><a href='/blog/categories/memo/'>memo (12)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>

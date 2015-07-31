@@ -4,7 +4,7 @@
   <title><![CDATA[Category: memo | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/memo/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-07-30T23:18:18+09:00</updated>
+  <updated>2015-07-31T16:58:21+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -43,6 +43,329 @@ buffer-size= xxxx
 
 
 <p>参考：<a href="http://stackoverflow.com/questions/15878176/uwsgi-invalid-request-block-size">uwsgi invalid request block size &ndash; Stack Overflow</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Django Memo]]></title>
+    <link href="http://blog.shigepon.info/blog/2014/11/23/django-memo/"/>
+    <updated>2014-11-23T22:35:38+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2014/11/23/django-memo</id>
+    <content type="html"><![CDATA[<p>Djangoやってて忘れっぽいところとかをメモ</p>
+
+<h2>リクエストパラメーターをモデルに入れる</h2>
+
+<p>```py views.py
+def a_view(request):</p>
+
+<pre><code>hoge = Fuga(request.GET) #新たにインスタンス作る場合
+fuga = Fuga.objects.get(pk=1)
+hage = Fuga(request.GET,instance=fuga) #既にあるインスタンスに入れる場合
+</code></pre>
+
+<p>```</p>
+
+<p>instance=xxxとやるのを何度か忘れた＞＜</p>
+
+<!-- more -->
+
+
+<h2>forms.DateFieldでISO-8601フォーマットの入力を受入れる</h2>
+
+<p>html5でdatetime-localとか扱おうとすると、入力値がISO-8601形式になって、そのままだとDateFieldが入力をdatetimeの正しい形式として認識してくれない。</p>
+
+<p>で、input_formatsを設定するといけるらしいんだけど、あまりマニュアルでちゃんと説明してない。Stack Overflowの情報とかをググると設定方法が間違ってるコードとかあって、正しいのが良く分からない。で、結局色々調べたら</p>
+
+<p><code>py models.py
+date = forms.DateField(input_formats=('%Y-%m-%dT%H:%M:%S',))
+</code></p>
+
+<p>とタプルで渡す必要があるらしい</p>
+
+<p>参考：<a href="http://labs.uechoco.com/blog/2011/08/django-dateform-inputs_format-wrong.html">うえちょこ＠ぼろぐ» [Django]forms.DateFieldのinputs_formatではまった</a></p>
+
+<h2>ModelForm使ってフォーム出力する時にrequeied属性をテンプレートで参照するとか</h2>
+
+<p><code>py models.py
+hoge = forms.CharField(max_length=100,widget=TextInput(attrs={"required":"true"}))↲
+</code></p>
+
+<p>こんな感じで定義したフィールドの属性取ってきたい場合、</p>
+
+<p><code>html
+\{\% for field in form \%\}
+  \{\% if field.field.required \%\}&lt;p&gt;必須&lt;/p&gt;\{\% endif \%\}
+\{\% endfor \%\}
+</code></p>
+
+<p>適当だけど、こんな感じでアクセスできる。</p>
+
+<h2>DjangoでGroup By</h2>
+
+<p>DjangoでGroup Byして何個かのフィールドのデータで例えば、日付とその日に登録したデータの件数だけ欲しい時</p>
+
+<p>```py views.py
+q = Hoge.objects.filter(date<strong>gte = date).filter(date</strong>lt = dto).extra({&lsquo;date&rsquo;:&ldquo;date_trunc(&lsquo;day&rsquo;,date)&rdquo;})
+q.query.group_by = [&lsquo;date&rsquo;]
+values = q.values(&lsquo;date&rsquo;).order_by().annotate(c = Count(&lsquo;id&rsquo;))</p>
+
+<p>こんな感じでいける。ちなみにPostgreSQL。dateが時間の情報も持っているのでPostgreSQLのdate_trunc関数を使ってdateを日付の情報だけにしてから、group_byする。
+annotateは集計した値を新しいフィールド（ここだとc）に入れる。
+例えばvalues[0].cでアクセスできる。このコードで、日付とその日に登録したデータ件数が入った辞書のリストを得ることが出来る
+```</p>
+
+<h2>QuerySetで吐いたクエリを出力</h2>
+
+<p><code>py views.py
+h = Hoge.objects.all()
+print h.query
+</code></p>
+
+<p>でおk。でもクエリが例外出す時には出せないような・・・</p>
+
+<p>参考：<a href="http://programmer-jobs.blogspot.jp/2013/01/djangosql.html">Djangoで、デバック用のSQLクエリの表示 一言多いプログラマーの独り言</a></p>
+
+<h2>ModelFormでcleanを使ってデータの検証する時に、updateしようとしてるかcreateしようとしてるか判断する</h2>
+
+<p>createの時だけチェックしたかったので、色々調べてみたらclean(self)内で、self.instanceでチェックすると良いみたい。例えばプライマリーキーでidがある場合こんな感じ</p>
+
+<p>```py models.py
+class Hoge(forms.ModelForm):</p>
+
+<pre><code>def clean(self):
+    cleaned_data = self.cleaned_data
+    if self.instance.id is None:
+        #create用の処理
+        raise ValidationError('例外出すのはこんな感じ')
+    else:
+        #update用の処理
+    return cleaned_data
+</code></pre>
+
+<p>```</p>
+
+<p>instanceの型チェックする方が正攻法かも。例外のメッセージは</p>
+
+<p>```py views.py
+def test(request):</p>
+
+<pre><code>form = Hoge(request.POST)
+if form.is_valid():
+    #例外が無かった場合
+else:
+    for k,v in form.errors.item():
+        #kが例外のフィールド。cleanの場合は__all__
+        #vが例外のメッセージ
+</code></pre>
+
+<p>```</p>
+
+<p>みたいな感じで取り出せる。</p>
+
+<h2>runserver実行時にコンソールにスタックとレースを出力する</h2>
+
+<p>```py settings.py
+LOGGING={</p>
+
+<pre><code>'version':1,
+'handlers':{
+    'console':{
+        'level':'DEBUG',
+        'class':'logging.StreamHandler',
+    },
+},
+'loggers':{
+    'django.request':{
+        'handlers':['console'],
+        'propagate':True,
+        'level':'DEBUG',
+    }
+},
+</code></pre>
+
+<p>}
+```
+これを書いておけばコンソールにスタックトレースを出力してくれる。apiのコード書いてる時とかajaxで呼び出してる場合とかに便利。</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/5886275/print-a-stack-trace-to-stdout-on-errors-in-django-while-using-manage-py-runserve">python &ndash; Print a stack trace to stdout on errors in Django while using manage.py runserver &ndash; Stack Overflow</a>というかここのコード丸コピー</p>
+
+<h2>Gmail送信</h2>
+
+<p><code>py settings.py
+EMAIL_USE_TLS=True
+EMAIL_HOST='smpt.gmail.com'
+EMAIL_HOST_USER='mymail@gmail.com'
+EMAIL_HOST_PASSWORD='mypassword'
+EMAIL_PORT=587
+</code></p>
+
+<p>```py views.py
+from django.core.mail import send_mail</p>
+
+<p>def mail(request):</p>
+
+<pre><code>send_mail('Subject','message','mymail.gmail.com',['to@mail.address'],fail_silently=False)
+</code></pre>
+
+<p>```</p>
+
+<p>こんだけ</p>
+
+<p>参考：<a href="http://d.hatena.ne.jp/yuheiomori0718/20120714/1342266647">DjangoでGmailを使ってメール送信 &ndash; brainstorm</a>、</p>
+
+<h2>MultiValueDictKeyError</h2>
+
+<p>モデルをgetする時にキーに何も値が指定されてなかったりすると起こる。例えば</p>
+
+<p><code>py
+instance = SampleModel.objects.get(id=key)
+</code></p>
+
+<p>でkeyに何も設定されてないと起こるみたい。出た時に何回かイチイチぐぐったのでメモ</p>
+
+<h2>PostgreSQLでDateTimeFieldの値を日付に対してグルーピングしたい</h2>
+
+<p>PostgreSQLではタイムゾーン入りのタイムスタンプで登録されるので、</p>
+
+<p><code>py
+q = Hoge.objects.extra({"date":"date_trunc('day',date)"})
+q.query.group_by['date']
+</code></p>
+
+<p>みたいな構文で日付だけ取り出して、グルーピングしようとすると、PostgreSQLの設定でタイムゾーンがUTCになっていた場合に、2014/12/17 00:00:00+9のデータは2014/12/16 15:00:00+0と認識されるので12/16のデータとしてグルーピングされてしまう。日本のタイムゾーンでやってると、これはまずいので、以下のようなコードにすると良い</p>
+
+<p><code>py
+q = Hoge.objects.extra({"date":"date_trunc('day',date AT TIME ZONE 'JST')"})
+q.query.group_by['date']
+</code></p>
+
+<h2>django+uwsgi+nginxで502エラーが出た原因の１つ</h2>
+
+<p>djangoはあまり関係無いけどuwsgiの設定の問題だったので、こちらに。django+uwsgi+nginxで502エラーが出て、runserverでは普通に動いたので、しばらくググって解答が得られたのでメモ</p>
+
+<p><a href="http://datatables.net/">DataTables</a>を使って動的にテーブルデータをロードしようとしたら、runserverでは上手く行くのにuwsgiだと502エラーが出てロード出来なかった。最初にnginxのログを見てみると、uwsgiのとこでエラーと書いてあったので、uwsgiのログをチェックした。すると</p>
+
+<p><code>
+invalid request block size: xxxxx (max 4096)...
+</code></p>
+
+<p>みたいなエラーが出ていた。リクエストが大きすぎるのかなと思い、リクエストの一部を削ってみたらエラーが出なかった。んで、対策をググってみたら書いてあったので、そのまま下のコードを実装してみた。</p>
+
+<p><code>ini uwsgi.ini
+buffer-size=65535
+</code></p>
+
+<p>みたいにバッファーサイズを大きく(例では64k)した。これでエラーが消えたのでめでたしめでたし。</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/22697584/nginx-uwsgi-104-connection-reset-by-peer-while-reading-response-header-from-u">django &ndash; Nginx uwsgi (104: Connection reset by peer) while reading response header from upstream &ndash; Stack Overflow</a></p>
+
+<h2>運用環境と開発環境で設定を切り分ける</h2>
+
+<p>開発環境用にlocalアプリを作って、local/settings.pyを作成し、開発環境での設定を書いて、プロジェクトのsettings.pyの最後に以下を追加すると良い</p>
+
+<p>```py
+try:</p>
+
+<pre><code>from local.settings import *
+</code></pre>
+
+<p>except ImportError:</p>
+
+<pre><code>pass
+</code></pre>
+
+<p>```</p>
+
+<p>参考：<a href="http://surgo.jp/2010/02/django.html">パーフェクトな Django の設定ファイル &mdash; Kosei Kitahara&rsquo;s Blog</a></p>
+
+<h2>テンプレートの読み込まれ順</h2>
+
+<ul>
+<li>TEMPLATE_DIRSで指定されたディレクトリの順番で、そこを起点にした全てのテンプレート</li>
+<li>INSTALLED_APPSに指定した順にアプリケーション直下のtemplatesディレクトリを調べる</li>
+</ul>
+
+
+<p>hogeアプリでテンプレートを指定した場合に、hogeアプリ直下のtemplatesディレクトリを調べてくれる訳ではないので注意が必要。</p>
+
+<p>例えば</p>
+
+<p>```py
+TEMPLATE_DIRS = [&lsquo;/home/hoge/templates&rsquo;,]
+INSTALLED_APPS = (</p>
+
+<pre><code>'hoge',
+'fuga',
+</code></pre>
+
+<p>)
+```</p>
+
+<p>と書いてあり、プロジェクトが/www/a_project/に置いてある場合、</p>
+
+<ul>
+<li>/home/hoge/templates</li>
+<li>/www/a_project/hoge/templates</li>
+<li>/www/a_project/fuga/templates</li>
+</ul>
+
+
+<p>の順でテンプレートの存在を調べる</p>
+
+<p>参考：<a href="http://www.tsuyukimakoto.com/blog/2006/11/22/django-template-loader/">DjangoのTemplateローダ | tsuyuki.makoto</a></p>
+
+<h2>Many to manyなモデルで中間テーブルをthroughで指定、かつ自己参照な場合の設定</h2>
+
+<p>参考：<a href="http://stackoverflow.com/questions/3880489/how-do-i-write-a-django-model-with-manytomany-relationsship-with-self-through-a">How do I write a Django model with ManyToMany relationsship with self through a Model &ndash; Stack Overflow</a></p>
+
+<p>symmetrical設定をすると良いらしい</p>
+
+<p>```py
+class Member(models.Model):</p>
+
+<pre><code>name = models.CharField(max_length=100)
+friends = models.ManyToManyField('self', through = 'MemberFriends', symmetrical = False)
+</code></pre>
+
+<p>class MemberFriends(models.Model):</p>
+
+<pre><code>f = models.ForeignKey(Member, related_name = 'f')
+t = models.ForeignKey(Member, related_name = 't')
+comment = model.CharField(max_length = 100)
+</code></pre>
+
+<p>```</p>
+
+<p>こんな感じ</p>
+
+<h2>url末尾に必ずスラッシュを入れる</h2>
+
+<p>url末尾にスラッシュが無い場合、スラッシュ有りにリダイレクトする設定</p>
+
+<p><code>py settings.py
+APPEND_SLASH = True
+</code></p>
+
+<h2>Django rest apiで日時としてタイムスタンプを出力する</h2>
+
+<p>参考：<a href="http://stackoverflow.com/questions/26083583/serialize-a-datetime-as-an-integer-timestamp">django rest framework &ndash; serialize a datetime as an integer timestamp &ndash; Stack Overflow</a></p>
+
+<p>どうもDjango rest frameworkのDateTimeFieldで指定するformatパラメータだとタイムスタンプが指定出来ないみたいなのでこんな感じにすると出来る。</p>
+
+<p>```py serialize.py
+from rest_framework import serializers
+import time
+class HogeSerializer(serializers.Serializer):</p>
+
+<pre><code>date = serializers.DateTimeField()
+timestamp = serializers.SerializerMethodField()
+def get_timestamp(self, obj):
+    return time.mktime(obj.date.timetuple())
+</code></pre>
+
+<p>```</p>
+
+<p>javascriptのタイムスタンプに対応するためにはget_timestampの返り値を1000倍すればおk</p>
 ]]></content>
   </entry>
   
@@ -263,80 +586,6 @@ server {</p>
 ```</p>
 
 <p>path/to/root/error/503.htmlがあれば、メンテナンス画面を表示する。なければ表示しない。一度nginx設定をリロードすればその後はリロードの必要もない。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[rhaco3 memo]]></title>
-    <link href="http://blog.shigepon.info/blog/2014/03/15/rhaco3-memo/"/>
-    <updated>2014-03-15T13:28:55+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2014/03/15/rhaco3-memo</id>
-    <content type="html"><![CDATA[<p>rhaco3を使ってる人なんて世界で何人居るのかなと思いつつ、あまりに情報が少ないので、メモ書きしていく。
-大きめネタは別記事にまとめるが小さいネタはここに追記する。</p>
-
-<h3>Daoで作ったSQLを確認する方法</h3>
-
-<p>Daoを継承したモデルとして、Hogeモデルがあるとして</p>
-
-<p><code>php
-\Hoge::start_record();
-\Hoge::find_get(\org\rhaco\store\db\Q::eq("id",1));//\Hogeモデルからid=1のデータを1件取得する命令
-$queries = \Hoge::stop_record();
-var_dump($queries);
-</code></p>
-
-<!-- more -->
-
-
-<p>こんな感じで使う。出力は</p>
-
-<!-- more -->
-
-
-<p>```html
-array(1) {
-  [0]=>
-  array(2) {</p>
-
-<pre><code>[0]=&gt;
-string(291) "select t4."id" as c5,t4."name" as c10 from hoge t4 where  ( (t4."id" = ?) )   offset 0 limit 1 "
-[1]=&gt;
-array(1) {
-  [0]=&gt;
-  string(1) "1"
-}
-</code></pre>
-
-<p>  }
-```</p>
-
-<p>みたいに出る</p>
-
-<h3>あるクラス用に設定したConfを別クラスから参照したい</h3>
-
-<p>\org\rhaco\Confはクラス用に設定値を決めるのに良く使う。
-大体commons/hoge.phpみたいにrhaco3で設定値を書くファイルに書くことが多い。</p>
-
-<p>例としてFlowクラスでルートURLを設定するには</p>
-
-<p><code>php
-\org\rhaco\Conf::set("org.rhaco.Flow","app_url","localhost");
-</code></p>
-
-<p>こんな感じでcommons/hoge.phpに書いたりする。Flowクラス内では</p>
-
-<p><code>php
-$app_url = \org\rhaco\Conf::get("app_url");
-</code></p>
-
-<p>で設定した値を読み込める。
-他のクラスで読み込みたい場合にどうするか良く分からなかったがソース読んだら分かったのでメモしておく</p>
-
-<p><code>php
-$app_url = \org\rhaco\Conf::get("org.rhaco.Flow@app_url");
-</code></p>
-
-<p>これでおk。@で区切ってクラス名と取得したい値のキーを書くと値を取って来れる。</p>
 ]]></content>
   </entry>
   
