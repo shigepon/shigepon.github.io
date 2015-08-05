@@ -4,7 +4,7 @@
   <title><![CDATA[Category: linux | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-08-05T18:07:32+09:00</updated>
+  <updated>2015-08-05T18:10:10+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -40,7 +40,9 @@ fatal error: 33 inconsistent data
 
 <ul>
 <li>Esxiのisoをダウンロード
-&mdash; <a href="https://my.vmware.com/jp/web/vmware/login">my vmware</a>からログイン(ユーザー登録はフォームに記入して・・・という良くある方法なので省略)
+
+<ul>
+<li><a href="https://my.vmware.com/jp/web/vmware/login">my vmware</a>からログイン(ユーザー登録はフォームに記入して・・・という良くある方法なので省略)
 &mdash; <a href="https://my.vmware.com/group/vmware/downloads#tab2">製品ダウンロード</a>に移動</li>
 <li>VMware vSphere Hypervisor (ESXi)の横の<a href="https://my.vmware.com/group/vmware/info/slug/datacenter_cloud_infrastructure/vmware_vsphere_hypervisor_esxi/6_0">View Download Components</a>をクリック</li>
 <li>左にバージョン選択用のコンボボックスがあるので、バージョンを選択して、Downloadリンクをクリック</li>
@@ -48,6 +50,8 @@ fatal error: 33 inconsistent data
 <li>License Informationにlicense keysが出るので保存しておく。(Vmware ESXi Clientでのライセンスキー登録に使う)</li>
 <li>ライセンスの登録が済んだらDownload Packages以下の項目からダウンロードするためのリンクが出るのでダウンロードする</li>
 <li><strong><em>AdBlockを入れてるとダウンロードが開始しなかったので注意</em></strong></li>
+</ul>
+</li>
 <li>ダウンロードしたisoをCDに焼く</li>
 <li>Esxiのハード要件を全て満たすハード上でCD起動する</li>
 <li>ESXiをインストールする</li>
