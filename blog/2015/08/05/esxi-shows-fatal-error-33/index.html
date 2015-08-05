@@ -1,0 +1,485 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Vmware Esxiがfatal error 33を出したのでインストールしなおしてついでに色々試した話 - shigeponが関心のある技術情報など</title>
+  <meta name="author" content="shigepon">
+
+  
+  <meta name="description" content="Vmware Esxiがある日 1
+2
+error loading /s.v00
+fatal error: 33 inconsistent data というメッセージを出して起動しなくなったので、修復方法をメモしておく 結論 まず結論から言うと、Vmware Esxiを入れ直すことになった。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.shigepon.info/blog/2015/08/05/esxi-shows-fatal-error-33">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<script language="JavaScript">
+	$(document).ready( function () {
+	   $("a[href^='http']:not([href*='" + location.hostname + "'])").attr('target', '_blank');
+	})
+</script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-6001470-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+</hgroup>
+
+</header>
+  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.shigepon.info" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav> -->
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Vmware Esxiがfatal Error 33を出したのでインストールしなおしてついでに色々試した話</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-05T16:45:31+09:00" pubdate data-updated="true">Aug 5<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Vmware Esxiがある日</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>error loading /s.v00
+</span><span class='line'>fatal error: 33 inconsistent data
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>というメッセージを出して起動しなくなったので、修復方法をメモしておく</p>
+
+<h2>結論</h2>
+
+<p>まず結論から言うと、Vmware Esxiを入れ直すことになった。他にも方法があるらしいが、その方法のページが途中で会員登録しないと見れなくなったので、参考にしなかった。</p>
+
+<p>参考：
+<a href="https://communities.vmware.com/thread/342182">error loading s.v00 fatal error 33 inconsistent&hellip; | VMware Communities</a></p>
+
+<h2>Vmware Esxiの入れ直し</h2>
+
+<p>USBにインストールしていたので、要はそのままインストールし直すだけなんだけど、以下手順</p>
+
+<ul>
+<li>Esxiのisoをダウンロード</li>
+<li><a href="https://my.vmware.com/jp/web/vmware/login">my vmware</a>からログイン(ユーザー登録はフォームに記入して・・・という良くある方法なので省略)</li>
+<li><a href="https://my.vmware.com/group/vmware/downloads#tab2">製品ダウンロード</a>に移動</li>
+<li>VMware vSphere Hypervisor (ESXi)の横の<a href="https://my.vmware.com/group/vmware/info/slug/datacenter_cloud_infrastructure/vmware_vsphere_hypervisor_esxi/6_0">View Download Components</a>をクリック</li>
+<li>左にバージョン選択用のコンボボックスがあるので、バージョンを選択して、Downloadリンクをクリック</li>
+<li>Registerのボタンが出てる場合、まずクリックして、ライセンスの登録を行う</li>
+<li>License Informationにlicense keysが出るので保存しておく。(Vmware ESXi Clientでのライセンスキー登録に使う)</li>
+<li>ライセンスの登録が済んだらDownload Packages以下の項目からダウンロードするためのリンクが出るのでダウンロードする</li>
+<li><strong><em>AdBlockを入れてるとダウンロードが開始しなかったので注意</em></strong></li>
+<li>ダウンロードしたisoをCDに焼く</li>
+<li>Esxiのハード要件を全て満たすハード上でCD起動する</li>
+<li>ESXiをインストールする</li>
+<li>Boot MenuでESXi Installerを選択する</li>
+<li>インストールを進めるかどうか聞かれる(Enter)</li>
+<li>ライセンス許諾を聞かれる(F11でおk)</li>
+<li>インストール先を選ぶ(入れたい場所を選ぶ。USB差しておけばUSBも出て選択出来る)</li>
+<li>キーボードレイアウトを選択する</li>
+<li>rootアカウントのパスワードを設定する(タブで移動、2回設定するEnterで完了)</li>
+<li>最後の確認(F11でおk)</li>
+<li>インストール終了後Enterで再起動</li>
+</ul>
+
+
+<h2>バージョン5.5、6.0</h2>
+
+<p>今まで入れてたのがEsxiバージョン5.0だったので、ついでに5.5、6.0を試してみた。インストール方法は入れ直し方法と同じ。</p>
+
+<p>で、インストール後にクライアントをDLしてホストに接続してみた。どのバージョンでも問題なく出来たが、Windows XPの端末ではこの2つのバージョンは接続出来ないそうな。</p>
+
+<p>Vmの操作（インベントリへの追加、起動、コンソール表示、終了）は全てのバージョンで同じように出来た。Vmはバージョン5で作ったものだが他のバージョンでの操作も問題ないらしい。これは便利。</p>
+
+<h2>sshでEsxiホストを操作する</h2>
+
+<p>linuxやmacからEsxiホストを操作して、vmの起動、終了とかやりたかったので、ついでに試してみた。手順は以下の通り</p>
+
+<ul>
+<li>EsxiホストでSSHを有効にする</li>
+<li>初期画面からCustomize Systemへ移動(F2)</li>
+<li>カーソルを上下移動して「Troubleshooting Options」のところでEnter</li>
+<li>Disable ESXi Shellにカーソルを合わせてEnterを押すとEnable ESXi Shellに変わる</li>
+<li>Disable SSHにカーソルを合わせてEnterを押すとEnable SSHに変わる</li>
+<li>Restart Management Agentsにカーソルを合わせてEnterを押す</li>
+<li>ESXiクライアントでSSHを有効にする</li>
+<li>インベントリが選択されている状態で、構成(Configuration) &ndash;> セキュリティプロファイル(Security Profile)の上部、サービス(Services)の「プロパティ(Properties)をクリック</li>
+<li>SSHを選択し、オプション(Options)をクリック</li>
+<li>ホストに連動して開始および停止(Start and stop with host)を選択し、サービスコマンドの開始(Start)ボタンを押す。その後okをクリックしてダイアログを消す。</li>
+<li>同中部、ファイアウォール(Firewall)の「プロパティ(Properties)をクリック</li>
+<li>SSHサーバ(SSH Server)をチェック</li>
+<li>ファイアーウォール(Firewall)ボタンをクリック</li>
+<li>IPアドレスの許可設定を行う。任意のIPアドレスからの接続を許可(Allow connections from any IP address)するのが一番楽。</li>
+<li>okをクリックしていって、ダイアログを閉じる</li>
+</ul>
+
+
+<p>以上で、linuxやmacから</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>ssh root@ESXiのip
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でインストール時に指定したパスワードを入力するとsshでESXiホストにアクセス出来るようになる。</p>
+
+<p>参考：<a href="http://www.serenity-networks.com/networking/how-to-enable-ssh-on-vmware-esxi-5-5-5-6-all-other-versions/">How To Enable SSH on VMware ESXi 5 / 5.5 / 6 &amp; All Other Versions | Serenity-Networks</a></p>
+
+<h2>ESXiの管理コマンド(ごく一部。追記予定)</h2>
+
+<h3>インベントリへのVMの追加、削除</h3>
+
+<p>追加</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>vim-cmd solo/registervm <span class="o">[</span>vmxのパス<span class="o">]</span> <span class="o">[</span>vm名<span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>削除</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>vim-cmd vmsvc/unregister <span class="o">[</span>vmのid<span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>vm一覧</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>vim-cmd vmsvc/getallvms
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ここで出て来たvmidをvmのidとして色んなコマンド内で使用する。</p>
+
+<h3>vm起動、シャットダウン</h3>
+
+<p>起動</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>vim-cmd vmsvc/power.on <span class="o">[</span>vmのid<span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>終了</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>vim-cmd vmsvc/power.shutdown <span class="o">[</span>vmのid<span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考：<a href="http://qiita.com/binzume/items/096ce77f73b6e853c342">VMware ESXiをSSHでがんばるぞい(コマンドライン操作色々) &ndash; Qiita</a></p>
+
+<p>ちなみに各コマンドについてはヘルプを出すオプションとか無いみたい。コマンド失敗した時に使用法が出ることもあるが、失敗するまで分からないとか怖いわー。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">shigepon</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-05T16:45:31+09:00" pubdate data-updated="true">Aug 5<span>th</span>, 2015</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/linux/'>linux</a>, <a class='category' href='/blog/categories/vmware/'>vmware</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.info/blog/2015/08/05/esxi-shows-fatal-error-33/" data-via="shigepon" data-counturl="http://blog.shigepon.info/blog/2015/08/05/esxi-shows-fatal-error-33/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    
+      <div class="related_posts">
+	<h1>Related Posts</h1>
+	<ul>
+		
+	</ul>
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/07/30/add-relation-to-existing-table-using-django/" title="Previous Post: Djangoで作成済みテーブルに手動でリレーションを追加する">&laquo; Djangoで作成済みテーブルに手動でリレーションを追加する</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <ul id="recent_posts">
+      <li class="post">
+      <a href="http://blog.shigepon.info" alt="Home"><img src="/images/Home.png"></a>
+      <a href="http://blog.shigepon.info/archives/" alt="Archives"><img src="/images/Calendar.png"></a>
+      <a href="mailto:" alt="E-Mail"><img src="/images/Envelope.png"></a>
+      <a href="http://blog.shigepon.info/atom.xml" alt="subscribe feed"><img src="/images/rss_big.png"></a>
+      </li>
+  </ul>
+</section>
+<section>
+  <h1>About Me</h1>
+  <p>A little something about me.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/08/05/esxi-shows-fatal-error-33/">Vmware Esxiがfatal Error 33を出したのでインストールしなおしてついでに色々試した話</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/07/30/add-relation-to-existing-table-using-django/">Djangoで作成済みテーブルに手動でリレーションを追加する</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/07/28/use-django-model-outside-django-project/">DjangoモデルをDjangoプロジェクトの外から使う</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/07/19/record-radiko-with-nadesiko2/">なでしこ2でradikoの録音をやってみた</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      getTwitterFeed("shigepon", , );
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <p>Follow <a href="http://twitter.com/shigepon">@shigepon</a></p>
+  
+</section>
+
+<section>
+<h1>Categories</h1>
+<ul id="categories">
+	<li class='category'><a href='/blog/categories/analytics/'>Analytics (1)</a></li>
+<li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
+<li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
+<li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (20)</a></li>
+<li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
+<li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
+<li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
+<li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
+<li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
+<li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (9)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (21)</a></li>
+<li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
+<li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
+<li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
+<li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
+<li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
+<li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (11)</a></li>
+<li class='category'><a href='/blog/categories/memo/'>memo (12)</a></li>
+<li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
+<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>
+<li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
+<li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
+<li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>
+<li class='category'><a href='/blog/categories/ruby/'>ruby (9)</a></li>
+<li class='category'><a href='/blog/categories/sqlite/'>sqlite (1)</a></li>
+<li class='category'><a href='/blog/categories/svn/'>svn (1)</a></li>
+<li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>
+<li class='category'><a href='/blog/categories/uwsgi/'>uwsgi (1)</a></li>
+<li class='category'><a href='/blog/categories/vim/'>vim (2)</a></li>
+<li class='category'><a href='/blog/categories/vmware/'>vmware (1)</a></li>
+
+</ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/shigepon">@shigepon</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'shigepon',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - shigepon -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

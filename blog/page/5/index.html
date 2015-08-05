@@ -9,8 +9,8 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="自分の話でなく、他人の話なので丁寧語で。
-6月27日にGroongaユーザー勉強会＠神戸に参加しました。ブログに書くまでが勉強会だったのを久々に思い出したので、感想書いてみます。 正直あまり回数行ったことがない神戸で、さらに行ったこと無い区域で、さらに入り口に「Closed」と書いてあったので、 &hellip;">
+  <meta name="description" content="Djangoやり始めたので、その過程で記録しておきたいことをメモ。 pip freezeでWarning: cannot find svn location for distribute==0.6.24dev-r0 1
+$ sudo pip install --upgrade distribute &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +80,78 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/30/python-memo/">Python Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-30T20:38:44+09:00" pubdate data-updated="true">Jun 30<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Djangoやり始めたので、その過程で記録しておきたいことをメモ。</p>
+
+<h2>pip freezeでWarning: cannot find svn location for distribute==0.6.24dev-r0</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo pip install --upgrade distribute
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でおk</p>
+
+<h2>pipで一気にインストールする</h2>
+
+<p>pip freezeで出てくる出力をファイルに書き出したものを使うと、別の環境で同じ状態にもっていける。ファイルからバージョン情報を消すと最新の状態でインストール出来る。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install -r freezed.txt
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>for文でループカウント取得</h2>
+
+<p>参考<a href="http://fujishinko.exblog.jp/7669024">Python 配列をfor文でまわしているときのループカウント取得 : fujishinko 雑記帳</a></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">,</span><span class="s">&#39;c&#39;</span><span class="p">]):</span>
+</span><span class='line'>  <span class="k">print</span> <span class="n">i</span><span class="p">,</span><span class="n">item</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/06/30/python-memo/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -629,73 +701,6 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/05/29/rails-memo/">Rails Memo</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-29T08:54:12+09:00" pubdate data-updated="true">May 29<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Rails関係でいつでも確認出来るようにメモ。</p>
-
-<h2>ルーティングでのパラメータの使い方</h2>
-
-<p>config/route.rbを編集する</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="n">get</span> <span class="s2">&quot;main/index/:hoge&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;main#index&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>app/controllers/main_controller.rbを編集</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">class</span> <span class="nc">MainController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">index</span>
-</span><span class='line'>    <span class="vi">@hoge</span> <span class="o">=</span> <span class="n">params</span><span class="o">[</span><span class="ss">:hoge</span><span class="o">]</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/05/29/rails-memo/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -727,6 +732,10 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/05/esxi-shows-fatal-error-33/">Vmware Esxiがfatal Error 33を出したのでインストールしなおしてついでに色々試した話</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/30/add-relation-to-existing-table-using-django/">Djangoで作成済みテーブルに手動でリレーションを追加する</a>
       </li>
     
@@ -740,10 +749,6 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
     
       <li class="post">
         <a href="/blog/2015/07/19/record-radiko-with-nadesiko2/">なでしこ2でradikoの録音をやってみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/07/use-multiple-databases-in-django/">Djangoで複数データベースを使用する</a>
       </li>
     
   </ul>
@@ -786,7 +791,7 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 <li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (10)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (11)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (12)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>
@@ -799,6 +804,7 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 <li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>
 <li class='category'><a href='/blog/categories/uwsgi/'>uwsgi (1)</a></li>
 <li class='category'><a href='/blog/categories/vim/'>vim (2)</a></li>
+<li class='category'><a href='/blog/categories/vmware/'>vmware (1)</a></li>
 
 </ul>
 </section>

@@ -9,8 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="ActiveRecordは便利なのかどうか知らないけど、allなどのメソッドで:conditionとかで?を使うことが出来る。だけど、sqlを直接打ちたいケースは必ず出てくるので、その時に?使いたいなと思ったけど、なかなか例文が無かった。 んで結局こうするといいみたい。 1
-@results = &hellip;">
+  <meta name="description" content="Rails関係でいつでも確認出来るようにメモ。 ルーティングでのパラメータの使い方 config/route.rbを編集する 1 get &quot;main/index/:hoge&quot; =&gt; &quot;main#index&quot; app/controllers/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +79,73 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/29/rails-memo/">Rails Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-29T08:54:12+09:00" pubdate data-updated="true">May 29<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Rails関係でいつでも確認出来るようにメモ。</p>
+
+<h2>ルーティングでのパラメータの使い方</h2>
+
+<p>config/route.rbを編集する</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="n">get</span> <span class="s2">&quot;main/index/:hoge&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;main#index&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>app/controllers/main_controller.rbを編集</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">class</span> <span class="nc">MainController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">index</span>
+</span><span class='line'>    <span class="vi">@hoge</span> <span class="o">=</span> <span class="n">params</span><span class="o">[</span><span class="ss">:hoge</span><span class="o">]</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/29/rails-memo/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -656,65 +722,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/15/rhaco3-memo/">Rhaco3 Memo</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-15T13:28:55+09:00" pubdate data-updated="true">Mar 15<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>rhaco3を使ってる人なんて世界で何人居るのかなと思いつつ、あまりに情報が少ないので、メモ書きしていく。
-大きめネタは別記事にまとめるが小さいネタはここに追記する。</p>
-
-<h3>Daoで作ったSQLを確認する方法</h3>
-
-<p>Daoを継承したモデルとして、Hogeモデルがあるとして</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nx">\Hoge</span><span class="o">::</span><span class="na">start_record</span><span class="p">();</span>
-</span><span class='line'><span class="nx">\Hoge</span><span class="o">::</span><span class="na">find_get</span><span class="p">(</span><span class="nx">\org\rhaco\store\db\Q</span><span class="o">::</span><span class="na">eq</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">));</span><span class="c1">//\Hogeモデルからid=1のデータを1件取得する命令</span>
-</span><span class='line'><span class="nv">$queries</span> <span class="o">=</span> <span class="nx">\Hoge</span><span class="o">::</span><span class="na">stop_record</span><span class="p">();</span>
-</span><span class='line'><span class="nb">var_dump</span><span class="p">(</span><span class="nv">$queries</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/03/15/rhaco3-memo/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -746,6 +753,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/05/esxi-shows-fatal-error-33/">Vmware Esxiがfatal Error 33を出したのでインストールしなおしてついでに色々試した話</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/30/add-relation-to-existing-table-using-django/">Djangoで作成済みテーブルに手動でリレーションを追加する</a>
       </li>
     
@@ -759,10 +770,6 @@
     
       <li class="post">
         <a href="/blog/2015/07/19/record-radiko-with-nadesiko2/">なでしこ2でradikoの録音をやってみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/07/use-multiple-databases-in-django/">Djangoで複数データベースを使用する</a>
       </li>
     
   </ul>
@@ -805,7 +812,7 @@
 <li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (10)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (11)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (12)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>
@@ -818,6 +825,7 @@
 <li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>
 <li class='category'><a href='/blog/categories/uwsgi/'>uwsgi (1)</a></li>
 <li class='category'><a href='/blog/categories/vim/'>vim (2)</a></li>
+<li class='category'><a href='/blog/categories/vmware/'>vmware (1)</a></li>
 
 </ul>
 </section>

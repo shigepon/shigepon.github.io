@@ -9,7 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="以前Kobe.R no 13に参加してきました &ndash; shigeponが関心のある技術情報などでLinked Open Dataが気になってたので、Pythonでいじれるライブラリを探してみて遊んでみた。 Sparqlで色々試してみると面白そうなので、pip search &hellip;">
+  <meta name="description" content="今までmono developでなでしこ2をビルド、テストして、cui環境にアップロードしてたんだけど、面倒になってきたのでcui環境で直接ビルド、テストしてみようと思ったのでついでに開発を始める段階からメモしてみる。 環境はubuntu 12.04とするが、上位バージョンでも問題無いはず &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,60 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">Ubuntuのcui環境でなでしこ2をビルドする</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-05-01T08:23:00+09:00" pubdate data-updated="true">May 1<span>st</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>今までmono developでなでしこ2をビルド、テストして、cui環境にアップロードしてたんだけど、面倒になってきたのでcui環境で直接ビルド、テストしてみようと思ったのでついでに開発を始める段階からメモしてみる。</p>
+
+<p>環境はubuntu 12.04とするが、上位バージョンでも問題無いはず</p>
+
+<h1>mono環境の準備</h1>
+
+<p>mono-develをインストールしたらmono関連で必要なものは勝手にインストールされたような気がする。ついでに<a href="http://blog.shigepon.info/blog/2014/08/20/vb-not-work-on-ubuntu/">VisualBasicが動かない件</a>にあるように、mono-vbnc、あとはnunitのインストール</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>aptitude install mono-devel mono-vbnc nunit
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -570,61 +624,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/12/08/add-uuid-to-titanium-mobile-project/">Titanium Mobileのプロジェクトをアドホック配信する時にテストしてもらうユーザーを追加する</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-12-08T01:42:49+09:00" pubdate data-updated="true">Dec 8<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>追記：UUIDと書いてたのはUDIDの間違いでした！恥ずかしー。ご指摘いただいた@key3さんありがとうございました！</p>
-
-<p>いやー色々ぐぐっても大変だったし、これからも結構な頻度でやりそうなのでメモ。</p>
-
-<p>もともと作ったプロビジョニングファイルにUDIDを追加するには、</p>
-
-<h2>ぐぐってしっかり情報があった箇所（プロビジョングファイルにUDIDを追加する）</h2>
-
-<ul>
-<li><a href="https://developer.apple.com/account/ios/profile/profileList.action">Apple Developer Center</a>で左メニューのDevices->Allをクリック</li>
-<li>右上の＋ボタンからデバイスを追加。名前とUDIDを記入してContinueでおk</li>
-<li>左メニューのProvisioning Profiles->AllからUDIDを追加したいプロビジョニングファイルを探してクリック->Editをクリック</li>
-<li>Devicesの一覧で、追加したDevice名をチェックしてGenerateボタンを押す</li>
-</ul>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/12/08/add-uuid-to-titanium-mobile-project/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -656,6 +655,10 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/05/esxi-shows-fatal-error-33/">Vmware Esxiがfatal Error 33を出したのでインストールしなおしてついでに色々試した話</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/30/add-relation-to-existing-table-using-django/">Djangoで作成済みテーブルに手動でリレーションを追加する</a>
       </li>
     
@@ -669,10 +672,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
     
       <li class="post">
         <a href="/blog/2015/07/19/record-radiko-with-nadesiko2/">なでしこ2でradikoの録音をやってみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/07/use-multiple-databases-in-django/">Djangoで複数データベースを使用する</a>
       </li>
     
   </ul>
@@ -715,7 +714,7 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 <li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (10)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (11)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (12)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>
@@ -728,6 +727,7 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 <li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>
 <li class='category'><a href='/blog/categories/uwsgi/'>uwsgi (1)</a></li>
 <li class='category'><a href='/blog/categories/vim/'>vim (2)</a></li>
+<li class='category'><a href='/blog/categories/vmware/'>vmware (1)</a></li>
 
 </ul>
 </section>

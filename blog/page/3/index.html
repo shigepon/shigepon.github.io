@@ -9,12 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Southってのを使うとモデルを変更した時に、サクッとDB(PostgreSQL)に反映出来るらしんだけど、今すでに作成中のプロジェクトに反映させたかったので、メモ インストール 1
-$ pip install south 設定 settings.py1
-2
-3
-4
-INSTALLED_APPS &hellip;">
+  <meta name="description" content="追記：UUIDと書いてたのはUDIDの間違いでした！恥ずかしー。ご指摘いただいた@key3さんありがとうございました！ いやー色々ぐぐっても大変だったし、これからも結構な頻度でやりそうなのでメモ。 もともと作ったプロビジョニングファイルにUDIDを追加するには、 ぐぐってしっかり情報があった箇所（ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,6 +79,61 @@ INSTALLED_APPS &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/12/08/add-uuid-to-titanium-mobile-project/">Titanium Mobileのプロジェクトをアドホック配信する時にテストしてもらうユーザーを追加する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-12-08T01:42:49+09:00" pubdate data-updated="true">Dec 8<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>追記：UUIDと書いてたのはUDIDの間違いでした！恥ずかしー。ご指摘いただいた@key3さんありがとうございました！</p>
+
+<p>いやー色々ぐぐっても大変だったし、これからも結構な頻度でやりそうなのでメモ。</p>
+
+<p>もともと作ったプロビジョニングファイルにUDIDを追加するには、</p>
+
+<h2>ぐぐってしっかり情報があった箇所（プロビジョングファイルにUDIDを追加する）</h2>
+
+<ul>
+<li><a href="https://developer.apple.com/account/ios/profile/profileList.action">Apple Developer Center</a>で左メニューのDevices->Allをクリック</li>
+<li>右上の＋ボタンからデバイスを追加。名前とUDIDを記入してContinueでおk</li>
+<li>左メニューのProvisioning Profiles->AllからUDIDを追加したいプロビジョニングファイルを探してクリック->Editをクリック</li>
+<li>Devicesの一覧で、追加したDevice名をチェックしてGenerateボタンを押す</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/12/08/add-uuid-to-titanium-mobile-project/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -612,59 +662,6 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/10/28/kobe-dot-r-no-12/">Kobe.R #12に参加しました</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-10-28T08:13:51+09:00" pubdate data-updated="true">Oct 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>勉強会の話なので丁寧語で。10/26に<a href="http://kobexr.doorkeeper.jp/events/16101">Kobe.R #12</a>があったので参加してきました。神戸で定期的に開催されているRの勉強会です。今回はたまたま大阪で開かれました。前回と同様誰がされたか名前を記憶していなかったりするので、とりあえず内容だけ紹介します。</p>
-
-<h2>回帰分析の基礎</h2>
-
-<p>@florets1さん</p>
-
-<p>Rのコマンドを叩いて結果を確認しながら回帰分析の基礎を学べる発表でした。回帰分析はある程度知っていても、Rで実際にやるとこんな感じというのが分かって面白かったです。あと、基礎の部分も何となくで素通りしていた部分を改めて説明してもらえたりするので、とても為になる発表でした。</p>
-
-<p>Rは結果をプロットなどで確認しやすかったり、要約を出してくれたりするのがとても便利です。評価はRで行って、定期的な処理になったらPythonで実装するというやりかたもアリかなと妄想しました。</p>
-
-<h2>クラスタリングについて</h2>
-
-<p>Twitter ID @Wakamatzさん</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/10/28/kobe-dot-r-no-12/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -696,6 +693,10 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/05/esxi-shows-fatal-error-33/">Vmware Esxiがfatal Error 33を出したのでインストールしなおしてついでに色々試した話</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/30/add-relation-to-existing-table-using-django/">Djangoで作成済みテーブルに手動でリレーションを追加する</a>
       </li>
     
@@ -709,10 +710,6 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
     
       <li class="post">
         <a href="/blog/2015/07/19/record-radiko-with-nadesiko2/">なでしこ2でradikoの録音をやってみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/07/use-multiple-databases-in-django/">Djangoで複数データベースを使用する</a>
       </li>
     
   </ul>
@@ -755,7 +752,7 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
 <li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (10)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (11)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (12)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>
@@ -768,6 +765,7 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
 <li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>
 <li class='category'><a href='/blog/categories/uwsgi/'>uwsgi (1)</a></li>
 <li class='category'><a href='/blog/categories/vim/'>vim (2)</a></li>
+<li class='category'><a href='/blog/categories/vmware/'>vmware (1)</a></li>
 
 </ul>
 </section>
