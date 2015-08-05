@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-08-05T18:10:10+09:00</updated>
+  <updated>2015-08-05T18:13:01+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -56,7 +56,9 @@
 </li>
 <li>ダウンロードしたisoをCDに焼く</li>
 <li>Esxiのハード要件を全て満たすハード上でCD起動する</li>
-<li>ESXiをインストールする</li>
+<li>ESXiをインストールする
+
+<ul>
 <li>Boot MenuでESXi Installerを選択する</li>
 <li>インストールを進めるかどうか聞かれる(Enter)</li>
 <li>ライセンス許諾を聞かれる(F11でおk)</li>
@@ -65,6 +67,8 @@
 <li>rootアカウントのパスワードを設定する(タブで移動、2回設定するEnterで完了)</li>
 <li>最後の確認(F11でおk)</li>
 <li>インストール終了後Enterで再起動</li>
+</ul>
+</li>
 </ul>
 
 
@@ -81,13 +85,19 @@
 <p>linuxやmacからEsxiホストを操作して、vmの起動、終了とかやりたかったので、ついでに試してみた。手順は以下の通り</p>
 
 <ul>
-<li>EsxiホストでSSHを有効にする</li>
+<li>EsxiホストでSSHを有効にする
+
+<ul>
 <li>初期画面からCustomize Systemへ移動(F2)</li>
 <li>カーソルを上下移動して「Troubleshooting Options」のところでEnter</li>
 <li>Disable ESXi Shellにカーソルを合わせてEnterを押すとEnable ESXi Shellに変わる</li>
 <li>Disable SSHにカーソルを合わせてEnterを押すとEnable SSHに変わる</li>
 <li>Restart Management Agentsにカーソルを合わせてEnterを押す</li>
-<li>ESXiクライアントでSSHを有効にする</li>
+</ul>
+</li>
+<li>ESXiクライアントでSSHを有効にする
+
+<ul>
 <li>インベントリが選択されている状態で、構成(Configuration) &ndash;> セキュリティプロファイル(Security Profile)の上部、サービス(Services)の「プロパティ(Properties)をクリック</li>
 <li>SSHを選択し、オプション(Options)をクリック</li>
 <li>ホストに連動して開始および停止(Start and stop with host)を選択し、サービスコマンドの開始(Start)ボタンを押す。その後okをクリックしてダイアログを消す。</li>
@@ -96,6 +106,8 @@
 <li>ファイアーウォール(Firewall)ボタンをクリック</li>
 <li>IPアドレスの許可設定を行う。任意のIPアドレスからの接続を許可(Allow connections from any IP address)するのが一番楽。</li>
 <li>okをクリックしていって、ダイアログを閉じる</li>
+</ul>
+</li>
 </ul>
 
 
