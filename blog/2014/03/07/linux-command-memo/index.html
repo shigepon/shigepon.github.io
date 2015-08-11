@@ -246,6 +246,44 @@
 </pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>ssh -N -f -L 6543:localhost:5432 username@hostname
 </span></code></pre></td></tr></table></div></figure>
 
+
+<h2>時刻調整</h2>
+
+<p>ntpをインストールする必要はない。Ubuntuの場合、ntpdate-debianコマンドがあればいける。ntpdateコマンドだとエラーが出た。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo ntpdate
+</span><span class='line'>no servers can be used, exiting
+</span><span class='line'><span class="nv">$ </span>sudo ntpdate-debian
+</span><span class='line'>step <span class="nb">time </span>server xxx.xxx.xxx.xxx offset -914.392749 sec
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考：<a href="http://ubuntuforums.org/showthread.php?t=2193509">[SOLVED] ntpdate &ndash; No Servers</a></p>
+
+<p>ntpサーバを指定するには/etc/default/ntpdateを変更する</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">NTP_USE_NTP_CONF</span><span class="o">=</span>no
+</span><span class='line'><span class="nv">NTPSERVERS</span><span class="o">=</span><span class="s2">&quot;ntp.nict.jp&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>毎日のcronjobで動作させる</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo <span class="nb">cd</span> /etc/cron.daily
+</span><span class='line'>sudo ln -s /etc/network/if-up.d/ntpdate ./ntpdate
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でおk
+参考：<a href="http://d.hatena.ne.jp/kobapan/20090909/1252472963">Ubuntu ntpdate 時刻合わせ &ndash; ガットポンポコ</a></p>
 </div>
 
 

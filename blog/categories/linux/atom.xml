@@ -4,7 +4,7 @@
   <title><![CDATA[Category: linux | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-08-05T18:13:01+09:00</updated>
+  <updated>2015-08-12T08:52:54+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -160,6 +160,18 @@ $ vim-cmd vmsvc/power.shutdown [vmのid]
 <p>参考：<a href="http://qiita.com/binzume/items/096ce77f73b6e853c342">VMware ESXiをSSHでがんばるぞい(コマンドライン操作色々) &ndash; Qiita</a></p>
 
 <p>ちなみに各コマンドについてはヘルプを出すオプションとか無いみたい。コマンド失敗した時に使用法が出ることもあるが、失敗するまで分からないとか怖いわー。</p>
+
+<h3>ESXiシャットダウン</h3>
+
+<p>シャットダウンと同時に電源を切る作業も必要</p>
+
+<p><code>sh
+$ shutdown.sh &amp;&amp; poweroff
+</code></p>
+
+<p>でおk。USBにインストールしているせいか分からないが、poweroffが無い場合、SSHの設定が再起動後、元に戻っていた。</p>
+
+<p>参考：<a href="http://www.nojokeit.com/2013/02/shut-down-esxi-51-guest-vms-and-host.html">No Joke IT: Shut down ESXi 5.1 guest VMs and the host (free edition) via SSH &ndash; the easy way!</a></p>
 ]]></content>
   </entry>
   
