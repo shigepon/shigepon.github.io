@@ -9,7 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="追記：UUIDと書いてたのはUDIDの間違いでした！恥ずかしー。ご指摘いただいた@key3さんありがとうございました！ いやー色々ぐぐっても大変だったし、これからも結構な頻度でやりそうなのでメモ。 もともと作ったプロビジョニングファイルにUDIDを追加するには、 ぐぐってしっかり情報があった箇所（ &hellip;">
+  <meta name="description" content="Django使ったサイトでカレンダーを表示しようとしたんだけど、HTMLCalendarとかだとレスポンシブにならないし、カスタマイズ面倒だしということで、javascriptで生成して、イベントデータはajaxリクエストから取り出すようにしたいと思ってライブラリを調べてみたのと感想を書いておく。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,58 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/12/17/check-table-library/">Javascriptでカレンダーを書くライブラリを調べてみた</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-12-17T13:37:38+09:00" pubdate data-updated="true">Dec 17<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Django使ったサイトでカレンダーを表示しようとしたんだけど、HTMLCalendarとかだとレスポンシブにならないし、カスタマイズ面倒だしということで、javascriptで生成して、イベントデータはajaxリクエストから取り出すようにしたいと思ってライブラリを調べてみたのと感想を書いておく。結論からすると、FullCalendarが汎用的で使えそう。</p>
+
+<h2>Zabuto Calendar</h2>
+
+<p><a href="https://github.com/zabuto/calendar">github</a>
+jqueryプラグイン。イベントは数字が表示される。カレンダーの表示は月毎のみ。言語設定に日本語は無い。日本語で日付表示する方法はReadmeに書かれていなかった。</p>
+
+<h2>Calendario</h2>
+
+<p><a href="http://tympanus.net/codrops/2012/11/27/calendario-a-flexible-calendar-plugin/">ダウンロードページ</a></p>
+
+<p>デモは奇麗に見えるんだけど、そもそもメインのcssが何故かdemo.cssみたいなのをインポートしてて、これは無いんじゃないと思ったのと背景画像無しだとイメージに合わなかった。あと、デモサイトがあるだけで、最初に必要なファイルとかが分かりにくかった。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/12/17/check-table-library/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -604,64 +656,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/04/use-django-with-uwsgi/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(4):djangoで作ったプロジェクトをnginx+uwsgiで使って公開する</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-11-04T21:33:54+09:00" pubdate data-updated="true">Nov 4<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>nginxのインストールは省略。ubuntuならaptitudeでインストールすればいい。デフォルトはちょっと古いけど。
-djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いているという前提。</p>
-
-<h2>uwsgiをインストール</h2>
-
-<p>全てvirtualenv上で行うとよさげ。
-<a href="http://docs.djangoproject.jp/en/latest/howto/deployment/wsgi/uwsgi.html">uWSGI で Django を使う方法 — Django 1.4 documentation</a>ほぼそのまま</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">source </span>path/to/virtualenv/bin/activate
-</span><span class='line'><span class="k">$(</span>virtualenv<span class="k">)</span> pip install uwsgi
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>uwsgi.iniを作る</h2>
-
-<p>djangoのプロジェクトを/path/to/mysiteに置いた場合の設定。pidfile,daemonizeはプロジェクト毎に適当に設定。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/11/04/use-django-with-uwsgi/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -693,6 +687,10 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/12/javascript-memo/">Javascript Memo</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/08/05/esxi-shows-fatal-error-33/">Vmware Esxiがfatal Error 33を出したのでインストールしなおしてついでに色々試した話</a>
       </li>
     
@@ -706,10 +704,6 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
     
       <li class="post">
         <a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/19/record-radiko-with-nadesiko2/">なでしこ2でradikoの録音をやってみた</a>
       </li>
     
   </ul>
@@ -740,6 +734,7 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
 <li class='category'><a href='/blog/categories/django/'>Django (20)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
+<li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>

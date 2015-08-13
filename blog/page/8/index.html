@@ -9,8 +9,8 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="svn使っててはまることが結構あるのでメモ ubuntuでsvnコマンドすると認証失敗する場合 1
-Password for ‘(null)’ GNOME keyring: というメッセージが表示される場合、gnome-keyringというやつが邪魔をしているらしい。ログイン情報を削除すれば解決 &hellip;">
+  <meta name="description" content="rhaco使わないでWebサービス作るならもうPHP使わずに他の言語でやってみようかなと思い、
+DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強という意味を込めてRailsでやってみることにした。 とりあえずまずはインストール出来ないと話にならないので、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +80,58 @@ Password for ‘(null)’ GNOME keyring: というメッセージが表示され
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/26/rails-startup/">Ruby on Railsを入れてみた</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-26T14:51:16+09:00" pubdate data-updated="true">Feb 26<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>rhaco使わないでWebサービス作るならもうPHP使わずに他の言語でやってみようかなと思い、
+DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強という意味を込めてRailsでやってみることにした。</p>
+
+<p>とりあえずまずはインストール出来ないと話にならないので、Railsをインストールしてみた話。</p>
+
+<p>Ubuntu使ってるので、aptitude install railsでさくっと終わるかなと思ってTwitterで何となく</p>
+
+<blockquote><p>shigepon: railsはバージョンいくつを使うと吉なんでしょ？</p></blockquote>
+
+<p>とつぶやいたら、@sugamasaoさんから</p>
+
+<blockquote><p>sugamasao: @shigepon しがらみがなければ、最新の4.0.2が良いと思います。お試しで触って見るなら、4.1のbeta版を使って見ても良いかもしれません〜</p></blockquote>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/02/26/rails-startup/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -676,62 +728,6 @@ Password for ‘(null)’ GNOME keyring: というメッセージが表示され
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/28/nadesiko-plugin/">C++/CLIでなでしこのプラグインを作る方法(Visual C++ Express Edition)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-28T21:45:15+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>なでしこでプラグインを作る時にC#を使いたかったので、その前段階としてC++/CLIでプラグインを作る方法を探ってみました。</p>
-
-<p>C++/CLIが使えると、.Netを使えるようになり、C#で作ったdllもVC++の参照設定から読み込んで使えるようになります。</p>
-
-<p>なでしこにはC++でプラグイン開発するためのsdkがあります。</p>
-
-<p>ただし、VC++で使用するには<a href="http://www.himanavi.net/cgi/nade-bbs2/cbbs.cgi?mode=one&amp;number=7462&amp;type=7446&amp;space=60&amp;no=0">なでしこ質問掲示板</a>にあるような設定をしなければいけません。（以下引用）</p>
-
-<ol>
-<li>Win32プロジェクトを作成</li>
-<li>plugins_sdk_cからソースを追加</li>
-<li>dnako_import.defを作成</li>
-<li>すべての構成でプロジェクトのプロパティを修正　全般→文字セットを「マルチ バイト文字セットを使用する」に変更　リンカ→入力→モジュール定義ファイルに「dnako_import.def」と入力</li>
-<li>ビルド</li>
-</ol>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/01/28/nadesiko-plugin/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/9/">&larr; Older</a>
@@ -763,6 +759,10 @@ Password for ‘(null)’ GNOME keyring: というメッセージが表示され
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/12/javascript-memo/">Javascript Memo</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/08/05/esxi-shows-fatal-error-33/">Vmware Esxiがfatal Error 33を出したのでインストールしなおしてついでに色々試した話</a>
       </li>
     
@@ -776,10 +776,6 @@ Password for ‘(null)’ GNOME keyring: というメッセージが表示され
     
       <li class="post">
         <a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/19/record-radiko-with-nadesiko2/">なでしこ2でradikoの録音をやってみた</a>
       </li>
     
   </ul>
@@ -810,6 +806,7 @@ Password for ‘(null)’ GNOME keyring: というメッセージが表示され
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
 <li class='category'><a href='/blog/categories/django/'>Django (20)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
+<li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>

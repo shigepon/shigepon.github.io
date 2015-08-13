@@ -4,7 +4,7 @@
   <title><![CDATA[Category: memo | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/memo/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-08-12T08:52:54+09:00</updated>
+  <updated>2015-08-13T16:08:03+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -366,6 +366,37 @@ def get_timestamp(self, obj):
 <p>```</p>
 
 <p>javascriptのタイムスタンプに対応するためにはget_timestampの返り値を1000倍すればおk</p>
+
+<h2>Paginatorでcount文を実行させずに指定件数分のページングを行う</h2>
+
+<p>分量が多くて、先頭1000件を100件ずつページング表示させるので十分かなという時に、いちいちcount文を発行させたくない時</p>
+
+<p><code>py
+paginator = Paginator(query, 100)
+paginator._count = 1000
+</code></p>
+
+<p>queryは適当なQuerySet</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/7707035/how-to-implement-a-paginator-that-doesnt-call-count">django &ndash; How to implement a paginator that doesn&rsquo;t call count(*) &ndash; Stack Overflow</a></p>
+
+<h2>メソッドの呼び出し元オブジェクトを取得</h2>
+
+<p>inspectモジュールってのが使えるらしい</p>
+
+<p>```py
+import inspect
+&hellip;</p>
+
+<pre><code>(frame, filename, line_number, function_name, lines, index) = inspect.getouterframes(inspect.currentframe())[1]
+print(frame, filename, line_number, function_name, lines, index)
+</code></pre>
+
+<p>```</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/3711184/how-to-use-inspect-to-get-the-callers-info-from-callee-in-python">How to use inspect to get the caller&rsquo;s info from callee in Python? &ndash; Stack Overflow</a></p>
+
+<p>プロファイラ使った時に、socket.pyが呼ばれてるのは分かったけど、その呼び出し元がイマイチわからなかった時に使った。</p>
 ]]></content>
   </entry>
   

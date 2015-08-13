@@ -9,7 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="今までmono developでなでしこ2をビルド、テストして、cui環境にアップロードしてたんだけど、面倒になってきたのでcui環境で直接ビルド、テストしてみようと思ったのでついでに開発を始める段階からメモしてみる。 環境はubuntu 12.04とするが、上位バージョンでも問題無いはず &hellip;">
+  <meta name="description" content="ubuntuのcui環境でなでしこ2をビルドするの続きで、cui環境でなでしこ2のテストを実行してみる。 cui環境でnunitを実行するにはnunit-consoleを使う。なでしこ2のテストを実行するにはテスト関連のdllをnunitで実行すると良い。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,63 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/05/05/nunit-console-test-for-nadesiko2/">なでしこ2をubuntu Cuiでテストする</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-05-05T23:02:32+09:00" pubdate data-updated="true">May 5<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">ubuntuのcui環境でなでしこ2をビルドする</a>の続きで、cui環境でなでしこ2のテストを実行してみる。</p>
+
+<p>cui環境でnunitを実行するには<a href="http://www.nunit.org/index.php?p=nunit-console&amp;r=2.5.10">nunit-console</a>を使う。なでしこ2のテストを実行するにはテスト関連のdllをnunitで実行すると良い。コマンドはなでしこ2をインストールしたディレクトリでこんな感じ。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>nunit-console CNako2Test/bin/Debug/CNako2Test.dll
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>プラグインのテスト(NakoPluginTest)プロジェクトでは外部ファイルを利用するので</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>nunit-console NakoPluginTest/bin/Debug/NakoPluginTest.dll
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/05/05/nunit-console-test-for-nadesiko2/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -572,58 +629,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/12/17/check-table-library/">Javascriptでカレンダーを書くライブラリを調べてみた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-12-17T13:37:38+09:00" pubdate data-updated="true">Dec 17<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Django使ったサイトでカレンダーを表示しようとしたんだけど、HTMLCalendarとかだとレスポンシブにならないし、カスタマイズ面倒だしということで、javascriptで生成して、イベントデータはajaxリクエストから取り出すようにしたいと思ってライブラリを調べてみたのと感想を書いておく。結論からすると、FullCalendarが汎用的で使えそう。</p>
-
-<h2>Zabuto Calendar</h2>
-
-<p><a href="https://github.com/zabuto/calendar">github</a>
-jqueryプラグイン。イベントは数字が表示される。カレンダーの表示は月毎のみ。言語設定に日本語は無い。日本語で日付表示する方法はReadmeに書かれていなかった。</p>
-
-<h2>Calendario</h2>
-
-<p><a href="http://tympanus.net/codrops/2012/11/27/calendario-a-flexible-calendar-plugin/">ダウンロードページ</a></p>
-
-<p>デモは奇麗に見えるんだけど、そもそもメインのcssが何故かdemo.cssみたいなのをインポートしてて、これは無いんじゃないと思ったのと背景画像無しだとイメージに合わなかった。あと、デモサイトがあるだけで、最初に必要なファイルとかが分かりにくかった。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/12/17/check-table-library/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -655,6 +660,10 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/12/javascript-memo/">Javascript Memo</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/08/05/esxi-shows-fatal-error-33/">Vmware Esxiがfatal Error 33を出したのでインストールしなおしてついでに色々試した話</a>
       </li>
     
@@ -668,10 +677,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
     
       <li class="post">
         <a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/19/record-radiko-with-nadesiko2/">なでしこ2でradikoの録音をやってみた</a>
       </li>
     
   </ul>
@@ -702,6 +707,7 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
 <li class='category'><a href='/blog/categories/django/'>Django (20)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
+<li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>

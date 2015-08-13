@@ -5,13 +5,17 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>djangoで出てくるエラーメッセージメモ - shigeponが関心のある技術情報など</title>
+  <title>Javascript memo - shigeponが関心のある技術情報など</title>
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Djangoでエラーメッセージが出た時に、どこから当たりを付けていくか
-イチイチググってるので、まとめておく。逐次追記。 other_dict must be a mapping (dictionary-like) object returnで返す時のdictionaryが 1
-{'a','b &hellip;">
+  <meta name="description" content="Javascript関連のメモ HighChartで日本時間をx軸に利用 チャートを表示するライブラリにHighChartってのを使ってるけど、横軸の時間がUTCになってしまうので、ちょっとはまった。 こうすればいいらしい 1
+2
+3
+4
+5
+6
+Highcharts.setOptions({ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +24,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.shigepon.info/blog/2014/08/06/django-error">
+  <link rel="canonical" href="http://blog.shigepon.info/blog/2015/08/12/javascript-memo">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -84,7 +88,7 @@
   
   <header>
     
-      <h1 class="entry-title">Djangoで出てくるエラーメッセージメモ</h1>
+      <h1 class="entry-title">Javascript Memo</h1>
     
     
       <p class="meta">
@@ -100,74 +104,38 @@
   
 
 
-<time datetime="2014-08-06T15:42:43+09:00" pubdate data-updated="true">Aug 6<span>th</span>, 2014</time>
+<time datetime="2015-08-12T09:01:59+09:00" pubdate data-updated="true">Aug 12<span>th</span>, 2015</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Djangoでエラーメッセージが出た時に、どこから当たりを付けていくか
-イチイチググってるので、まとめておく。逐次追記。</p>
+<div class="entry-content"><p>Javascript関連のメモ</p>
 
-<h2>other_dict must be a mapping (dictionary-like) object</h2>
+<h2>HighChartで日本時間をx軸に利用</h2>
 
-<p>returnで返す時のdictionaryが</p>
+<p>チャートを表示するライブラリに<a href="http://www.highcharts.com/">HighChart</a>ってのを使ってるけど、横軸の時間がUTCになってしまうので、ちょっとはまった。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{'a','b'}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>となってないかチェック。正しくは</p>
-
-<!-- more -->
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{'a':'b'}</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<!-- more -->
-
-
-<h2>Django ImportError when importing xxx</h2>
-
-<p>ライブラリをインストールしていない場合、</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install xxx
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ライブラリ入れてる場合、xxxと同じファイル名のpythonファイル（とキャッシュ）が無いかチェックして、名前を変更するか、消す</p>
-
-<h2>locale.Error: unsupported locale setting</h2>
-
-<p>localeの設定名がおかしい。例えばこんな風だとエラー</p>
+<p>こうすればいいらしい</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">locale</span>
-</span><span class='line'><span class="n">locale</span><span class="o">.</span><span class="n">setlocale</span><span class="p">(</span><span class="n">locale</span><span class="o">.</span><span class="n">LC_ALL</span><span class="p">,</span><span class="s">&#39;ja_JP&#39;</span><span class="p">)</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">Highcharts</span><span class="p">.</span><span class="nx">setOptions</span><span class="p">({</span>
+</span><span class='line'>    <span class="nx">global</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">useUTC</span><span class="o">:</span> <span class="kc">false</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">chart</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HighChart</span><span class="p">(...);</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>こうするとオッケー</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">locale</span>
-</span><span class='line'><span class="n">locale</span><span class="o">.</span><span class="n">setlocale</span><span class="p">(</span><span class="n">locale</span><span class="o">.</span><span class="n">LC_ALL</span><span class="p">,</span><span class="s">&#39;ja_JP.utf8&#39;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>IndexError: list index out of range</h2>
-
-<p>リストのインデックスが範囲外なので、該当する箇所のリストの添字をチェック。そもそもリストになっているかどうかもチェック。</p>
+<p>グローバルな設定として使うらしい。
+参考（ほぼそのまま）<a href="http://mtc.hatenablog.com/">mtcdotcom&rsquo;s blog</a></p>
 </div>
 
 
@@ -190,15 +158,21 @@
   
 
 
-<time datetime="2014-08-06T15:42:43+09:00" pubdate data-updated="true">Aug 6<span>th</span>, 2014</time>
+<time datetime="2015-08-12T09:01:59+09:00" pubdate data-updated="true">Aug 12<span>th</span>, 2015</time>
       
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/javascript/'>Javascript</a>
+  
+</span>
 
 
     </p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.info/blog/2014/08/06/django-error/" data-via="shigepon" data-counturl="http://blog.shigepon.info/blog/2014/08/06/django-error/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.info/blog/2015/08/12/javascript-memo/" data-via="shigepon" data-counturl="http://blog.shigepon.info/blog/2015/08/12/javascript-memo/" >Tweet</a>
   
   
   
@@ -218,10 +192,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/07/29/matcha-139/" title="Previous Post: まっちゃ139勉強会に参加しました">&laquo; まっちゃ139勉強会に参加しました</a>
+        <a class="basic-alignment left" href="/blog/2015/08/05/esxi-shows-fatal-error-33/" title="Previous Post: Vmware Esxiがfatal error 33を出したのでインストールしなおしてついでに色々試した話">&laquo; Vmware Esxiがfatal error 33を出したのでインストールしなおしてついでに色々試した話</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/08/20/vb-not-work-on-ubuntu/" title="Next Post: ubuntuのmonoでMicrosoft.VisualBasicが動かない件">ubuntuのmonoでMicrosoft.VisualBasicが動かない件 &raquo;</a>
       
     </p>
   </footer>

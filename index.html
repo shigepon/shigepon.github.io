@@ -9,10 +9,13 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Vmware Esxiがある日 1
+  <meta name="description" content="Javascript関連のメモ HighChartで日本時間をx軸に利用 チャートを表示するライブラリにHighChartってのを使ってるけど、横軸の時間がUTCになってしまうので、ちょっとはまった。 こうすればいいらしい 1
 2
-error loading /s.v00
-fatal error: 33 inconsistent data というメッセージを出して起動しなくなったので、修復方法をメモしておく 結論 まず結論から言うと、Vmware Esxiを入れ直すことになった。 &hellip;">
+3
+4
+5
+6
+Highcharts.setOptions({ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +85,66 @@ fatal error: 33 inconsistent data というメッセージを出して起動し�
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/08/12/javascript-memo/">Javascript Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-12T09:01:59+09:00" pubdate data-updated="true">Aug 12<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Javascript関連のメモ</p>
+
+<h2>HighChartで日本時間をx軸に利用</h2>
+
+<p>チャートを表示するライブラリに<a href="http://www.highcharts.com/">HighChart</a>ってのを使ってるけど、横軸の時間がUTCになってしまうので、ちょっとはまった。</p>
+
+<p>こうすればいいらしい</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">Highcharts</span><span class="p">.</span><span class="nx">setOptions</span><span class="p">({</span>
+</span><span class='line'>    <span class="nx">global</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">useUTC</span><span class="o">:</span> <span class="kc">false</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">chart</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HighChart</span><span class="p">(...);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>グローバルな設定として使うらしい。
+参考（ほぼそのまま）<a href="http://mtc.hatenablog.com/">mtcdotcom&rsquo;s blog</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1241,63 +1304,6 @@ ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/05/05/nunit-console-test-for-nadesiko2/">なでしこ2をubuntu Cuiでテストする</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-05-05T23:02:32+09:00" pubdate data-updated="true">May 5<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">ubuntuのcui環境でなでしこ2をビルドする</a>の続きで、cui環境でなでしこ2のテストを実行してみる。</p>
-
-<p>cui環境でnunitを実行するには<a href="http://www.nunit.org/index.php?p=nunit-console&amp;r=2.5.10">nunit-console</a>を使う。なでしこ2のテストを実行するにはテスト関連のdllをnunitで実行すると良い。コマンドはなでしこ2をインストールしたディレクトリでこんな感じ。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>nunit-console CNako2Test/bin/Debug/CNako2Test.dll
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>プラグインのテスト(NakoPluginTest)プロジェクトでは外部ファイルを利用するので</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>nunit-console NakoPluginTest/bin/Debug/NakoPluginTest.dll
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/05/05/nunit-console-test-for-nadesiko2/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1327,6 +1333,10 @@ ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/12/javascript-memo/">Javascript Memo</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/08/05/esxi-shows-fatal-error-33/">Vmware Esxiがfatal Error 33を出したのでインストールしなおしてついでに色々試した話</a>
       </li>
     
@@ -1340,10 +1350,6 @@ ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
     
       <li class="post">
         <a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/19/record-radiko-with-nadesiko2/">なでしこ2でradikoの録音をやってみた</a>
       </li>
     
   </ul>
@@ -1374,6 +1380,7 @@ ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
 <li class='category'><a href='/blog/categories/django/'>Django (20)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
+<li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>

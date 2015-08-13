@@ -19,7 +19,7 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.shigepon.info/blog/2014/01/28/postgresql">
+  <link rel="canonical" href="http://blog.shigepon.info/blog/2014/01/28/postgresql-memo">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -384,6 +384,19 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 
 
 <p>-cオプションで実行するsqlを指定する場合は無理っぽい</p>
+
+<h2>サブクエリで2列以上を返す</h2>
+
+<p>調べるのに結構時間かかった。配列を使うと上手く出来る</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="n">a</span><span class="p">.</span><span class="n">id</span><span class="p">,</span> <span class="n">sub_array</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">as</span> <span class="n">hoge</span><span class="p">,</span> <span class="n">sub_array</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">as</span> <span class="n">fuga</span> <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="n">a</span><span class="p">.</span><span class="n">id</span><span class="p">,</span> <span class="p">(</span><span class="k">select</span> <span class="nb">array</span><span class="p">[</span><span class="k">avg</span><span class="p">(</span><span class="n">hoge</span><span class="p">),</span><span class="n">stddev</span><span class="p">(</span><span class="n">hoge</span><span class="p">)]</span> <span class="k">from</span> <span class="n">table1</span> <span class="k">where</span> <span class="p">...)</span> <span class="k">as</span> <span class="n">sub_array</span> <span class="k">from</span> <span class="n">table1</span><span class="p">)</span> <span class="n">a</span> <span class="k">where</span> <span class="p">...;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じで一旦複数列の値を配列に格納して、1列扱いとして、その配列を展開することでいける。ちなみに配列の添字は0スタートではなく、1スタートみたい。ある期間での集計値を各行に追加したいとかそんな場合にとても使える。</p>
+
+<p>参考：<a href="http://yanor.net/wiki/?PostgreSQL%2FSQL%2F%E3%82%B5%E3%83%96%E3%82%AF%E3%82%A8%E3%83%AA%E3%81%A7%E8%A4%87%E6%95%B0%E3%82%AB%E3%83%A9%E3%83%A0%E3%82%92%E8%BF%94%E3%81%99">PostgreSQL/SQL/サブクエリで複数カラムを返す &ndash; yanor.net/wiki</a></p>
 </div>
 
 
@@ -420,7 +433,7 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.info/blog/2014/01/28/postgresql/" data-via="shigepon" data-counturl="http://blog.shigepon.info/blog/2014/01/28/postgresql/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.info/blog/2014/01/28/postgresql-memo/" data-via="shigepon" data-counturl="http://blog.shigepon.info/blog/2014/01/28/postgresql-memo/" >Tweet</a>
   
   
   
@@ -470,6 +483,10 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/12/javascript-memo/">Javascript Memo</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/08/05/esxi-shows-fatal-error-33/">Vmware Esxiがfatal Error 33を出したのでインストールしなおしてついでに色々試した話</a>
       </li>
     
@@ -483,10 +500,6 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
     
       <li class="post">
         <a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/19/record-radiko-with-nadesiko2/">なでしこ2でradikoの録音をやってみた</a>
       </li>
     
   </ul>
@@ -517,6 +530,7 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
 <li class='category'><a href='/blog/categories/django/'>Django (20)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
+<li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>

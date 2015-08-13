@@ -284,6 +284,39 @@
 
 <p>でおk
 参考：<a href="http://d.hatena.ne.jp/kobapan/20090909/1252472963">Ubuntu ntpdate 時刻合わせ &ndash; ガットポンポコ</a></p>
+
+<h2>windows共有フォルダをマウント</h2>
+
+<p>コマンドはこんな感じ</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install cifs-utils
+</span><span class='line'><span class="nv">$ </span>sudo mount -t cifs -o <span class="nv">username</span><span class="o">=</span>Windowsユーザー名,password<span class="o">=</span>Windowsパスワード,uid<span class="o">=</span>Linuxユーザーid,gid<span class="o">=</span>Linuxグループid //windows ip/path/to/share /mnt/path/to/share
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こうしておくとファイルの編集も可能。uidとかgidが無いとrootで共有する。</p>
+
+<p>linux(ubuntu)起動時に共有したい場合、fstabを編集する</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>//windows ip/path/to/share  /mnt/path/to/share  cifs  <span class="nv">credentials</span><span class="o">=</span>/home/username/.windowscredentials,uid<span class="o">=</span>Linuxユーザーid,gid<span class="o">=</span>Linuxグループid,iocharset<span class="o">=</span>utf8  0  0
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上のコマンドみたいにWindowsユーザー名、パスワードを入力してもいけるが、fstabは複数人から見ることが出来るので、ユーザーフォルダ内に認証用のファイルを作ってパスワードを隠す</p>
+
+<p>/home/username/.windowscredentialsを次のようにして600で保存すればおk</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">username</span><span class="o">=</span>Windowsユーザー名
+</span><span class='line'><span class="nv">password</span><span class="o">=</span>Windowsパスワード
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考：<a href="https://wiki.ubuntu.com/MountWindowsSharesPermanently">MountWindowsSharesPermanently &ndash; Ubuntu Wiki</a></p>
 </div>
 
 
@@ -372,6 +405,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/12/javascript-memo/">Javascript Memo</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/08/05/esxi-shows-fatal-error-33/">Vmware Esxiがfatal Error 33を出したのでインストールしなおしてついでに色々試した話</a>
       </li>
     
@@ -385,10 +422,6 @@
     
       <li class="post">
         <a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/19/record-radiko-with-nadesiko2/">なでしこ2でradikoの録音をやってみた</a>
       </li>
     
   </ul>
@@ -419,6 +452,7 @@
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
 <li class='category'><a href='/blog/categories/django/'>Django (20)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
+<li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>

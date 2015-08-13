@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-08-12T08:52:54+09:00</updated>
+  <updated>2015-08-13T16:08:03+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,39 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Javascript memo]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/08/12/javascript-memo/"/>
+    <updated>2015-08-12T09:01:59+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/08/12/javascript-memo</id>
+    <content type="html"><![CDATA[<p>Javascript関連のメモ</p>
+
+<h2>HighChartで日本時間をx軸に利用</h2>
+
+<p>チャートを表示するライブラリに<a href="http://www.highcharts.com/">HighChart</a>ってのを使ってるけど、横軸の時間がUTCになってしまうので、ちょっとはまった。</p>
+
+<p>こうすればいいらしい</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">Highcharts</span><span class="p">.</span><span class="nx">setOptions</span><span class="p">({</span>
+</span><span class='line'>    <span class="nx">global</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">useUTC</span><span class="o">:</span> <span class="kc">false</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">chart</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HighChart</span><span class="p">(...);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>グローバルな設定として使うらしい。
+参考（ほぼそのまま）<a href="http://mtc.hatenablog.com/">mtcdotcom&rsquo;s blog</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Vmware Esxiがfatal error 33を出したのでインストールしなおしてついでに色々試した話]]></title>
@@ -1779,52 +1812,6 @@ Twitterでインなんとかとか言っちゃいましたが、インキャン�
 <p>bootstrap2だとnavbar表示の時に表示が重なるとか何とかあったけど、bootstrap3だと気にしなくて良いのかな？何も追加css書かなくても特に問題無さそう。これは嬉しい。</p>
 
 <p>でも<a href="http://qiita.com/Alex_23drum/items/bbf80aff7dbb6fd1a7d9">Navbarに画像入れると下に偏った配置になる</a>とかあるみたいなので、調べてみる必要があるかも</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[javascriptでカレンダーを書くライブラリを調べてみた]]></title>
-    <link href="http://blog.shigepon.info/blog/2014/12/17/check-table-library/"/>
-    <updated>2014-12-17T13:37:38+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2014/12/17/check-table-library</id>
-    <content type="html"><![CDATA[<p>Django使ったサイトでカレンダーを表示しようとしたんだけど、HTMLCalendarとかだとレスポンシブにならないし、カスタマイズ面倒だしということで、javascriptで生成して、イベントデータはajaxリクエストから取り出すようにしたいと思ってライブラリを調べてみたのと感想を書いておく。結論からすると、FullCalendarが汎用的で使えそう。</p>
-
-<h2>Zabuto Calendar</h2>
-
-<p><a href="https://github.com/zabuto/calendar">github</a>
-jqueryプラグイン。イベントは数字が表示される。カレンダーの表示は月毎のみ。言語設定に日本語は無い。日本語で日付表示する方法はReadmeに書かれていなかった。</p>
-
-<h2>Calendario</h2>
-
-<p><a href="http://tympanus.net/codrops/2012/11/27/calendario-a-flexible-calendar-plugin/">ダウンロードページ</a></p>
-
-<p>デモは奇麗に見えるんだけど、そもそもメインのcssが何故かdemo.cssみたいなのをインポートしてて、これは無いんじゃないと思ったのと背景画像無しだとイメージに合わなかった。あと、デモサイトがあるだけで、最初に必要なファイルとかが分かりにくかった。</p>
-
-<!-- more -->
-
-
-
-
-<!-- more -->
-
-
-<h2>pickadate</h2>
-
-<p><a href="http://amsul.ca/pickadate.js/">ダウンロードページ</a></p>
-
-<p>カレンダーだけじゃなく、タイムスケジュールの表示もあるライブラリ。でもパッと使ってみただけだとモーダル以外での表示方法が分からなかった。デートピッカーとして使うなら良い？</p>
-
-<h2>FullCalendar</h2>
-
-<p><a href="http://fullcalendar.io/">Home</a></p>
-
-<p>GoogleCalendarっぽいカレンダーが作れて、カスタマイズ出来て、タイムスケジュールも表示出来るライブラリ。bower使うとか書いてあるけど、zip解凍して出て来たファイルを使うことでとりあえずはいけた。jqueryと<a href="http://momentjs.com/">Moment</a>ってライブラリが要る。汎用的だけど、それだけに色々見ないといけないけど、マニュアルあるので分かるようになっている。日本語の言語ファイルは無いが、曜日等のカスタマイズ方法がマニュアルに書いてあるので、日本語化出来る。</p>
-
-<h2>bootstrap-calendar</h2>
-
-<p><a href="https://github.com/Serhioromano/bootstrap-calendar">github</a></p>
-
-<p>試してない。結構汎用的な感じ？言語ファイルに日本語は無い。曜日を日本語化する方法がReadmeに無くて良くわからん。</p>
 ]]></content>
   </entry>
   

@@ -489,6 +489,40 @@ def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る
 
 
 <p>javascriptのタイムスタンプに対応するためにはget_timestampの返り値を1000倍すればおk</p>
+
+<h2>Paginatorでcount文を実行させずに指定件数分のページングを行う</h2>
+
+<p>分量が多くて、先頭1000件を100件ずつページング表示させるので十分かなという時に、いちいちcount文を発行させたくない時</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">paginator</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+</span><span class='line'><span class="n">paginator</span><span class="o">.</span><span class="n">_count</span> <span class="o">=</span> <span class="mi">1000</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>queryは適当なQuerySet</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/7707035/how-to-implement-a-paginator-that-doesnt-call-count">django &ndash; How to implement a paginator that doesn&rsquo;t call count(*) &ndash; Stack Overflow</a></p>
+
+<h2>メソッドの呼び出し元オブジェクトを取得</h2>
+
+<p>inspectモジュールってのが使えるらしい</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">inspect</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'>    <span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">line_number</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">lines</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getouterframes</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">())[</span><span class="mi">1</span><span class="p">]</span>
+</span><span class='line'>    <span class="k">print</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">line_number</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">lines</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考：<a href="http://stackoverflow.com/questions/3711184/how-to-use-inspect-to-get-the-callers-info-from-callee-in-python">How to use inspect to get the caller&rsquo;s info from callee in Python? &ndash; Stack Overflow</a></p>
+
+<p>プロファイラ使った時に、socket.pyが呼ばれてるのは分かったけど、その呼び出し元がイマイチわからなかった時に使った。</p>
 </div>
 
 
@@ -577,6 +611,10 @@ def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/12/javascript-memo/">Javascript Memo</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/08/05/esxi-shows-fatal-error-33/">Vmware Esxiがfatal Error 33を出したのでインストールしなおしてついでに色々試した話</a>
       </li>
     
@@ -590,10 +628,6 @@ def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る
     
       <li class="post">
         <a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/19/record-radiko-with-nadesiko2/">なでしこ2でradikoの録音をやってみた</a>
       </li>
     
   </ul>
@@ -624,6 +658,7 @@ def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
 <li class='category'><a href='/blog/categories/django/'>Django (20)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
+<li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>

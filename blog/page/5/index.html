@@ -9,8 +9,9 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Djangoやり始めたので、その過程で記録しておきたいことをメモ。 pip freezeでWarning: cannot find svn location for distribute==0.6.24dev-r0 1
-$ sudo pip install --upgrade distribute &hellip;">
+  <meta name="description" content="ansibleで自分が欲しい情報が色んなページに散らばっていたので、メモ ansible-playbookのオプション -K: sudoのパスワード入力
+-C (&mdash;check): 実際に実行しないでチェックしてくれる
+-l name: hostsファイルに[name] &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +81,54 @@ $ sudo pip install --upgrade distribute &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/01/ansible-memo/">Ansible Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-01T16:56:06+09:00" pubdate data-updated="true">Jul 1<span>st</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ansibleで自分が欲しい情報が色んなページに散らばっていたので、メモ</p>
+
+<h3>ansible-playbookのオプション</h3>
+
+<ul>
+<li>-K: sudoのパスワード入力</li>
+<li>-C (&mdash;check): 実際に実行しないでチェックしてくれる</li>
+<li>-l name: hostsファイルに[name]と書かれたホストにのみ実行</li>
+<li>-i hostsfile: 初期状態では/etc/ansible/hostsを見に行くので、自分で指定したい場合に</li>
+<li>&mdash;syntax-check: playbookの書式チェック。書いて最初にやるといい</li>
+<li>&mdash;list-tasks: playbookで行う内容をリストアップ</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -644,63 +693,6 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/06/06/difficult-to-use-rails/">Railsやりにくいから挫折しそうという話</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-06-06T10:38:10+09:00" pubdate data-updated="true">Jun 6<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>今までphpの<a href="http://rhaco.org">rhaco</a>というドマイナーなフレームワークを使ってきてたので、メジャーなフレームワークでも使ってみるかー。ついでにrubyの練習にもなるかーと思ってRails4をはじめたんだけど、なんかこー色々自分の開発方法に合ってないような気がするので挫折する。</p>
-
-<p>使いにくいなと思った点はメリットとの二律背反の部分もあるんだけど、次のような感じ</p>
-
-<ul>
-<li>モデルをコマンドで作ると、テーブル名が勝手に複数形になる</li>
-<li>viewでurl表示させたりするのが面倒。きっとやり方知らないだけだろうけど。</li>
-<li>コマンドありきで作っていくので、手作業でどこまで修正して良いか分からない</li>
-<li>どんな流れで処理が進むのかさっぱり分からない（フレームワークが大きすぎるから？）。本読めって話だろうけど・・・なー(めんどい)。</li>
-<li>分からない時に聞く相手が居ない</li>
-<li>バージョンによってやり方が結構変わるみたいで、ググってもそれが正しい手法か分からない時がある（これはrhacoも同じだからrhacoにも何とかして欲しいとこではある）</li>
-<li>Capistrano+nginx+unicornで結構ハマってそれだけで挫折しそうになった。未だにちゃんとunicornをリロード出来ない。</li>
-<li>メジャーなフレームワークのはずなのに、ちょこちょこバッドノウハウない？違う？</li>
-<li>SassやCoffeeScriptがデフォみたいなのがやだ</li>
-<li>いちいちgemファイルでほにゃららしないと上手く動かない？Bootstrapとか。そしてgemがあるかどうかをいちいちググって探さないといけない。</li>
-</ul>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/06/06/difficult-to-use-rails/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -732,6 +724,10 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/12/javascript-memo/">Javascript Memo</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/08/05/esxi-shows-fatal-error-33/">Vmware Esxiがfatal Error 33を出したのでインストールしなおしてついでに色々試した話</a>
       </li>
     
@@ -745,10 +741,6 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
     
       <li class="post">
         <a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/19/record-radiko-with-nadesiko2/">なでしこ2でradikoの録音をやってみた</a>
       </li>
     
   </ul>
@@ -779,6 +771,7 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
 <li class='category'><a href='/blog/categories/django/'>Django (20)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
+<li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
