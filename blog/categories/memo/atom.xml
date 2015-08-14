@@ -4,7 +4,7 @@
   <title><![CDATA[Category: memo | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/memo/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-08-13T16:08:03+09:00</updated>
+  <updated>2015-08-15T00:50:55+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,36 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Javascript memo]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/08/12/javascript-memo/"/>
+    <updated>2015-08-12T09:01:59+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/08/12/javascript-memo</id>
+    <content type="html"><![CDATA[<p>Javascript関連のメモ</p>
+
+<h2>HighChartで日本時間をx軸に利用</h2>
+
+<p>チャートを表示するライブラリに<a href="http://www.highcharts.com/">HighChart</a>ってのを使ってるけど、横軸の時間がUTCになってしまうので、ちょっとはまった。</p>
+
+<p>こうすればいいらしい</p>
+
+<p>```js
+Highcharts.setOptions({</p>
+
+<pre><code>global: {
+    useUTC: false
+}
+</code></pre>
+
+<p>});
+var chart = new HighChart(&hellip;);
+```</p>
+
+<p>グローバルな設定として使うらしい。
+参考（ほぼそのまま）<a href="http://mtc.hatenablog.com/">mtcdotcom&rsquo;s blog</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[uwsgiメモ]]></title>
@@ -566,57 +596,6 @@ $ git merge master
 <p><code>sh
 $ git ls-files -u
 </code></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[nginx memo]]></title>
-    <link href="http://blog.shigepon.info/blog/2014/03/20/nginx-memo/"/>
-    <updated>2014-03-20T16:04:53+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2014/03/20/nginx-memo</id>
-    <content type="html"><![CDATA[<h2>Nginxで503コードのページをカスタマイズする</h2>
-
-<p>なるべく手軽にメンテナンスページを出すための手順</p>
-
-<ul>
-<li>path/to/root/error/503.htmlにページを用意する。</li>
-<li>path/to/root/error/以下に画像やcss、javascriptなど必要なものを用意する。</li>
-<li>nginxの設定を変更する。必要な部分だけ抜粋</li>
-</ul>
-
-
-<p>```
-server {</p>
-
-<pre><code>server_name xxx.xxx;
-    set $maintenance false;
-    if (-f $document_root/error/503.html ){
-            set $maintenance true;
-    }
-    if ($uri ~ "^/error/") {
-        set $maintenance false;
-    }
-    if ($remote_addr = XXX.XXX.XXX.XXX ){
-            set $maintenance false;#指定したIPからのアクセスは普通に見れるようにする
-    }
-    if ($maintenance = true) {
-            return 503;
-    }
-    error_page 503 @maintenance;
-    location @maintenance {
-            rewrite ^(.*)$ /error/503.html break;
-            expires 0;
-    }
-    location /error/ {}
-</code></pre>
-
-<!-- more -->
-
-
-<p>}
-```</p>
-
-<p>path/to/root/error/503.htmlがあれば、メンテナンス画面を表示する。なければ表示しない。一度nginx設定をリロードすればその後はリロードの必要もない。</p>
 ]]></content>
   </entry>
   

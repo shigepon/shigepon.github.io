@@ -397,6 +397,22 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 <p>こんな感じで一旦複数列の値を配列に格納して、1列扱いとして、その配列を展開することでいける。ちなみに配列の添字は0スタートではなく、1スタートみたい。ある期間での集計値を各行に追加したいとかそんな場合にとても使える。</p>
 
 <p>参考：<a href="http://yanor.net/wiki/?PostgreSQL%2FSQL%2F%E3%82%B5%E3%83%96%E3%82%AF%E3%82%A8%E3%83%AA%E3%81%A7%E8%A4%87%E6%95%B0%E3%82%AB%E3%83%A9%E3%83%A0%E3%82%92%E8%BF%94%E3%81%99">PostgreSQL/SQL/サブクエリで複数カラムを返す &ndash; yanor.net/wiki</a></p>
+
+<h2>クエリを止める</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="n">pg_stat_activity</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でpidを確認して</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="n">pg_cancel_backend</span><span class="p">(</span><span class="n">pid</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でおk</p>
 </div>
 
 
@@ -544,7 +560,7 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linux/'>linux (11)</a></li>
-<li class='category'><a href='/blog/categories/memo/'>memo (12)</a></li>
+<li class='category'><a href='/blog/categories/memo/'>memo (13)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
