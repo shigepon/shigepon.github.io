@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Django | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/django/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-08-15T00:50:55+09:00</updated>
+  <updated>2015-08-25T18:09:08+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,44 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Django 1.7から1.8にアップデートしてみた]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/08/25/migrate-from-django-1-dot-7-to-1-dot-8/"/>
+    <updated>2015-08-25T15:39:02+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/08/25/migrate-from-django-1-dot-7-to-1-dot-8</id>
+    <content type="html"><![CDATA[<p><a href="http://blog.shigepon.info/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/">1.6の時</a>と同様にpipでアップデートした。</p>
+
+<h2>注意点</h2>
+
+<p>個人的に作っているアプリでアップデートした際にコード変更が必要だった点は以下の通り。他にも色々使えなくなった命令とかあるみたいだけど引っ掛からなかったので省略。詳しくは<a href="https://docs.djangoproject.com/en/1.8/releases/1.8/#features-removed-in-1-8">Django 1.8 release notes | Django documentation | Django</a>で見ることが出来る。</p>
+
+<h3>urls.pyで指定するnamespace</h3>
+
+<p>urls.pyでapp_nameを指定した場合に必ずnamespaceを指定する必要があるようになった。</p>
+
+<p><code>py urls.py
+url(r'^', include('hoge.urls',app_name='hoge')),#これはダメ
+url(r'^', include('hoge.urls',app_name='hoge',namespace='hoge')),#これはOK
+</code></p>
+
+<p>ダメなコード実装してた場合は、reverseでurlを作ってる箇所にも修正が必要になる。</p>
+
+<h3>transactionについて</h3>
+
+<p><code>py
+transaction.commit_unless_managed()
+</code></p>
+
+<p>みたいなメソッドが無くなってた。</p>
+
+<h2>嬉しい点</h2>
+
+<p>色々あるみたいだけど、PostgreSQLを使っているので、特にPostgreSQL使ってる場合に、独自のフィールドを使えるようになった点が嬉しい。ArrayFieldとか、わざわざリレーション作りたくない時とか便利そう。</p>
+
+<p><a href="https://docs.djangoproject.com/en/1.8/ref/contrib/postgres/fields/">Djangoドキュメントによる説明</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Djangoで作成済みテーブルに手動でリレーションを追加する]]></title>
@@ -346,181 +384,6 @@ $ python manage.py runserver
 </code></p>
 
 <p>とすると、127.0.0.1/adminにアクセスすると管理画面へのログイン画面が出る。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[djangoをプロファイリングする]]></title>
-    <link href="http://blog.shigepon.info/blog/2015/07/01/profiling-django/"/>
-    <updated>2015-07-01T09:06:13+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2015/07/01/profiling-django</id>
-    <content type="html"><![CDATA[<p>作ってるWebサービスが条件によってえらい重くなるので、ボトルネックを探すためにプロファイラを動かしてみようと考えてやってみたらそこそこハマった。</p>
-
-<p>先に結論：</p>
-
-<p><strong>Middleware使ってブラウザに表示させるのが楽だった</strong></p>
-
-<p>条件</p>
-
-<ul>
-<li>cui環境なので、プロファイル結果は画像作るかブラウザ表示するかのどちらか</li>
-<li>コードに埋めこまない形</li>
-</ul>
-
-
-<p>まず参考にしたのは公式ページの<a href="https://code.djangoproject.com/wiki/ProfilingDjango">ProfilingDjango – Django</a>。ざっくりとした結果が知りたかったのでrunprofileserverを試してみることにした。</p>
-
-<h2>開発サーバでやってみる（runprofileserver）</h2>
-
-<p>django-extensionの一機能で</p>
-
-<p><code>sh
-$ pip install django-extensions
-</code></p>
-
-<p>でインストールして、</p>
-
-<p><code>py settings.py
-INSTALLED_APP = (...
-   'django_extensions',
-)
-</code></p>
-
-<p>で設定して</p>
-
-<p><code>sh
-$ python manage.py runprofileserver
-</code></p>
-
-<p>とすると、よしなに/tmpフォルダ内にプロファイル結果を吐き出してくれる開発用サーバだそうで、これは便利そうと思い、やってみた。</p>
-
-<h3>結果を画像にしようとしてハマる</h3>
-
-<p>プロファイル結果からgraphviz通して画像にしたらブラウザから確認出来るし楽なんじゃね？とか良く考えると不毛なことを考えたのが間違いのもと。普通にKCacheGrind使ってろって話なんだけど、やってみた</p>
-
-<p>ツールとして使ったもの</p>
-
-<ul>
-<li><a href="https://github.com/jrfonseca/gprof2dot">gprof2dot</a>、プロファイル結果をdotファイルに変換する</li>
-<li>graphviz、dotファイルを画像に変換する</li>
-</ul>
-
-
-<p>話にならなかったもの（良く考えるとこのケースで使えないの当たり前なのに使おうとして失敗したもの）</p>
-
-<ul>
-<li>xdebugtoolkit、単純にxdebugの結果でないとそりゃ使えないよねと納得した</li>
-</ul>
-
-
-<p>あまり良く分かってなかったので、KCacheGrind互換で出力しておけば、色んなソフト使ってよしなに出来るんじゃね？と思ってみた。んでKCacheGrind互換出力ってcallgrind形式ってことだよね！と勝手に思い込んでた</p>
-
-<p><code>sh
-$ python manage.py runprofileserver --kcachegrind
-</code></p>
-
-<p>おもむろにdotファイルに変換!</p>
-
-<p><code>sh
-$ path/to/gprof2dot -o out.dot -f callgrind /tmp/xxx.prof
-....
-AssertionError
-</code></p>
-
-<p>うまくいかない。何かの計算値がこうなるはずなのにならないよ！とか怒られてる。って良く考えたらKCacheGrind互換の出力がcallgrind形式って保証がどこにもない！</p>
-
-<p>ってことで、あれこれドキュメント読んでたら、runprofileserverはhotshot使ってるとか何とか書いてあるから、何も指定しなかったらhotshotでの形式になる・・・ってことは全然説明されてないけど-fのオプションはpstatsで良いんじゃね？</p>
-
-<p>と勝手に予想して</p>
-
-<p><code>sh
-$ python manage.py runprofileserver
-</code></p>
-
-<p><code>sh
-$ path/to/gprof2dot -o out.dot -f pstats /tmp/xxx.prof
-</code></p>
-
-<p>とやるとout.dotが出来ましたとさ。あとは色んなとこに書いてある（例えば<a href="http://stackoverflow.com/questions/9279144/interpreting-callgrind-data">ここ</a>）ように、dotファイルを画像ファイルに変換すると、ちゃんと画像が出来上がった。</p>
-
-<p>ただ・・・・、まだ設定分かってないからだと思うんだけど、出来上がった画像にはviewやmodelのメソッドが一切書かれておらず、この情報だけからボトルネック探すのかなりキツイんじゃね？ということだけが分かった。</p>
-
-<h3>同一ドメインのurlを内部で呼び出してハマる</h3>
-
-<p>何故かURLによってプロファイル作るのが途中で止まって、サーバもレスポンスを返してくれなくなった。問題箇所を調べると、どうも内部で同じrunprofileserverで管理しているurlにアクセスすると止まっちゃう模様。別サーバを立てて、そこにアクセスするようにすれば、問題無く動作した。</p>
-
-<h2>手間なのでMiddlewareでプロファイルすることにした</h2>
-
-<p>いちいち開発中の状態なのにサーバ2つ立てて面倒だったり、結局作った画像見ても良く分からなかったので、今度はMiddlewareに埋め込むタイプを試してみた。</p>
-
-<h3>取りあえず動かなくてハマる</h3>
-
-<p>Extendedって書いてあるしということで<a href="https://djangosnippets.org/snippets/605/">djangosnippets: Extended Profiling Middleware</a>を試してみた。</p>
-
-<p>手順は</p>
-
-<ul>
-<li>↑のページのファイルをダウンロード（コード右上にダウンロードボタンがある）</li>
-<li>適当な名前を付けてimport出来る適当な場所に配置。（オラはmodulesってとこにprofiler.pyという名前を付けて置いてみた）</li>
-<li>settings.pyにmiddlewareを登録する</li>
-<li>プロファイルしたいURLにprof=というパラメータを付けてブラウザでアクセスする</li>
-</ul>
-
-
-<p>って感じ。settings.pyは</p>
-
-<p>```py settings.py
-MIDDLEWARE_CLASSES = (
-&hellip;</p>
-
-<pre><code>'modules.profiler.ProfileMiddleware',
-</code></pre>
-
-<p>)
-```</p>
-
-<p>こんな感じ。で、上のようにブラウザでアクセスするとエラー・・・</p>
-
-<p><code>
-AttributeError: 'WSGIRequest' object has no attribute 'has_key'
-</code></p>
-
-<p>なので、コード上で</p>
-
-<p><code>py
-request.has_key
-</code></p>
-
-<p>となっているところを</p>
-
-<p><code>py
-request.GET.has_key
-</code></p>
-
-<p>と変更すると上手く動いた。ProfileMiddlewareのページ内コメントを見ると</p>
-
-<p><code>py
-'prof' in request.GET
-</code></p>
-
-<p>と変更しても動くらしい。んで、プロファイルしたいurlにprof=をパラメータとして付けてアクセスすると、ブラウザ上に</p>
-
-<p>```
-47793 function calls (42681 primitive calls) in 0.907 seconds</p>
-
-<p>   Ordered by: internal time, call count</p>
-
-<p>   ncalls  tottime  percall  cumtime  percall filename:lineno(function)</p>
-
-<pre><code>    3    0.608    0.203    0.608    0.203 /path/to/python/local/lib/python/site-packages/django/db/backends/utils.py:58(execute)
-   30    0.112    0.004    0.112    0.004 /usr/lib/python/socket.py:406(readline)
-   12    0.050    0.004    0.050    0.004 /usr/lib/python/socket.py:223(meth)
-</code></pre>
-
-<p>&hellip;.
-```</p>
-
-<p>という形でプロファイルが表示出来た。もーこれでいーや。ということでやったのはここまで。まだまだだけど、取りあえずプロファイル結果を出すまでだけでハマったし、次回やっても同じようにハマりそうなのでメモしておく。</p>
 ]]></content>
   </entry>
   

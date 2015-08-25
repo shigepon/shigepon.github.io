@@ -9,7 +9,8 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="今までphpのrhacoというドマイナーなフレームワークを使ってきてたので、メジャーなフレームワークでも使ってみるかー。ついでにrubyの練習にもなるかーと思ってRails4をはじめたんだけど、なんかこー色々自分の開発方法に合ってないような気がするので挫折する。 &hellip;">
+  <meta name="description" content="基本はphp-buildで複数バージョンのPHP-FPMを用意する &ndash; hnwの日記を参考にして進める 1
+$ curl https://raw.github.com/CHH/phpenv/master/bin/phpenv-install.sh | bash &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +80,65 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/07/build-php-with-phpenv/">Phpenvとphp-buildを使って適当なバージョンのphpをビルドする</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-07T00:42:03+09:00" pubdate data-updated="true">Jun 7<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>基本は<a href="http://d.hatena.ne.jp/hnw/20130626">php-buildで複数バージョンのPHP-FPMを用意する &ndash; hnwの日記</a>を参考にして進める</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>curl https://raw.github.com/CHH/phpenv/master/bin/phpenv-install.sh | bash
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これが何故か上手くいかなかったので</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>wget https://raw.github.com/CHH/phpenv/master/bin/phpenv-install.sh
+</span><span class='line'><span class="nv">$ </span>chmod +x phpenv-install.sh
+</span><span class='line'><span class="nv">$ </span>./phpenv-install.sh
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/06/07/build-php-with-phpenv/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -624,62 +684,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/04/08/update-openssl-security-patch/">Ubuntuでopensslのsecurity Patchを当てる</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-04-08T14:39:21+09:00" pubdate data-updated="true">Apr 8<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>本日、<a href="http://jp.techcrunch.com/2014/04/08/20140407massive-security-bug-in-openssl-could-effect-a-huge-chunk-of-the-internet/">OpenSSLの重大バグが発覚。インターネットの大部分に影響の可能性 | TechCrunch Japan</a>というニュースで</p>
-
-<blockquote><p>過去2年以内のあらゆるバージョンのOpenSSLが走るシステムで、システムメモリー上にある大量のデータを暴露することが可能</p></blockquote>
-
-<p>と書いてあった、これはまずいので、あわててセキュリティパッチを当てたので手順をメモ。 OSはUbuntu 12.04LTS。</p>
-
-<p>Ubuntuでは<a href="http://www.ubuntu.com/usn/usn-2165-1/">USN-2165-1: OpenSSL vulnerabilities | Ubuntu</a>にあるように、Ubuntu 13.10、12.10、12.04 LTSでセキュリティパッチが出ている（2014年4月7日現在)。ということでaptを使えばセキュリティパッチを当てることが出来る。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo apt-get update
-</span><span class='line'><span class="nv">$ </span>sudo apt-get upgrade
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/04/08/update-openssl-security-patch/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -711,6 +715,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/25/migrate-from-django-1-dot-7-to-1-dot-8/">Django 1.7から1.8にアップデートしてみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/08/12/javascript-memo/">Javascript Memo</a>
       </li>
     
@@ -724,10 +732,6 @@
     
       <li class="post">
         <a href="/blog/2015/07/28/use-django-model-outside-django-project/">DjangoモデルをDjangoプロジェクトの外から使う</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a>
       </li>
     
   </ul>
@@ -756,7 +760,7 @@
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (20)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (21)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
@@ -776,6 +780,7 @@
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
+<li class='category'><a href='/blog/categories/python/'>python (1)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>
 <li class='category'><a href='/blog/categories/ruby/'>ruby (9)</a></li>

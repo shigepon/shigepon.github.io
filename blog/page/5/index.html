@@ -9,9 +9,15 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="ansibleで自分が欲しい情報が色んなページに散らばっていたので、メモ ansible-playbookのオプション -K: sudoのパスワード入力
--C (&mdash;check): 実際に実行しないでチェックしてくれる
--l name: hostsファイルに[name] &hellip;">
+  <meta name="description" content="データの一覧表示 あとで参考ページとか追記する予定。
+データの一覧表示には何種類かファイルが必要（モデル、ビュー、テンプレート、URLディスパッチャー）。
+それぞれこんな感じで用意する。 モデル models.py1
+2
+3
+4
+5
+6
+from django.db import models &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +87,70 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/02/django-show-list-with-paging/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-02T11:51:44+09:00" pubdate data-updated="true">Jul 2<span>nd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>データの一覧表示</h2>
+
+<p>あとで参考ページとか追記する予定。
+データの一覧表示には何種類かファイルが必要（モデル、ビュー、テンプレート、URLディスパッチャー）。
+それぞれこんな感じで用意する。</p>
+
+<h3>モデル</h3>
+
+<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">Bocho</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">court</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
+</span><span class='line'>    <span class="o">....</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/07/02/django-show-list-with-paging/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -634,65 +704,6 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/06/07/build-php-with-phpenv/">Phpenvとphp-buildを使って適当なバージョンのphpをビルドする</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-06-07T00:42:03+09:00" pubdate data-updated="true">Jun 7<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>基本は<a href="http://d.hatena.ne.jp/hnw/20130626">php-buildで複数バージョンのPHP-FPMを用意する &ndash; hnwの日記</a>を参考にして進める</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>curl https://raw.github.com/CHH/phpenv/master/bin/phpenv-install.sh | bash
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これが何故か上手くいかなかったので</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>wget https://raw.github.com/CHH/phpenv/master/bin/phpenv-install.sh
-</span><span class='line'><span class="nv">$ </span>chmod +x phpenv-install.sh
-</span><span class='line'><span class="nv">$ </span>./phpenv-install.sh
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/06/07/build-php-with-phpenv/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -724,6 +735,10 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/25/migrate-from-django-1-dot-7-to-1-dot-8/">Django 1.7から1.8にアップデートしてみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/08/12/javascript-memo/">Javascript Memo</a>
       </li>
     
@@ -737,10 +752,6 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
     
       <li class="post">
         <a href="/blog/2015/07/28/use-django-model-outside-django-project/">DjangoモデルをDjangoプロジェクトの外から使う</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a>
       </li>
     
   </ul>
@@ -769,7 +780,7 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (20)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (21)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
@@ -789,6 +800,7 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
+<li class='category'><a href='/blog/categories/python/'>python (1)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>
 <li class='category'><a href='/blog/categories/ruby/'>ruby (9)</a></li>

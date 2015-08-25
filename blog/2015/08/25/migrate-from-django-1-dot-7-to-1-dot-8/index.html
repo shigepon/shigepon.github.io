@@ -5,16 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>rhaco3 memo - shigeponが関心のある技術情報など</title>
+  <title>Django 1.7から1.8にアップデートしてみた - shigeponが関心のある技術情報など</title>
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="rhaco3を使ってる人なんて世界で何人居るのかなと思いつつ、あまりに情報が少ないので、メモ書きしていく。
-大きめネタは別記事にまとめるが小さいネタはここに追記する。 Daoで作ったSQLを確認する方法 Daoを継承したモデルとして、Hogeモデルがあるとして 1
-2
-3
-4
-\Hoge:: &hellip;">
+  <meta name="description" content="1.6の時と同様にpipでアップデートした。 注意点 個人的に作っているアプリでアップデートした際にコード変更が必要だった点は以下の通り。他にも色々使えなくなった命令とかあるみたいだけど引っ掛からなかったので省略。詳しくはDjango 1.8 release notes | Django &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -23,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.shigepon.info/blog/2014/03/15/rhaco3-memo">
+  <link rel="canonical" href="http://blog.shigepon.info/blog/2015/08/25/migrate-from-django-1-dot-7-to-1-dot-8">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -87,7 +82,7 @@
   
   <header>
     
-      <h1 class="entry-title">Rhaco3 Memo</h1>
+      <h1 class="entry-title">Django 1.7から1.8にアップデートしてみた</h1>
     
     
       <p class="meta">
@@ -103,98 +98,46 @@
   
 
 
-<time datetime="2014-03-15T13:28:55+09:00" pubdate data-updated="true">Mar 15<span>th</span>, 2014</time>
+<time datetime="2015-08-25T15:39:02+09:00" pubdate data-updated="true">Aug 25<span>th</span>, 2015</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>rhaco3を使ってる人なんて世界で何人居るのかなと思いつつ、あまりに情報が少ないので、メモ書きしていく。
-大きめネタは別記事にまとめるが小さいネタはここに追記する。</p>
+<div class="entry-content"><p><a href="http://blog.shigepon.info/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/">1.6の時</a>と同様にpipでアップデートした。</p>
 
-<h3>Daoで作ったSQLを確認する方法</h3>
+<h2>注意点</h2>
 
-<p>Daoを継承したモデルとして、Hogeモデルがあるとして</p>
+<p>個人的に作っているアプリでアップデートした際にコード変更が必要だった点は以下の通り。他にも色々使えなくなった命令とかあるみたいだけど引っ掛からなかったので省略。詳しくは<a href="https://docs.djangoproject.com/en/1.8/releases/1.8/#features-removed-in-1-8">Django 1.8 release notes | Django documentation | Django</a>で見ることが出来る。</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<h3>urls.pyで指定するnamespace</h3>
+
+<p>urls.pyでapp_nameを指定した場合に必ずnamespaceを指定する必要があるようになった。</p>
+
+<figure class='code'><figcaption><span>urls.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nx">\Hoge</span><span class="o">::</span><span class="na">start_record</span><span class="p">();</span>
-</span><span class='line'><span class="nx">\Hoge</span><span class="o">::</span><span class="na">find_get</span><span class="p">(</span><span class="nx">\org\rhaco\store\db\Q</span><span class="o">::</span><span class="na">eq</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">));</span><span class="c1">//\Hogeモデルからid=1のデータを1件取得する命令</span>
-</span><span class='line'><span class="nv">$queries</span> <span class="o">=</span> <span class="nx">\Hoge</span><span class="o">::</span><span class="na">stop_record</span><span class="p">();</span>
-</span><span class='line'><span class="nb">var_dump</span><span class="p">(</span><span class="nv">$queries</span><span class="p">);</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">url</span><span class="p">(</span><span class="s">r&#39;^&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s">&#39;hoge.urls&#39;</span><span class="p">,</span><span class="n">app_name</span><span class="o">=</span><span class="s">&#39;hoge&#39;</span><span class="p">)),</span><span class="c">#これはダメ</span>
+</span><span class='line'><span class="n">url</span><span class="p">(</span><span class="s">r&#39;^&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s">&#39;hoge.urls&#39;</span><span class="p">,</span><span class="n">app_name</span><span class="o">=</span><span class="s">&#39;hoge&#39;</span><span class="p">,</span><span class="n">namespace</span><span class="o">=</span><span class="s">&#39;hoge&#39;</span><span class="p">)),</span><span class="c">#これはOK</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
+<p>ダメなコード実装してた場合は、reverseでurlを作ってる箇所にも修正が必要になる。</p>
 
-
-<!-- more -->
-
-
-<p>こんな感じで使う。出力は</p>
-
-<!-- more -->
-
-
-
+<h3>transactionについて</h3>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'>array(1) {
-</span><span class='line'>  [0]=&gt;
-</span><span class='line'>  array(2) {
-</span><span class='line'>    [0]=&gt;
-</span><span class='line'>    string(291) &quot;select t4.&quot;id&quot; as c5,t4.&quot;name&quot; as c10 from hoge t4 where  ( (t4.&quot;id&quot; = ?) )   offset 0 limit 1 &quot;
-</span><span class='line'>    [1]=&gt;
-</span><span class='line'>    array(1) {
-</span><span class='line'>      [0]=&gt;
-</span><span class='line'>      string(1) &quot;1&quot;
-</span><span class='line'>    }
-</span><span class='line'>  }
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">transaction</span><span class="o">.</span><span class="n">commit_unless_managed</span><span class="p">()</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>みたいに出る</p>
+<p>みたいなメソッドが無くなってた。</p>
 
-<h3>あるクラス用に設定したConfを別クラスから参照したい</h3>
+<h2>嬉しい点</h2>
 
-<p>\org\rhaco\Confはクラス用に設定値を決めるのに良く使う。
-大体commons/hoge.phpみたいにrhaco3で設定値を書くファイルに書くことが多い。</p>
+<p>色々あるみたいだけど、PostgreSQLを使っているので、特にPostgreSQL使ってる場合に、独自のフィールドを使えるようになった点が嬉しい。ArrayFieldとか、わざわざリレーション作りたくない時とか便利そう。</p>
 
-<p>例としてFlowクラスでルートURLを設定するには</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nx">\org\rhaco\Conf</span><span class="o">::</span><span class="na">set</span><span class="p">(</span><span class="s2">&quot;org.rhaco.Flow&quot;</span><span class="p">,</span><span class="s2">&quot;app_url&quot;</span><span class="p">,</span><span class="s2">&quot;localhost&quot;</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな感じでcommons/hoge.phpに書いたりする。Flowクラス内では</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nv">$app_url</span> <span class="o">=</span> <span class="nx">\org\rhaco\Conf</span><span class="o">::</span><span class="na">get</span><span class="p">(</span><span class="s2">&quot;app_url&quot;</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>で設定した値を読み込める。
-他のクラスで読み込みたい場合にどうするか良く分からなかったがソース読んだら分かったのでメモしておく</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nv">$app_url</span> <span class="o">=</span> <span class="nx">\org\rhaco\Conf</span><span class="o">::</span><span class="na">get</span><span class="p">(</span><span class="s2">&quot;org.rhaco.Flow@app_url&quot;</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これでおk。@で区切ってクラス名と取得したい値のキーを書くと値を取って来れる。</p>
+<p><a href="https://docs.djangoproject.com/en/1.8/ref/contrib/postgres/fields/">Djangoドキュメントによる説明</a></p>
 </div>
 
 
@@ -217,12 +160,12 @@
   
 
 
-<time datetime="2014-03-15T13:28:55+09:00" pubdate data-updated="true">Mar 15<span>th</span>, 2014</time>
+<time datetime="2015-08-25T15:39:02+09:00" pubdate data-updated="true">Aug 25<span>th</span>, 2015</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/memo/'>memo</a>, <a class='category' href='/blog/categories/rhaco/'>rhaco</a>, <a class='category' href='/blog/categories/rhaco3/'>rhaco3</a>
+    <a class='category' href='/blog/categories/django/'>Django</a>, <a class='category' href='/blog/categories/python/'>python</a>
   
 </span>
 
@@ -231,7 +174,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.info/blog/2014/03/15/rhaco3-memo/" data-via="shigepon" data-counturl="http://blog.shigepon.info/blog/2014/03/15/rhaco3-memo/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.info/blog/2015/08/25/migrate-from-django-1-dot-7-to-1-dot-8/" data-via="shigepon" data-counturl="http://blog.shigepon.info/blog/2015/08/25/migrate-from-django-1-dot-7-to-1-dot-8/" >Tweet</a>
   
   
   
@@ -251,10 +194,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/03/14/a-way-of-creating-rails-application4/" title="Previous Post: Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(4):ビューにBootstrapを使う">&laquo; Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(4):ビューにBootstrapを使う</a>
+        <a class="basic-alignment left" href="/blog/2015/08/12/javascript-memo/" title="Previous Post: Javascript memo">&laquo; Javascript memo</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/03/20/nginx-memo/" title="Next Post: nginx memo">nginx memo &raquo;</a>
       
     </p>
   </footer>

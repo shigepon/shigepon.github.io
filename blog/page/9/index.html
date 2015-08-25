@@ -9,7 +9,19 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="なでしこでプラグインを作る時にC#を使いたかったので、その前段階としてC++/CLIでプラグインを作る方法を探ってみました。 C++/CLIが使えると、.Netを使えるようになり、C#で作ったdllもVC++の参照設定から読み込んで使えるようになります。 なでしこにはC++ &hellip;">
+  <meta name="description" content="画像やファイルが無くなっていますがご了承下さい なでしこでプラグインを作る時にC#を使いたかったので、本格的にdllを作る前に、C++/CLIからMessageBoxを表示する程度のC#のdllを呼び出してみました。 C#のdllコード 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +91,81 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/28/nadesiko-plugin-cs/">C#で作ったdllをC++/CLIで使う</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-28T22:27:58+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong>画像やファイルが無くなっていますがご了承下さい</strong></p>
+
+<p>なでしこでプラグインを作る時にC#を使いたかったので、本格的にdllを作る前に、C++/CLIからMessageBoxを表示する程度のC#のdllを呼び出してみました。</p>
+
+<p>C#のdllコード</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>using System;
+</span><span class='line'>using System.Collections.Generic;
+</span><span class='line'>using System.Windows.Forms;
+</span><span class='line'>using System.Text;
+</span><span class='line'>namespace ClassLibrary1{
+</span><span class='line'>    public class Class1
+</span><span class='line'>    {
+</span><span class='line'>        public static void Method1()
+</span><span class='line'>        {
+</span><span class='line'>            MessageBox.Show(&quot;method1&quot;);
+</span><span class='line'>        }
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/01/28/nadesiko-plugin-cs/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -333,6 +420,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/25/migrate-from-django-1-dot-7-to-1-dot-8/">Django 1.7から1.8にアップデートしてみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/08/12/javascript-memo/">Javascript Memo</a>
       </li>
     
@@ -346,10 +437,6 @@
     
       <li class="post">
         <a href="/blog/2015/07/28/use-django-model-outside-django-project/">DjangoモデルをDjangoプロジェクトの外から使う</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a>
       </li>
     
   </ul>
@@ -378,7 +465,7 @@
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (20)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (21)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
@@ -398,6 +485,7 @@
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
+<li class='category'><a href='/blog/categories/python/'>python (1)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>
 <li class='category'><a href='/blog/categories/ruby/'>ruby (9)</a></li>

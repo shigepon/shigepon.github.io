@@ -9,8 +9,18 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="rhaco使わないでWebサービス作るならもうPHP使わずに他の言語でやってみようかなと思い、
-DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強という意味を込めてRailsでやってみることにした。 とりあえずまずはインストール出来ないと話にならないので、 &hellip;">
+  <meta name="description" content="ググってみたけど無かったのでメモ。
+単純に.vimrcに 1
+2
+3
+4
+5
+6
+7
+let dbext_default_profile=""
+let dbext_default_type="PGSQL"
+let dbext_default_user="username"
+let &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +90,66 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/28/vim-dbext-postgresql/">dbext.vimでpostgresqlにアクセスする</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-28T11:48:20+09:00" pubdate data-updated="true">Feb 28<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ググってみたけど無かったのでメモ。
+単純に.vimrcに</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>let dbext_default_profile=""
+</span><span class='line'>let dbext_default_type="PGSQL"
+</span><span class='line'>let dbext_default_user="username"
+</span><span class='line'>let dbext_default_passwd="password"
+</span><span class='line'>let dbext_default_dbname="dbname"
+</span><span class='line'>let dbext_default_host="host"
+</span><span class='line'>let dbext_default_port="port"</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/02/28/vim-dbext-postgresql/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -653,81 +723,6 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/28/nadesiko-plugin-cs/">C#で作ったdllをC++/CLIで使う</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-28T22:27:58+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><strong>画像やファイルが無くなっていますがご了承下さい</strong></p>
-
-<p>なでしこでプラグインを作る時にC#を使いたかったので、本格的にdllを作る前に、C++/CLIからMessageBoxを表示する程度のC#のdllを呼び出してみました。</p>
-
-<p>C#のdllコード</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>using System;
-</span><span class='line'>using System.Collections.Generic;
-</span><span class='line'>using System.Windows.Forms;
-</span><span class='line'>using System.Text;
-</span><span class='line'>namespace ClassLibrary1{
-</span><span class='line'>    public class Class1
-</span><span class='line'>    {
-</span><span class='line'>        public static void Method1()
-</span><span class='line'>        {
-</span><span class='line'>            MessageBox.Show(&quot;method1&quot;);
-</span><span class='line'>        }
-</span><span class='line'>    }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/01/28/nadesiko-plugin-cs/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/9/">&larr; Older</a>
@@ -759,6 +754,10 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/25/migrate-from-django-1-dot-7-to-1-dot-8/">Django 1.7から1.8にアップデートしてみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/08/12/javascript-memo/">Javascript Memo</a>
       </li>
     
@@ -772,10 +771,6 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
     
       <li class="post">
         <a href="/blog/2015/07/28/use-django-model-outside-django-project/">DjangoモデルをDjangoプロジェクトの外から使う</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a>
       </li>
     
   </ul>
@@ -804,7 +799,7 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (20)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (21)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
@@ -824,6 +819,7 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
+<li class='category'><a href='/blog/categories/python/'>python (1)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>
 <li class='category'><a href='/blog/categories/ruby/'>ruby (9)</a></li>

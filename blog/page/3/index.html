@@ -9,7 +9,8 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Django使ったサイトでカレンダーを表示しようとしたんだけど、HTMLCalendarとかだとレスポンシブにならないし、カスタマイズ面倒だしということで、javascriptで生成して、イベントデータはajaxリクエストから取り出すようにしたいと思ってライブラリを調べてみたのと感想を書いておく。 &hellip;">
+  <meta name="description" content="そろそろbootstrap3を使ってみたいなと思い、Djangoでbootstrap3を使う方法を調べてみた。django-bootstrap-toolkitのページを見てみるとdjango-bootstrap3を使ってねと書いてあるので、それを使ってみることにした。 インストール 1
+$ pip &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +80,56 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/12/18/use-bootstrap3-in-django/">Use Bootstrap3 in Django</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-12-18T08:24:56+09:00" pubdate data-updated="true">Dec 18<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>そろそろbootstrap3を使ってみたいなと思い、Djangoでbootstrap3を使う方法を調べてみた。django-bootstrap-toolkitのページを見てみるとdjango-bootstrap3を使ってねと書いてあるので、それを使ってみることにした。</p>
+
+<h2>インストール</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install django-bootstrap3
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>設定</h2>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/12/18/use-bootstrap3-in-django/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -572,90 +623,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/20/titanium-ajax-post-to-django/">Titanium MobileとDjangoでAjax認証を行う</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-11-20T09:42:26+09:00" pubdate data-updated="true">Nov 20<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>最近Titanium Mobile使ってスマホアプリを作ろうかなと思って色々試してるんだけど、ログイン認証する時にはまったので、メモ</p>
-
-<p>参考<a href="http://stackoverflow.com/questions/26022797/in-appcelerator-titanium-how-can-i-get-djangos-csrf-token">In Appcelerator Titanium, how can I get Django&rsquo;s CSRF token?(Stack Overflow)</a></p>
-
-<h2>Titanium MobileでのPOST</h2>
-
-<p>HTTPClientを使って、例えば次のように書く。UIの設計部分とかそんなのは省略。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>var <span class="nv">client</span> <span class="o">=</span> Ti.Network.createHTTPClient<span class="o">({</span>
-</span><span class='line'>    onerror: <span class="k">function</span><span class="o">(</span>e<span class="o">){</span>
-</span><span class='line'>        Ti.API.debug<span class="o">(</span>e.error<span class="o">)</span>;
-</span><span class='line'>        alert<span class="o">(</span><span class="s1">&#39;error&#39;</span><span class="o">)</span>;
-</span><span class='line'>    <span class="o">}</span>,
-</span><span class='line'>    onload: <span class="k">function</span><span class="o">(</span>e<span class="o">){</span>
-</span><span class='line'>        var <span class="nv">item</span> <span class="o">=</span> JSON.parse<span class="o">(</span>this.responseText<span class="o">)</span>;
-</span><span class='line'>        <span class="k">if</span><span class="o">(</span>item.status<span class="o">==</span>1<span class="o">){</span>//例としてstatusを返すという設定にしているのでこんな感じにしてる
-</span><span class='line'>            alert<span class="o">(</span><span class="s1">&#39;ログインしました&#39;</span><span class="o">)</span>;
-</span><span class='line'>        <span class="o">}</span><span class="k">else</span><span class="o">{</span>
-</span><span class='line'>            alert<span class="o">(</span><span class="s1">&#39;ログイン失敗しました&#39;</span><span class="o">)</span>;
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">})</span>;
-</span><span class='line'>client.open<span class="o">(</span><span class="s1">&#39;POST&#39;</span>,<span class="s1">&#39;http://url/to/login&#39;</span><span class="o">)</span>;
-</span><span class='line'>client.send<span class="o">({</span>username:<span class="s1">&#39;hoge&#39;</span>,password:<span class="s1">&#39;fuga&#39;</span><span class="o">})</span>;
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/11/20/titanium-ajax-post-to-django/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -687,6 +654,10 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/25/migrate-from-django-1-dot-7-to-1-dot-8/">Django 1.7から1.8にアップデートしてみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/08/12/javascript-memo/">Javascript Memo</a>
       </li>
     
@@ -700,10 +671,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
     
       <li class="post">
         <a href="/blog/2015/07/28/use-django-model-outside-django-project/">DjangoモデルをDjangoプロジェクトの外から使う</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a>
       </li>
     
   </ul>
@@ -732,7 +699,7 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (20)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (21)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
@@ -752,6 +719,7 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
+<li class='category'><a href='/blog/categories/python/'>python (1)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>
 <li class='category'><a href='/blog/categories/ruby/'>ruby (9)</a></li>
