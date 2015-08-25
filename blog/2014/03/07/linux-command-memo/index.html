@@ -317,6 +317,25 @@
 
 
 <p>参考：<a href="https://wiki.ubuntu.com/MountWindowsSharesPermanently">MountWindowsSharesPermanently &ndash; Ubuntu Wiki</a></p>
+
+<h2>LANで利用されているIPアドレスを調べる</h2>
+
+<p>arp-scanコマンドを使う。
+まずはインストール</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install arp-scan
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>使い方</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo arp-scan -I eth0 -l
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>eth0はスキャンしたいネットワークアダプタ</p>
 </div>
 
 
