@@ -305,6 +305,146 @@ subprocessを使う。何か昔は別の手法だったらしい。</p>
 
 <p>と認証を削除するといけた
 <a href="http://stackoverflow.com/questions/19693433/django-rest-framework-behind-http-basic-authentication">nginx &ndash; Django Rest Framework behind HTTP Basic Authentication &ndash; Stack Overflow</a></p>
+
+<h2>リストの文字列をリストに変換する</h2>
+
+<p>リクエストでリストの文字列をパラメーターにして送って、それをリストとして評価したかったので、調べてみた。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">ast</span>
+</span><span class='line'><span class="n">hoge</span> <span class="o">=</span> <span class="s">u&#39;[&quot;A&quot;,&quot;B&quot;,&quot;C&quot;]</span>
+</span><span class='line'><span class="n">fuga</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">hoge</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><a href="https://docs.python.org/2/library/ast.html#ast.literal%5Feval">32.2. ast — Abstract Syntax Trees — Python 2.7.10 documentation</a>見ると</p>
+
+<blockquote><p>This can be used for safely evaluating strings containing Python values from untrusted sources without the need to parse the values oneself.</p></blockquote>
+
+<p>と、あるので、変換だけならチェックしなくても問題ない・・・かも？</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/1894269/convert-string-representation-of-list-to-list-in-python">convert string representation of list to list in python &ndash; Stack Overflow</a></p>
+
+<h2>lxmlで&nbsp;が入った文章をxmlでパース出来ない</h2>
+
+<p>xmlに&nbsp;（空白）が入っている場合に、xmlとしてパースした場合に</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">lxml</span><span class="o">.</span><span class="n">etree</span><span class="o">.</span><span class="n">XMLSyntaxError</span><span class="p">:</span> <span class="n">Entity</span> <span class="s">&#39;nbsp&#39;</span> <span class="ow">not</span> <span class="n">defined</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいなメッセージを出されちゃうことがある。解決策としては</p>
+
+<ul>
+<li>htmlとしてパースする</li>
+<li>xml定義をしっかりやっておく</li>
+<li>＆の部分を適当に置換</li>
+</ul>
+
+
+<p>くらいがある。</p>
+
+<h4>htmlとしてパース</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">StringIO</span> <span class="kn">import</span> <span class="n">StringIO</span>
+</span><span class='line'><span class="n">parser</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">HTMLParser</span><span class="p">()</span>
+</span><span class='line'><span class="n">parsed</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">source</span><span class="p">),</span> <span class="n">parser</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>xml定義をしっかり書く</h4>
+
+<p>xmlとしてしっかり書いて、パーサーのパラメータとしてresolve_entities=Falseと指定すれば良いらしい</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">StringIO</span> <span class="kn">import</span> <span class="n">StringIO</span>
+</span><span class='line'><span class="n">source</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+</span><span class='line'><span class="s">&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;</span>
+</span><span class='line'><span class="s">&lt;hoge&gt;&amp;nbsp;fuga&lt;/hoge&gt;&quot;&quot;&quot;</span>
+</span><span class='line'><span class="n">parser</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">XMLParser</span><span class="p">(</span><span class="n">resolve_entities</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</span><span class='line'><span class="n">parsed</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">source</span><span class="p">),</span> <span class="n">parser</span><span class="p">)</span>
+</span><span class='line'><span class="k">print</span> <span class="n">etree</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">parsed</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>＆を適当に置換</h4>
+
+<p>一個一個特殊文字をユニコードに変えるという手もあるけど、とても手間なので</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">source</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;&amp;&#39;</span><span class="p">,</span><span class="s">&#39;&amp;amp;&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とやってからパースすれば通る</p>
+
+<h2>except時にトレースバックを表示</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">traceback</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">hoge</span><span class="p">():</span>
+</span><span class='line'>    <span class="k">try</span><span class="p">:</span>
+</span><span class='line'>        <span class="o">...</span>
+</span><span class='line'>    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じで、tracebackを使えば良い</p>
+
+<p>参考：<a href="https://doughellmann.com/blog/2009/06/19/python-exception-handling-techniques/">Python Exception Handling Techniques | Doug Hellmann</a></p>
+
+<h2>datetimeからタイムスタンプへの変換（逆も)</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">datetime</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">time</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">datetime_to_timestamp</span><span class="p">(</span><span class="n">dt</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">mktime</span><span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">timetuple</span><span class="p">())</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">timestamp</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">timestamp_to_datetime</span><span class="p">(</span><span class="n">timestamp</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">dt</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じ</p>
+
+<p>参考：<a href="http://uokada.hatenablog.jp/entry/20120217/1329444315">pythonでdatetimeとtimestampを相互変換するコード &ndash; uokadaの見逃し三振は嫌いです</a></p>
 </div>
 
 
