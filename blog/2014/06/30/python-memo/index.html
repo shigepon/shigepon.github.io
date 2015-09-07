@@ -445,6 +445,25 @@ subprocessを使う。何か昔は別の手法だったらしい。</p>
 <p>こんな感じ</p>
 
 <p>参考：<a href="http://uokada.hatenablog.jp/entry/20120217/1329444315">pythonでdatetimeとtimestampを相互変換するコード &ndash; uokadaの見逃し三振は嫌いです</a></p>
+
+<h2>パイプで渡されたデータを受け取る</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="c"># encoding: UTF-8</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">sys</span>
+</span><span class='line'><span class="n">lines</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+</span><span class='line'><span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+</span><span class='line'>    <span class="k">print</span> <span class="n">line</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じ。ちょっとしたコマンド作る時に使えるのでメモ</p>
+
+<p>参考；<a href="http://studiot.jp/blog/?p=321">[Python]シェルからパイプで渡されたデータをPythonで受け取る « StudioT::DevLog</a></p>
 </div>
 
 
