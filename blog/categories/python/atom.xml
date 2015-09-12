@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: python | shigeponが関心のある技術情報など]]></title>
+  <title><![CDATA[Category: Python | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-09-07T16:15:20+09:00</updated>
+  <updated>2015-09-12T21:19:33+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -48,6 +48,342 @@ transaction.commit_unless_managed()
 <p>色々あるみたいだけど、PostgreSQLを使っているので、特にPostgreSQL使ってる場合に、独自のフィールドを使えるようになった点が嬉しい。ArrayFieldとか、わざわざリレーション作りたくない時とか便利そう。</p>
 
 <p><a href="https://docs.djangoproject.com/en/1.8/ref/contrib/postgres/fields/">Djangoドキュメントによる説明</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Djangoで作成済みテーブルに手動でリレーションを追加する]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/07/30/add-relation-to-existing-table-using-django/"/>
+    <updated>2015-07-30T10:46:15+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/07/30/add-relation-to-existing-table-using-django</id>
+    <content type="html"><![CDATA[<p>リレーションの理解が悪くて酷いコードを組んでいて、それを直した話。</p>
+
+<p>article</p>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th align="left">key</th>
+<th align="right">title</th>
+<th align="right">content</th>
+<th align="right">author_key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td align="left">1</td>
+<td align="right">DjangoでHello World作ってみた</td>
+<td align="right">出来なかった！</td>
+<td align="right">1|</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>author</p>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th align="left">key</th>
+<th align="right">name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td align="left">1</td>
+<td align="right">shigepon|</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>こんなテーブルがあって、author.keyとarticle.author_keyが繋がっている場合に
+ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
+
+<p>```py models.py
+class Article(models.Model):</p>
+
+<pre><code>key=models.IntegerField(primary_key=True)
+title=models.TextField()
+content=models.TextField()
+author_key=models.IntegerField()
+def author(self):
+    return Author.objects.get(key=self.author_key)
+</code></pre>
+
+<p>class Author(models.Model):</p>
+
+<pre><code>key=models.IntegerField(primary_key=True)
+name=models.TextField()
+</code></pre>
+
+<p>```</p>
+
+<p>いやー改めて見ると酷い。Articleを100個読み込んで、そのAuthorを出力するだけで、100回以上dbにアクセスしないといけない。という訳でこの酷いコードからリレーションを貼って、さらにdbアクセスが少なくなるように修正したらこうなった</p>
+
+<p>参考：</p>
+
+<ul>
+<li><a href="https://docs.djangoproject.com/en/1.8/ref/models/fields/">Model field reference | Django documentation | Django</a></li>
+<li><a href="https://docs.djangoproject.com/en/1.8/ref/models/querysets/">QuerySet API reference | Django documentation | Django</a></li>
+</ul>
+
+
+<p>```py models.py
+class Article(models.Model):</p>
+
+<pre><code>key=models.IntegerField(primary_key=True)
+title=models.TextField()
+content=models.TextField()
+author=models.ForeignKey('Author', db_column='author_key', to_field='key', related_name='articles')
+</code></pre>
+
+<p>class Author(models.Model):</p>
+
+<pre><code>key=models.IntegerField(primary_key=True)
+name=models.TextField()
+</code></pre>
+
+<p>```</p>
+
+<p>こんな感じで適切にForeignKeyフィールドを設定することで、上の構成のテーブルにもリレーションを貼ることが出来た。db_columnでArticle側のリレーションキーになるカラムを指定して、to_fieldでAuthor側のリレーションキーになるカラムを指定する。related_nameは指定しないとエラーが出た。</p>
+
+<p>んで、dbアクセスがなるべく少なくなるように（sqlでjoinを組んでくれるように）views.pyを書いてみると</p>
+
+<p>```py views.py
+from app.models import Article
+def index(request):</p>
+
+<pre><code>articles = Article.objects.select_related('author').all()
+...
+</code></pre>
+
+<p>```</p>
+
+<p>みたいにselect_relatedメソッドを使うとjoinしてくれた。prefetch_relatedってメソッドでも同じように出来る（ちょっと役割は違う）らしいが試していない。ざっくりドキュメントを読むと、ForeignKeyと１対１リレーションにはselect_relatedが良く、Many to ManyやMany to Oneにはprefetch_relatedが良いらしい。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[DjangoモデルをDjangoプロジェクトの外から使う]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/07/28/use-django-model-outside-django-project/"/>
+    <updated>2015-07-28T16:43:55+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/07/28/use-django-model-outside-django-project</id>
+    <content type="html"><![CDATA[<p>参考：</p>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/shobonengine/20120103/1325535420">外部から Django プロジェクトのデータベースを操作する &ndash; ShobonEngineの日記</a></li>
+<li><a href="http://stackoverflow.com/questions/25537905/django-1-7-throws-django-core-exceptions-appregistrynotready-models-arent-load">python &ndash; Django 1.7 throws django.core.exceptions.AppRegistryNotReady: Models aren&rsquo;t loaded yet &ndash; Stack Overflow</a></li>
+</ul>
+
+
+<p>モデルインポート前に以下の手順が必要</p>
+
+<ul>
+<li>プロジェクトをsys.pathに追加</li>
+<li>DJANGO_SETTINGS_MODULE環境変数がプロジェクトのsettings.pyを指すように指定</li>
+<li>applicationのロードが必要? (上2つだけだとModels aren&rsquo;t loaded yetというエラーが出た)</li>
+</ul>
+
+
+<p>sys.pathにはフルパスを入れれば確実。必要なコードは下のような感じになる。</p>
+
+<p>```py</p>
+
+<h1>encoding: UTF-8</h1>
+
+<p>import sys
+sys.path.append(&lsquo;/path/to/django/project&rsquo;)
+import os
+os.environ[&lsquo;DJANGO_SETTINGS_MODULE&rsquo;] = &lsquo;project.settings&rsquo;</p>
+
+<p>from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()</p>
+
+<p>from application.models import AModel</p>
+
+<p>list = AModel.objects.all()
+&hellip;
+```</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Djangoで複数データベースを使用する]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/07/07/use-multiple-databases-in-django/"/>
+    <updated>2015-07-07T12:33:37+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/07/07/use-multiple-databases-in-django</id>
+    <content type="html"><![CDATA[<p>Djangoでは複数データベースを扱える。でも色々コーディングや設定が必要なのでメモしておく。参考：<a href="https://docs.djangoproject.com/en/1.7/topics/db/multi-db/">Multiple databases | Django documentation | Django</a>。対応バージョンはDjango 1.7。使ったデータベースはPostgreSQL。</p>
+
+<h2>settings.py</h2>
+
+<p>settings.pyで複数データベースの接続設定をする</p>
+
+<p>```py settings.py
+DATABASES = {</p>
+
+<pre><code>'default': {
+    'NAME': 'app_data',
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'USER': 'postgres_user',
+    'PASSWORD': 's3krit'
+},
+'users': {
+    'NAME': 'user_data',
+    'ENGINE': 'django.db.backends.mysql',
+    'USER': 'mysql_user',
+    'PASSWORD': 'priv4te'
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>参考ページのをそのまま使った。さらに追加も出来る。</p>
+
+<h2>ここまでの設定でのマイグレーション</h2>
+
+<p><code>sh
+$ python manage.py migrate
+</code></p>
+
+<p>だとdefault設定のデータベースへのマイグレーション、</p>
+
+<p><code>sh
+$ python manage.py migrate --database=users
+</code></p>
+
+<p>とするとusersで設定したデータベースへのマイグレーションとなる。
+何も設定していないと、それぞれのデータベースに全アプリケーションの全てのモデルが反映される。</p>
+
+<h2>データベースに保存するアプリ、モデルを限定したい</h2>
+
+<p>ルーティング設定をする。</p>
+
+<p><code>py settings.py
+DATABASE_ROUTERS = ['myproject.routers.Router']
+</code></p>
+
+<p>settings.pyはこんな感じ。んでmyprojectフォルダにrouters.pyを作成して例えばuserアプリのものだけusersデータベースを使うという設定の場合次のように書く</p>
+
+<p>```py routers.py
+class Router(object):</p>
+
+<pre><code>def db_for_read(self, model, **hints):
+    #ここでランダムに選択すると、dbの負荷分散っぽいことが出来る
+    #例：return random.choice['default','users']
+    if model._meta.app_label == "user":
+        return "users"
+    return "default"
+def db_for_write(self, model, **hints):
+    if model._meta.app_label == "user":
+        return "users"
+    return "default"
+def allow_relation(self, obj1, obj2, **hints):
+    #Trueはリレーションを認める、Falseは認めない、Noneはこのコードでは関知しないという意味
+    return None
+def allow_migrate(self, db, model):
+    #userアプリの場合はusers設定のデータベースへmigrate。
+    #他のアプリはusers以外のデータベースへmigrateする設定
+    if model._meta.app_label == "user"
+        return db == "users":
+    else:
+        return True
+    return False
+</code></pre>
+
+<p>```</p>
+
+<p>routers.pyをちゃんと書かないと、色々不具合が出る（例：管理用のモデルがmigrateできないとか）ので気をつけた方が良い。</p>
+
+<p>上に紹介した参考ページには色々コードが書いてあるので、参考になる。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Django1.7でPostgreSQLとBootstrap使ったアプリを作ってみた(1.5):管理ページを作ってみた]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/07/03/make-admin-page-using-django/"/>
+    <updated>2015-07-03T21:59:10+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/07/03/make-admin-page-using-django</id>
+    <content type="html"><![CDATA[<p>Django1.6.5でアプリを作ってみたってネタをやってたけど、Django1.7にバージョンアップしたので、タイトルを変えた。ついでにDjango1.7だとINSTALLED_APPにdjango.contrib.authを入れておかないとエラーが出るケースがある（例えば<a href="http://www.django-rest-framework.org/">Django REST framework</a>でエラーが出た）ので、エラー出ないように最初に管理ページを用意しておくと良いと思う。</p>
+
+<p>管理ページを用意する手順はこんな感じ</p>
+
+<h2>settings.pyに設定を書く</h2>
+
+<p>```py settings.py
+INSTALLED_APPS = (</p>
+
+<pre><code>'django.contrib.admin',
+'django.contrib.auth',
+...
+</code></pre>
+
+<p>)
+MIDDLEWARE_CLASSES = (</p>
+
+<pre><code>'django.contrib.auth.middleware.AuthenticationMiddleware',
+...
+</code></pre>
+
+<p>)
+TEMPLATE_CONTEXT_PROCESSORS = (</p>
+
+<pre><code>'django.contrib.auth.context_processors.auth',
+...
+</code></pre>
+
+<p>)
+```</p>
+
+<h2>migrate</h2>
+
+<p>マイグレーションしておく</p>
+
+<p><code>sh
+$ python manage.py makemigrations
+$ python manage.py migrate
+</code></p>
+
+<p>マルチデータベースでやろうとして反映されずにハマったりしたけど、それはまた別の記事で書くかも</p>
+
+<h2>管理アカウントを作る</h2>
+
+<p><code>sh
+$ python manage.py createsuperuser
+Username: hoge
+Email address: hoge@example.com
+Password: ********
+Password (again): ********
+Superuser created successfully.
+</code></p>
+
+<p>って出来るとおk</p>
+
+<h2>urls.pyを書く</h2>
+
+<p>`&ldquo;py urls.py
+urlpatterns = patterns(&rdquo;,</p>
+
+<pre><code>url(r'^admin/', include(admin.site.urls)),
+...
+</code></pre>
+
+<p>)
+```</p>
+
+<p>こんな感じで作って</p>
+
+<p><code>sh
+$ python manage.py runserver
+</code></p>
+
+<p>とすると、127.0.0.1/adminにアクセスすると管理画面へのログイン画面が出る。</p>
 ]]></content>
   </entry>
   
