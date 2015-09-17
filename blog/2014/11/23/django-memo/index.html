@@ -523,6 +523,28 @@ def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る
 <p>参考：<a href="http://stackoverflow.com/questions/3711184/how-to-use-inspect-to-get-the-callers-info-from-callee-in-python">How to use inspect to get the caller&rsquo;s info from callee in Python? &ndash; Stack Overflow</a></p>
 
 <p>プロファイラ使った時に、socket.pyが呼ばれてるのは分かったけど、その呼び出し元がイマイチわからなかった時に使った。</p>
+
+<h2>urlsでviewにパラメータを送る</h2>
+
+<figure class='code'><figcaption><span>urls.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">url</span><span class="p">(</span><span class="s">&#39;^$&#39;</span><span class="p">,</span><span class="n">views</span><span class="o">.</span><span class="n">hoge</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;fuga&#39;</span><span class="p">:</span><span class="s">&#39;hage&#39;</span><span class="p">},</span> <span class="n">name</span><span class="o">=</span><span class="s">&#39;hoge&#39;</span><span class="p">),</span>
+</span><span class='line'><span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">hoge</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="n">fuga</span><span class="p">):</span>
+</span><span class='line'>    <span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>パラメーターに指定する名前（上の場合はfuga）がviewsとurlsで同じ名前になっていることが必要（でないとエラーが出る）</p>
+
+<p>参考：<a href="https://docs.djangoproject.com/en/1.8/topics/http/urls/#passing-extra-options-to-include">URL dispatcher | Django documentation | Django</a></p>
 </div>
 
 
