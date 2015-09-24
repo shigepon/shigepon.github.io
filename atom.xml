@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-09-17T23:39:23+09:00</updated>
+  <updated>2015-09-24T09:57:57+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,270 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[ubuntu12.04でpg bulkloadを使う]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04/"/>
+    <updated>2015-09-24T08:50:36+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04</id>
+    <content type="html"><![CDATA[<p>pg_bulkloadを使いたくなるケース</p>
+
+<ul>
+<li>大量のデータをインポートしたい</li>
+<li>中にはエラーがあるデータがちょこちょこある</li>
+</ul>
+
+
+<p>に当てはまったので、インストールからやってみた。
+やったこと順に列記するので最低限の手順ではないと思う。</p>
+
+<p>rpmからインストールする方法でなく、ソースからやってみることにした。
+Ubuntu12.04でインストールしたけど、他のバージョンでもほぼ同じだと思う。</p>
+
+<h2>ソースの取得</h2>
+
+<p>まずは最新のstableをgithubから取ってくる。ブログ執筆時はこんな感じ。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone -b VERSION3_1_STABLE https://github.com/ossc-db/pg_bulkload.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>make(失敗)</h2>
+
+<p>おもむろにmakeしてみると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>pg_bulkload
+</span><span class='line'><span class="nv">$ </span>make
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>するとpgxs.xmlが無い！というエラーが出て来た</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Makefile:17: /usr/lib/postgresql/9.4/lib/pgxs/src/makefiles/pgxs.mk: そのようなファイルやディレクトリはありません
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>postgresqlは9.2しか入れてないはずなのに何故か9.4のファイルが無いとか言われた。</p>
+
+<h2>試行錯誤(失敗)</h2>
+
+<p>どうもMakefileを調べてみると、ここで出てくるバージョンはpg_configコマンドで取得するバージョンらしい。面倒なので、手動で9.2のファイルを設定するように変更して、さらにpgxs.mkを入れるためにpostgresql-server-dev-9.2をaptitudeでインストールした。</p>
+
+<p>で、おもむろにmakeすると・・・</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo make
+</span><span class='line'>....
+</span><span class='line'>/usr/include/postgresql/libpq-fe.h:547:1: エラー: 不明な型名 ‘pg_int64’ です
+</span><span class='line'>/usr/include/postgresql/libpq-fe.h:547:50: エラー: 不明な型名 ‘pg_int64’ です
+</span><span class='line'>/usr/include/postgresql/libpq-fe.h:551:1: エラー: 不明な型名 ‘pg_int64’ です
+</span><span class='line'>/usr/include/postgresql/libpq-fe.h:553:48: エラー: 不明な型名 ‘pg_int64’ です
+</span><span class='line'>make<span class="o">[</span>1<span class="o">]</span>: *** <span class="o">[</span>pg_bulkload.o<span class="o">]</span> エラー 1
+</span><span class='line'>make<span class="o">[</span>1<span class="o">]</span>: ディレクトリ <span class="sb">`</span>/****/pg_bulkload/bin<span class="err">&#39;</span> から出ます
+</span><span class='line'>make: *** <span class="o">[</span>all<span class="o">]</span> エラー 2
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と結局エラーが出てしまった。ググって調べるとどうもlibpqのバージョンが関連するらしい。調べてみると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>aptitude show libpq-dev
+</span><span class='line'>パッケージ: libpq-dev
+</span><span class='line'>状態: インストール済み
+</span><span class='line'>自動的にインストールされた: いいえ
+</span><span class='line'>バージョン: 9.4.0-1.pgdg12.4+1
+</span><span class='line'>....
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>バージョンが9.4になっていたorz。多分だけど、9.2でpg_bulkloadをインストールするにはlibpqをダウングレードしないといけないっぽい。それは面倒なのでpostgresqlのバージョン9.4をインストールすることでバージョンを合わせることにした</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install postgresql-9.4
+</span><span class='line'><span class="nv">$ </span>sudo aptitude install postgresql-server-dev-9.4
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>インストールの途中でlibpq-devは削除することになった。</p>
+
+<h2>make(成功)</h2>
+
+<p>バージョンを合わせたので、makeしてみると今度はライブラリが足らないというエラーが出た</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo make
+</span><span class='line'>....
+</span><span class='line'>/usr/bin/ld: cannot find -lpam
+</span><span class='line'>/usr/bin/ld: cannot find -ledit
+</span><span class='line'>collect2: ld はステータス 1 で終了しました
+</span><span class='line'>make<span class="o">[</span>1<span class="o">]</span>: *** <span class="o">[</span>pg_bulkload<span class="o">]</span> エラー 1
+</span><span class='line'>make<span class="o">[</span>1<span class="o">]</span>: ディレクトリ <span class="sb">`</span>/***/pg_bulkload/bin<span class="err">&#39;</span> から出ます
+</span><span class='line'>make: *** <span class="o">[</span>all<span class="o">]</span> エラー 2
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これはubuntuではlibpam-devとlibedit-devが足らないという意味らしいので、aptitudeからインストールした。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install libpam-dev
+</span><span class='line'><span class="nv">$ </span>sudo aptitude install libedit-dev
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以上の作業でpg_bulkloadのmakeに成功した</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo make
+</span><span class='line'><span class="nv">$ </span>sudo make install
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>使ってみる</h2>
+
+<p>pg_bulkloadはbinフォルダ内にある。使い方は</p>
+
+<ul>
+<li>設定ファイルを書く</li>
+<li>csvファイルを用意する</li>
+<li>実行する</li>
+</ul>
+
+
+<p>となる。</p>
+
+<h3>設定ファイルを書く</h3>
+
+<p>設定ファイルの例はこんな感じ(下のコマンドの場合、example.ctlで保存しておく)、bin/data内にも例があるので参考になる。
+この設定は</p>
+
+<ul>
+<li>リダイレクトでcsvファイルを入力する。</li>
+<li>リレーションをチェックする。リレーションにミスがある場合はエラーにする</li>
+<li>タブ区切り</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">TYPE</span> <span class="o">=</span> CSV
+</span><span class='line'><span class="nv">INPUT</span> <span class="o">=</span> stdin
+</span><span class='line'><span class="nv">TABLE</span> <span class="o">=</span> table_name
+</span><span class='line'><span class="nv">CHECK_CONSTRAINTS</span> <span class="o">=</span> YES
+</span><span class='line'><span class="nv">DELIMITER</span> <span class="o">=</span> <span class="s2">&quot;   &quot;</span> <span class="c">#タブの場合</span>
+</span><span class='line'><span class="nv">WRITER</span> <span class="o">=</span> DIRECT
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>コマンドはこんな感じ</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>./pg_bulkload example.ctl --dbname db_name  &lt; csv_name.csv
+</span><span class='line'>NOTICE: BULK LOAD START
+</span><span class='line'>NOTICE: BULK LOAD END
+</span><span class='line'>    0 Rows skipped.
+</span><span class='line'>    10 Rows successfully loaded.
+</span><span class='line'>    0 Rows not loaded due to parse errors.
+</span><span class='line'>    0 Rows not loaded due to duplicate errors.
+</span><span class='line'>    0 Rows replaced with new rows.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>csvファイルはpsqlで\d table_nameで表示される順序にしておくこと。でないとパースエラーが出る。</p>
+
+<h2>順序が変わる場合</h2>
+
+<p>csvファイル内のフィールド順序をdb内の順序と違うものにしたい場合や、idなど、データを省略したい場合はフィルタを指定出来る。フィルタは</p>
+
+<ul>
+<li>db内に関数を作る</li>
+<li>設定ファイルでフィルタを指定</li>
+</ul>
+
+
+<p>で設定する。</p>
+
+<p>フィルタの例</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">CREATE</span> <span class="k">FUNCTION</span> <span class="n">sample_filter</span><span class="p">(</span><span class="nb">integer</span><span class="p">,</span> <span class="nb">text</span><span class="p">,</span> <span class="nb">text</span><span class="p">,</span> <span class="nb">real</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">.</span><span class="mi">05</span><span class="p">)</span> <span class="k">RETURNS</span> <span class="n">record</span>
+</span><span class='line'>    <span class="k">AS</span> <span class="err">$$</span> <span class="k">SELECT</span> <span class="err">$</span><span class="mi">1</span> <span class="o">*</span> <span class="err">$</span><span class="mi">4</span><span class="p">,</span> <span class="k">upper</span><span class="p">(</span><span class="err">$</span><span class="mi">3</span><span class="p">)</span> <span class="err">$$</span>
+</span><span class='line'>    <span class="k">LANGUAGE</span> <span class="k">SQL</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>設定ファイル</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">TYPE</span> <span class="o">=</span> <span class="n">CSV</span>
+</span><span class='line'><span class="k">INPUT</span> <span class="o">=</span> <span class="k">stdin</span>
+</span><span class='line'><span class="k">TABLE</span> <span class="o">=</span> <span class="k">table_name</span>
+</span><span class='line'><span class="n">CHECK_CONSTRAINTS</span> <span class="o">=</span> <span class="n">YES</span>
+</span><span class='line'><span class="k">DELIMITER</span> <span class="o">=</span> <span class="ss">&quot;   &quot;</span> <span class="o">#</span><span class="err">タブの場合</span>
+</span><span class='line'><span class="n">WRITER</span> <span class="o">=</span> <span class="n">DIRECT</span>
+</span><span class='line'><span class="n">FILTER</span> <span class="o">=</span> <span class="n">sample_filter</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>出来てない点（追記予定）</h2>
+
+<ul>
+<li>MULTI_PROCESS = YESの時に認証失敗する件</li>
+</ul>
+
+
+<p>参考：
++ <a href="http://pgbulkload.projects.pgfoundry.org/pg_bulkload.html#filter">pg_bulkload</a>
++ <a href="http://www.atmarkit.co.jp/flinux/rensai/linuxtips/a115makeerror.html">makeで「/usr/bin/ld: cannot find」と表示されるときは － ＠IT</a>
++ <a href="http://pgfoundry.org/forum/forum.php?thread_id=2851&amp;forum_id=1004&amp;group_id=1000261">pgFoundry: Forum: help</a>
++ <a href="https://github.com/ossc-db/pg_bulkload">ossc-db/pg_bulkload</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Django 1.7から1.8にアップデートしてみた]]></title>
@@ -1696,71 +1960,6 @@ Twitterでインなんとかとか言っちゃいましたが、インキャン�
 <p>他にももっと細かくhtmlを記述出来るformat_outputとかあるみたいだけど、試してないので省略。なくても取りあえず出来る。</p>
 
 <p>参考：<a href="https://docs.djangoproject.com/en/1.7/ref/forms/widgets/#django.forms.MultiWidget">Django英語ドキュメント</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[pythonのデコレーターをdjangoで使って見る]]></title>
-    <link href="http://blog.shigepon.info/blog/2015/01/06/python-decorator/"/>
-    <updated>2015-01-06T08:55:46+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2015/01/06/python-decorator</id>
-    <content type="html"><![CDATA[<p>pythonのデコレーターを使ってみたらとても便利だなと思ったのでメモ</p>
-
-<p>参考にしたページを読んでいくと理解できた。要はデコレーターとして使う関数は引数に呼び出し元の関数を貰っておいて、内部で作った関数を返せば良い。内部の関数は適当に作れるみたい（今のとこそういう理解をしている）。djangoのビューで呼び出したかったので、内部の関数で可変長引数を取れるようにして下のようにしたら動いた。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">outer</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-</span><span class='line'>        <span class="k">print</span> <span class="s">&quot;hoge&quot;</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">inner</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<!-- more -->
-
-
-<p>この時、args[0]にHttpRequestオブジェクトが入ってるので、これをいじると適当に値を追加したり整形したりするのをビューの外部に持っていけるので、使いようによっては共通部分と個別部分の分離や、ビューに直接関係ない処理（ログとか）を分離出来るので便利な感じがする。ただ、やりすぎるとコードが分割されすぎて読みにくくなる気もする。</p>
-
-<!-- more -->
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">outer</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-</span><span class='line'>        <span class="n">request</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span class='line'>        <span class="n">request</span><span class="o">.</span><span class="n">hoge</span> <span class="o">=</span> <span class="s">&quot;fuga&quot;</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">inner</span>
-</span><span class='line'>
-</span><span class='line'><span class="nd">@outer</span>
-</span><span class='line'><span class="k">def</span> <span class="nf">hoge</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">print</span> <span class="n">request</span><span class="o">.</span><span class="n">hoge</span>
-</span><span class='line'>    <span class="o">....</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とやったりすることが出来る。個人的にはWebサービスでサイドメニューに必要な情報をデコレーターでやって、メインコンテンツに必要な情報をビューでやるとかそんな感じで使ってみようと思う。</p>
-
-<p>参考：<a href="http://qiita.com/_rdtr/items/d3bc1a8d4b7eb375c368">Pythonのデコレータを理解するための12Step &ndash; Qiita</a></p>
 ]]></content>
   </entry>
   

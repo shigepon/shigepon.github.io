@@ -9,7 +9,9 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="1.6の時と同様にpipでアップデートした。 注意点 個人的に作っているアプリでアップデートした際にコード変更が必要だった点は以下の通り。他にも色々使えなくなった命令とかあるみたいだけど引っ掛からなかったので省略。詳しくはDjango 1.8 release notes | Django &hellip;">
+  <meta name="description" content="pg_bulkloadを使いたくなるケース 大量のデータをインポートしたい
+中にはエラーがあるデータがちょこちょこある に当てはまったので、インストールからやってみた。
+やったこと順に列記するので最低限の手順ではないと思う。 rpmからインストールする方法でなく、ソースからやってみることにした。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +81,297 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04/">ubuntu12.04でpg bulkloadを使う</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-09-24T08:50:36+09:00" pubdate data-updated="true">Sep 24<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>pg_bulkloadを使いたくなるケース</p>
+
+<ul>
+<li>大量のデータをインポートしたい</li>
+<li>中にはエラーがあるデータがちょこちょこある</li>
+</ul>
+
+
+<p>に当てはまったので、インストールからやってみた。
+やったこと順に列記するので最低限の手順ではないと思う。</p>
+
+<p>rpmからインストールする方法でなく、ソースからやってみることにした。
+Ubuntu12.04でインストールしたけど、他のバージョンでもほぼ同じだと思う。</p>
+
+<h2>ソースの取得</h2>
+
+<p>まずは最新のstableをgithubから取ってくる。ブログ執筆時はこんな感じ。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone -b VERSION3_1_STABLE https://github.com/ossc-db/pg_bulkload.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>make(失敗)</h2>
+
+<p>おもむろにmakeしてみると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>pg_bulkload
+</span><span class='line'><span class="nv">$ </span>make
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>するとpgxs.xmlが無い！というエラーが出て来た</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Makefile:17: /usr/lib/postgresql/9.4/lib/pgxs/src/makefiles/pgxs.mk: そのようなファイルやディレクトリはありません
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>postgresqlは9.2しか入れてないはずなのに何故か9.4のファイルが無いとか言われた。</p>
+
+<h2>試行錯誤(失敗)</h2>
+
+<p>どうもMakefileを調べてみると、ここで出てくるバージョンはpg_configコマンドで取得するバージョンらしい。面倒なので、手動で9.2のファイルを設定するように変更して、さらにpgxs.mkを入れるためにpostgresql-server-dev-9.2をaptitudeでインストールした。</p>
+
+<p>で、おもむろにmakeすると・・・</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo make
+</span><span class='line'>....
+</span><span class='line'>/usr/include/postgresql/libpq-fe.h:547:1: エラー: 不明な型名 ‘pg_int64’ です
+</span><span class='line'>/usr/include/postgresql/libpq-fe.h:547:50: エラー: 不明な型名 ‘pg_int64’ です
+</span><span class='line'>/usr/include/postgresql/libpq-fe.h:551:1: エラー: 不明な型名 ‘pg_int64’ です
+</span><span class='line'>/usr/include/postgresql/libpq-fe.h:553:48: エラー: 不明な型名 ‘pg_int64’ です
+</span><span class='line'>make<span class="o">[</span>1<span class="o">]</span>: *** <span class="o">[</span>pg_bulkload.o<span class="o">]</span> エラー 1
+</span><span class='line'>make<span class="o">[</span>1<span class="o">]</span>: ディレクトリ <span class="sb">`</span>/****/pg_bulkload/bin<span class="err">&#39;</span> から出ます
+</span><span class='line'>make: *** <span class="o">[</span>all<span class="o">]</span> エラー 2
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と結局エラーが出てしまった。ググって調べるとどうもlibpqのバージョンが関連するらしい。調べてみると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>aptitude show libpq-dev
+</span><span class='line'>パッケージ: libpq-dev
+</span><span class='line'>状態: インストール済み
+</span><span class='line'>自動的にインストールされた: いいえ
+</span><span class='line'>バージョン: 9.4.0-1.pgdg12.4+1
+</span><span class='line'>....
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>バージョンが9.4になっていたorz。多分だけど、9.2でpg_bulkloadをインストールするにはlibpqをダウングレードしないといけないっぽい。それは面倒なのでpostgresqlのバージョン9.4をインストールすることでバージョンを合わせることにした</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install postgresql-9.4
+</span><span class='line'><span class="nv">$ </span>sudo aptitude install postgresql-server-dev-9.4
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>インストールの途中でlibpq-devは削除することになった。</p>
+
+<h2>make(成功)</h2>
+
+<p>バージョンを合わせたので、makeしてみると今度はライブラリが足らないというエラーが出た</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo make
+</span><span class='line'>....
+</span><span class='line'>/usr/bin/ld: cannot find -lpam
+</span><span class='line'>/usr/bin/ld: cannot find -ledit
+</span><span class='line'>collect2: ld はステータス 1 で終了しました
+</span><span class='line'>make<span class="o">[</span>1<span class="o">]</span>: *** <span class="o">[</span>pg_bulkload<span class="o">]</span> エラー 1
+</span><span class='line'>make<span class="o">[</span>1<span class="o">]</span>: ディレクトリ <span class="sb">`</span>/***/pg_bulkload/bin<span class="err">&#39;</span> から出ます
+</span><span class='line'>make: *** <span class="o">[</span>all<span class="o">]</span> エラー 2
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これはubuntuではlibpam-devとlibedit-devが足らないという意味らしいので、aptitudeからインストールした。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install libpam-dev
+</span><span class='line'><span class="nv">$ </span>sudo aptitude install libedit-dev
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以上の作業でpg_bulkloadのmakeに成功した</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo make
+</span><span class='line'><span class="nv">$ </span>sudo make install
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>使ってみる</h2>
+
+<p>pg_bulkloadはbinフォルダ内にある。使い方は</p>
+
+<ul>
+<li>設定ファイルを書く</li>
+<li>csvファイルを用意する</li>
+<li>実行する</li>
+</ul>
+
+
+<p>となる。</p>
+
+<h3>設定ファイルを書く</h3>
+
+<p>設定ファイルの例はこんな感じ(下のコマンドの場合、example.ctlで保存しておく)、bin/data内にも例があるので参考になる。
+この設定は</p>
+
+<ul>
+<li>リダイレクトでcsvファイルを入力する。</li>
+<li>リレーションをチェックする。リレーションにミスがある場合はエラーにする</li>
+<li>タブ区切り</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">TYPE</span> <span class="o">=</span> CSV
+</span><span class='line'><span class="nv">INPUT</span> <span class="o">=</span> stdin
+</span><span class='line'><span class="nv">TABLE</span> <span class="o">=</span> table_name
+</span><span class='line'><span class="nv">CHECK_CONSTRAINTS</span> <span class="o">=</span> YES
+</span><span class='line'><span class="nv">DELIMITER</span> <span class="o">=</span> <span class="s2">&quot;   &quot;</span> <span class="c">#タブの場合</span>
+</span><span class='line'><span class="nv">WRITER</span> <span class="o">=</span> DIRECT
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>コマンドはこんな感じ</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>./pg_bulkload example.ctl --dbname db_name  &lt; csv_name.csv
+</span><span class='line'>NOTICE: BULK LOAD START
+</span><span class='line'>NOTICE: BULK LOAD END
+</span><span class='line'>    0 Rows skipped.
+</span><span class='line'>    10 Rows successfully loaded.
+</span><span class='line'>    0 Rows not loaded due to parse errors.
+</span><span class='line'>    0 Rows not loaded due to duplicate errors.
+</span><span class='line'>    0 Rows replaced with new rows.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>csvファイルはpsqlで\d table_nameで表示される順序にしておくこと。でないとパースエラーが出る。</p>
+
+<h2>順序が変わる場合</h2>
+
+<p>csvファイル内のフィールド順序をdb内の順序と違うものにしたい場合や、idなど、データを省略したい場合はフィルタを指定出来る。フィルタは</p>
+
+<ul>
+<li>db内に関数を作る</li>
+<li>設定ファイルでフィルタを指定</li>
+</ul>
+
+
+<p>で設定する。</p>
+
+<p>フィルタの例</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">CREATE</span> <span class="k">FUNCTION</span> <span class="n">sample_filter</span><span class="p">(</span><span class="nb">integer</span><span class="p">,</span> <span class="nb">text</span><span class="p">,</span> <span class="nb">text</span><span class="p">,</span> <span class="nb">real</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">.</span><span class="mi">05</span><span class="p">)</span> <span class="k">RETURNS</span> <span class="n">record</span>
+</span><span class='line'>    <span class="k">AS</span> <span class="err">$$</span> <span class="k">SELECT</span> <span class="err">$</span><span class="mi">1</span> <span class="o">*</span> <span class="err">$</span><span class="mi">4</span><span class="p">,</span> <span class="k">upper</span><span class="p">(</span><span class="err">$</span><span class="mi">3</span><span class="p">)</span> <span class="err">$$</span>
+</span><span class='line'>    <span class="k">LANGUAGE</span> <span class="k">SQL</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>設定ファイル</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">TYPE</span> <span class="o">=</span> <span class="n">CSV</span>
+</span><span class='line'><span class="k">INPUT</span> <span class="o">=</span> <span class="k">stdin</span>
+</span><span class='line'><span class="k">TABLE</span> <span class="o">=</span> <span class="k">table_name</span>
+</span><span class='line'><span class="n">CHECK_CONSTRAINTS</span> <span class="o">=</span> <span class="n">YES</span>
+</span><span class='line'><span class="k">DELIMITER</span> <span class="o">=</span> <span class="ss">&quot;   &quot;</span> <span class="o">#</span><span class="err">タブの場合</span>
+</span><span class='line'><span class="n">WRITER</span> <span class="o">=</span> <span class="n">DIRECT</span>
+</span><span class='line'><span class="n">FILTER</span> <span class="o">=</span> <span class="n">sample_filter</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>出来てない点（追記予定）</h2>
+
+<ul>
+<li>MULTI_PROCESS = YESの時に認証失敗する件</li>
+</ul>
+
+
+<p>参考：
++ <a href="http://pgbulkload.projects.pgfoundry.org/pg_bulkload.html#filter">pg_bulkload</a>
++ <a href="http://www.atmarkit.co.jp/flinux/rensai/linuxtips/a115makeerror.html">makeで「/usr/bin/ld: cannot find」と表示されるときは － ＠IT</a>
++ <a href="http://pgfoundry.org/forum/forum.php?thread_id=2851&amp;forum_id=1004&amp;group_id=1000261">pgFoundry: Forum: help</a>
++ <a href="https://github.com/ossc-db/pg_bulkload">ossc-db/pg_bulkload</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1086,232 +1379,6 @@ ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/07/01/profiling-django/">Djangoをプロファイリングする</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-07-01T09:06:13+09:00" pubdate data-updated="true">Jul 1<span>st</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>作ってるWebサービスが条件によってえらい重くなるので、ボトルネックを探すためにプロファイラを動かしてみようと考えてやってみたらそこそこハマった。</p>
-
-<p>先に結論：</p>
-
-<p><strong>Middleware使ってブラウザに表示させるのが楽だった</strong></p>
-
-<p>条件</p>
-
-<ul>
-<li>cui環境なので、プロファイル結果は画像作るかブラウザ表示するかのどちらか</li>
-<li>コードに埋めこまない形</li>
-</ul>
-
-
-<p>まず参考にしたのは公式ページの<a href="https://code.djangoproject.com/wiki/ProfilingDjango">ProfilingDjango – Django</a>。ざっくりとした結果が知りたかったのでrunprofileserverを試してみることにした。</p>
-
-<h2>開発サーバでやってみる（runprofileserver）</h2>
-
-<p>django-extensionの一機能で</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install django-extensions
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でインストールして、</p>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">INSTALLED_APP</span> <span class="o">=</span> <span class="p">(</span><span class="o">...</span>
-</span><span class='line'>   <span class="s">&#39;django_extensions&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>で設定して</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py runprofileserver
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とすると、よしなに/tmpフォルダ内にプロファイル結果を吐き出してくれる開発用サーバだそうで、これは便利そうと思い、やってみた。</p>
-
-<h3>結果を画像にしようとしてハマる</h3>
-
-<p>プロファイル結果からgraphviz通して画像にしたらブラウザから確認出来るし楽なんじゃね？とか良く考えると不毛なことを考えたのが間違いのもと。普通にKCacheGrind使ってろって話なんだけど、やってみた</p>
-
-<p>ツールとして使ったもの</p>
-
-<ul>
-<li><a href="https://github.com/jrfonseca/gprof2dot">gprof2dot</a>、プロファイル結果をdotファイルに変換する</li>
-<li>graphviz、dotファイルを画像に変換する</li>
-</ul>
-
-
-<p>話にならなかったもの（良く考えるとこのケースで使えないの当たり前なのに使おうとして失敗したもの）</p>
-
-<ul>
-<li>xdebugtoolkit、単純にxdebugの結果でないとそりゃ使えないよねと納得した</li>
-</ul>
-
-
-<p>あまり良く分かってなかったので、KCacheGrind互換で出力しておけば、色んなソフト使ってよしなに出来るんじゃね？と思ってみた。んでKCacheGrind互換出力ってcallgrind形式ってことだよね！と勝手に思い込んでた</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py runprofileserver --kcachegrind
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>おもむろにdotファイルに変換!</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>path/to/gprof2dot -o out.dot -f callgrind /tmp/xxx.prof
-</span><span class='line'>....
-</span><span class='line'>AssertionError
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>うまくいかない。何かの計算値がこうなるはずなのにならないよ！とか怒られてる。って良く考えたらKCacheGrind互換の出力がcallgrind形式って保証がどこにもない！</p>
-
-<p>ってことで、あれこれドキュメント読んでたら、runprofileserverはhotshot使ってるとか何とか書いてあるから、何も指定しなかったらhotshotでの形式になる・・・ってことは全然説明されてないけど-fのオプションはpstatsで良いんじゃね？</p>
-
-<p>と勝手に予想して</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py runprofileserver
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>path/to/gprof2dot -o out.dot -f pstats /tmp/xxx.prof
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とやるとout.dotが出来ましたとさ。あとは色んなとこに書いてある（例えば<a href="http://stackoverflow.com/questions/9279144/interpreting-callgrind-data">ここ</a>）ように、dotファイルを画像ファイルに変換すると、ちゃんと画像が出来上がった。</p>
-
-<p>ただ・・・・、まだ設定分かってないからだと思うんだけど、出来上がった画像にはviewやmodelのメソッドが一切書かれておらず、この情報だけからボトルネック探すのかなりキツイんじゃね？ということだけが分かった。</p>
-
-<h3>同一ドメインのurlを内部で呼び出してハマる</h3>
-
-<p>何故かURLによってプロファイル作るのが途中で止まって、サーバもレスポンスを返してくれなくなった。問題箇所を調べると、どうも内部で同じrunprofileserverで管理しているurlにアクセスすると止まっちゃう模様。別サーバを立てて、そこにアクセスするようにすれば、問題無く動作した。</p>
-
-<h2>手間なのでMiddlewareでプロファイルすることにした</h2>
-
-<p>いちいち開発中の状態なのにサーバ2つ立てて面倒だったり、結局作った画像見ても良く分からなかったので、今度はMiddlewareに埋め込むタイプを試してみた。</p>
-
-<h3>取りあえず動かなくてハマる</h3>
-
-<p>Extendedって書いてあるしということで<a href="https://djangosnippets.org/snippets/605/">djangosnippets: Extended Profiling Middleware</a>を試してみた。</p>
-
-<p>手順は</p>
-
-<ul>
-<li>↑のページのファイルをダウンロード（コード右上にダウンロードボタンがある）</li>
-<li>適当な名前を付けてimport出来る適当な場所に配置。（オラはmodulesってとこにprofiler.pyという名前を付けて置いてみた）</li>
-<li>settings.pyにmiddlewareを登録する</li>
-<li>プロファイルしたいURLにprof=というパラメータを付けてブラウザでアクセスする</li>
-</ul>
-
-
-<p>って感じ。settings.pyは</p>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">MIDDLEWARE_CLASSES</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'><span class="o">...</span>
-</span><span class='line'>    <span class="s">&#39;modules.profiler.ProfileMiddleware&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな感じ。で、上のようにブラウザでアクセスするとエラー・・・</p>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="ne">AttributeError</span><span class="p">:</span> <span class="s">&#39;WSGIRequest&#39;</span> <span class="nb">object</span> <span class="n">has</span> <span class="n">no</span> <span class="n">attribute</span> <span class="s">&#39;has_key&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>なので、コード上で</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">request</span><span class="o">.</span><span class="n">has_key</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>となっているところを</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">has_key</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と変更すると上手く動いた。ProfileMiddlewareのページ内コメントを見ると</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="s">&#39;prof&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と変更しても動くらしい。んで、プロファイルしたいurlにprof=をパラメータとして付けてアクセスすると、ブラウザ上に</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="mi">47793</span> <span class="n">function</span> <span class="n">calls</span> <span class="p">(</span><span class="mi">42681</span> <span class="n">primitive</span> <span class="n">calls</span><span class="p">)</span> <span class="ow">in</span> <span class="mf">0.907</span> <span class="n">seconds</span>
-</span><span class='line'>
-</span><span class='line'>   <span class="n">Ordered</span> <span class="n">by</span><span class="p">:</span> <span class="n">internal</span> <span class="n">time</span><span class="p">,</span> <span class="n">call</span> <span class="n">count</span>
-</span><span class='line'>
-</span><span class='line'>   <span class="n">ncalls</span>  <span class="n">tottime</span>  <span class="n">percall</span>  <span class="n">cumtime</span>  <span class="n">percall</span> <span class="n">filename</span><span class="p">:</span><span class="n">lineno</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
-</span><span class='line'>        <span class="mi">3</span>    <span class="mf">0.608</span>    <span class="mf">0.203</span>    <span class="mf">0.608</span>    <span class="mf">0.203</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">db</span><span class="o">/</span><span class="n">backends</span><span class="o">/</span><span class="n">utils</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">58</span><span class="p">(</span><span class="n">execute</span><span class="p">)</span>
-</span><span class='line'>       <span class="mi">30</span>    <span class="mf">0.112</span>    <span class="mf">0.004</span>    <span class="mf">0.112</span>    <span class="mf">0.004</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">socket</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">406</span><span class="p">(</span><span class="n">readline</span><span class="p">)</span>
-</span><span class='line'>       <span class="mi">12</span>    <span class="mf">0.050</span>    <span class="mf">0.004</span>    <span class="mf">0.050</span>    <span class="mf">0.004</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">socket</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">223</span><span class="p">(</span><span class="n">meth</span><span class="p">)</span>
-</span><span class='line'><span class="o">....</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>という形でプロファイルが表示出来た。もーこれでいーや。ということでやったのはここまで。まだまだだけど、取りあえずプロファイル結果を出すまでだけでハマったし、次回やっても同じようにハマりそうなのでメモしておく。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1341,6 +1408,10 @@ ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04/">ubuntu12.04でpg bulkloadを使う</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/08/25/migrate-from-django-1-dot-7-to-1-dot-8/">Django 1.7から1.8にアップデートしてみた</a>
       </li>
     
@@ -1354,10 +1425,6 @@ ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
     
       <li class="post">
         <a href="/blog/2015/07/30/add-relation-to-existing-table-using-django/">Djangoで作成済みテーブルに手動でリレーションを追加する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/28/use-django-model-outside-django-project/">DjangoモデルをDjangoプロジェクトの外から使う</a>
       </li>
     
   </ul>
@@ -1393,7 +1460,7 @@ ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
-<li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (9)</a></li>
+<li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (10)</a></li>
 <li class='category'><a href='/blog/categories/python/'>Python (22)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>

@@ -9,18 +9,26 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="ググってみたけど無かったのでメモ。
-単純に.vimrcに 1
+  <meta name="description" content="vimでsnippet 色々方法があるみたいだけど、neocomplecacheを入れているので、それと相性が良さそうな（作者が同じ）プラグインを入れた 1
 2
 3
 4
 5
 6
 7
-let dbext_default_profile=""
-let dbext_default_type="PGSQL"
-let dbext_default_user="username"
-let &hellip;">
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+NeoBundle 'Shougo/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -90,6 +98,91 @@ let &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/01/vim-memo/">Vim Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-01T14:14:10+09:00" pubdate data-updated="true">Mar 1<span>st</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>vimでsnippet</h2>
+
+<p>色々方法があるみたいだけど、neocomplecacheを入れているので、それと相性が良さそうな（作者が同じ）プラグインを入れた</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>NeoBundle 'Shougo/neosnippet'
+</span><span class='line'>NeoBundle 'Shougo/neosnippet-snippets'
+</span><span class='line'>
+</span><span class='line'>" Plugin key-mappings.
+</span><span class='line'>imap &lt;C-k&gt;     &lt;Plug&gt;(neosnippet_expand_or_jump)
+</span><span class='line'>smap &lt;C-k&gt;     &lt;Plug&gt;(neosnippet_expand_or_jump)
+</span><span class='line'>xmap &lt;C-k&gt;     &lt;Plug&gt;(neosnippet_expand_target)
+</span><span class='line'>" " SuperTab like snippets behavior.
+</span><span class='line'>imap &lt;expr&gt;&lt;TAB&gt; neosnippet#expandable_or_jumpable() ?
+</span><span class='line'>\ "\&lt;Plug&gt;(neosnippet_expand_or_jump)"
+</span><span class='line'>\: pumvisible() ? "\&lt;C-n&gt;" : "\&lt;TAB&gt;"
+</span><span class='line'>smap &lt;expr&gt;&lt;TAB&gt; neosnippet#expandable_or_jumpable() ?
+</span><span class='line'>\ "\&lt;Plug&gt;(neosnippet_expand_or_jump)"
+</span><span class='line'>\: "\&lt;TAB&gt;"
+</span><span class='line'>"
+</span><span class='line'>" " For snippet_complete marker.
+</span><span class='line'>if has('conceal')
+</span><span class='line'>  set conceallevel=2 concealcursor=i
+</span><span class='line'>endif</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/03/01/vim-memo/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -656,73 +749,6 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/28/nadesiko-plugin-cs2/">C#で作ったdllをなでしこで使う</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-28T22:42:43+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>C#のdllを呼び出せるように、C#のdllを参照した後、Plugin.cppの一部を以下のように書き換えました</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>PHiValue __stdcall sample01(DWORD param) {
-</span><span class='line'>  PHiValue result;
-</span><span class='line'>  ClassLibrary1::Class1::Method1();
-</span><span class='line'>  result = nako_var_new(NULL);
-</span><span class='line'>  hi_setStr(result&cedil; &quot;abc&quot;&cedil; sizeof(&quot;abc&quot;));
-</span><span class='line'>  return result;
-</span><span class='line'>}
-</span><span class='line'>NAKO_API(void) ImportNakoFunction(void) {
-</span><span class='line'>  // ユーザー命令の追加
-</span><span class='line'>  nako_addFunction(&quot;sample01&quot;&cedil;&quot;&quot;&cedil; sample01&cedil; 0);
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/01/28/nadesiko-plugin-cs2/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/9/">&larr; Older</a>
@@ -754,6 +780,10 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04/">ubuntu12.04でpg bulkloadを使う</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/08/25/migrate-from-django-1-dot-7-to-1-dot-8/">Django 1.7から1.8にアップデートしてみた</a>
       </li>
     
@@ -767,10 +797,6 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
     
       <li class="post">
         <a href="/blog/2015/07/30/add-relation-to-existing-table-using-django/">Djangoで作成済みテーブルに手動でリレーションを追加する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/28/use-django-model-outside-django-project/">DjangoモデルをDjangoプロジェクトの外から使う</a>
       </li>
     
   </ul>
@@ -806,7 +832,7 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
-<li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (9)</a></li>
+<li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (10)</a></li>
 <li class='category'><a href='/blog/categories/python/'>Python (22)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>

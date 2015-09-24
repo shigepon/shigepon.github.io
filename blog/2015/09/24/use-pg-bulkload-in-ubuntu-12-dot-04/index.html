@@ -1,0 +1,607 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>ubuntu12.04でpg bulkloadを使う - shigeponが関心のある技術情報など</title>
+  <meta name="author" content="shigepon">
+
+  
+  <meta name="description" content="pg_bulkloadを使いたくなるケース 大量のデータをインポートしたい
+中にはエラーがあるデータがちょこちょこある に当てはまったので、インストールからやってみた。
+やったこと順に列記するので最低限の手順ではないと思う。 rpmからインストールする方法でなく、ソースからやってみることにした。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.shigepon.info/blog/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<script language="JavaScript">
+	$(document).ready( function () {
+	   $("a[href^='http']:not([href*='" + location.hostname + "'])").attr('target', '_blank');
+	})
+</script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-6001470-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+</hgroup>
+
+</header>
+  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.shigepon.info" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav> -->
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">ubuntu12.04でpg bulkloadを使う</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-09-24T08:50:36+09:00" pubdate data-updated="true">Sep 24<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>pg_bulkloadを使いたくなるケース</p>
+
+<ul>
+<li>大量のデータをインポートしたい</li>
+<li>中にはエラーがあるデータがちょこちょこある</li>
+</ul>
+
+
+<p>に当てはまったので、インストールからやってみた。
+やったこと順に列記するので最低限の手順ではないと思う。</p>
+
+<p>rpmからインストールする方法でなく、ソースからやってみることにした。
+Ubuntu12.04でインストールしたけど、他のバージョンでもほぼ同じだと思う。</p>
+
+<h2>ソースの取得</h2>
+
+<p>まずは最新のstableをgithubから取ってくる。ブログ執筆時はこんな感じ。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone -b VERSION3_1_STABLE https://github.com/ossc-db/pg_bulkload.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>make(失敗)</h2>
+
+<p>おもむろにmakeしてみると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>pg_bulkload
+</span><span class='line'><span class="nv">$ </span>make
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>するとpgxs.xmlが無い！というエラーが出て来た</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Makefile:17: /usr/lib/postgresql/9.4/lib/pgxs/src/makefiles/pgxs.mk: そのようなファイルやディレクトリはありません
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>postgresqlは9.2しか入れてないはずなのに何故か9.4のファイルが無いとか言われた。</p>
+
+<h2>試行錯誤(失敗)</h2>
+
+<p>どうもMakefileを調べてみると、ここで出てくるバージョンはpg_configコマンドで取得するバージョンらしい。面倒なので、手動で9.2のファイルを設定するように変更して、さらにpgxs.mkを入れるためにpostgresql-server-dev-9.2をaptitudeでインストールした。</p>
+
+<p>で、おもむろにmakeすると・・・</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo make
+</span><span class='line'>....
+</span><span class='line'>/usr/include/postgresql/libpq-fe.h:547:1: エラー: 不明な型名 ‘pg_int64’ です
+</span><span class='line'>/usr/include/postgresql/libpq-fe.h:547:50: エラー: 不明な型名 ‘pg_int64’ です
+</span><span class='line'>/usr/include/postgresql/libpq-fe.h:551:1: エラー: 不明な型名 ‘pg_int64’ です
+</span><span class='line'>/usr/include/postgresql/libpq-fe.h:553:48: エラー: 不明な型名 ‘pg_int64’ です
+</span><span class='line'>make<span class="o">[</span>1<span class="o">]</span>: *** <span class="o">[</span>pg_bulkload.o<span class="o">]</span> エラー 1
+</span><span class='line'>make<span class="o">[</span>1<span class="o">]</span>: ディレクトリ <span class="sb">`</span>/****/pg_bulkload/bin<span class="err">&#39;</span> から出ます
+</span><span class='line'>make: *** <span class="o">[</span>all<span class="o">]</span> エラー 2
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と結局エラーが出てしまった。ググって調べるとどうもlibpqのバージョンが関連するらしい。調べてみると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>aptitude show libpq-dev
+</span><span class='line'>パッケージ: libpq-dev
+</span><span class='line'>状態: インストール済み
+</span><span class='line'>自動的にインストールされた: いいえ
+</span><span class='line'>バージョン: 9.4.0-1.pgdg12.4+1
+</span><span class='line'>....
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>バージョンが9.4になっていたorz。多分だけど、9.2でpg_bulkloadをインストールするにはlibpqをダウングレードしないといけないっぽい。それは面倒なのでpostgresqlのバージョン9.4をインストールすることでバージョンを合わせることにした</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install postgresql-9.4
+</span><span class='line'><span class="nv">$ </span>sudo aptitude install postgresql-server-dev-9.4
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>インストールの途中でlibpq-devは削除することになった。</p>
+
+<h2>make(成功)</h2>
+
+<p>バージョンを合わせたので、makeしてみると今度はライブラリが足らないというエラーが出た</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo make
+</span><span class='line'>....
+</span><span class='line'>/usr/bin/ld: cannot find -lpam
+</span><span class='line'>/usr/bin/ld: cannot find -ledit
+</span><span class='line'>collect2: ld はステータス 1 で終了しました
+</span><span class='line'>make<span class="o">[</span>1<span class="o">]</span>: *** <span class="o">[</span>pg_bulkload<span class="o">]</span> エラー 1
+</span><span class='line'>make<span class="o">[</span>1<span class="o">]</span>: ディレクトリ <span class="sb">`</span>/***/pg_bulkload/bin<span class="err">&#39;</span> から出ます
+</span><span class='line'>make: *** <span class="o">[</span>all<span class="o">]</span> エラー 2
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これはubuntuではlibpam-devとlibedit-devが足らないという意味らしいので、aptitudeからインストールした。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install libpam-dev
+</span><span class='line'><span class="nv">$ </span>sudo aptitude install libedit-dev
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以上の作業でpg_bulkloadのmakeに成功した</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo make
+</span><span class='line'><span class="nv">$ </span>sudo make install
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>使ってみる</h2>
+
+<p>pg_bulkloadはbinフォルダ内にある。使い方は</p>
+
+<ul>
+<li>設定ファイルを書く</li>
+<li>csvファイルを用意する</li>
+<li>実行する</li>
+</ul>
+
+
+<p>となる。</p>
+
+<h3>設定ファイルを書く</h3>
+
+<p>設定ファイルの例はこんな感じ(下のコマンドの場合、example.ctlで保存しておく)、bin/data内にも例があるので参考になる。
+この設定は</p>
+
+<ul>
+<li>リダイレクトでcsvファイルを入力する。</li>
+<li>リレーションをチェックする。リレーションにミスがある場合はエラーにする</li>
+<li>タブ区切り</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">TYPE</span> <span class="o">=</span> CSV
+</span><span class='line'><span class="nv">INPUT</span> <span class="o">=</span> stdin
+</span><span class='line'><span class="nv">TABLE</span> <span class="o">=</span> table_name
+</span><span class='line'><span class="nv">CHECK_CONSTRAINTS</span> <span class="o">=</span> YES
+</span><span class='line'><span class="nv">DELIMITER</span> <span class="o">=</span> <span class="s2">&quot;   &quot;</span> <span class="c">#タブの場合</span>
+</span><span class='line'><span class="nv">WRITER</span> <span class="o">=</span> DIRECT
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>コマンドはこんな感じ</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>./pg_bulkload example.ctl --dbname db_name  &lt; csv_name.csv
+</span><span class='line'>NOTICE: BULK LOAD START
+</span><span class='line'>NOTICE: BULK LOAD END
+</span><span class='line'>    0 Rows skipped.
+</span><span class='line'>    10 Rows successfully loaded.
+</span><span class='line'>    0 Rows not loaded due to parse errors.
+</span><span class='line'>    0 Rows not loaded due to duplicate errors.
+</span><span class='line'>    0 Rows replaced with new rows.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>csvファイルはpsqlで\d table_nameで表示される順序にしておくこと。でないとパースエラーが出る。</p>
+
+<h2>順序が変わる場合</h2>
+
+<p>csvファイル内のフィールド順序をdb内の順序と違うものにしたい場合や、idなど、データを省略したい場合はフィルタを指定出来る。フィルタは</p>
+
+<ul>
+<li>db内に関数を作る</li>
+<li>設定ファイルでフィルタを指定</li>
+</ul>
+
+
+<p>で設定する。</p>
+
+<p>フィルタの例</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">CREATE</span> <span class="k">FUNCTION</span> <span class="n">sample_filter</span><span class="p">(</span><span class="nb">integer</span><span class="p">,</span> <span class="nb">text</span><span class="p">,</span> <span class="nb">text</span><span class="p">,</span> <span class="nb">real</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">.</span><span class="mi">05</span><span class="p">)</span> <span class="k">RETURNS</span> <span class="n">record</span>
+</span><span class='line'>    <span class="k">AS</span> <span class="err">$$</span> <span class="k">SELECT</span> <span class="err">$</span><span class="mi">1</span> <span class="o">*</span> <span class="err">$</span><span class="mi">4</span><span class="p">,</span> <span class="k">upper</span><span class="p">(</span><span class="err">$</span><span class="mi">3</span><span class="p">)</span> <span class="err">$$</span>
+</span><span class='line'>    <span class="k">LANGUAGE</span> <span class="k">SQL</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>設定ファイル</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">TYPE</span> <span class="o">=</span> <span class="n">CSV</span>
+</span><span class='line'><span class="k">INPUT</span> <span class="o">=</span> <span class="k">stdin</span>
+</span><span class='line'><span class="k">TABLE</span> <span class="o">=</span> <span class="k">table_name</span>
+</span><span class='line'><span class="n">CHECK_CONSTRAINTS</span> <span class="o">=</span> <span class="n">YES</span>
+</span><span class='line'><span class="k">DELIMITER</span> <span class="o">=</span> <span class="ss">&quot;   &quot;</span> <span class="o">#</span><span class="err">タブの場合</span>
+</span><span class='line'><span class="n">WRITER</span> <span class="o">=</span> <span class="n">DIRECT</span>
+</span><span class='line'><span class="n">FILTER</span> <span class="o">=</span> <span class="n">sample_filter</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>出来てない点（追記予定）</h2>
+
+<ul>
+<li>MULTI_PROCESS = YESの時に認証失敗する件</li>
+</ul>
+
+
+<p>参考：
++ <a href="http://pgbulkload.projects.pgfoundry.org/pg_bulkload.html#filter">pg_bulkload</a>
++ <a href="http://www.atmarkit.co.jp/flinux/rensai/linuxtips/a115makeerror.html">makeで「/usr/bin/ld: cannot find」と表示されるときは － ＠IT</a>
++ <a href="http://pgfoundry.org/forum/forum.php?thread_id=2851&amp;forum_id=1004&amp;group_id=1000261">pgFoundry: Forum: help</a>
++ <a href="https://github.com/ossc-db/pg_bulkload">ossc-db/pg_bulkload</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">shigepon</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-09-24T08:50:36+09:00" pubdate data-updated="true">Sep 24<span>th</span>, 2015</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/postgresql/'>PostgreSQL</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.info/blog/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04/" data-via="shigepon" data-counturl="http://blog.shigepon.info/blog/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    
+      <div class="related_posts">
+	<h1>Related Posts</h1>
+	<ul>
+		
+	</ul>
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/08/25/migrate-from-django-1-dot-7-to-1-dot-8/" title="Previous Post: Django 1.7から1.8にアップデートしてみた">&laquo; Django 1.7から1.8にアップデートしてみた</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <ul id="recent_posts">
+      <li class="post">
+      <a href="http://blog.shigepon.info" alt="Home"><img src="/images/Home.png"></a>
+      <a href="http://blog.shigepon.info/archives/" alt="Archives"><img src="/images/Calendar.png"></a>
+      <a href="mailto:" alt="E-Mail"><img src="/images/Envelope.png"></a>
+      <a href="http://blog.shigepon.info/atom.xml" alt="subscribe feed"><img src="/images/rss_big.png"></a>
+      </li>
+  </ul>
+</section>
+<section>
+  <h1>About Me</h1>
+  <p>A little something about me.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04/">ubuntu12.04でpg bulkloadを使う</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/08/25/migrate-from-django-1-dot-7-to-1-dot-8/">Django 1.7から1.8にアップデートしてみた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/08/12/javascript-memo/">Javascript Memo</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/08/05/esxi-shows-fatal-error-33/">Vmware Esxiがfatal Error 33を出したのでインストールしなおしてついでに色々試した話</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/07/30/add-relation-to-existing-table-using-django/">Djangoで作成済みテーブルに手動でリレーションを追加する</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      getTwitterFeed("shigepon", , );
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <p>Follow <a href="http://twitter.com/shigepon">@shigepon</a></p>
+  
+</section>
+
+<section>
+<h1>Categories</h1>
+<ul id="categories">
+	<li class='category'><a href='/blog/categories/analytics/'>Analytics (1)</a></li>
+<li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
+<li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
+<li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (21)</a></li>
+<li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
+<li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
+<li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
+<li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
+<li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
+<li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
+<li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (10)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (22)</a></li>
+<li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
+<li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
+<li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
+<li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
+<li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
+<li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (11)</a></li>
+<li class='category'><a href='/blog/categories/memo/'>memo (13)</a></li>
+<li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
+<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>
+<li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
+<li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
+<li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>
+<li class='category'><a href='/blog/categories/ruby/'>ruby (9)</a></li>
+<li class='category'><a href='/blog/categories/sqlite/'>sqlite (1)</a></li>
+<li class='category'><a href='/blog/categories/svn/'>svn (1)</a></li>
+<li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>
+<li class='category'><a href='/blog/categories/uwsgi/'>uwsgi (1)</a></li>
+<li class='category'><a href='/blog/categories/vim/'>vim (2)</a></li>
+<li class='category'><a href='/blog/categories/vmware/'>vmware (1)</a></li>
+
+</ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/shigepon">@shigepon</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'shigepon',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - shigepon -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

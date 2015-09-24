@@ -9,7 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="画像やファイルが無くなっていますがご了承下さい なでしこでプラグインを作る時にC#を使いたかったので、本格的にdllを作る前に、C++/CLIからMessageBoxを表示する程度のC#のdllを呼び出してみました。 C#のdllコード 1
+  <meta name="description" content="C#のdllを呼び出せるように、C#のdllを参照した後、Plugin.cppの一部を以下のように書き換えました 1
 2
 3
 4
@@ -20,8 +20,7 @@
 9
 10
 11
-12
-13 &hellip;">
+PHiValue __stdcall sample01(DWORD param) { PHiValue result; &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -91,6 +90,73 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/28/nadesiko-plugin-cs2/">C#で作ったdllをなでしこで使う</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-28T22:42:43+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>C#のdllを呼び出せるように、C#のdllを参照した後、Plugin.cppの一部を以下のように書き換えました</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>PHiValue __stdcall sample01(DWORD param) {
+</span><span class='line'>  PHiValue result;
+</span><span class='line'>  ClassLibrary1::Class1::Method1();
+</span><span class='line'>  result = nako_var_new(NULL);
+</span><span class='line'>  hi_setStr(result&cedil; &quot;abc&quot;&cedil; sizeof(&quot;abc&quot;));
+</span><span class='line'>  return result;
+</span><span class='line'>}
+</span><span class='line'>NAKO_API(void) ImportNakoFunction(void) {
+</span><span class='line'>  // ユーザー命令の追加
+</span><span class='line'>  nako_addFunction(&quot;sample01&quot;&cedil;&quot;&quot;&cedil; sample01&cedil; 0);
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/01/28/nadesiko-plugin-cs2/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -420,6 +486,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04/">ubuntu12.04でpg bulkloadを使う</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/08/25/migrate-from-django-1-dot-7-to-1-dot-8/">Django 1.7から1.8にアップデートしてみた</a>
       </li>
     
@@ -433,10 +503,6 @@
     
       <li class="post">
         <a href="/blog/2015/07/30/add-relation-to-existing-table-using-django/">Djangoで作成済みテーブルに手動でリレーションを追加する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/28/use-django-model-outside-django-project/">DjangoモデルをDjangoプロジェクトの外から使う</a>
       </li>
     
   </ul>
@@ -472,7 +538,7 @@
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
-<li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (9)</a></li>
+<li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (10)</a></li>
 <li class='category'><a href='/blog/categories/python/'>Python (22)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
