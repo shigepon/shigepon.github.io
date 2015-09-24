@@ -4,7 +4,7 @@
   <title><![CDATA[Category: PostgreSQL | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/postgresql/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-09-24T09:57:57+09:00</updated>
+  <updated>2015-09-24T09:59:34+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -217,11 +217,15 @@ FILTER = sample_filter
 </ul>
 
 
-<p>参考：
-+ <a href="http://pgbulkload.projects.pgfoundry.org/pg_bulkload.html#filter">pg_bulkload</a>
-+ <a href="http://www.atmarkit.co.jp/flinux/rensai/linuxtips/a115makeerror.html">makeで「/usr/bin/ld: cannot find」と表示されるときは － ＠IT</a>
-+ <a href="http://pgfoundry.org/forum/forum.php?thread_id=2851&amp;forum_id=1004&amp;group_id=1000261">pgFoundry: Forum: help</a>
-+ <a href="https://github.com/ossc-db/pg_bulkload">ossc-db/pg_bulkload</a></p>
+<p>参考：</p>
+
+<ul>
+<li><a href="http://pgbulkload.projects.pgfoundry.org/pg_bulkload.html#filter">pg_bulkload</a></li>
+<li><a href="http://www.atmarkit.co.jp/flinux/rensai/linuxtips/a115makeerror.html">makeで「/usr/bin/ld: cannot find」と表示されるときは － ＠IT</a></li>
+<li><a href="http://pgfoundry.org/forum/forum.php?thread_id=2851&amp;forum_id=1004&amp;group_id=1000261">pgFoundry: Forum: help</a></li>
+<li><a href="https://github.com/ossc-db/pg_bulkload">ossc-db/pg_bulkload</a></li>
+</ul>
+
 ]]></content>
   </entry>
   
