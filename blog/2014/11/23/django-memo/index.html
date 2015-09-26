@@ -545,6 +545,45 @@ def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る
 <p>パラメーターに指定する名前（上の場合はfuga）がviewsとurlsで同じ名前になっていることが必要（でないとエラーが出る）</p>
 
 <p>参考：<a href="https://docs.djangoproject.com/en/1.8/topics/http/urls/#passing-extra-options-to-include">URL dispatcher | Django documentation | Django</a></p>
+
+<h2>dbにインデックスを付ける</h2>
+
+<p>インデックスの場合はフィールド定義にdb_index=Trueを付けるとおk</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">hoge</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">db_index</span><span class="o">=</span><span class="n">true</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>複合インデックスの場合はMetaクラスでindex_togetherを定義する</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">class</span> <span class="nc">Hoge</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span class='line'>  <span class="o">....</span>
+</span><span class='line'>  <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+</span><span class='line'>    <span class="n">index_together</span> <span class="o">=</span> <span class="p">[</span>
+</span><span class='line'>      <span class="p">[</span><span class="s">&#39;hoge&#39;</span><span class="p">,</span><span class="s">&#39;fuga&#39;</span><span class="p">]</span>
+</span><span class='line'>    <span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この場合インデックス順はhoge->fugaとなる。</p>
+
+<h2>ForeignKeyで逆参照をしたくない場合</h2>
+
+<p>related_nameを+にするか末尾に+を付けるかで対応出来る。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">user</span> <span class="o">=</span> models.ForeignKey<span class="o">(</span>User, <span class="nv">related_name</span><span class="o">=</span><span class="s1">&#39;user+&#39;</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じ</p>
 </div>
 
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: memo | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/memo/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-09-24T09:59:34+09:00</updated>
+  <updated>2015-09-26T11:09:55+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -446,6 +446,40 @@ def hoge(request,fuga):</p>
 <p>パラメーターに指定する名前（上の場合はfuga）がviewsとurlsで同じ名前になっていることが必要（でないとエラーが出る）</p>
 
 <p>参考：<a href="https://docs.djangoproject.com/en/1.8/topics/http/urls/#passing-extra-options-to-include">URL dispatcher | Django documentation | Django</a></p>
+
+<h2>dbにインデックスを付ける</h2>
+
+<p>インデックスの場合はフィールド定義にdb_index=Trueを付けるとおk</p>
+
+<p><code>py
+hoge = models.TextField(db_index=true)
+</code></p>
+
+<p>複合インデックスの場合はMetaクラスでindex_togetherを定義する</p>
+
+<p>```py
+class Hoge(models.Model):
+  &hellip;.
+  class Meta:</p>
+
+<pre><code>index_together = [
+  ['hoge','fuga']
+]
+</code></pre>
+
+<p>```</p>
+
+<p>この場合インデックス順はhoge->fugaとなる。</p>
+
+<h2>ForeignKeyで逆参照をしたくない場合</h2>
+
+<p>related_nameを+にするか末尾に+を付けるかで対応出来る。</p>
+
+<p><code>sh
+user = models.ForeignKey(User, related_name='user+')
+</code></p>
+
+<p>こんな感じ</p>
 ]]></content>
   </entry>
   
