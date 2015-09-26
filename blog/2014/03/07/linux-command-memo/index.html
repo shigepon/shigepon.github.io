@@ -212,6 +212,13 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
+<p>一行目に文字列を追加する</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sed -i hoge -e <span class="s2">&quot;1i fuga&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
 <p>参考:
 <a href="http://d.hatena.ne.jp/n9d/20081110/1226284188">sedにて一番最初にマッチしたモノだけを置換するには &ndash; 計算機と戯れる日々</a></p>
 
@@ -336,6 +343,24 @@
 
 
 <p>eth0はスキャンしたいネットワークアダプタ</p>
+
+<h2>csvからカラム切り出し</h2>
+
+<p>例としてhoge.csvの2カラム目を取り出す</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>cut -f 2 hoge.csv
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この場合タブ区切り、カンマ区切りしたい場合は</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>cut -d , -f 2 hoge.csv
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考：<a href="http://linux.just4fun.biz/?%E9%80%86%E5%BC%95%E3%81%8DUNIX%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%2F%E6%8C%87%E5%AE%9A%E3%81%97%E3%81%9F%E3%83%95%E3%82%A3%E3%83%BC%E3%83%AB%E3%83%89%E3%82%92%E6%8A%9C%E3%81%8D%E5%87%BA%E3%81%99#q05e8b64">逆引きUNIXコマンド/指定したフィールドを抜き出す &ndash; Linuxと過ごす</a></p>
 </div>
 
 
