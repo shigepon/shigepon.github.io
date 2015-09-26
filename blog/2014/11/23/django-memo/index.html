@@ -584,6 +584,17 @@ def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る
 
 
 <p>こんな感じ</p>
+
+<h2>生sqlを使う時にin句にパラメーターを使いたい</h2>
+
+<p>タプルで指定すれば良い。リストは試してない。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">results</span> <span class="o">=</span> Hoge.objects.raw<span class="o">(</span><span class="s2">&quot;select * from application_hoge where fuga in %s&quot;</span>, tuple<span class="o">(</span>fuga<span class="o">))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考：<a href="http://stackoverflow.com/questions/6895051/passing-lists-or-tuples-as-arguments-in-django-raw-sql">passing lists or tuples as arguments in django raw sql &ndash; Stack Overflow</a></p>
 </div>
 
 
