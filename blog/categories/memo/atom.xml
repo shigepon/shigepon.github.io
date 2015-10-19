@@ -4,7 +4,7 @@
   <title><![CDATA[Category: memo | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/memo/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-09-26T11:23:52+09:00</updated>
+  <updated>2015-10-19T20:50:18+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -490,6 +490,15 @@ results = Hoge.objects.raw("select * from application_hoge where fuga in %s", tu
 </code></p>
 
 <p>参考：<a href="http://stackoverflow.com/questions/6895051/passing-lists-or-tuples-as-arguments-in-django-raw-sql">passing lists or tuples as arguments in django raw sql &ndash; Stack Overflow</a></p>
+
+<h2>Ajaxでpostしたい時</h2>
+
+<p>csrfフィルタが初期状態で設定されてるし、csrfフィルタはあった方が良いので、次のようになったら良いかも（Jqueryを使う場合）</p>
+
+<p><code>js
+$.post(url,{csrfmiddlewaretoken: ''}...);
+</code>
+参考：<a href="http://stackoverflow.com/questions/5100539/django-csrf-check-failing-with-an-ajax-post-request">Django CSRF check failing with an Ajax POST request &ndash; Stack Overflow</a></p>
 ]]></content>
   </entry>
   
