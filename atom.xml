@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-10-19T20:50:18+09:00</updated>
+  <updated>2015-10-20T19:26:25+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -308,11 +308,49 @@ Ubuntu12.04でインストールしたけど、他のバージョンでもほぼ
 <h3>transactionについて</h3>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
 </pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">transaction</span><span class="o">.</span><span class="n">commit_unless_managed</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">みたいなメソッドが無くなってた。</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">## migrate関連でのハマりポイント（2015-10-20追記）</span>
+</span><span class='line'>
+</span><span class='line'><span class="mf">1.7</span><span class="err">から</span><span class="mf">1.8</span><span class="err">にバージョンアップすると、マイグレーションでエラーが出る。普通に</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>みたいなメソッドが無くなってた。</p>
+<p>sh
+$ python manage.py makemigrations
+$ python manage.py migrate</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">とすると</span><span class="n">migrate</span><span class="err">コマンドで</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>sh
+Error creating new content types. Please make sure contenttypes</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">というメッセージが出てコマンドが途中で終わってしまう。調べて結果データベース上で</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ALTER TABLE django_content_type DROP COLUMN name;</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">を実行することで対処できた。要はカラムが一個要らなくなったみたい。</span>
+</span><span class='line'>
+</span><span class='line'><span class="err">参考：</span><span class="p">[</span><span class="n">django</span> <span class="o">-</span> <span class="n">Error</span> <span class="n">creating</span> <span class="n">new</span> <span class="n">content</span> <span class="n">types</span><span class="o">.</span> <span class="n">Please</span> <span class="n">make</span> <span class="n">sure</span> <span class="n">contenttypes</span> <span class="ow">is</span> <span class="n">migrated</span> <span class="n">before</span> <span class="n">trying</span> <span class="n">to</span> <span class="n">migrate</span> <span class="n">apps</span> <span class="n">individually</span> <span class="o">-</span> <span class="n">Stack</span> <span class="n">Overflow</span><span class="p">](</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">stackoverflow</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">questions</span><span class="o">/</span><span class="mi">29917442</span><span class="o">/</span><span class="n">error</span><span class="o">-</span><span class="n">creating</span><span class="o">-</span><span class="n">new</span><span class="o">-</span><span class="n">content</span><span class="o">-</span><span class="n">types</span><span class="o">-</span><span class="n">please</span><span class="o">-</span><span class="n">make</span><span class="o">-</span><span class="n">sure</span><span class="o">-</span><span class="n">contenttypes</span><span class="o">-</span><span class="ow">is</span><span class="o">-</span><span class="n">migrated</span><span class="o">-</span><span class="n">befo</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <h2>嬉しい点</h2>
 

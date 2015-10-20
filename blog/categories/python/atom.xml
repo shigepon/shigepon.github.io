@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-10-19T20:50:18+09:00</updated>
+  <updated>2015-10-20T19:26:25+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -37,11 +37,37 @@ url(r'^', include('hoge.urls',app_name='hoge',namespace='hoge')),#これはOK
 
 <h3>transactionについて</h3>
 
-<p><code>py
-transaction.commit_unless_managed()
-</code></p>
+<p>```py
+transaction.commit_unless_managed()</p>
 
 <p>みたいなメソッドが無くなってた。</p>
+
+<h2>migrate関連でのハマりポイント（2015-10-20追記）</h2>
+
+<p>1.7から1.8にバージョンアップすると、マイグレーションでエラーが出る。普通に</p>
+
+<p><code>sh
+$ python manage.py makemigrations
+$ python manage.py migrate
+</code></p>
+
+<p>とするとmigrateコマンドで</p>
+
+<p><code>sh
+Error creating new content types. Please make sure contenttypes
+</code></p>
+
+<p>というメッセージが出てコマンドが途中で終わってしまう。調べて結果データベース上で</p>
+
+<p><code>
+ALTER TABLE django_content_type DROP COLUMN name;
+</code></p>
+
+<p>を実行することで対処できた。要はカラムが一個要らなくなったみたい。</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/29917442/error-creating-new-content-types-please-make-sure-contenttypes-is-migrated-befo">django &ndash; Error creating new content types. Please make sure contenttypes is migrated before trying to migrate apps individually &ndash; Stack Overflow</a></p>
+
+<p>```</p>
 
 <h2>嬉しい点</h2>
 
