@@ -4,7 +4,7 @@
   <title><![CDATA[Category: memo | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/memo/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-10-20T19:26:25+09:00</updated>
+  <updated>2015-10-21T22:28:56+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -40,6 +40,47 @@ var chart = new HighChart(&hellip;);
 
 <p>グローバルな設定として使うらしい。
 参考（ほぼそのまま）<a href="http://mtc.hatenablog.com/">mtcdotcom&rsquo;s blog</a></p>
+
+<h2>HighChartでチャートをクリックするとUncaught TypeError: undefined is not a functionが出る</h2>
+
+<p>Chromeでのみ確認。Google翻訳の拡張機能を切ればおk</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/30498335/highcharts-always-console-error-ablout-bubble-compiled-js">javascript &ndash; highcharts always console error ablout bubble_compiled.js? &ndash; Stack Overflow</a></p>
+
+<h2>bootstrap3のタブ変更時に何か実行したい</h2>
+
+<p>タブの中身を表示する時に何か実行させたい時は次のようにすればおk</p>
+
+<p>```html</p>
+
+<ul class="nav nav-tabs">
+ <li class="active"><a href="#tab1" data-toggle="tab">Tab1</a></li>
+ <li ><a href="#tab2" data-toggle="tab">Tab2</a></li>
+</ul>
+
+
+<div class="tab-content">
+ <div class="tab-pane active" id="tab1">
+   Tab1 content
+ </div>
+ <div class="tab-pane" id="tab2">
+   Tab2 content
+ </div>
+</div>
+
+
+<script>
+$('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+    ...
+});
+</script>
+
+
+<p>```</p>
+
+<p>shown.bs.tabってイベントがあるらしい。</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/20705905/bootstrap-3-jquery-event-for-active-tab-change">Bootstrap 3 jquery event for active tab change &ndash; Stack Overflow</a></p>
 ]]></content>
   </entry>
   
