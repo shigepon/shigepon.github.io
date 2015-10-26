@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Django | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/django/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-10-21T22:28:56+09:00</updated>
+  <updated>2015-10-26T17:56:33+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -67,7 +67,18 @@ ALTER TABLE django_content_type DROP COLUMN name;
 
 <p>参考：<a href="http://stackoverflow.com/questions/29917442/error-creating-new-content-types-please-make-sure-contenttypes-is-migrated-befo">django &ndash; Error creating new content types. Please make sure contenttypes is migrated before trying to migrate apps individually &ndash; Stack Overflow</a></p>
 
-<p>```</p>
+<h2>adminでユーザー追加するとnot null制限に引っ掛かるエラー（2015-10-26追記）</h2>
+
+<p>```
+admin画面でユーザーを追加すると「last_loginがnot null制限あるのにnullを入れようとした」と怒られた。</p>
+
+<p>対策をググると普通にmigrateコマンドすればおkと書いてあるのに出来なかったのでsqlで対応してみた</p>
+
+<p><code>
+alter table auth_user alter column last_login drop not null;
+</code></p>
+
+<p>これでユーザー追加出来るようになった</p>
 
 <h2>嬉しい点</h2>
 

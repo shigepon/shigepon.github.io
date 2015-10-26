@@ -465,11 +465,26 @@ Error creating new content types. Please make sure contenttypes</p>
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
 </pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">を実行することで対処できた。要はカラムが一個要らなくなったみたい。</span>
 </span><span class='line'>
 </span><span class='line'><span class="err">参考：</span><span class="p">[</span><span class="n">django</span> <span class="o">-</span> <span class="n">Error</span> <span class="n">creating</span> <span class="n">new</span> <span class="n">content</span> <span class="n">types</span><span class="o">.</span> <span class="n">Please</span> <span class="n">make</span> <span class="n">sure</span> <span class="n">contenttypes</span> <span class="ow">is</span> <span class="n">migrated</span> <span class="n">before</span> <span class="n">trying</span> <span class="n">to</span> <span class="n">migrate</span> <span class="n">apps</span> <span class="n">individually</span> <span class="o">-</span> <span class="n">Stack</span> <span class="n">Overflow</span><span class="p">](</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">stackoverflow</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">questions</span><span class="o">/</span><span class="mi">29917442</span><span class="o">/</span><span class="n">error</span><span class="o">-</span><span class="n">creating</span><span class="o">-</span><span class="n">new</span><span class="o">-</span><span class="n">content</span><span class="o">-</span><span class="n">types</span><span class="o">-</span><span class="n">please</span><span class="o">-</span><span class="n">make</span><span class="o">-</span><span class="n">sure</span><span class="o">-</span><span class="n">contenttypes</span><span class="o">-</span><span class="ow">is</span><span class="o">-</span><span class="n">migrated</span><span class="o">-</span><span class="n">befo</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">## adminでユーザー追加するとnot null制限に引っ掛かるエラー（2015-10-26追記）</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<p>admin画面でユーザーを追加すると「last_loginがnot null制限あるのにnullを入れようとした」と怒られた。</p>
+
+<p>対策をググると普通にmigrateコマンドすればおkと書いてあるのに出来なかったのでsqlで対応してみた</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">alter</span> <span class="n">table</span> <span class="n">auth_user</span> <span class="n">alter</span> <span class="n">column</span> <span class="n">last_login</span> <span class="n">drop</span> <span class="ow">not</span> <span class="n">null</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これでユーザー追加出来るようになった</p>
 
 <h2>嬉しい点</h2>
 
