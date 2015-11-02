@@ -9,9 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="今回は他の人からの話があるので丁寧語で。
-@ktouさんからGroongaについて「Groongaについてのいくつかの質問について答えて欲しい」との話がありましたので、ブログに載せておきます。 質問は以下の3点 Groongaを選んだ決め手
-実際にGroongaを使っていてよいと思っているところ &hellip;">
+  <meta name="description" content="「djangoでfacebook, twitter, mixiでの認証使うにはどうしたらいいんだろ？」URLと質問したら、@key3さんから「@shigepon python-social-authおすすめ https://t.co/uWqOX8Xh94」URLと教えて貰ったので試してみた。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +79,57 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/23/use-python-social-auth-in-django/">Djangoでpython-social-authを使うための最低限の設定</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-23T09:40:36+09:00" pubdate data-updated="true">Jul 23<span>rd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>「djangoでfacebook, twitter, mixiでの認証使うにはどうしたらいいんだろ？」<a href="http://twitter.com/shigepon/status/491397829215006720">URL</a>と質問したら、@key3さんから「@shigepon python-social-authおすすめ <a href="https://t.co/uWqOX8Xh94">https://t.co/uWqOX8Xh94</a>」<a href="http://twitter.com/key3/status/491404335335477248">URL</a>と教えて貰ったので試してみた。</p>
+
+<p>一日試してみて、認証出来たんだけど、<a href="http://psa.matiasaguirre.net/docs/index.html">ドキュメント</a>見ても、どれが最低限必要な設定なのか良く分からなかったのでブログに残しておく。</p>
+
+<h2>python-social-authをインストール</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ pip install python-social-auth</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>設定</h2>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/07/23/use-python-social-auth-in-django/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -614,65 +663,6 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/06/18/start-django-on-ubuntu-12-dot-04/">Ubuntu 12.04でDjangoを始める</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-06-18T08:06:49+09:00" pubdate data-updated="true">Jun 18<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>ヘタレなことにRailsに挫折してしまったので、Railsと同様良く名前が出てくるDjangoを試してみることにする。Djangoを使うにはpythonとかpipとか入れておくといいらしい。</p>
-
-<p>どれもとりあえずaptitudeでインストール出来るので、おもむろに</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install python,python-pip
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でインストール。python2.7がインストール出来た。一応aptitude updateくらいしておいたら良いと思う。</p>
-
-<p>んで、Djangoはpipでインストール</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo pip install <span class="nv">Django</span><span class="o">==</span>1.6.5
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/06/18/start-django-on-ubuntu-12-dot-04/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -704,6 +694,10 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/11/02/use-mecab-in-python-virtualenv-ubuntu1-12-dot-04/">Virtualenv上のpythonでmecabを使う Ubuntu1 12.04</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04/">ubuntu12.04でpg bulkloadを使う</a>
       </li>
     
@@ -717,10 +711,6 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
     
       <li class="post">
         <a href="/blog/2015/08/05/esxi-shows-fatal-error-33/">Vmware Esxiがfatal Error 33を出したのでインストールしなおしてついでに色々試した話</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/30/add-relation-to-existing-table-using-django/">Djangoで作成済みテーブルに手動でリレーションを追加する</a>
       </li>
     
   </ul>
@@ -757,14 +747,14 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (10)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (22)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (23)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
 <li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (11)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (12)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (13)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>

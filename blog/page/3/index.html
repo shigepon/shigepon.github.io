@@ -9,7 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="pythonのデコレーターを使ってみたらとても便利だなと思ったのでメモ 参考にしたページを読んでいくと理解できた。要はデコレーターとして使う関数は引数に呼び出し元の関数を貰っておいて、内部で作った関数を返せば良い。内部の関数は適当に作れるみたい（今のとこそういう理解をしている）。 &hellip;">
+  <meta name="description" content="ModelFormでModelの１つのカラムを複数のフォーム要素（inputとか）で表現したかったので調べてみた。フォーム要素を適当に作って、clean_xxxの時にくっつけるとかそんな実装の仕方も出来るみたいだけど、MultiWidgetを使うと、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,62 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/24/django-modelform-multiwidget/">djangoのModelFormでMultiWidgetを使って見る</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-01-24T17:23:07+09:00" pubdate data-updated="true">Jan 24<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ModelFormでModelの１つのカラムを複数のフォーム要素（inputとか）で表現したかったので調べてみた。フォーム要素を適当に作って、clean_xxxの時にくっつけるとかそんな実装の仕方も出来るみたいだけど、MultiWidgetを使うと、Modelの１つのカラムに対して複数のinput要素を使うことが出来るみたいなので、使ってみた。名前のカラムに対して姓、名の入力要素を作るとかそんなのが出来るみたい。</p>
+
+<p>まずはMultiWidgetを継承したクラスを作る</p>
+
+<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">django.forms.widgets</span> <span class="kn">import</span> <span class="n">MultiWidget</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">NameWidget</span><span class="p">(</span><span class="n">MultiWidget</span><span class="p">):</span>
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>次にクラスに対して、__init__をオーバーライドし、widgetとしてTextInputのフォームを2つ登録してみた。コードはこんな感じ。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/01/24/django-modelform-multiwidget/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -573,60 +629,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/23/titanium-mobile-memo/">Titanium Mobileメモ</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-11-23T09:48:44+09:00" pubdate data-updated="true">Nov 23<span>rd</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Titanium Mobileに関するメモ</p>
-
-<h2>アプリ固有の設定を登録する</h2>
-
-<p>アプリを終了して、再起動させた時も保存される設定をしたい時はTitanium.App.Propertiesを使う</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">Properties</span><span class="p">.</span><span class="nx">setString</span><span class="p">(</span><span class="s2">&quot;hoge&quot;</span><span class="p">,</span><span class="s2">&quot;fuga&quot;</span><span class="p">);</span><span class="c1">//設定</span>
-</span><span class='line'><span class="nx">hoge</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">Properties</span><span class="p">.</span><span class="nx">getString</span><span class="p">(</span><span class="s2">&quot;hoge&quot;</span><span class="p">);</span><span class="c1">//取得</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>stringを例にしてるが、ListとかObjectとかBoolとか色々入れられる。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/11/23/titanium-mobile-memo/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -658,6 +660,10 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/11/02/use-mecab-in-python-virtualenv-ubuntu1-12-dot-04/">Virtualenv上のpythonでmecabを使う Ubuntu1 12.04</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04/">ubuntu12.04でpg bulkloadを使う</a>
       </li>
     
@@ -671,10 +677,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
     
       <li class="post">
         <a href="/blog/2015/08/05/esxi-shows-fatal-error-33/">Vmware Esxiがfatal Error 33を出したのでインストールしなおしてついでに色々試した話</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/30/add-relation-to-existing-table-using-django/">Djangoで作成済みテーブルに手動でリレーションを追加する</a>
       </li>
     
   </ul>
@@ -711,14 +713,14 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (10)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (22)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (23)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
 <li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (11)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (12)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (13)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>

@@ -9,7 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="作ってるWebサービスが条件によってえらい重くなるので、ボトルネックを探すためにプロファイラを動かしてみようと考えてやってみたらそこそこハマった。 先に結論： Middleware使ってブラウザに表示させるのが楽だった 条件 cui環境なので、 &hellip;">
+  <meta name="description" content="Django1.6.5でアプリを作ってみたってネタをやってたけど、Django1.7にバージョンアップしたので、タイトルを変えた。ついでにDjango1.7だとINSTALLED_APPにdjango.contrib.authを入れておかないとエラーが出るケースがある（例えばDjango REST &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,129 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/07/03/make-admin-page-using-django/">Django1.7でPostgreSQLとBootstrap使ったアプリを作ってみた(1.5):管理ページを作ってみた</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-07-03T21:59:10+09:00" pubdate data-updated="true">Jul 3<span>rd</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Django1.6.5でアプリを作ってみたってネタをやってたけど、Django1.7にバージョンアップしたので、タイトルを変えた。ついでにDjango1.7だとINSTALLED_APPにdjango.contrib.authを入れておかないとエラーが出るケースがある（例えば<a href="http://www.django-rest-framework.org/">Django REST framework</a>でエラーが出た）ので、エラー出ないように最初に管理ページを用意しておくと良いと思う。</p>
+
+<p>管理ページを用意する手順はこんな感じ</p>
+
+<h2>settings.pyに設定を書く</h2>
+
+<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
+</span><span class='line'>    <span class="s">&#39;django.contrib.admin&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s">&#39;django.contrib.auth&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'><span class="p">)</span>
+</span><span class='line'><span class="n">MIDDLEWARE_CLASSES</span> <span class="o">=</span> <span class="p">(</span>
+</span><span class='line'>    <span class="s">&#39;django.contrib.auth.middleware.AuthenticationMiddleware&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'><span class="p">)</span>
+</span><span class='line'><span class="n">TEMPLATE_CONTEXT_PROCESSORS</span> <span class="o">=</span> <span class="p">(</span>
+</span><span class='line'>    <span class="s">&#39;django.contrib.auth.context_processors.auth&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>migrate</h2>
+
+<p>マイグレーションしておく</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py makemigrations
+</span><span class='line'><span class="nv">$ </span>python manage.py migrate
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>マルチデータベースでやろうとして反映されずにハマったりしたけど、それはまた別の記事で書くかも</p>
+
+<h2>管理アカウントを作る</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py createsuperuser
+</span><span class='line'>Username: hoge
+</span><span class='line'>Email address: hoge@example.com
+</span><span class='line'>Password: ********
+</span><span class='line'>Password <span class="o">(</span>again<span class="o">)</span>: ********
+</span><span class='line'>Superuser created successfully.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>って出来るとおk</p>
+
+<h2>urls.pyを書く</h2>
+
+<figure class='code'><figcaption><span>urls.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="n">url</span><span class="p">(</span><span class="s">r&#39;^admin/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">urls</span><span class="p">)),</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じで作って</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py runserver
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とすると、127.0.0.1/adminにアクセスすると管理画面へのログイン画面が出る。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -745,62 +868,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/01/24/django-modelform-multiwidget/">djangoのModelFormでMultiWidgetを使って見る</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-01-24T17:23:07+09:00" pubdate data-updated="true">Jan 24<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>ModelFormでModelの１つのカラムを複数のフォーム要素（inputとか）で表現したかったので調べてみた。フォーム要素を適当に作って、clean_xxxの時にくっつけるとかそんな実装の仕方も出来るみたいだけど、MultiWidgetを使うと、Modelの１つのカラムに対して複数のinput要素を使うことが出来るみたいなので、使ってみた。名前のカラムに対して姓、名の入力要素を作るとかそんなのが出来るみたい。</p>
-
-<p>まずはMultiWidgetを継承したクラスを作る</p>
-
-<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">django.forms.widgets</span> <span class="kn">import</span> <span class="n">MultiWidget</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">NameWidget</span><span class="p">(</span><span class="n">MultiWidget</span><span class="p">):</span>
-</span><span class='line'>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>次にクラスに対して、__init__をオーバーライドし、widgetとしてTextInputのフォームを2つ登録してみた。コードはこんな感じ。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/01/24/django-modelform-multiwidget/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -832,6 +899,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/11/02/use-mecab-in-python-virtualenv-ubuntu1-12-dot-04/">Virtualenv上のpythonでmecabを使う Ubuntu1 12.04</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04/">ubuntu12.04でpg bulkloadを使う</a>
       </li>
     
@@ -845,10 +916,6 @@
     
       <li class="post">
         <a href="/blog/2015/08/05/esxi-shows-fatal-error-33/">Vmware Esxiがfatal Error 33を出したのでインストールしなおしてついでに色々試した話</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/30/add-relation-to-existing-table-using-django/">Djangoで作成済みテーブルに手動でリレーションを追加する</a>
       </li>
     
   </ul>
@@ -885,14 +952,14 @@
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (10)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (22)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (23)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
 <li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (11)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (12)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (13)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>

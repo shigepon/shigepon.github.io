@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-10-26T17:56:33+09:00</updated>
+  <updated>2015-11-03T08:41:50+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,120 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[virtualenv上のpythonでmecabを使う ubuntu1 12.04]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/11/02/use-mecab-in-python-virtualenv-ubuntu1-12-dot-04/"/>
+    <updated>2015-11-02T17:28:17+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/11/02/use-mecab-in-python-virtualenv-ubuntu1-12-dot-04</id>
+    <content type="html"><![CDATA[<p>ubuntu 12.04でapt使ってmecabをインストールしている状態、virtualenvのpythonに切り替えているところからスタート</p>
+
+<h2>先に結論</h2>
+
+<p>mecabをソースからインストールして最新版にして、natto-pyをpipでインストールすれば出来た。</p>
+
+<h2>1. mecab-pythonをvirtualenv上で使用してみる</h2>
+
+<p>ファイルにmecab-pythonを置いてる場所を指定して、pip使えば良い</p>
+
+<p><code>sh requirements.txt
+https://mecab.googlecode.com/files/mecab-python-0.996.tar.gz
+</code></p>
+
+<p><code>sh
+$ pip install -r requirements.txt
+</code></p>
+
+<p>これでvirtualenv上にmecab-pythonをインストール出来た。
+参考：<a href="http://qiita.com/hagino3000/items/4cb73fb53537c0714044">travisでpython-mecabを動かしたい時の設定 &ndash; Qiita</a></p>
+
+<p>でもこれでおもむろに</p>
+
+<p><code>py
+import MeCab
+m = MeCab.Tagger('-Ochasen')
+print '今日は良い天気'
+</code></p>
+
+<p>エラーが出たorz</p>
+
+<h2>2. natto-pyを使ってみる</h2>
+
+<p>pip search mecabで調べて、その後ググると、natto-pyってのがmecab使えるライブラリであるっぽいのでインストールしてみた</p>
+
+<p>参考：<a href="https://github.com/buruzaemon/natto-py">buruzaemon/natto-py</a></p>
+
+<p><code>sh
+$ pip install natto-py
+</code></p>
+
+<p>これだけでインストール出来た。使ってみたらインストールしてあるmecabのバージョンが古過ぎて使えないと怒られたorz。</p>
+
+<h2>3. mecabを最新バージョンにする</h2>
+
+<p>仕方ないので</p>
+
+<h3>aptのmecabをアンインストール</h3>
+
+<p><code>sh
+$ sudo aptitude remove mecab
+</code></p>
+
+<h3>mecabをソースからインストール</h3>
+
+<p><code>sh
+$ wget https://drive.google.com/uc?export=download&amp;id=0B4y35FiV1wh7cENtOXlicTFaRUE
+$ tar zxvf mecab-0.996.tar.gz
+$ cd mecab-0.996
+$ ./configure
+$ make
+$ make check
+$ sudo make install
+</code></p>
+
+<h3>mecab辞書のインストール</h3>
+
+<p><code>sh
+$ wget https://drive.google.com/uc?export=download&amp;id=0B4y35FiV1wh7MWVlSDBCSXZMTXM
+$ tar zvxf mecab-ipadic-2.7.0-20070801.tar.gz
+$ cd mecab-ipadic-2.7.0-20070801
+$ ./configure --with-charset=utf8
+$ make
+$ sudo make install
+</code></p>
+
+<p>urlはそれぞれ<a href="http://taku910.github.io/mecab/#download">mecabのページ</a>からリンクされているものを用いた。</p>
+
+<p>参考：<a href="http://tatsuyaoiw.hatenablog.com/entry/20120414/1334397985">MeCabのインストール方法 &ndash; tatsuyaoiw.hatenablog.com</a></p>
+
+<h2>natto-pyを改めて使う</h2>
+
+<p>```py</p>
+
+<h1>coding: utf-8↲</h1>
+
+<p>from natto import MeCab
+nm = MeCab()
+print nm.parse(&lsquo;ピンチの時には必ずヒーローが現れる。&rsquo;)</p>
+
+<h1>MeCab result as a single string</h1>
+
+<p>ピンチ    名詞,一般,<em>,</em>,<em>,</em>,ピンチ,ピンチ,ピンチ
+の      助詞,連体化,<em>,</em>,<em>,</em>,の,ノ,ノ
+時      名詞,非自立,副詞可能,<em>,</em>,<em>,時,トキ,トキ
+に      助詞,格助詞,一般,</em>,<em>,</em>,に,ニ,ニ
+は      助詞,係助詞,<em>,</em>,<em>,</em>,は,ハ,ワ
+必ず    副詞,助詞類接続,<em>,</em>,<em>,</em>,必ず,カナラズ,カナラズ
+ヒーロー  名詞,一般,<em>,</em>,<em>,</em>,ヒーロー,ヒーロー,ヒーロー
+が      助詞,格助詞,一般,<em>,</em>,<em>,が,ガ,ガ
+現れる  動詞,自立,</em>,<em>,一段,基本形,現れる,アラワレル,アラワレル
+。      記号,句点,</em>,<em>,</em>,*,。,。,。
+EOS
+```</p>
+
+<p>うまくいった。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Django 1.7から1.8にアップデートしてみた]]></title>
@@ -339,88 +453,6 @@ def allow_migrate(self, db, model):
 <p>routers.pyをちゃんと書かないと、色々不具合が出る（例：管理用のモデルがmigrateできないとか）ので気をつけた方が良い。</p>
 
 <p>上に紹介した参考ページには色々コードが書いてあるので、参考になる。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Django1.7でPostgreSQLとBootstrap使ったアプリを作ってみた(1.5):管理ページを作ってみた]]></title>
-    <link href="http://blog.shigepon.info/blog/2015/07/03/make-admin-page-using-django/"/>
-    <updated>2015-07-03T21:59:10+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2015/07/03/make-admin-page-using-django</id>
-    <content type="html"><![CDATA[<p>Django1.6.5でアプリを作ってみたってネタをやってたけど、Django1.7にバージョンアップしたので、タイトルを変えた。ついでにDjango1.7だとINSTALLED_APPにdjango.contrib.authを入れておかないとエラーが出るケースがある（例えば<a href="http://www.django-rest-framework.org/">Django REST framework</a>でエラーが出た）ので、エラー出ないように最初に管理ページを用意しておくと良いと思う。</p>
-
-<p>管理ページを用意する手順はこんな感じ</p>
-
-<h2>settings.pyに設定を書く</h2>
-
-<p>```py settings.py
-INSTALLED_APPS = (</p>
-
-<pre><code>'django.contrib.admin',
-'django.contrib.auth',
-...
-</code></pre>
-
-<p>)
-MIDDLEWARE_CLASSES = (</p>
-
-<pre><code>'django.contrib.auth.middleware.AuthenticationMiddleware',
-...
-</code></pre>
-
-<p>)
-TEMPLATE_CONTEXT_PROCESSORS = (</p>
-
-<pre><code>'django.contrib.auth.context_processors.auth',
-...
-</code></pre>
-
-<p>)
-```</p>
-
-<h2>migrate</h2>
-
-<p>マイグレーションしておく</p>
-
-<p><code>sh
-$ python manage.py makemigrations
-$ python manage.py migrate
-</code></p>
-
-<p>マルチデータベースでやろうとして反映されずにハマったりしたけど、それはまた別の記事で書くかも</p>
-
-<h2>管理アカウントを作る</h2>
-
-<p><code>sh
-$ python manage.py createsuperuser
-Username: hoge
-Email address: hoge@example.com
-Password: ********
-Password (again): ********
-Superuser created successfully.
-</code></p>
-
-<p>って出来るとおk</p>
-
-<h2>urls.pyを書く</h2>
-
-<p>`&ldquo;py urls.py
-urlpatterns = patterns(&rdquo;,</p>
-
-<pre><code>url(r'^admin/', include(admin.site.urls)),
-...
-</code></pre>
-
-<p>)
-```</p>
-
-<p>こんな感じで作って</p>
-
-<p><code>sh
-$ python manage.py runserver
-</code></p>
-
-<p>とすると、127.0.0.1/adminにアクセスすると管理画面へのログイン画面が出る。</p>
 ]]></content>
   </entry>
   

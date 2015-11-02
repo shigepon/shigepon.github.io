@@ -9,9 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="pg_bulkloadを使いたくなるケース 大量のデータをインポートしたい
-中にはエラーがあるデータがちょこちょこある に当てはまったので、インストールからやってみた。
-やったこと順に列記するので最低限の手順ではないと思う。 rpmからインストールする方法でなく、ソースからやってみることにした。 &hellip;">
+  <meta name="description" content="ubuntu 12.04でapt使ってmecabをインストールしている状態、virtualenvのpythonに切り替えているところからスタート 先に結論 mecabをソースからインストールして最新版にして、natto-pyをpipでインストールすれば出来た。 1. mecab- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +79,181 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/11/02/use-mecab-in-python-virtualenv-ubuntu1-12-dot-04/">Virtualenv上のpythonでmecabを使う Ubuntu1 12.04</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-02T17:28:17+09:00" pubdate data-updated="true">Nov 2<span>nd</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ubuntu 12.04でapt使ってmecabをインストールしている状態、virtualenvのpythonに切り替えているところからスタート</p>
+
+<h2>先に結論</h2>
+
+<p>mecabをソースからインストールして最新版にして、natto-pyをpipでインストールすれば出来た。</p>
+
+<h2>1. mecab-pythonをvirtualenv上で使用してみる</h2>
+
+<p>ファイルにmecab-pythonを置いてる場所を指定して、pip使えば良い</p>
+
+<figure class='code'><figcaption><span>requirements.txt</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>https://mecab.googlecode.com/files/mecab-python-0.996.tar.gz
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install -r requirements.txt
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これでvirtualenv上にmecab-pythonをインストール出来た。
+参考：<a href="http://qiita.com/hagino3000/items/4cb73fb53537c0714044">travisでpython-mecabを動かしたい時の設定 &ndash; Qiita</a></p>
+
+<p>でもこれでおもむろに</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">MeCab</span>
+</span><span class='line'><span class="n">m</span> <span class="o">=</span> <span class="n">MeCab</span><span class="o">.</span><span class="n">Tagger</span><span class="p">(</span><span class="s">&#39;-Ochasen&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="k">print</span> <span class="s">&#39;今日は良い天気&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>エラーが出たorz</p>
+
+<h2>2. natto-pyを使ってみる</h2>
+
+<p>pip search mecabで調べて、その後ググると、natto-pyってのがmecab使えるライブラリであるっぽいのでインストールしてみた</p>
+
+<p>参考：<a href="https://github.com/buruzaemon/natto-py">buruzaemon/natto-py</a></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install natto-py
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これだけでインストール出来た。使ってみたらインストールしてあるmecabのバージョンが古過ぎて使えないと怒られたorz。</p>
+
+<h2>3. mecabを最新バージョンにする</h2>
+
+<p>仕方ないので</p>
+
+<h3>aptのmecabをアンインストール</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude remove mecab
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>mecabをソースからインストール</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>wget https://drive.google.com/uc?export<span class="o">=</span>download&amp;id<span class="o">=</span>0B4y35FiV1wh7cENtOXlicTFaRUE
+</span><span class='line'><span class="nv">$ </span>tar zxvf mecab-0.996.tar.gz
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>mecab-0.996
+</span><span class='line'><span class="nv">$ </span>./configure
+</span><span class='line'><span class="nv">$ </span>make
+</span><span class='line'><span class="nv">$ </span>make check
+</span><span class='line'><span class="nv">$ </span>sudo make install
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>mecab辞書のインストール</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>wget https://drive.google.com/uc?export<span class="o">=</span>download&amp;id<span class="o">=</span>0B4y35FiV1wh7MWVlSDBCSXZMTXM
+</span><span class='line'><span class="nv">$ </span>tar zvxf mecab-ipadic-2.7.0-20070801.tar.gz
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>mecab-ipadic-2.7.0-20070801
+</span><span class='line'><span class="nv">$ </span>./configure --with-charset<span class="o">=</span>utf8
+</span><span class='line'><span class="nv">$ </span>make
+</span><span class='line'><span class="nv">$ </span>sudo make install
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>urlはそれぞれ<a href="http://taku910.github.io/mecab/#download">mecabのページ</a>からリンクされているものを用いた。</p>
+
+<p>参考：<a href="http://tatsuyaoiw.hatenablog.com/entry/20120414/1334397985">MeCabのインストール方法 &ndash; tatsuyaoiw.hatenablog.com</a></p>
+
+<h2>natto-pyを改めて使う</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="c"># coding: utf-8↲</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">natto</span> <span class="kn">import</span> <span class="n">MeCab</span>
+</span><span class='line'><span class="n">nm</span> <span class="o">=</span> <span class="n">MeCab</span><span class="p">()</span>
+</span><span class='line'><span class="k">print</span> <span class="n">nm</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&#39;ピンチの時には必ずヒーローが現れる。&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="c"># MeCab result as a single string</span>
+</span><span class='line'><span class="err">ピンチ</span>    <span class="err">名詞</span><span class="p">,</span><span class="err">一般</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">ピンチ</span><span class="p">,</span><span class="err">ピンチ</span><span class="p">,</span><span class="err">ピンチ</span>
+</span><span class='line'><span class="err">の</span>      <span class="err">助詞</span><span class="p">,</span><span class="err">連体化</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">の</span><span class="p">,</span><span class="err">ノ</span><span class="p">,</span><span class="err">ノ</span>
+</span><span class='line'><span class="err">時</span>      <span class="err">名詞</span><span class="p">,</span><span class="err">非自立</span><span class="p">,</span><span class="err">副詞可能</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">時</span><span class="p">,</span><span class="err">トキ</span><span class="p">,</span><span class="err">トキ</span>
+</span><span class='line'><span class="err">に</span>      <span class="err">助詞</span><span class="p">,</span><span class="err">格助詞</span><span class="p">,</span><span class="err">一般</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">に</span><span class="p">,</span><span class="err">ニ</span><span class="p">,</span><span class="err">ニ</span>
+</span><span class='line'><span class="err">は</span>      <span class="err">助詞</span><span class="p">,</span><span class="err">係助詞</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">は</span><span class="p">,</span><span class="err">ハ</span><span class="p">,</span><span class="err">ワ</span>
+</span><span class='line'><span class="err">必ず</span>    <span class="err">副詞</span><span class="p">,</span><span class="err">助詞類接続</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">必ず</span><span class="p">,</span><span class="err">カナラズ</span><span class="p">,</span><span class="err">カナラズ</span>
+</span><span class='line'><span class="err">ヒーロー</span>  <span class="err">名詞</span><span class="p">,</span><span class="err">一般</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">ヒーロー</span><span class="p">,</span><span class="err">ヒーロー</span><span class="p">,</span><span class="err">ヒーロー</span>
+</span><span class='line'><span class="err">が</span>      <span class="err">助詞</span><span class="p">,</span><span class="err">格助詞</span><span class="p">,</span><span class="err">一般</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">が</span><span class="p">,</span><span class="err">ガ</span><span class="p">,</span><span class="err">ガ</span>
+</span><span class='line'><span class="err">現れる</span>  <span class="err">動詞</span><span class="p">,</span><span class="err">自立</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">一段</span><span class="p">,</span><span class="err">基本形</span><span class="p">,</span><span class="err">現れる</span><span class="p">,</span><span class="err">アラワレル</span><span class="p">,</span><span class="err">アラワレル</span>
+</span><span class='line'><span class="err">。</span>      <span class="err">記号</span><span class="p">,</span><span class="err">句点</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">。</span><span class="p">,</span><span class="err">。</span><span class="p">,</span><span class="err">。</span>
+</span><span class='line'><span class="n">EOS</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>うまくいった。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1364,129 +1537,6 @@ ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/07/03/make-admin-page-using-django/">Django1.7でPostgreSQLとBootstrap使ったアプリを作ってみた(1.5):管理ページを作ってみた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-07-03T21:59:10+09:00" pubdate data-updated="true">Jul 3<span>rd</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Django1.6.5でアプリを作ってみたってネタをやってたけど、Django1.7にバージョンアップしたので、タイトルを変えた。ついでにDjango1.7だとINSTALLED_APPにdjango.contrib.authを入れておかないとエラーが出るケースがある（例えば<a href="http://www.django-rest-framework.org/">Django REST framework</a>でエラーが出た）ので、エラー出ないように最初に管理ページを用意しておくと良いと思う。</p>
-
-<p>管理ページを用意する手順はこんな感じ</p>
-
-<h2>settings.pyに設定を書く</h2>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'>    <span class="s">&#39;django.contrib.admin&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="s">&#39;django.contrib.auth&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="o">...</span>
-</span><span class='line'><span class="p">)</span>
-</span><span class='line'><span class="n">MIDDLEWARE_CLASSES</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'>    <span class="s">&#39;django.contrib.auth.middleware.AuthenticationMiddleware&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="o">...</span>
-</span><span class='line'><span class="p">)</span>
-</span><span class='line'><span class="n">TEMPLATE_CONTEXT_PROCESSORS</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'>    <span class="s">&#39;django.contrib.auth.context_processors.auth&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="o">...</span>
-</span><span class='line'><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>migrate</h2>
-
-<p>マイグレーションしておく</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py makemigrations
-</span><span class='line'><span class="nv">$ </span>python manage.py migrate
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>マルチデータベースでやろうとして反映されずにハマったりしたけど、それはまた別の記事で書くかも</p>
-
-<h2>管理アカウントを作る</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py createsuperuser
-</span><span class='line'>Username: hoge
-</span><span class='line'>Email address: hoge@example.com
-</span><span class='line'>Password: ********
-</span><span class='line'>Password <span class="o">(</span>again<span class="o">)</span>: ********
-</span><span class='line'>Superuser created successfully.
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>って出来るとおk</p>
-
-<h2>urls.pyを書く</h2>
-
-<figure class='code'><figcaption><span>urls.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="n">url</span><span class="p">(</span><span class="s">r&#39;^admin/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">urls</span><span class="p">)),</span>
-</span><span class='line'>    <span class="o">...</span>
-</span><span class='line'><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな感じで作って</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py runserver
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とすると、127.0.0.1/adminにアクセスすると管理画面へのログイン画面が出る。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1516,6 +1566,10 @@ ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/11/02/use-mecab-in-python-virtualenv-ubuntu1-12-dot-04/">Virtualenv上のpythonでmecabを使う Ubuntu1 12.04</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04/">ubuntu12.04でpg bulkloadを使う</a>
       </li>
     
@@ -1529,10 +1583,6 @@ ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
     
       <li class="post">
         <a href="/blog/2015/08/05/esxi-shows-fatal-error-33/">Vmware Esxiがfatal Error 33を出したのでインストールしなおしてついでに色々試した話</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/30/add-relation-to-existing-table-using-django/">Djangoで作成済みテーブルに手動でリレーションを追加する</a>
       </li>
     
   </ul>
@@ -1569,14 +1619,14 @@ ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (10)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (22)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (23)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
 <li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (11)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (12)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (13)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>

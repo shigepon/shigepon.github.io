@@ -4,7 +4,7 @@
   <title><![CDATA[Category: linux | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-10-26T17:56:33+09:00</updated>
+  <updated>2015-11-03T08:41:50+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,120 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[virtualenv上のpythonでmecabを使う ubuntu1 12.04]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/11/02/use-mecab-in-python-virtualenv-ubuntu1-12-dot-04/"/>
+    <updated>2015-11-02T17:28:17+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/11/02/use-mecab-in-python-virtualenv-ubuntu1-12-dot-04</id>
+    <content type="html"><![CDATA[<p>ubuntu 12.04でapt使ってmecabをインストールしている状態、virtualenvのpythonに切り替えているところからスタート</p>
+
+<h2>先に結論</h2>
+
+<p>mecabをソースからインストールして最新版にして、natto-pyをpipでインストールすれば出来た。</p>
+
+<h2>1. mecab-pythonをvirtualenv上で使用してみる</h2>
+
+<p>ファイルにmecab-pythonを置いてる場所を指定して、pip使えば良い</p>
+
+<p><code>sh requirements.txt
+https://mecab.googlecode.com/files/mecab-python-0.996.tar.gz
+</code></p>
+
+<p><code>sh
+$ pip install -r requirements.txt
+</code></p>
+
+<p>これでvirtualenv上にmecab-pythonをインストール出来た。
+参考：<a href="http://qiita.com/hagino3000/items/4cb73fb53537c0714044">travisでpython-mecabを動かしたい時の設定 &ndash; Qiita</a></p>
+
+<p>でもこれでおもむろに</p>
+
+<p><code>py
+import MeCab
+m = MeCab.Tagger('-Ochasen')
+print '今日は良い天気'
+</code></p>
+
+<p>エラーが出たorz</p>
+
+<h2>2. natto-pyを使ってみる</h2>
+
+<p>pip search mecabで調べて、その後ググると、natto-pyってのがmecab使えるライブラリであるっぽいのでインストールしてみた</p>
+
+<p>参考：<a href="https://github.com/buruzaemon/natto-py">buruzaemon/natto-py</a></p>
+
+<p><code>sh
+$ pip install natto-py
+</code></p>
+
+<p>これだけでインストール出来た。使ってみたらインストールしてあるmecabのバージョンが古過ぎて使えないと怒られたorz。</p>
+
+<h2>3. mecabを最新バージョンにする</h2>
+
+<p>仕方ないので</p>
+
+<h3>aptのmecabをアンインストール</h3>
+
+<p><code>sh
+$ sudo aptitude remove mecab
+</code></p>
+
+<h3>mecabをソースからインストール</h3>
+
+<p><code>sh
+$ wget https://drive.google.com/uc?export=download&amp;id=0B4y35FiV1wh7cENtOXlicTFaRUE
+$ tar zxvf mecab-0.996.tar.gz
+$ cd mecab-0.996
+$ ./configure
+$ make
+$ make check
+$ sudo make install
+</code></p>
+
+<h3>mecab辞書のインストール</h3>
+
+<p><code>sh
+$ wget https://drive.google.com/uc?export=download&amp;id=0B4y35FiV1wh7MWVlSDBCSXZMTXM
+$ tar zvxf mecab-ipadic-2.7.0-20070801.tar.gz
+$ cd mecab-ipadic-2.7.0-20070801
+$ ./configure --with-charset=utf8
+$ make
+$ sudo make install
+</code></p>
+
+<p>urlはそれぞれ<a href="http://taku910.github.io/mecab/#download">mecabのページ</a>からリンクされているものを用いた。</p>
+
+<p>参考：<a href="http://tatsuyaoiw.hatenablog.com/entry/20120414/1334397985">MeCabのインストール方法 &ndash; tatsuyaoiw.hatenablog.com</a></p>
+
+<h2>natto-pyを改めて使う</h2>
+
+<p>```py</p>
+
+<h1>coding: utf-8↲</h1>
+
+<p>from natto import MeCab
+nm = MeCab()
+print nm.parse(&lsquo;ピンチの時には必ずヒーローが現れる。&rsquo;)</p>
+
+<h1>MeCab result as a single string</h1>
+
+<p>ピンチ    名詞,一般,<em>,</em>,<em>,</em>,ピンチ,ピンチ,ピンチ
+の      助詞,連体化,<em>,</em>,<em>,</em>,の,ノ,ノ
+時      名詞,非自立,副詞可能,<em>,</em>,<em>,時,トキ,トキ
+に      助詞,格助詞,一般,</em>,<em>,</em>,に,ニ,ニ
+は      助詞,係助詞,<em>,</em>,<em>,</em>,は,ハ,ワ
+必ず    副詞,助詞類接続,<em>,</em>,<em>,</em>,必ず,カナラズ,カナラズ
+ヒーロー  名詞,一般,<em>,</em>,<em>,</em>,ヒーロー,ヒーロー,ヒーロー
+が      助詞,格助詞,一般,<em>,</em>,<em>,が,ガ,ガ
+現れる  動詞,自立,</em>,<em>,一段,基本形,現れる,アラワレル,アラワレル
+。      記号,句点,</em>,<em>,</em>,*,。,。,。
+EOS
+```</p>
+
+<p>うまくいった。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Vmware Esxiがfatal error 33を出したのでインストールしなおしてついでに色々試した話]]></title>
@@ -374,103 +488,6 @@ $ nunit-console -noshadow NakoPluginTest/bin/Debug/NakoPluginTest.dll
 
 <p>とすると、外部ファイルを読み込んでくれる。
 これでcui環境でなでしこ2をビルドからテストまで出来る。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ubuntuのcui環境でなでしこ2をビルドする]]></title>
-    <link href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/"/>
-    <updated>2015-05-01T08:23:00+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui</id>
-    <content type="html"><![CDATA[<p>今までmono developでなでしこ2をビルド、テストして、cui環境にアップロードしてたんだけど、面倒になってきたのでcui環境で直接ビルド、テストしてみようと思ったのでついでに開発を始める段階からメモしてみる。</p>
-
-<p>環境はubuntu 12.04とするが、上位バージョンでも問題無いはず</p>
-
-<h1>mono環境の準備</h1>
-
-<p>mono-develをインストールしたらmono関連で必要なものは勝手にインストールされたような気がする。ついでに<a href="http://blog.shigepon.info/blog/2014/08/20/vb-not-work-on-ubuntu/">VisualBasicが動かない件</a>にあるように、mono-vbnc、あとはnunitのインストール</p>
-
-<p><code>sh
-$ aptitude install mono-devel mono-vbnc nunit
-</code></p>
-
-<!-- more -->
-
-
-
-
-<!-- more -->
-
-
-<h1>なでしこ2リポジトリを取得</h1>
-
-<p><a href="http://it.slashdot.jp/story/15/03/13/0340256/">Google Codeが2016年1月に閉鎖される</a>ので、なでしこ2のリポジトリはgithubに移動している。</p>
-
-<p>なので、リポジトリの取得はgit cloneでいける。kujirahandさんのリポジトリをcloneするなら</p>
-
-<p><code>sh
-$ git clone https://github.com/kujirahand/nadesiko2.git
-</code></p>
-
-<p>shigeponがfolkしたリポジトリなら</p>
-
-<p><code>sh
-$ git clone https://github.com/shigepon/nadesiko2.git
-</code></p>
-
-<p>で、カレントディレクトリにnadesiko2ディレクトリが出来て、その下にプロジェクト1式が入っている。中にはソリューションが3つあり、それぞれ</p>
-
-<ul>
-<li>Nako2_CNako.sln → cui環境で動かすなでしこ2(cnako)関連</li>
-<li>Nako2_Plugins.sln → なでしこ2のプラグイン関連</li>
-<li>Nako2_Plugins_Office.sln → なでしこ2のOffice関係プラグイン</li>
-</ul>
-
-
-<p>のソリューションである。今回は\/home\/usernameディレクトリ上でcloneすると考える</p>
-
-<h1>おもむろにビルド</h1>
-
-<p>kujirahandさんのリポジトリをcloneしたとして、とりあえず何もせずにCNakoのソリューションをビルドしてみると</p>
-
-<p><code>sh
-$ xbuild Nako2_CNako.sln
-...
-NakoPluginArrayTest.cs(9,7): error CS0246: The type or namespace name `NUnit' could not be found. Are you missing a using directive or an assembly reference?
-...
-</code></p>
-
-<p>みたいなエラーメッセージを出してビルド出来ない。一方でプラグイン関連のソリューションは</p>
-
-<p>```sh
-$ xbuild Nako2_Plugins.sln
-&hellip;</p>
-
-<pre><code>18 Warning(s)
- 0 Error(s)
-</code></pre>
-
-<p>Time Elapsed 00:00:06.1095450
-```</p>
-
-<p>と出て、エラー無くビルド出来る。この違いはそれぞれのソリューションで参照しているテストプロジェクトにnunitへの参照パスが入っているかどうかの違いだったので、NakoPluginTest/NakoPluginTest.csprojを参考にしてCNakoTest/CNakoTest.csprojの</p>
-
-<p><code>
-&lt;Reference Include="nunit.framework.extensions, ..." /&gt;
-</code></p>
-
-<p>行に３行追記する</p>
-
-<p>```xml
-   <Reference Include="nunit.framework"></p>
-
-<pre><code>   &lt;HintPath&gt;..\..\..\..\usr\lib\mono\gac\nunit.framework\2.5.10.0__96d09a1eb7f44a77\nunit.framework.dll&lt;/HintPath&gt;
-</code></pre>
-
-<p>   </Reference>
-```</p>
-
-<p>で、再度ビルドするとビルド出来た。shigeponのリポジトリには修正したものをアップしておくのでそのままビルド出来ると思う。パスはリポジトリをcloneするディレクトリによっては変更しないといけないと思う。</p>
 ]]></content>
   </entry>
   

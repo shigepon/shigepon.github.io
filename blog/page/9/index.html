@@ -9,18 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="C#のdllを呼び出せるように、C#のdllを参照した後、Plugin.cppの一部を以下のように書き換えました 1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-PHiValue __stdcall sample01(DWORD param) { PHiValue result; &hellip;">
+  <meta name="description" content="なでしこ2でプラグインを作りたい人向けというニッチすぎるネタです。現在なでしこの時期バージョンなでしこ2が開発中です(えらい長いこと開発中です)が、構文の実装がある程度終わっているので、プラグインを開発することが出来ます。try catchの実装どうするかなーとか考えて進んでないですが、それはそれ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -90,6 +79,135 @@ PHiValue __stdcall sample01(DWORD param) { PHiValue result; &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/29/nadesiko2-make-plugin/">なでしこ2のプラグインを作る方法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-29T09:49:17+09:00" pubdate data-updated="true">Jan 29<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>なでしこ2でプラグインを作りたい人向けというニッチすぎるネタです。現在なでしこの時期バージョンなでしこ2が開発中です(えらい長いこと開発中です)が、構文の実装がある程度終わっているので、プラグインを開発することが出来ます。try catchの実装どうするかなーとか考えて進んでないですが、それはそれ。</p>
+
+<p>なでしこ2はC#で組まれているので、プラグインもC#で組むことができます。</p>
+
+<p>まずは準備として、なでしこ2のソースをsvnでチェックアウトします。 <a href="http://code.google.com/p/nadesiko2/source/checkout">URL</a></p>
+
+<p>SharpDevelopで開発中なので、SharpDevelopでソリューションを開きます。で、中にNakoPluginXXXというプロジェクトがあるので、それを参考にすれば良いわけですが、軽く説明しておきます。</p>
+
+<p>プラグインのソースは下のようになります。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>/*
+</span><span class='line'> * Created by SharpDevelop.
+</span><span class='line'> * User: shigepon
+</span><span class='line'> * Date: 2011/04/04
+</span><span class='line'> * Time: 9:42
+</span><span class='line'> *
+</span><span class='line'> * To change this template use Tools | Options | Coding | Edit Standard Headers.
+</span><span class='line'> */
+</span><span class='line'>using System;
+</span><span class='line'>using System.Collections.Generic;
+</span><span class='line'>using System.Text;
+</span><span class='line'>using Libnako.JPNCompiler;
+</span><span class='line'>using NakoPlugin;
+</span><span class='line'>namespace NakoPluginSample{
+</span><span class='line'>    public class NakoPluginSample : INakoPlugin    {
+</span><span class='line'>  string _description = &quot;サンプルプラグイン&quot;;
+</span><span class='line'>        double _version = 1.0;
+</span><span class='line'>        //&lt;del&gt; プラグイン共通の部分 &lt;/del&gt;
+</span><span class='line'>        public double TargetNakoVersion { get { return 2.0; } }
+</span><span class='line'>        public bool Used { get; set; }
+</span><span class='line'>        public string Name { get { return this.GetType().FullName; } }
+</span><span class='line'>        public double PluginVersion { get { return _version; } }
+</span><span class='line'>        public string Description { get { return _description; } }
+</span><span class='line'>        //&lt;del&gt; 関数の定義 &lt;/del&gt;
+</span><span class='line'>        public void DefineFunction(INakoPluginBank bank)        {
+</span><span class='line'>            bank.AddFunc({関数名}&cedil; {なでしこ形式の引数}&cedil; {戻り値の形式}&cedil; {実際の呼び出し先}&cedil;{関数の説明}&cedil; {関数のよみかた});
+</span><span class='line'>        }
+</span><span class='line'>  // プラグインの初期化処理
+</span><span class='line'>        public void PluginInit(INakoInterpreter runner)        {
+</span><span class='line'>        }
+</span><span class='line'>        // プラグインの終了処理
+</span><span class='line'>        public void PluginFin(INakoInterpreter runner)        {
+</span><span class='line'>        }
+</span><span class='line'>       public Object {実際の処理}(INakoFuncCallInfo info){
+</span><span class='line'>            ...
+</span><span class='line'>        }
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/01/29/nadesiko2-make-plugin/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -486,6 +604,10 @@ PHiValue __stdcall sample01(DWORD param) { PHiValue result; &hellip;">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/11/02/use-mecab-in-python-virtualenv-ubuntu1-12-dot-04/">Virtualenv上のpythonでmecabを使う Ubuntu1 12.04</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04/">ubuntu12.04でpg bulkloadを使う</a>
       </li>
     
@@ -499,10 +621,6 @@ PHiValue __stdcall sample01(DWORD param) { PHiValue result; &hellip;">
     
       <li class="post">
         <a href="/blog/2015/08/05/esxi-shows-fatal-error-33/">Vmware Esxiがfatal Error 33を出したのでインストールしなおしてついでに色々試した話</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/30/add-relation-to-existing-table-using-django/">Djangoで作成済みテーブルに手動でリレーションを追加する</a>
       </li>
     
   </ul>
@@ -539,14 +657,14 @@ PHiValue __stdcall sample01(DWORD param) { PHiValue result; &hellip;">
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (10)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (22)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (23)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
 <li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (11)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (12)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (13)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>
