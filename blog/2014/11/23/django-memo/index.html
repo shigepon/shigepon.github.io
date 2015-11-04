@@ -606,6 +606,40 @@ def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る
 
 
 <p>参考：<a href="http://stackoverflow.com/questions/5100539/django-csrf-check-failing-with-an-ajax-post-request">Django CSRF check failing with an Ajax POST request &ndash; Stack Overflow</a></p>
+
+<h2>AjaxのPOSTで配列を受け取りたい時</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">var</span> <span class="nx">arr</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;hoge&#39;</span><span class="p">,</span><span class="s1">&#39;fuga&#39;</span><span class="p">];</span>
+</span><span class='line'><span class="nx">$</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="p">{</span><span class="nx">arr</span><span class="o">:</span><span class="nx">arr</span><span class="p">},</span> <span class="kd">function</span><span class="p">(){</span><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;success&#39;</span><span class="p">);});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>該当するビューでこんな風に書く</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">hoge</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">arr</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s">&#39;arr&#39;</span><span class="p">[]</span><span class="s">&#39;)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ちなみにgetだと[]は要らないらしい。</p>
+
+<p>参考：[<a href="http://stackoverflow.com/questions/12101658/how-to-get-an-array-in-django-posted-via-ajax">http://stackoverflow.com/questions/12101658/how-to-get-an-array-in-django-posted-via-ajax</a>]
+該当するビューでこんな風に書く</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">hoge</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">arr</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s">&#39;arr&#39;</span><span class="p">[]</span><span class="s">&#39;)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ちなみにgetだと[]は要らないらしい。</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/12101658/how-to-get-an-array-in-django-posted-via-ajax">How to get an array in Django posted via Ajax &ndash; Stack Overflow</a></p>
 </div>
 
 
