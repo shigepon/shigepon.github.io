@@ -640,6 +640,19 @@ def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る
 <p>ちなみにgetだと[]は要らないらしい。</p>
 
 <p>参考：<a href="http://stackoverflow.com/questions/12101658/how-to-get-an-array-in-django-posted-via-ajax">How to get an array in Django posted via Ajax &ndash; Stack Overflow</a></p>
+
+<h2>intcommaフィルタが効かない(django 1.8)</h2>
+
+<p>django 1.4からL10Nを見るので、ロケールjaの場合はNUMBER_GROUPINGを明示しないといけないらしい。</p>
+
+<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">NUMBER_GROUPING</span> <span class="o">=</span> <span class="mi">3</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これでおk</p>
+
+<p>参考：<a href="http://yamayoshi.blogspot.jp/2013/02/django14-intcomma.html">やまよし＠Google大好き: Django1.4 で intcommaが効かない</a></p>
 </div>
 
 

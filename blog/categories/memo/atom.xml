@@ -4,7 +4,7 @@
   <title><![CDATA[Category: memo | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/memo/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-11-04T08:25:07+09:00</updated>
+  <updated>2015-11-16T21:46:56+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -574,6 +574,18 @@ def hoge(request):</p>
 <p>ちなみにgetだと[]は要らないらしい。</p>
 
 <p>参考：<a href="http://stackoverflow.com/questions/12101658/how-to-get-an-array-in-django-posted-via-ajax">How to get an array in Django posted via Ajax &ndash; Stack Overflow</a></p>
+
+<h2>intcommaフィルタが効かない(django 1.8)</h2>
+
+<p>django 1.4からL10Nを見るので、ロケールjaの場合はNUMBER_GROUPINGを明示しないといけないらしい。</p>
+
+<p><code>py settings.py
+NUMBER_GROUPING = 3
+</code></p>
+
+<p>これでおk</p>
+
+<p>参考：<a href="http://yamayoshi.blogspot.jp/2013/02/django14-intcomma.html">やまよし＠Google大好き: Django1.4 で intcommaが効かない</a></p>
 ]]></content>
   </entry>
   
