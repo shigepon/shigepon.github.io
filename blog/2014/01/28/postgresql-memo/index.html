@@ -430,6 +430,24 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 
 
 <p>でおk</p>
+
+<h2>コマンドラインでpsqlした結果をファイルに保存</h2>
+
+<p>カラム名などの情報無しでpsqlした結果を保存する</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>psql dbname -A -t -c <span class="s2">&quot;select ...&quot;</span> &gt; result.txt
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>オプションで</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>-F ,
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とか加えるとカンマ区切りになる</p>
 </div>
 
 
