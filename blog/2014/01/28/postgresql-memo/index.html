@@ -419,6 +419,17 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 <p>sum, min, maxでは特に気にする必要は無いがcount, avg, stddevなどの集計の場合、nullは無視される。これを応用して、色んな条件での平均を計算したりできる。例えば毎日のデータに1週間分、1ヶ月分の集計を追加するとか出来る。</p>
 
 <p>参考：<a href="http://fdays.blogspot.jp/2010/05/sql-null.html">floatingdays: SQLの集計関数で NULLを含む列を集計する場合の注意点</a></p>
+
+<h2>マテリアライズド・ビューの定義を表示</h2>
+
+<p>マテリアライズド・ビューの情報は通常のビューと違い、pg_matviewsに入っている。定義を確認する場合は</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="n">definition</span> <span class="k">from</span> <span class="n">pg_matviews</span> <span class="k">where</span> <span class="n">matviewname</span><span class="o">=</span><span class="s1">&#39;ビュー名&#39;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でおk</p>
 </div>
 
 
