@@ -12,7 +12,9 @@
   <meta name="description" content="git関連のメモ 変更履歴を見る 1
 $ git log -p で全体の変更履歴 1
 $ git log -p filename でfilenameの変更履歴を表示する ブランチ間の変更ファイル一覧を取得 1
-$ git diff --name-only -b parent_branch -b &hellip;">
+2
+3
+$ git diff --name-only -b parent_branch &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -134,7 +136,11 @@ $ git diff --name-only -b parent_branch -b &hellip;">
 <h3>ブランチ間の変更ファイル一覧を取得</h3>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git diff --name-only -b parent_branch -b child_branch
+</span><span class='line'>//履歴を見る場合
+</span><span class='line'><span class="nv">$ </span>git diff --name-only
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -249,7 +255,14 @@ $ git diff --name-only -b parent_branch -b &hellip;">
 </span></code></pre></td></tr></table></div></figure>
 
 
+<h2>branch名を変更する</h2>
 
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git branch -m &lt;oldname&gt; &lt;newname&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考：<a href="http://stackoverflow.com/questions/6591213/how-do-you-rename-the-local-branch">git &ndash; How do you rename the local branch? &ndash; Stack Overflow</a></p>
 </div>
 
 
