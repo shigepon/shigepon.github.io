@@ -9,7 +9,9 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="アクセスログのIPアドレスを集計してみる 参考：Linux サーバーでお手軽にログの集計：こっそりと。 &ndash; livedoor Blog（ブログ） Google Analyticsでリファラ無しの変なアクセスが増えたので、アクセスログからIPを集計してみた。 &hellip;">
+  <meta name="description" content="参考ページHow to Block Bots from Your Google Analytics ここ数日Google Analyticsにアメリカからリファラ無し直帰率100%近くのアクセスを大量に発見。
+どう考えてもbotですどうも(ry
+本当はGoogle &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +81,61 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/09/how-to-block-bot-access-from-google-analytics/">Google Analyticsからbotアクセスを取り除く</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-09T21:53:40+09:00" pubdate data-updated="true">Mar 9<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>参考ページ<a href="http://www.lunametrics.com/blog/2013/09/05/filter-bots-google-analytics/#sr=d&amp;m=n&amp;cp=d&amp;ct=-tmc&amp;ts=1394369739">How to Block Bots from Your Google Analytics</a></p>
+
+<p>ここ数日Google Analyticsにアメリカからリファラ無し直帰率100%近くのアクセスを大量に発見。
+どう考えてもbotですどうも(ry
+本当はGoogle Analyticsに自動でフィルタして欲しいけど、どうもフィルタしてないので、自力でフィルタ設定しないといけないみたい。</p>
+
+<p>上のリンクを参考に設定してみる</p>
+
+<ul>
+<li>アナリティクス設定→ ビュー→フィルタと移動</li>
+<li>「新しいボタン」をクリック</li>
+</ul>
+
+
+<h3>設定は以下の通り</h3>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/03/09/how-to-block-bot-access-from-google-analytics/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -613,52 +670,6 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/30/nadesiko-make-exe/">なでしこで実行ファイルを作る時のメモ</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-30T09:22:46+09:00" pubdate data-updated="true">Jan 30<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><ul>
-<li>パックファイル作る時はメインになるファイルだけnadesiko.nakoというパック名にして、その他はファイル名自身をパック名とする</li>
-<li>データを埋め込む場合は、そのデータを呼び出す時にフルパスにしない。データが無いと言われる。</li>
-</ul>
-
-
-<p>何となくマニュアル見ても分かりにくかったのでメモ</p>
-
-<p>ついでにリンク</p>
-
-<p><a href="http://nadesi.com">なでしこ</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/9/">&larr; Older</a>
@@ -690,6 +701,10 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/11/29/output-msil-manually/">Msilを手動で出力する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/11/02/use-mecab-in-python-virtualenv-ubuntu1-12-dot-04/">Virtualenv上のpythonでmecabを使う (Ubuntu1 12.04)</a>
       </li>
     
@@ -703,10 +718,6 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
     
       <li class="post">
         <a href="/blog/2015/08/12/javascript-memo/">Javascript Memo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/08/05/esxi-shows-fatal-error-33/">Vmware Esxiがfatal Error 33を出したのでインストールしなおしてついでに色々試した話</a>
       </li>
     
   </ul>
@@ -734,7 +745,7 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
 	<li class='category'><a href='/blog/categories/analytics/'>Analytics (1)</a></li>
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
-<li class='category'><a href='/blog/categories/csharp/'>CSharp (5)</a></li>
+<li class='category'><a href='/blog/categories/csharp/'>CSharp (6)</a></li>
 <li class='category'><a href='/blog/categories/django/'>Django (21)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>

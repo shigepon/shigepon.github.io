@@ -4,7 +4,7 @@
   <title><![CDATA[Category: CSharp | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/csharp/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-11-24T12:05:09+09:00</updated>
+  <updated>2015-11-30T12:36:36+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,161 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[msilを手動で出力する]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/11/29/output-msil-manually/"/>
+    <updated>2015-11-29T20:40:36+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/11/29/output-msil-manually</id>
+    <content type="html"><![CDATA[<p>何個か方法がある。とりあえずは雑多にメモ書きしておく</p>
+
+<h2>一行一行全て手動で出力する</h2>
+
+<p>System.Refrection、System.Refrection.Emitを使ってilを直接書き出していく方法。</p>
+
+<p>参考：
+ <a href="http://stackoverflow.com/questions/15600142/reflection-emit-assemblybuilder-setentrypoint-does-not-set-entry-point">c# &ndash; Reflection.Emit: AssemblyBuilder.SetEntryPoint does not set entry point &ndash; Stack Overflow</a>ゆーてもこれそのままやっても.netは知らないけどmonoだと動かなかったりするので、修正が必要。動くコードはこちら</p>
+
+<p>```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.IO;
+using System.Diagnostics;</p>
+
+<p>namespace iltest
+{</p>
+
+<pre><code>class Program
+{
+    static void Main(string[] args)
+    {
+        const string ASSEMBLY_NAME = "IL_Test";
+        AssemblyBuilder assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly( new AssemblyName(ASSEMBLY_NAME), AssemblyBuilderAccess.Save);
+        ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule(ASSEMBLY_NAME, "test.exe");
+        TypeBuilder typeBuilder = moduleBuilder.DefineType("Program", TypeAttributes.Class | TypeAttributes.Public);
+        MethodBuilder methodBuilder = typeBuilder.DefineMethod( "Main", MethodAttributes.HideBySig|MethodAttributes.Public | MethodAttributes.Static, typeof(void), new Type[] { typeof(string[]) });
+        ILGenerator gen = methodBuilder.GetILGenerator();
+        gen.Emit(OpCodes.Ldstr, "Hello, World!");
+        gen.Emit(OpCodes.Call, typeof(Console).GetMethod("WriteLine", new Type[] { typeof(string) }));
+        gen.Emit(OpCodes.Ldc_I4_1);
+        gen.Emit(OpCodes.Call, typeof(Console).GetMethod("ReadKey", new Type[] { typeof(bool) }));
+        gen.Emit (OpCodes.Pop);
+        gen.Emit (OpCodes.Ret);
+        typeBuilder.CreateType();
+        assemblyBuilder.SetEntryPoint(methodBuilder, PEFileKinds.ConsoleApplication);
+        File.Delete("test.exe");
+        assemblyBuilder.Save("test.exe");
+        Process.Start("test.exe");
+    }
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>手順は大雑把に</p>
+
+<ul>
+<li>出力したいファイルの情報を作る。(Mainの1行目〜3行目)</li>
+<li>class、メソッドを作る(4, 5行目)</li>
+<li>ilを書き出す(6 〜 13行目)</li>
+<li>エントリーポイントを作る(14行目)</li>
+<li>ファイルを出力する(16行目)</li>
+<li>実行する(17行目)</li>
+</ul>
+
+
+<p>OpCOdesに関してはここをチェックした<a href="https://msdn.microsoft.com/en-us/library/system.reflection.emit.opcodes_fields(v=vs.110">OpCodes Fields (System.Reflection.Emit)</a>.aspx)</p>
+
+<p>実際にどういうilコードを書けば良いかは、一回C#でビルドしたものを</p>
+
+<p><code>sh
+$ monodis hoge.exe
+</code></p>
+
+<p>みたいにしてilコードを表示させると良い</p>
+
+<h2>一旦ビルドしたものを手動で修正する</h2>
+
+<p>何個か選択肢があるみたいだが、<a href="http://www.mono-project.com/docs/tools+libraries/libraries/Mono.Cecil/">Mono.Cecil</a>を使ったので、Mono.Cecilについてのみ書く。</p>
+
+<p>色々情報はあるんだけど、どうもバージョンの違いによって作法が若干変わるみたい。なので、これは2015/11/29時点の情報(バージョン0.9.6)になる。</p>
+
+<p>test.exeにConsole.WriteLine(&ldquo;injected!&rdquo;)を追加するにはこんな感じで</p>
+
+<p>```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.IO;
+using System.Diagnostics;
+using Mono.Cecil;
+using Mono.Cecil.Cil;</p>
+
+<p>namespace ceciltest{
+ class Program {</p>
+
+<pre><code>public static void Main (string[] args)
+{
+    asm = AssemblyDefinition.ReadAssembly(@"test.exe");
+    mainDef = asm.MainModule.Types.OfType&lt;TypeDefinition&gt;().Single(t =&gt; t.Name == "MainClass");
+    MethodDefinition mainMethod = mainDef.Methods.OfType&lt;MethodDefinition&gt;().Single(m =&gt; m.Name == "Main");
+    Instruction ret = mainMethod.Body.Instructions.Last(i =&gt; i.OpCode == OpCodes.Ret);
+    mainMethod.Body.Instructions.Remove (ret);
+    mainMethod.Body.Instructions.Add (Instruction.Create(Mono.Cecil.Cil.OpCodes.Ldstr,"injected!"));
+    var writeLineMethod = typeof(Console).GetMethod("WriteLine", new Type[] { typeof(string) });
+    var writeLineRef = asm.MainModule.ImportReference(writeLineMethod);
+    mainMethod.Body.Instructions.Add (Instruction.Create(OpCodes.Call, writeLineRef));
+    mainMethod.Body.Instructions.Add (Instruction.Create(OpCodes.Ret));
+    asm.Write("test.modified.exe");
+}
+</code></pre>
+
+<p> }
+}
+```</p>
+
+<p>大雑把にやってることはこんな感じ</p>
+
+<ul>
+<li>ビルドしたもの(dllとかexeとか)をアセンブリとして読み込む(Main関数の1行目)</li>
+<li>変更したいクラス、メソッドを取り出す(2, 3行目)</li>
+<li>メソッド内のilを修正(追加とか削除とか)</li>
+<li>Main内に元々あるretを削除(4, 5行目)</li>
+<li>出力したい文字列を設定する(6行目)</li>
+<li>Console.WriteLineを定義(7行目)</li>
+<li>Callする為の参照を作る(8行目)。</li>
+<li>Console.WriteLineをCallする(9行目)</li>
+<li>消したretを再度追加</li>
+<li>修正したものを書き出し(11行目)</li>
+</ul>
+
+
+<h3>雑多</h3>
+
+<ul>
+<li>他の情報でImportとあるのはImportReferenceになっている</li>
+<li>型やメソッドなど参照で登録するのでImportReferenceを使う。アセンブリ内で独自に定義している型の場合は別の作法が必要。</li>
+</ul>
+
+
+<p>参考：
++ <a href="http://mono.1490590.n4.nabble.com/TypeReference-of-bool-td1550891.html">Mono &ndash; Cecil &ndash; TypeReference of bool</a>
++ <a href="http://vx.thomazi.me/posts/net-injection-cecil/">.Net injection with Mono.Cecil(全てのメソッドを修正する例)</a></p>
+
+<p>他参考資料</p>
+
+<ul>
+<li><a href="http://home.a00.itscom.net/hatada/_toc/dotnet.html#dotnet">.NET &amp; C#</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[なでしこ2でssl使うとthe authentication or decription has failedエラーが出る件]]></title>
@@ -261,59 +416,6 @@ namespace ClassLibrary1{</p>
 <p>```</p>
 
 <p>で動かしてみるときちんと動かせました。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[C++/CLIでなでしこのプラグインを作る方法(Visual C++ Express Edition)]]></title>
-    <link href="http://blog.shigepon.info/blog/2014/01/28/nadesiko-plugin/"/>
-    <updated>2014-01-28T21:45:15+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2014/01/28/nadesiko-plugin</id>
-    <content type="html"><![CDATA[<p>なでしこでプラグインを作る時にC#を使いたかったので、その前段階としてC++/CLIでプラグインを作る方法を探ってみました。</p>
-
-<p>C++/CLIが使えると、.Netを使えるようになり、C#で作ったdllもVC++の参照設定から読み込んで使えるようになります。</p>
-
-<p>なでしこにはC++でプラグイン開発するためのsdkがあります。</p>
-
-<p>ただし、VC++で使用するには<a href="http://www.himanavi.net/cgi/nade-bbs2/cbbs.cgi?mode=one&amp;number=7462&amp;type=7446&amp;space=60&amp;no=0">なでしこ質問掲示板</a>にあるような設定をしなければいけません。（以下引用）</p>
-
-<ol>
-<li>Win32プロジェクトを作成</li>
-<li>plugins_sdk_cからソースを追加</li>
-<li>dnako_import.defを作成</li>
-<li>すべての構成でプロジェクトのプロパティを修正　全般→文字セットを「マルチ バイト文字セットを使用する」に変更　リンカ→入力→モジュール定義ファイルに「dnako_import.def」と入力</li>
-<li>ビルド</li>
-</ol>
-
-
-<!-- more -->
-
-
-<p>dnako_import.defは以下</p>
-
-<p><code>
-EXPORTS
-ImportNakoFunction
-PluginInfo
-PluginVersion
-PluginRequire
-PluginInit
-PluginFin
-</code></p>
-
-<p>実際こちらで試した場合は他にも4の箇所で</p>
-
-<p>全般→共通言語ランタイムサポートを「共通言語ランタイムサポートを使用しない」に
-C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘッダーの作成/使用を「プリコンパイル済みヘッダーを使用しない」に</p>
-
-<p>変更が必要でした。</p>
-
-<p>ただし、この方法だとC++/CLIを使えないので、.Netを使うことは出来ません。そこで、次のように変更しました。</p>
-
-<p>+sdkに含まれる.cファイルを全て.cppに変更
-+dnako_import\let.h内にある各GetProcAddressの第一引数hDllをstatic_castでHMODULE型にキャスト</p>
-
-<p>すると問題なくビルドが通り、.Netを使用することが出来ました。と言ってもMessageBoxを試した程度ですが。</p>
 ]]></content>
   </entry>
   
