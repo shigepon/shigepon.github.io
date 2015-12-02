@@ -155,17 +155,34 @@
   </header>
 
 
-  <div class="entry-content"><p>なでしこ2でプラグインを作りたい人向けというニッチすぎるネタです。現在なでしこの時期バージョンなでしこ2が開発中です(えらい長いこと開発中です)が、構文の実装がある程度終わっているので、プラグインを開発することが出来ます。try catchの実装どうするかなーとか考えて進んでないですが、それはそれ。</p>
+  <div class="entry-content"><p>2015-12-01：情報が古くなったので古い部分を修正しました。</p>
+
+<p>なでしこ2でプラグインを作りたい人向けというニッチすぎるネタです。現在なでしこの時期バージョンなでしこ2が開発中です(えらい長いこと開発中です)が、構文の実装がある程度終わっているので、プラグインを開発することが出来ます。try catchの実装どうするかなーとか考えて進んでないですが、それはそれ。</p>
 
 <p>なでしこ2はC#で組まれているので、プラグインもC#で組むことができます。</p>
 
-<p>まずは準備として、なでしこ2のソースをsvnでチェックアウトします。 <a href="http://code.google.com/p/nadesiko2/source/checkout">URL</a></p>
+<h2>準備</h2>
 
-<p>SharpDevelopで開発中なので、SharpDevelopでソリューションを開きます。で、中にNakoPluginXXXというプロジェクトがあるので、それを参考にすれば良いわけですが、軽く説明しておきます。</p>
+<p><del>まずは準備として、なでしこ2のソースをsvnでチェックアウトします。 <a href="http://code.google.com/p/nadesiko2/source/checkout">URL</a></del></p>
+
+<p>まずは準備として、なでしこ2のソースをGithubからクローンします。 ~~</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone https://github.com/kujirahand/nadesiko2.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><del>SharpDevelopで開発中なので、SharpDevelopでソリューションを開きます。</del>XamarinやVisualStudioで開発出来るので、そこらへんでソリューションを開きます。</p>
+
+<p>cnakoをビルドする必要があるので、Nako2_CNakoソリューション(Nako2_CNako.sln)を開いて、cnako2プロジェクトをビルドしておきます。cnako2/bin/Debugフォルダにcnako2.exeが出来ます。これをなでしこ2のコード実行に使います。</p>
+
+<h2>プラグイン作成</h2>
+
+<p>プラグイン作成には今まで作成したプラグインがNakoPluginXXXというプロジェクト名であるので、それを参考にすれば良いわけですが、軽く説明しておきます。</p>
 
 <p>プラグインのソースは下のようになります。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -203,44 +220,45 @@
 <span class='line-number'>36</span>
 <span class='line-number'>37</span>
 <span class='line-number'>38</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>/*
-</span><span class='line'> * Created by SharpDevelop.
-</span><span class='line'> * User: shigepon
-</span><span class='line'> * Date: 2011/04/04
-</span><span class='line'> * Time: 9:42
-</span><span class='line'> *
-</span><span class='line'> * To change this template use Tools | Options | Coding | Edit Standard Headers.
-</span><span class='line'> */
-</span><span class='line'>using System;
-</span><span class='line'>using System.Collections.Generic;
-</span><span class='line'>using System.Text;
-</span><span class='line'>using Libnako.JPNCompiler;
-</span><span class='line'>using NakoPlugin;
-</span><span class='line'>namespace NakoPluginSample{
-</span><span class='line'>    public class NakoPluginSample : INakoPlugin    {
-</span><span class='line'>  string _description = &quot;サンプルプラグイン&quot;;
-</span><span class='line'>        double _version = 1.0;
-</span><span class='line'>        //&lt;del&gt; プラグイン共通の部分 &lt;/del&gt;
-</span><span class='line'>        public double TargetNakoVersion { get { return 2.0; } }
-</span><span class='line'>        public bool Used { get; set; }
-</span><span class='line'>        public string Name { get { return this.GetType().FullName; } }
-</span><span class='line'>        public double PluginVersion { get { return _version; } }
-</span><span class='line'>        public string Description { get { return _description; } }
-</span><span class='line'>        //&lt;del&gt; 関数の定義 &lt;/del&gt;
-</span><span class='line'>        public void DefineFunction(INakoPluginBank bank)        {
-</span><span class='line'>            bank.AddFunc({関数名}&cedil; {なでしこ形式の引数}&cedil; {戻り値の形式}&cedil; {実際の呼び出し先}&cedil;{関数の説明}&cedil; {関数のよみかた});
-</span><span class='line'>        }
-</span><span class='line'>  // プラグインの初期化処理
-</span><span class='line'>        public void PluginInit(INakoInterpreter runner)        {
-</span><span class='line'>        }
-</span><span class='line'>        // プラグインの終了処理
-</span><span class='line'>        public void PluginFin(INakoInterpreter runner)        {
-</span><span class='line'>        }
-</span><span class='line'>       public Object {実際の処理}(INakoFuncCallInfo info){
-</span><span class='line'>            ...
-</span><span class='line'>        }
-</span><span class='line'>    }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="cm">/*</span>
+</span><span class='line'><span class="cm"> * Created by SharpDevelop.</span>
+</span><span class='line'><span class="cm"> * User: shigepon</span>
+</span><span class='line'><span class="cm"> * Date: 2011/04/04</span>
+</span><span class='line'><span class="cm"> * Time: 9:42</span>
+</span><span class='line'><span class="cm"> *</span>
+</span><span class='line'><span class="cm"> * To change this template use Tools | Options | Coding | Edit Standard Headers.</span>
+</span><span class='line'><span class="cm"> */</span>
+</span><span class='line'><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+</span><span class='line'><span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+</span><span class='line'><span class="k">using</span> <span class="nn">System.Text</span><span class="p">;</span>
+</span><span class='line'><span class="k">using</span> <span class="nn">Libnako.JPNCompiler</span><span class="p">;</span>
+</span><span class='line'><span class="k">using</span> <span class="nn">NakoPlugin</span><span class="p">;</span>
+</span><span class='line'><span class="k">namespace</span> <span class="nn">NakoPluginSample</span><span class="p">{</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">class</span> <span class="nc">NakoPluginSample</span> <span class="p">:</span> <span class="n">INakoPlugin</span>    <span class="p">{</span>
+</span><span class='line'>  <span class="kt">string</span> <span class="n">_description</span> <span class="p">=</span> <span class="p">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="err">サンプルプラグイン</span><span class="p">&amp;</span><span class="n">quot</span><span class="p">;;</span>
+</span><span class='line'>        <span class="kt">double</span> <span class="n">_version</span> <span class="p">=</span> <span class="m">1.0</span><span class="p">;</span>
+</span><span class='line'>        <span class="c1">//&lt;del&gt; プラグイン共通の部分 &lt;/del&gt;</span>
+</span><span class='line'>        <span class="k">public</span> <span class="kt">double</span> <span class="n">TargetNakoVersion</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="m">2.0</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+</span><span class='line'>        <span class="k">public</span> <span class="kt">bool</span> <span class="n">Used</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>        <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="n">GetType</span><span class="p">().</span><span class="n">FullName</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+</span><span class='line'>        <span class="k">public</span> <span class="kt">double</span> <span class="n">PluginVersion</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_version</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+</span><span class='line'>        <span class="k">public</span> <span class="kt">string</span> <span class="n">Description</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_description</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+</span><span class='line'>        <span class="c1">//&lt;del&gt; 関数の定義 &lt;/del&gt;</span>
+</span><span class='line'>        <span class="k">public</span> <span class="k">void</span> <span class="nf">DefineFunction</span><span class="p">(</span><span class="n">INakoPluginBank</span> <span class="n">bank</span><span class="p">)</span>        <span class="p">{</span>
+</span><span class='line'>            <span class="n">bank</span><span class="p">.</span><span class="n">AddFunc</span><span class="p">({</span><span class="err">関数名</span><span class="p">}&amp;</span><span class="n">cedil</span><span class="p">;</span> <span class="p">{</span><span class="err">なでしこ形式の引数</span><span class="p">}&amp;</span><span class="n">cedil</span><span class="p">;</span> <span class="p">{</span><span class="err">戻り値の形式</span><span class="p">}&amp;</span><span class="n">cedil</span><span class="p">;</span> <span class="p">{</span><span class="err">実際の呼び出し先</span><span class="p">}&amp;</span><span class="n">cedil</span><span class="p">;{</span><span class="err">関数の説明</span><span class="p">}&amp;</span><span class="n">cedil</span><span class="p">;</span> <span class="p">{</span><span class="err">関数のよみかた</span><span class="p">});</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>  <span class="c1">// プラグインの初期化処理</span>
+</span><span class='line'>        <span class="k">public</span> <span class="k">void</span> <span class="nf">PluginInit</span><span class="p">(</span><span class="n">INakoInterpreter</span> <span class="n">runner</span><span class="p">)</span>        <span class="p">{</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="c1">// プラグインの終了処理</span>
+</span><span class='line'>        <span class="k">public</span> <span class="k">void</span> <span class="nf">PluginFin</span><span class="p">(</span><span class="n">INakoInterpreter</span> <span class="n">runner</span><span class="p">)</span>        <span class="p">{</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>       <span class="k">public</span> <span class="n">Object</span> <span class="p">{</span><span class="err">実際の処理</span><span class="p">}(</span><span class="n">INakoFuncCallInfo</span> <span class="n">info</span><span class="p">){</span>
+</span><span class='line'>            <span class="p">...</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
