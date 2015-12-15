@@ -4,7 +4,7 @@
   <title><![CDATA[Category: memo | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/memo/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-12-02T23:03:45+09:00</updated>
+  <updated>2015-12-15T20:44:00+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -193,6 +193,8 @@ print h.query
 </code></p>
 
 <p>でおk。でもクエリが例外出す時には出せないような・・・</p>
+
+<p>debug_toolbar使えば見れるか</p>
 
 <p>参考：<a href="http://programmer-jobs.blogspot.jp/2013/01/djangosql.html">Djangoで、デバック用のSQLクエリの表示 一言多いプログラマーの独り言</a></p>
 
@@ -586,6 +588,23 @@ NUMBER_GROUPING = 3
 <p>これでおk</p>
 
 <p>参考：<a href="http://yamayoshi.blogspot.jp/2013/02/django14-intcomma.html">やまよし＠Google大好き: Django1.4 で intcommaが効かない</a></p>
+
+<h2>サブクエリの使い方</h2>
+
+<p>例えばMemberモデルにname (名前)やboss(上司の名前)、stage(肩書き)フィールドがあるとして、肩書きが部長の上司を持つMemberを取り出したい場合はこんな感じ</p>
+
+<p><code>py
+a_query = Member.objects.filter(stage='部長').value_list('name')
+b_query = Member.objects.filter(boss__in = a_query)
+</code></p>
+
+<p><code>sql
+select * from member where boss in (select name from member where stage='部長');
+</code></p>
+
+<p>を実行したような感じになる。</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/8556297/how-to-subquery-in-queryset-in-django">python &ndash; how to subquery in queryset in django? &ndash; Stack Overflow</a></p>
 ]]></content>
   </entry>
   
@@ -634,137 +653,320 @@ hoge = Ti.App.Properties.getString("hoge");//取得
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[git memo]]></title>
-    <link href="http://blog.shigepon.info/blog/2014/04/09/git-memo/"/>
-    <updated>2014-04-09T12:36:49+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2014/04/09/git-memo</id>
-    <content type="html"><![CDATA[<p>git関連のメモ</p>
+    <title type="html"><![CDATA[Python memo]]></title>
+    <link href="http://blog.shigepon.info/blog/2014/06/30/python-memo/"/>
+    <updated>2014-06-30T20:38:44+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2014/06/30/python-memo</id>
+    <content type="html"><![CDATA[<p>Djangoやり始めたので、その過程で記録しておきたいことをメモ。</p>
 
-<h3>変更履歴を見る</h3>
+<h2>pip freezeでWarning: cannot find svn location for distribute==0.6.24dev-r0</h2>
 
 <p><code>sh
-$ git log -p
+$ sudo pip install --upgrade distribute
 </code></p>
 
-<p>で全体の変更履歴</p>
+<p>でおk</p>
+
+<h2>pipで一気にインストールする</h2>
+
+<p>pip freezeで出てくる出力をファイルに書き出したものを使うと、別の環境で同じ状態にもっていける。ファイルからバージョン情報を消すと最新の状態でインストール出来る。</p>
 
 <p><code>sh
-$ git log -p filename
+$ pip install -r freezed.txt
+</code></p>
+
+<h2>for文でループカウント取得</h2>
+
+<p>参考<a href="http://fujishinko.exblog.jp/7669024">Python 配列をfor文でまわしているときのループカウント取得 : fujishinko 雑記帳</a></p>
+
+<p><code>py
+for i,item in enumerate(['a','b','c']):
+  print i,item
 </code></p>
 
 <!-- more -->
 
 
-<p>でfilenameの変更履歴を表示する</p>
+<h2>日本語のコマンドライン引数取得</h2>
 
-<h3>ブランチ間の変更ファイル一覧を取得</h3>
+<p>参考<a href="http://www.yukun.info/blog/2008/07/python-command-line-arguments.html">Python: コマンドライン引数の取得 – sys.argv変数</a></p>
+
+<p>```py :hoge.py</p>
+
+<h1>&ndash;*&ndash; encoding: utf-8 &ndash;*&ndash;</h1>
+
+<p>import sys
+argv = sys.argv
+print argv[1].decode(&ldquo;utf-8&rdquo;)
+```</p>
 
 <p><code>sh
-$ git diff --name-only -b parent_branch -b child_branch
-//履歴を見る場合
-$ git diff --name-only
+$ python hoge.py あいうえお
+あいうえお
+$
 </code></p>
 
-<p>参考：<a href="http://qa.atmarkit.co.jp/q/2047">gitの指定ブランチで変更されたファイルの一覧を取得したい &ndash; QA@IT</a></p>
+<h2>コマンド実行して実行結果を取得</h2>
 
-<h2>GitHubで色々やる手順</h2>
+<p>参考<a href="http://qiita.com/mokemokechicken/items/a84b0aa96b94d1931f08">Python の subprocess で出力を受け取るときは communicate() を使おう &ndash; Qiita</a>
+subprocessを使う。何か昔は別の手法だったらしい。</p>
 
-<p>参考：</p>
+<p><code>py
+import subprocess
+p = subprocess.Popen("echo 'hoge'",shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+p.wait()
+stdout_data,stderr_data = p.communicate()
+print stdout_data.decode("utf-8").strip()
+</code></p>
+
+<h2>親クラスのメソッド呼び出し</h2>
+
+<p>```py
+class Hoge(object):</p>
+
+<pre><code>def aaa(self,param):
+    print param
+</code></pre>
+
+<p>class Fuga(Hoge):</p>
+
+<pre><code>def bbb(self,param):
+    self.hage = super(Fuga,self).aaa(param)
+</code></pre>
+
+<p>f = Fuga()
+f.bbb(&lsquo;test&rsquo;)
+```</p>
+
+<p>こんな感じ。お作法を忘れがち。</p>
+
+<h2>正規表現オブジェクトのパターンをチェックする方法</h2>
+
+<p>他のライブラリで正規表現が設定されてて、その内容をチェックしたかったので調べてみたら、patternプロパティを見れば良いらしい</p>
+
+<p><code>py
+import re
+r = re.compile('^hoge',re.l)
+print r.pattern
+</code></p>
+
+<p>参考：<a href="http://compgroups.net/comp.lang.python/how-to-print-sre_pattern-regexp-object-text/309372">How to print SRE_Pattern (regexp object) text for debugging purposes? &ndash; comp.lang.python</a></p>
+
+<h2>1ヶ月前の日付を求める</h2>
+
+<p>timedeltaを使うとweeksとかdaysしか指定出来ないので、1ヶ月前の日付を取得しようと思ったら、別の方法が必要になる</p>
+
+<p>``` py
+import time
+from datetime import date</p>
+
+<p>base_date = date(2015,1,3)
+one_month_ago = date.fromtimestamp(time.mktime((base_date.year, base_date.month -1, base_date.day, 0, 0, 0, 0, 0, 0)))
+```</p>
+
+<p>こんな感じで出来る。
+参考：<a href="http://blog.kjirou.net/p/381">[Python] 月の加減算処理ができない？ | それなりブログ</a></p>
+
+<h2>日付表示で良く使うフォーマット</h2>
+
+<p><code>py
+from datetime import date
+print date(2002,12,4).isoformat()
+</code></p>
+
+<p>としておくと、2002-12-04と表示される</p>
+
+<h2>lxmlをインストールしようとしたら、fatal error: libxml/xmlversion.h: No such file or directory</h2>
+
+<p>ライブラリが足らないのでインストールすればおk
+<a href="http://stackoverflow.com/questions/15759150/src-lxml-etree-defs-h931-fatal-error-libxml-xmlversion-h-no-such-file-or-di">python 2.7 &ndash; src/lxml/etree_defs.h:9:31: fatal error: libxml/xmlversion.h: No such file or directory &ndash; Stack Overflow</a></p>
+
+<p><code>sh
+$ sudo aptitude install libxml2-dev libxslt1-dev
+</code></p>
+
+<h2>pythonでsudoを付けたコマンドを実行する</h2>
+
+<p>パスワードをリダイレクトすればおk
+<a href="http://stackoverflow.com/questions/13045593/using-sudo-with-python-script">shell &ndash; Using sudo with Python script &ndash; Stack Overflow</a></p>
+
+<p><code>py
+import os
+p = os.system('echo pass | sudo -S ...')
+os.popen("sudo -S ...","w").write("pass")
+</code></p>
+
+<h2>django rest frameworkでBasic認証のあるサイトを扱う</h2>
+
+<p>basic認証のあるサイトでdjango rest frameworkを使ったjson apiみたいなのを作ろうと思った時に、認証してアクセスしても</p>
+
+<p><code>
+{"detail": "Invalid username/password"}
+</code></p>
+
+<p>みたいなメッセージが帰ってきてうまく情報を取って来れなかった。</p>
+
+<p>```py settings.py
+REST_FRAMEWORK = {</p>
+
+<pre><code>'DEFAULT_AUTHENTICATION_CLASSES': ()
+</code></pre>
+
+<p>}
+```</p>
+
+<p>と認証を削除するといけた
+<a href="http://stackoverflow.com/questions/19693433/django-rest-framework-behind-http-basic-authentication">nginx &ndash; Django Rest Framework behind HTTP Basic Authentication &ndash; Stack Overflow</a></p>
+
+<h2>リストの文字列をリストに変換する</h2>
+
+<p>リクエストでリストの文字列をパラメーターにして送って、それをリストとして評価したかったので、調べてみた。</p>
+
+<p><code>py
+import ast
+hoge = u'["A","B","C"]
+fuga = ast.literal_eval(hoge)
+</code></p>
+
+<p><a href="https://docs.python.org/2/library/ast.html#ast.literal%5Feval">32.2. ast — Abstract Syntax Trees — Python 2.7.10 documentation</a>見ると</p>
+
+<blockquote><p>This can be used for safely evaluating strings containing Python values from untrusted sources without the need to parse the values oneself.</p></blockquote>
+
+<p>と、あるので、変換だけならチェックしなくても問題ない・・・かも？</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/1894269/convert-string-representation-of-list-to-list-in-python">convert string representation of list to list in python &ndash; Stack Overflow</a></p>
+
+<h2>lxmlで&nbsp;が入った文章をxmlでパース出来ない</h2>
+
+<p>xmlに&nbsp;（空白）が入っている場合に、xmlとしてパースした場合に</p>
+
+<p><code>
+lxml.etree.XMLSyntaxError: Entity 'nbsp' not defined
+</code></p>
+
+<p>みたいなメッセージを出されちゃうことがある。解決策としては</p>
 
 <ul>
-<li><a href="http://kik.xii.jp/archives/179">Github で Fork してから Pull Request をするまでの流れ | けーこ in サンフランシスコ</a></li>
-<li><a href="http://qiita.com/xtetsuji/items/555a1ef19ed21ee42873">GitHubでFork/cloneしたリポジトリを本家リポジトリに追従する &ndash; Qiita</a></li>
-<li><a href="http://misapon.blogspot.jp/2014/10/github.html">明日に向かって昇龍拳: GitHubでプルリクエストがマージされた後にすること</a></li>
+<li>htmlとしてパースする</li>
+<li>xml定義をしっかりやっておく</li>
+<li>＆の部分を適当に置換</li>
 </ul>
 
 
-<h3>1.準備</h3>
+<p>くらいがある。</p>
 
-<p>まずは開発に関わりたいプロジェクトのリポジトリをFork</p>
+<h4>htmlとしてパース</h4>
 
-<p>次にローカルにクローン</p>
-
-<p><code>sh
-$ git clone https://github.com/path/to/repository.git
-$ cd repository
+<p><code>py
+from lxml import etree
+from StringIO import StringIO
+parser = etree.HTMLParser()
+parsed = etree.HTML(StringIO(source), parser)
 </code></p>
 
-<h3>2.開発〜Pull Request</h3>
+<h4>xml定義をしっかり書く</h4>
 
-<p>Pull Request用にブランチを切る</p>
+<p>xmlとしてしっかり書いて、パーサーのパラメータとしてresolve_entities=Falseと指定すれば良いらしい</p>
 
-<p><code>sh
-$ git checkout -b issue
+<p><code>py
+from lxml import etree
+from StringIO import StringIO
+source = """&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
+&lt;hoge&gt;&amp;nbsp;fuga&lt;/hoge&gt;"""
+parser = etree.XMLParser(resolve_entities=False)
+parsed = etree.parse(StringIO(source), parser)
+print etree.tostring(parsed)
 </code></p>
 
-<p>コード変更後、コミット</p>
+<h4>＆を適当に置換</h4>
 
-<p><code>sh
-$ git add -A
-$ git commit -m "commit message"
-$ git push origin issue
+<p>一個一個特殊文字をユニコードに変えるという手もあるけど、とても手間なので</p>
+
+<p><code>py
+source = source.replace('&amp;','&amp;amp;')
 </code></p>
 
-<p>まだrebeseは良く分かってない。で、GitHub上でPull Requestを作成する。</p>
+<p>とやってからパースすれば通る</p>
 
-<h3>3.Pull Requestが反映された後</h3>
+<h2>except時にトレースバックを表示</h2>
 
-<h4>Pull Requestに使ったブランチを削除</h4>
+<p>```py
+import traceback</p>
 
-<p><code>sh
-$ git checkout master
-$ git branch -D issue
-$ git push origin :issue
-</code></p>
+<p>def hoge():</p>
 
-<h4>GitHubでForkしたリポジトリを本家に合わせる</h4>
+<pre><code>try:
+    ...
+except Exception as e:
+    traceback.print_exc()
+</code></pre>
 
-<p><code>sh
-$ git remote add honke https://github.com/honke/path/to/repository.git
-</code></p>
+<p>```</p>
 
-<p>リポジトリの追加は1回で良い。後は合わせたいタイミングで下のコマンドを繰り返す</p>
+<p>こんな感じで、tracebackを使えば良い</p>
 
-<p><code>sh
-$ git fetch honke
-$ git merge honke/master
-$ git push origin master
-</code></p>
+<p>参考：<a href="https://doughellmann.com/blog/2009/06/19/python-exception-handling-techniques/">Python Exception Handling Techniques | Doug Hellmann</a></p>
 
-<p>以下2〜3を繰り返す</p>
+<h2>datetimeからタイムスタンプへの変換（逆も)</h2>
 
-<h3>別の場所に開発中のブランチをダウンロードしたい場合</h3>
+<p>```py
+import datetime
+import time</p>
 
-<p>参考：
-<a href="http://glassylamp.blogspot.jp/2010/11/git.html">GlassyLamp: git でブランチを指定してダウンロードする方法</a></p>
+<p>def datetime_to_timestamp(dt):</p>
 
-<p>issueブランチをダウンロードしたい場合</p>
+<pre><code>timestamp = time.mktime(dt.timetuple())
+return timestamp
+</code></pre>
 
-<p><code>sh
-$ git clone https://github.com/path/to/repository.git
-$ git checkout -b issue-local remotes/origin/issue
-</code></p>
+<p>def timestamp_to_datetime(timestamp):</p>
 
-<h3>masterブランチの変更を別ブランチに反映する</h3>
+<pre><code>dt = datetime.datetime.fromtimestamp(timestamp)
+return dt
+</code></pre>
 
-<p><code>sh
-$ git checkout hoge
-$ git merge master
-</code></p>
+<p>```</p>
 
-<h3>mergeでコンフリクトしたファイルの一覧</h3>
+<p>こんな感じ</p>
 
-<p><code>sh
-$ git ls-files -u
-</code></p>
+<p>参考：<a href="http://uokada.hatenablog.jp/entry/20120217/1329444315">pythonでdatetimeとtimestampを相互変換するコード &ndash; uokadaの見逃し三振は嫌いです</a></p>
 
-<h2>branch名を変更する</h2>
+<h2>パイプで渡されたデータを受け取る</h2>
 
-<p><code>sh
-$ git branch -m &lt;oldname&gt; &lt;newname&gt;
-</code></p>
+<p>```py</p>
 
-<p>参考：<a href="http://stackoverflow.com/questions/6591213/how-do-you-rename-the-local-branch">git &ndash; How do you rename the local branch? &ndash; Stack Overflow</a></p>
+<h1>encoding: UTF-8</h1>
+
+<p>import sys
+lines = sys.stdin.readlines()
+for line in lines:</p>
+
+<pre><code>print line
+</code></pre>
+
+<p>```</p>
+
+<p>こんな感じ。ちょっとしたコマンド作る時に使えるのでメモ</p>
+
+<p>参考；<a href="http://studiot.jp/blog/?p=321">[Python]シェルからパイプで渡されたデータをPythonで受け取る « StudioT::DevLog</a></p>
+
+<h2>変数が文字列かチェックする</h2>
+
+<p>文字列が来てる場合はstrptimeやって、他の場合は普通に代入とかそんな場合に、文字列かチェックする必要があるのでメモ</p>
+
+<p>```py
+hoge = &ldquo;fuga&rdquo;
+if instanceof(hoge, basestring):</p>
+
+<pre><code>pass
+</code></pre>
+
+<p>```</p>
+
+<p>こんな感じ。整数ならbasestringをintにするとかやればおk</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/4843173/how-to-check-if-type-of-a-variable-is-string-in-python">How to check if type of a variable is string in python? &ndash; Stack OverflowHow to check if type of a variable is string in python? &ndash; Stack Overflow</a></p>
 ]]></content>
   </entry>
   

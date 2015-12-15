@@ -198,6 +198,8 @@ def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る
 
 <p>でおk。でもクエリが例外出す時には出せないような・・・</p>
 
+<p>debug_toolbar使えば見れるか</p>
+
 <p>参考：<a href="http://programmer-jobs.blogspot.jp/2013/01/djangosql.html">Djangoで、デバック用のSQLクエリの表示 一言多いプログラマーの独り言</a></p>
 
 <h2>ModelFormでcleanを使ってデータの検証する時に、updateしようとしてるかcreateしようとしてるか判断する</h2>
@@ -653,6 +655,28 @@ def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る
 <p>これでおk</p>
 
 <p>参考：<a href="http://yamayoshi.blogspot.jp/2013/02/django14-intcomma.html">やまよし＠Google大好き: Django1.4 で intcommaが効かない</a></p>
+
+<h2>サブクエリの使い方</h2>
+
+<p>例えばMemberモデルにname (名前)やboss(上司の名前)、stage(肩書き)フィールドがあるとして、肩書きが部長の上司を持つMemberを取り出したい場合はこんな感じ</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">a_query</span> <span class="o">=</span> <span class="n">Member</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">stage</span><span class="o">=</span><span class="s">&#39;部長&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">value_list</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">b_query</span> <span class="o">=</span> <span class="n">Member</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">boss__in</span> <span class="o">=</span> <span class="n">a_query</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">member</span> <span class="k">where</span> <span class="n">boss</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">name</span> <span class="k">from</span> <span class="n">member</span> <span class="k">where</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;部長&#39;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>を実行したような感じになる。</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/8556297/how-to-subquery-in-queryset-in-django">python &ndash; how to subquery in queryset in django? &ndash; Stack Overflow</a></p>
 </div>
 
 
@@ -802,7 +826,7 @@ def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linux/'>linux (12)</a></li>
-<li class='category'><a href='/blog/categories/memo/'>memo (13)</a></li>
+<li class='category'><a href='/blog/categories/memo/'>memo (14)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>

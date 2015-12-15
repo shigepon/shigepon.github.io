@@ -464,6 +464,23 @@ subprocessを使う。何か昔は別の手法だったらしい。</p>
 <p>こんな感じ。ちょっとしたコマンド作る時に使えるのでメモ</p>
 
 <p>参考；<a href="http://studiot.jp/blog/?p=321">[Python]シェルからパイプで渡されたデータをPythonで受け取る « StudioT::DevLog</a></p>
+
+<h2>変数が文字列かチェックする</h2>
+
+<p>文字列が来てる場合はstrptimeやって、他の場合は普通に代入とかそんな場合に、文字列かチェックする必要があるのでメモ</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">hoge</span> <span class="o">=</span> <span class="s">&quot;fuga&quot;</span>
+</span><span class='line'><span class="k">if</span> <span class="n">instanceof</span><span class="p">(</span><span class="n">hoge</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">pass</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じ。整数ならbasestringをintにするとかやればおk</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/4843173/how-to-check-if-type-of-a-variable-is-string-in-python">How to check if type of a variable is string in python? &ndash; Stack OverflowHow to check if type of a variable is string in python? &ndash; Stack Overflow</a></p>
 </div>
 
 
@@ -491,7 +508,7 @@ subprocessを使う。何か昔は別の手法だったらしい。</p>
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/python/'>Python</a>
+    <a class='category' href='/blog/categories/python/'>Python</a>, <a class='category' href='/blog/categories/memo/'>memo</a>
   
 </span>
 
@@ -613,7 +630,7 @@ subprocessを使う。何か昔は別の手法だったらしい。</p>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linux/'>linux (12)</a></li>
-<li class='category'><a href='/blog/categories/memo/'>memo (13)</a></li>
+<li class='category'><a href='/blog/categories/memo/'>memo (14)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
