@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-12-15T20:44:00+09:00</updated>
+  <updated>2015-12-17T14:04:03+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,69 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[mono winformsがmacで文字化けする件]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/12/17/mono-winforms-garbled-on-mac/"/>
+    <updated>2015-12-17T08:55:02+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/12/17/mono-winforms-garbled-on-mac</id>
+    <content type="html"><![CDATA[<p>なでしこ2にフォームの機能入れるためにmonoのWinFormを試しているが、どうにも文字化けが治らないので、途中経過までのメモ。取りあえずボタンは文字化けしないようになった。</p>
+
+<h2>Fontプロパティを設定する</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+</span><span class='line'><span class="k">using</span> <span class="nn">System.Windows.Forms</span><span class="p">;</span>
+</span><span class='line'><span class="k">using</span> <span class="nn">System.Drawing</span><span class="p">;</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'><span class="n">Form</span> <span class="n">win</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Form</span><span class="p">();</span>
+</span><span class='line'><span class="n">win</span><span class="p">.</span><span class="n">Font</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Font</span> <span class="p">(</span><span class="s">&quot;Osaka&quot;</span><span class="p">,</span> <span class="m">10</span><span class="p">);</span>
+</span><span class='line'><span class="p">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じ。</p>
+
+<h2>~/.config/fonts.confを設定</h2>
+
+<p>とりあえず必ず日本語フォントにするように設定してみる</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="p">&lt;</span><span class="n">fontconfig</span><span class="p">&gt;</span>
+</span><span class='line'><span class="p">&lt;</span><span class="n">match</span> <span class="n">target</span><span class="p">=</span><span class="s">&quot;pattern&quot;</span><span class="p">&gt;</span>
+</span><span class='line'>  <span class="p">&lt;</span><span class="n">edit</span> <span class="n">name</span><span class="p">=</span><span class="s">&quot;family&quot;</span> <span class="n">mode</span><span class="p">=</span><span class="s">&quot;assign&quot;</span> <span class="n">binding</span><span class="p">=</span><span class="s">&quot;strong&quot;</span><span class="p">&gt;</span>
+</span><span class='line'>    <span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span><span class="n">Hiragino</span> <span class="n">Kaku</span> <span class="n">Gothic</span> <span class="n">Pro</span> <span class="n">W3</span><span class="p">&lt;/</span><span class="n">strong</span><span class="p">&gt;</span>
+</span><span class='line'>  <span class="p">&lt;/</span><span class="n">edit</span><span class="p">&gt;</span>
+</span><span class='line'><span class="p">&lt;/</span><span class="n">match</span><span class="p">&gt;</span>
+</span><span class='line'><span class="p">&lt;/</span><span class="n">fontconfig</span><span class="p">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>一応どっちもメインフォームにボタン貼付けくらいなら日本語になった。でもメインフォームのタイトルが文字化けするのが治らない。メインフォームは豆腐でない文字化けなので、フォントじゃないような気がする。どうしたものか。</p>
+
+<p>とここまで書いて、Eto.Formsっての使ってみた方が今後を考えると良いんじゃないかと思い始めたのでこれ以上やらないと思う。</p>
+
+<p>ここまでで参考にしたページ（情報少ない）</p>
+
+<ul>
+<li><a href="http://risky-safety.org/zinnia/d/2011/09/">Zinnia hacks tomorrow.</a> 一番参考になった</li>
+<li><a href="http://www.slideshare.net/babatakao/font-config">Fontconfigことはじめ</a> fontconfig回り</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[msilを手動で出力する]]></title>
@@ -2195,66 +2258,6 @@ ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
 
 
 <p>参考：<a href="http://stackoverflow.com/questions/15878176/uwsgi-invalid-request-block-size">uwsgi invalid request block size &ndash; Stack Overflow</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[突然サーバエラーが頻発したので、調べてみたらエラーログが原因だった]]></title>
-    <link href="http://blog.shigepon.info/blog/2015/03/03/error-log-make-php-error/"/>
-    <updated>2015-03-03T09:56:56+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2015/03/03/error-log-make-php-error</id>
-    <content type="html"><![CDATA[<p>参考：<a href="http://zapanet.info/blog/item/2489">PHPのエラーログが肥大してPHPが動かなくなった話</a></p>
-
-<p>ある日、運用しているサービスがサーバエラーを頻出しだしたので、調べてみた。環境はUbuntu、nginx、php-fpm、postgresql。</p>
-
-<ul>
-<li>他のサーバへのdbアクセスがおかしくなったのかと思い、他の方法でdbアクセス→問題無し</li>
-<li>サービスを色々再起動してみた。→変化なし</li>
-<li>サーバを再起動。しばらくエラーでないが、しばらくするとエラーががが</li>
-<li>php-fpmを再起動。しばらくエラーでないが、しばらくするとエラーががが</li>
-<li>php周りかなと思ったので、phpのログを開く→開かない！</li>
-<li>良く見たらphp-fpmのログが2GB超えてた。ナンテコッタイ。</li>
-<li>ログを退避して、ローテーション設定して改めてphp-fpmを再起動したら直った。めでたしめでたし。</li>
-</ul>
-
-
-<p>メモがてらローテーション設定を書いておく</p>
-
-<!-- more -->
-
-
-<p>/etc/logrotate.d/php.conf</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>/path/to/php5-fpm.log {
-</span><span class='line'>  daily
-</span><span class='line'>  missingok
-</span><span class='line'>  rotate 52
-</span><span class='line'>  compress
-</span><span class='line'>  delaycompress
-</span><span class='line'>  notifyempty
-</span><span class='line'>  create 0644 group username
-</span><span class='line'>  dateext
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>エラーチェックテストはこんな感じ</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>logrotate -dv /etc/logrotate.d/php.conf
-</span></code></pre></td></tr></table></div></figure>
-
-
-
 ]]></content>
   </entry>
   

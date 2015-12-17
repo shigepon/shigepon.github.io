@@ -4,7 +4,7 @@
   <title><![CDATA[Category: nadesiko2 | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/nadesiko2/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-12-15T20:44:00+09:00</updated>
+  <updated>2015-12-17T14:04:03+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,58 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[mono winformsがmacで文字化けする件]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/12/17/mono-winforms-garbled-on-mac/"/>
+    <updated>2015-12-17T08:55:02+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/12/17/mono-winforms-garbled-on-mac</id>
+    <content type="html"><![CDATA[<p>なでしこ2にフォームの機能入れるためにmonoのWinFormを試しているが、どうにも文字化けが治らないので、途中経過までのメモ。取りあえずボタンは文字化けしないようになった。</p>
+
+<h2>Fontプロパティを設定する</h2>
+
+<p><code>csharp
+using System;
+using System.Windows.Forms;
+using System.Drawing;
+...
+Form win = new Form();
+win.Font = new Font ("Osaka", 10);
+...
+</code></p>
+
+<p>こんな感じ。</p>
+
+<h2>~/.config/fonts.confを設定</h2>
+
+<p>とりあえず必ず日本語フォントにするように設定してみる</p>
+
+<p>```
+<fontconfig>
+<match target="pattern">
+  <edit name="family" mode="assign" binding="strong"></p>
+
+<pre><code>&lt;string&gt;Hiragino Kaku Gothic Pro W3&lt;/strong&gt;
+</code></pre>
+
+<p>  </edit>
+</match>
+</fontconfig>
+```</p>
+
+<p>一応どっちもメインフォームにボタン貼付けくらいなら日本語になった。でもメインフォームのタイトルが文字化けするのが治らない。メインフォームは豆腐でない文字化けなので、フォントじゃないような気がする。どうしたものか。</p>
+
+<p>とここまで書いて、Eto.Formsっての使ってみた方が今後を考えると良いんじゃないかと思い始めたのでこれ以上やらないと思う。</p>
+
+<p>ここまでで参考にしたページ（情報少ない）</p>
+
+<ul>
+<li><a href="http://risky-safety.org/zinnia/d/2011/09/">Zinnia hacks tomorrow.</a> 一番参考になった</li>
+<li><a href="http://www.slideshare.net/babatakao/font-config">Fontconfigことはじめ</a> fontconfig回り</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[なでしこ2でssl使うとthe authentication or decription has failedエラーが出る件]]></title>
@@ -273,103 +325,6 @@ $ nunit-console -noshadow NakoPluginTest/bin/Debug/NakoPluginTest.dll
 
 <p>とすると、外部ファイルを読み込んでくれる。
 これでcui環境でなでしこ2をビルドからテストまで出来る。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ubuntuのcui環境でなでしこ2をビルドする]]></title>
-    <link href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/"/>
-    <updated>2015-05-01T08:23:00+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui</id>
-    <content type="html"><![CDATA[<p>今までmono developでなでしこ2をビルド、テストして、cui環境にアップロードしてたんだけど、面倒になってきたのでcui環境で直接ビルド、テストしてみようと思ったのでついでに開発を始める段階からメモしてみる。</p>
-
-<p>環境はubuntu 12.04とするが、上位バージョンでも問題無いはず</p>
-
-<h1>mono環境の準備</h1>
-
-<p>mono-develをインストールしたらmono関連で必要なものは勝手にインストールされたような気がする。ついでに<a href="http://blog.shigepon.info/blog/2014/08/20/vb-not-work-on-ubuntu/">VisualBasicが動かない件</a>にあるように、mono-vbnc、あとはnunitのインストール</p>
-
-<p><code>sh
-$ aptitude install mono-devel mono-vbnc nunit
-</code></p>
-
-<!-- more -->
-
-
-
-
-<!-- more -->
-
-
-<h1>なでしこ2リポジトリを取得</h1>
-
-<p><a href="http://it.slashdot.jp/story/15/03/13/0340256/">Google Codeが2016年1月に閉鎖される</a>ので、なでしこ2のリポジトリはgithubに移動している。</p>
-
-<p>なので、リポジトリの取得はgit cloneでいける。kujirahandさんのリポジトリをcloneするなら</p>
-
-<p><code>sh
-$ git clone https://github.com/kujirahand/nadesiko2.git
-</code></p>
-
-<p>shigeponがfolkしたリポジトリなら</p>
-
-<p><code>sh
-$ git clone https://github.com/shigepon/nadesiko2.git
-</code></p>
-
-<p>で、カレントディレクトリにnadesiko2ディレクトリが出来て、その下にプロジェクト1式が入っている。中にはソリューションが3つあり、それぞれ</p>
-
-<ul>
-<li>Nako2_CNako.sln → cui環境で動かすなでしこ2(cnako)関連</li>
-<li>Nako2_Plugins.sln → なでしこ2のプラグイン関連</li>
-<li>Nako2_Plugins_Office.sln → なでしこ2のOffice関係プラグイン</li>
-</ul>
-
-
-<p>のソリューションである。今回は\/home\/usernameディレクトリ上でcloneすると考える</p>
-
-<h1>おもむろにビルド</h1>
-
-<p>kujirahandさんのリポジトリをcloneしたとして、とりあえず何もせずにCNakoのソリューションをビルドしてみると</p>
-
-<p><code>sh
-$ xbuild Nako2_CNako.sln
-...
-NakoPluginArrayTest.cs(9,7): error CS0246: The type or namespace name `NUnit' could not be found. Are you missing a using directive or an assembly reference?
-...
-</code></p>
-
-<p>みたいなエラーメッセージを出してビルド出来ない。一方でプラグイン関連のソリューションは</p>
-
-<p>```sh
-$ xbuild Nako2_Plugins.sln
-&hellip;</p>
-
-<pre><code>18 Warning(s)
- 0 Error(s)
-</code></pre>
-
-<p>Time Elapsed 00:00:06.1095450
-```</p>
-
-<p>と出て、エラー無くビルド出来る。この違いはそれぞれのソリューションで参照しているテストプロジェクトにnunitへの参照パスが入っているかどうかの違いだったので、NakoPluginTest/NakoPluginTest.csprojを参考にしてCNakoTest/CNakoTest.csprojの</p>
-
-<p><code>
-&lt;Reference Include="nunit.framework.extensions, ..." /&gt;
-</code></p>
-
-<p>行に３行追記する</p>
-
-<p>```xml
-   <Reference Include="nunit.framework"></p>
-
-<pre><code>   &lt;HintPath&gt;..\..\..\..\usr\lib\mono\gac\nunit.framework\2.5.10.0__96d09a1eb7f44a77\nunit.framework.dll&lt;/HintPath&gt;
-</code></pre>
-
-<p>   </Reference>
-```</p>
-
-<p>で、再度ビルドするとビルド出来た。shigeponのリポジトリには修正したものをアップしておくのでそのままビルド出来ると思う。パスはリポジトリをcloneするディレクトリによっては変更しないといけないと思う。</p>
 ]]></content>
   </entry>
   

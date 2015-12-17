@@ -5,14 +5,19 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Basic認証する時に気をつけること - shigeponが関心のある技術情報など</title>
+  <title>mono winformsがmacで文字化けする件 - shigeponが関心のある技術情報など</title>
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="rhaco3で作ったWebサービス全体にBasic認証をかけた時にちょっとハマったのでメモ。 症状 rhaco3の認証が入っているサービスで全体にBasic認証をかけると、 トップページに入る時にBasic認証がかかる
-認証完了
-ログインページに移動
-またBasic認証がかかる &hellip;">
+  <meta name="description" content="なでしこ2にフォームの機能入れるためにmonoのWinFormを試しているが、どうにも文字化けが治らないので、途中経過までのメモ。取りあえずボタンは文字化けしないようになった。 Fontプロパティを設定する 1
+2
+3
+4
+5
+6
+7
+using System;
+using System. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +26,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.shigepon.info/blog/2014/02/03/basic-auth">
+  <link rel="canonical" href="http://blog.shigepon.info/blog/2015/12/17/mono-winforms-garbled-on-mac">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -85,7 +90,7 @@
   
   <header>
     
-      <h1 class="entry-title">Basic認証する時に気をつけること</h1>
+      <h1 class="entry-title">Mono Winformsがmacで文字化けする件</h1>
     
     
       <p class="meta">
@@ -101,88 +106,68 @@
   
 
 
-<time datetime="2014-02-03T07:48:33+09:00" pubdate data-updated="true">Feb 3<span>rd</span>, 2014</time>
+<time datetime="2015-12-17T08:55:02+09:00" pubdate data-updated="true">Dec 17<span>th</span>, 2015</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>rhaco3で作ったWebサービス全体にBasic認証をかけた時にちょっとハマったのでメモ。</p>
+<div class="entry-content"><p>なでしこ2にフォームの機能入れるためにmonoのWinFormを試しているが、どうにも文字化けが治らないので、途中経過までのメモ。取りあえずボタンは文字化けしないようになった。</p>
 
-<h2>症状</h2>
+<h2>Fontプロパティを設定する</h2>
 
-<p>rhaco3の認証が入っているサービスで全体にBasic認証をかけると、</p>
-
-<ol>
-<li>トップページに入る時にBasic認証がかかる</li>
-<li>認証完了</li>
-<li>ログインページに移動</li>
-<li>またBasic認証がかかる</li>
-</ol>
-
-
-<p>というケースが見られました。Webサーバにはnginxを使いました。</p>
-
-<!-- more -->
-
-
-<h2>原因</h2>
-
-<p>nginx側の設定が悪いのかなとか色々試行錯誤しましたが、結論としてrhaco3の認証部分が401のレスポンスを吐いてたのが問題でした。</p>
-
-<!-- more -->
-
-
-<p><a href="http://www.slogical.co.jp/tech/http_basicauth.html">Basic認証の動作</a>というページで詳しく書かれています（以下に引用します）が</p>
-
-<blockquote><ol>
-<li>ユーザーがクライアント（IE等のWebブラウザ）に目的のURLを入力する。</li>
-<li>クライアントが、Authorization: ヘッダを付加しないで、
-目的のコンテンツにアクセスする。</li>
-<li>サーバーは、401 Authorization Required のレスポンスを返して、
-クライアントに認証が必要である旨を伝える。</li>
-<li>クライアントがユーザーに ID/PW の入力を求める
-（IE等のブラウザが、ポップアップウインドウを出して、
-　ID/PW の入力をユーザーに求めるアレです。）</li>
-<li>ユーザーが ID/PW を入力する。</li>
-<li>クライアントが、Authorization: ヘッダに ID/PW の情報を付加
-して目的のコンテンツに再度アクセスする。</li>
-<li>サーバが ID/PW を解析して、認証OKであればコンテンツをクライ
-アントに返す。</li>
-<li>クライアントがコンテンツを表示して、ユーザーがそれを閲覧する。</li>
-</ol>
-</blockquote>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>    +------+  1---&gt;  +--------+  2---&gt;  +-------+
-</span><span class='line'>    |      |  &lt;---4  |        |  &lt;---3  |       |
-</span><span class='line'>    | User |         | Client |         | httpd |
-</span><span class='line'>    |      |  5---&gt;  |        |  6---&gt;  |       |
-</span><span class='line'>    +------+  &lt;---8  +--------+  &lt;---7  +-------+</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+</span><span class='line'><span class="k">using</span> <span class="nn">System.Windows.Forms</span><span class="p">;</span>
+</span><span class='line'><span class="k">using</span> <span class="nn">System.Drawing</span><span class="p">;</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'><span class="n">Form</span> <span class="n">win</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Form</span><span class="p">();</span>
+</span><span class='line'><span class="n">win</span><span class="p">.</span><span class="n">Font</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Font</span> <span class="p">(</span><span class="s">&quot;Osaka&quot;</span><span class="p">,</span> <span class="m">10</span><span class="p">);</span>
+</span><span class='line'><span class="p">...</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<blockquote><p>（コンテンツデータを１つ取得するために、リクエスト・レスポンスの
-　やりとりが２回行われています。）</p>
+<p>こんな感じ。</p>
 
-<p>なお、
-Authorization: ヘッダには、
-Basic認証の ID と PW とを :（半角のコロン）でつなげた文字列を、
-base64した値が格納さています。
-（例えば、
-　Authorization: Basic dXNlcjAxOnBhc3N3b3JkCg==　といったようになります。）</p></blockquote>
+<h2>~/.config/fonts.confを設定</h2>
 
-<p>ように、Basic認証ではサーバが401のレスポンスを返すことで、ブラウザ側にポップアップを出させているようです。その為rhaco3の認証部分で401のレスポンスを出した時に認証の情報がリセットされてしまったのではないかと思われます。</p>
+<p>とりあえず必ず日本語フォントにするように設定してみる</p>
 
-<h2>対処</h2>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="p">&lt;</span><span class="n">fontconfig</span><span class="p">&gt;</span>
+</span><span class='line'><span class="p">&lt;</span><span class="n">match</span> <span class="n">target</span><span class="p">=</span><span class="s">&quot;pattern&quot;</span><span class="p">&gt;</span>
+</span><span class='line'>  <span class="p">&lt;</span><span class="n">edit</span> <span class="n">name</span><span class="p">=</span><span class="s">&quot;family&quot;</span> <span class="n">mode</span><span class="p">=</span><span class="s">&quot;assign&quot;</span> <span class="n">binding</span><span class="p">=</span><span class="s">&quot;strong&quot;</span><span class="p">&gt;</span>
+</span><span class='line'>    <span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span><span class="n">Hiragino</span> <span class="n">Kaku</span> <span class="n">Gothic</span> <span class="n">Pro</span> <span class="n">W3</span><span class="p">&lt;/</span><span class="n">strong</span><span class="p">&gt;</span>
+</span><span class='line'>  <span class="p">&lt;/</span><span class="n">edit</span><span class="p">&gt;</span>
+</span><span class='line'><span class="p">&lt;/</span><span class="n">match</span><span class="p">&gt;</span>
+</span><span class='line'><span class="p">&lt;/</span><span class="n">fontconfig</span><span class="p">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p>rhaco3の認証部分(\org\rhaco\flow\parts\RequestFlow::do_login)で401を送信していた部分で200を送信することで対処できました。</p>
 
-<p>rhaco3で見られた症状でしたが、他のフレームワークでも特に何も考えてなかったら引っかかる可能性があります。というかBasic認証とフレームワークの認証両方掛けるとか普通無いですよねそうですよね。</p>
+<p>一応どっちもメインフォームにボタン貼付けくらいなら日本語になった。でもメインフォームのタイトルが文字化けするのが治らない。メインフォームは豆腐でない文字化けなので、フォントじゃないような気がする。どうしたものか。</p>
+
+<p>とここまで書いて、Eto.Formsっての使ってみた方が今後を考えると良いんじゃないかと思い始めたのでこれ以上やらないと思う。</p>
+
+<p>ここまでで参考にしたページ（情報少ない）</p>
+
+<ul>
+<li><a href="http://risky-safety.org/zinnia/d/2011/09/">Zinnia hacks tomorrow.</a> 一番参考になった</li>
+<li><a href="http://www.slideshare.net/babatakao/font-config">Fontconfigことはじめ</a> fontconfig回り</li>
+</ul>
+
 </div>
 
 
@@ -205,12 +190,12 @@ base64した値が格納さています。
   
 
 
-<time datetime="2014-02-03T07:48:33+09:00" pubdate data-updated="true">Feb 3<span>rd</span>, 2014</time>
+<time datetime="2015-12-17T08:55:02+09:00" pubdate data-updated="true">Dec 17<span>th</span>, 2015</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/nginx/'>nginx</a>, <a class='category' href='/blog/categories/rhaco/'>rhaco</a>
+    <a class='category' href='/blog/categories/csharp/'>CSharp</a>, <a class='category' href='/blog/categories/nadesiko2/'>nadesiko2</a>
   
 </span>
 
@@ -219,7 +204,7 @@ base64した値が格納さています。
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.info/blog/2014/02/03/basic-auth/" data-via="shigepon" data-counturl="http://blog.shigepon.info/blog/2014/02/03/basic-auth/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.info/blog/2015/12/17/mono-winforms-garbled-on-mac/" data-via="shigepon" data-counturl="http://blog.shigepon.info/blog/2015/12/17/mono-winforms-garbled-on-mac/" >Tweet</a>
   
   
   
@@ -239,10 +224,8 @@ base64した値が格納さています。
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/01/31/octpress-tips/" title="Previous Post: octpress tips">&laquo; octpress tips</a>
+        <a class="basic-alignment left" href="/blog/2015/11/29/output-msil-manually/" title="Previous Post: msilを手動で出力する">&laquo; msilを手動で出力する</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/02/10/unity-memo/" title="Next Post: unity memo">unity memo &raquo;</a>
       
     </p>
   </footer>

@@ -9,11 +9,8 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Djangoやってて忘れっぽいところとかをメモ リクエストパラメーターをモデルに入れる views.py1
-2
-3
-4
-def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る場合 fuga = Fuga.objects.get(pk=1 &hellip;">
+  <meta name="description" content="ソーシャルログインだけでなく、通常のログインもやりたかったので、django-allauthを試してみた。 インストール pipで 1
+pip install django-allauth ファイルでの設定 settings.pyとurls.pyを設定 ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +80,60 @@ def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/25/use-django-allauth/">Django-allauthを使ってみた</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-11-25T14:55:16+09:00" pubdate data-updated="true">Nov 25<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ソーシャルログインだけでなく、通常のログインもやりたかったので、django-allauthを試してみた。</p>
+
+<h2>インストール</h2>
+
+<p>pipで</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>pip install django-allauth
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>ファイルでの設定</h2>
+
+<p>settings.pyとurls.pyを設定</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/11/25/use-django-allauth/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -618,58 +669,6 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/08/06/django-error/">Djangoで出てくるエラーメッセージメモ</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-08-06T15:42:43+09:00" pubdate data-updated="true">Aug 6<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Djangoでエラーメッセージが出た時に、どこから当たりを付けていくか
-イチイチググってるので、まとめておく。逐次追記。</p>
-
-<h2>other_dict must be a mapping (dictionary-like) object</h2>
-
-<p>returnで返す時のdictionaryが</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{'a','b'}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>となってないかチェック。正しくは</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/08/06/django-error/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -701,6 +700,10 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/12/17/mono-winforms-garbled-on-mac/">Mono Winformsがmacで文字化けする件</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/11/29/output-msil-manually/">Msilを手動で出力する</a>
       </li>
     
@@ -714,10 +717,6 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
     
       <li class="post">
         <a href="/blog/2015/08/25/migrate-from-django-1-dot-7-to-1-dot-8/">Django 1.7から1.8にアップデートしてみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/08/12/javascript-memo/">Javascript Memo</a>
       </li>
     
   </ul>
@@ -745,7 +744,7 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
 	<li class='category'><a href='/blog/categories/analytics/'>Analytics (1)</a></li>
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
-<li class='category'><a href='/blog/categories/csharp/'>CSharp (6)</a></li>
+<li class='category'><a href='/blog/categories/csharp/'>CSharp (7)</a></li>
 <li class='category'><a href='/blog/categories/django/'>Django (21)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
@@ -764,7 +763,7 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
 <li class='category'><a href='/blog/categories/linux/'>linux (12)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (14)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
-<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (7)</a></li>
+<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (8)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>

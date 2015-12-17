@@ -4,7 +4,7 @@
   <title><![CDATA[Category: CSharp | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/csharp/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-12-15T20:44:00+09:00</updated>
+  <updated>2015-12-17T14:04:03+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,58 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[mono winformsがmacで文字化けする件]]></title>
+    <link href="http://blog.shigepon.info/blog/2015/12/17/mono-winforms-garbled-on-mac/"/>
+    <updated>2015-12-17T08:55:02+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2015/12/17/mono-winforms-garbled-on-mac</id>
+    <content type="html"><![CDATA[<p>なでしこ2にフォームの機能入れるためにmonoのWinFormを試しているが、どうにも文字化けが治らないので、途中経過までのメモ。取りあえずボタンは文字化けしないようになった。</p>
+
+<h2>Fontプロパティを設定する</h2>
+
+<p><code>csharp
+using System;
+using System.Windows.Forms;
+using System.Drawing;
+...
+Form win = new Form();
+win.Font = new Font ("Osaka", 10);
+...
+</code></p>
+
+<p>こんな感じ。</p>
+
+<h2>~/.config/fonts.confを設定</h2>
+
+<p>とりあえず必ず日本語フォントにするように設定してみる</p>
+
+<p>```
+<fontconfig>
+<match target="pattern">
+  <edit name="family" mode="assign" binding="strong"></p>
+
+<pre><code>&lt;string&gt;Hiragino Kaku Gothic Pro W3&lt;/strong&gt;
+</code></pre>
+
+<p>  </edit>
+</match>
+</fontconfig>
+```</p>
+
+<p>一応どっちもメインフォームにボタン貼付けくらいなら日本語になった。でもメインフォームのタイトルが文字化けするのが治らない。メインフォームは豆腐でない文字化けなので、フォントじゃないような気がする。どうしたものか。</p>
+
+<p>とここまで書いて、Eto.Formsっての使ってみた方が今後を考えると良いんじゃないかと思い始めたのでこれ以上やらないと思う。</p>
+
+<p>ここまでで参考にしたページ（情報少ない）</p>
+
+<ul>
+<li><a href="http://risky-safety.org/zinnia/d/2011/09/">Zinnia hacks tomorrow.</a> 一番参考になった</li>
+<li><a href="http://www.slideshare.net/babatakao/font-config">Fontconfigことはじめ</a> fontconfig回り</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[msilを手動で出力する]]></title>
@@ -461,63 +513,6 @@ nako_addFunction(&amp;quot;sample01&amp;quot;&amp;cedil;&amp;quot;&amp;quot;&amp
 <blockquote><p>vnako.exe と同じフォルダに配置したらエラー出ませんでした。たぶん、plug-ins フォルダにパスを通さない限り、DLLがもう一方を参照できなくなるのだと思います。</p></blockquote>
 
 <p>という返事が！まじで！？と思い試してみると・・・上手くいくじゃないですか！これでC#で作ったdllもなでしこで利用できるようになりました。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[C#で作ったdllをC++/CLIで使う]]></title>
-    <link href="http://blog.shigepon.info/blog/2014/01/28/nadesiko-plugin-cs/"/>
-    <updated>2014-01-28T22:27:58+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2014/01/28/nadesiko-plugin-cs</id>
-    <content type="html"><![CDATA[<p><strong>画像やファイルが無くなっていますがご了承下さい</strong></p>
-
-<p>なでしこでプラグインを作る時にC#を使いたかったので、本格的にdllを作る前に、C++/CLIからMessageBoxを表示する程度のC#のdllを呼び出してみました。</p>
-
-<p>C#のdllコード</p>
-
-<p>```
-using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using System.Text;
-namespace ClassLibrary1{</p>
-
-<pre><code>public class Class1
-{
-    public static void Method1()
-    {
-        MessageBox.Show(&amp;quot;method1&amp;quot;);
-    }
-}
-</code></pre>
-
-<p>}
-```</p>
-
-<!-- more -->
-
-
-<p>C++フォームアプリケーション</p>
-
-<p>C#で作ったdllの参照とかフォームの構成とか画像が消えちゃったので適当に想像してください。
-用はC++のアプリケーションでC#のdllを参照します。</p>
-
-<p>ボタンクリック時のコード</p>
-
-<p>```</p>
-
-<pre><code>private: System::Void button1_Click(System::Object^  sender&amp;cedil; System::EventArgs^  e) {
-     try{
-        ClassLibrary1::Class1::Method1();
-     }catch(Exception^ e){
-        System::Windows::Forms::MessageBox::Show(e-&amp;gt;Message);
-     }
- }
-</code></pre>
-
-<p>```</p>
-
-<p>で動かしてみるときちんと動かせました。</p>
 ]]></content>
   </entry>
   
