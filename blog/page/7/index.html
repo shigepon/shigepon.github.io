@@ -9,7 +9,11 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Rails4にはjbuilderが標準で入っていて、viewを設定するだけでJSON出力が可能ならしい。 例えばRails4でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データ一覧ページを作って、詳細ページへのリンクを貼る &ndash; &hellip;">
+  <meta name="description" content="Nginx, Unicorn, Rails4でurl_forを使ったら変なURLになってしまったので対処法を書いておく Ninxで 1
+2
+server hoge.com;
+proxy_pass http://upstream; のような設定をしているとurl_forで 1
+http://hoge &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +83,63 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/05/rails-url-for-shows-proxy-pass/">Railsでurl forを使ったらshows proxy passで設定したURLになってしまう件</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-05T14:00:54+09:00" pubdate data-updated="true">May 5<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Nginx, Unicorn, Rails4でurl_forを使ったら変なURLになってしまったので対処法を書いておく</p>
+
+<p>Ninxで</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>server hoge.com;
+</span><span class='line'>proxy_pass http://upstream;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>のような設定をしているとurl_forで</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>http://hoge.com</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/05/rails-url-for-shows-proxy-pass/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -681,66 +742,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/10/a-way-of-creating-rails-application2/">Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(2):データベースにPostgreSQLを使ってみた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-10T18:10:41+09:00" pubdate data-updated="true">Mar 10<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>参考にした記事URL一覧</p>
-
-<ul>
-<li><a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a></li>
-<li><a href="http://www.oiax.jp/rails3book/setup_postgresql.html">データベースとの接続（PostgreSQL編） &ndash; Ruby on Rails with OIAX</a></li>
-<li><a href="http://qiita.com/stkn_bb/items/72d06c149d3e6f315f8c">[Rails]既存のMySQLテーブルに接続する方法 &ndash; Qiita</a></li>
-</ul>
-
-
-<p>前回に引き続き<a href="http://openbook4.me/projects/92">小学生でもわかるRuby on Rails入門 | OpenBook</a>を参考にしているが、色々すっとばしてデータベースを作るところをなぞる。
-どうもモデルを作って、コマンド打ったら自動的にテーブル作ってくれてよしなにしてくれるらしい。</p>
-
-<p>ではモデルを作る。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>rails g model event name:string date:timestamp
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/03/10/a-way-of-creating-rails-application2/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/8/">&larr; Older</a>
@@ -772,6 +773,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/01/06/track-button-click-at-google-tag-manager/">Google Tag Managerを使ってボタンのクリックを検出する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/12/17/mono-winforms-garbled-on-mac/">Mono Winformsがmacで文字化けする件</a>
       </li>
     
@@ -785,10 +790,6 @@
     
       <li class="post">
         <a href="/blog/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04/">ubuntu12.04でpg bulkloadを使う</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/08/25/migrate-from-django-1-dot-7-to-1-dot-8/">Django 1.7から1.8にアップデートしてみた</a>
       </li>
     
   </ul>
@@ -813,7 +814,7 @@
 <section>
 <h1>Categories</h1>
 <ul id="categories">
-	<li class='category'><a href='/blog/categories/analytics/'>Analytics (1)</a></li>
+	<li class='category'><a href='/blog/categories/analytics/'>Analytics (2)</a></li>
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (7)</a></li>

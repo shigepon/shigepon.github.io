@@ -9,15 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="なでしこ2にフォームの機能入れるためにmonoのWinFormを試しているが、どうにも文字化けが治らないので、途中経過までのメモ。取りあえずボタンは文字化けしないようになった。 Fontプロパティを設定する 1
-2
-3
-4
-5
-6
-7
-using System;
-using System. &hellip;">
+  <meta name="description" content="Google Tag Manager(多分現在はバージョン2)を使ってリンクのクリックをAnalyticsに検出させる方法はちょこちょこ書いてあるけど、ボタンのクリックを検出する方法が書いてなかったのでメモ。例としてIDがhogeのボタンクリックを検出してみる 変数の設定 google tag &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +79,93 @@ using System. &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/01/06/track-button-click-at-google-tag-manager/">Google Tag Managerを使ってボタンのクリックを検出する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-01-06T11:43:41+09:00" pubdate data-updated="true">Jan 6<span>th</span>, 2016</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Google Tag Manager(多分現在はバージョン2)を使ってリンクのクリックをAnalyticsに検出させる方法はちょこちょこ書いてあるけど、ボタンのクリックを検出する方法が書いてなかったのでメモ。例としてIDがhogeのボタンクリックを検出してみる</p>
+
+<h2>変数の設定</h2>
+
+<p>google tag managerのコンテナ画面で、左サイドメニューの「変数」をクリックすると「クリック」という項目が色々ある。初期ではチェックが外れている。これを全てチェックしておく（実際はID指定でクリックを検出したいならClick IDをチェックすれば良いとかあるけど全部チェックしておくと無難）</p>
+
+<h2>トリガー作成</h2>
+
+<p>同じく左サイドメニューの「トリガー」をクリックする。「新規」ボタンを押してトリガーを新規作成する。そこからは下のようにする</p>
+
+<ul>
+<li>1.イベントを選択→クリック</li>
+<li>2.トリガーを設定、ターゲット→すべての要素→続行をクリック</li>
+<li>3.配信するタイミング→一部のクリック→Click ID、等しいの順に選択→hogeと入力→トリガーを作成ボタンをクリック</li>
+<li>名前を聞かれるので分かる名前にする。例としてfugaとしておく</li>
+</ul>
+
+
+<h2>タグ作成</h2>
+
+<p>同じく左サイドメニューの「タグ」をクリックする。「新規」ボタンを押してタグを新規作成する。そこからは下のようにする</p>
+
+<ul>
+<li>1.プロダクトを選択→GoogleAnalytics</li>
+<li>2.タグの種類を選択→ユニバーサル　アナリティクス</li>
+<li>3.タグを設定→下のように設定して続行ボタンをクリック</li>
+<li>トラッキングID→AnalyticsのトラッキングID（UA-xxxx-xxxxxみたいな）</li>
+<li>ディスプレイ広告向け機能を有効にする→どっちでも</li>
+<li>トラッキングタイプ→イベント</li>
+<li>カテゴリ→適当（Buttonとかで良い？）</li>
+<li>アクション→適当（clickとか？）</li>
+<li>ラベル→適当（hogeとか？）</li>
+<li>その他はそのまま</li>
+<li>4.配信するタイミング→クリック</li>
+<li>「既存のクリック　トリガーから選択」が出てくるので作ったトリガーをチェック→「保存」ボタンをクリック</li>
+<li>「タグを作成」ボタンをクリック</li>
+</ul>
+
+
+<h2>プレビュー</h2>
+
+<p>まだ良く分かってない。作った設定を当てはめる前にチェックが出来るらしい。</p>
+
+<h2>公開</h2>
+
+<p>右上の「公開」ボタンをクリックして出てくるダイアログで「今すぐ公開」をクリックすると作った設定を当てはめることが出来る。</p>
+
+<h2>確認</h2>
+
+<p>Chromeなら<a href="https://chrome.google.com/webstore/detail/tag-assistant-by-google/kejbdjndbnbjgmefkgdddjlbokphdefk">Tag Assistant</a>って拡張があるのでこれをインストールして確認する。実際にクリックしてみてAnalyticsで検出を確認するのでもおk</p>
+
+<p>参考：<a href="http://konygin.net/gtm/tracking-buttons-en/">Buttons tracking at Google Tag Manager 2.0</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1557,102 +1636,6 @@ ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/">なでしこ2でssl使うとthe Authentication or Decription Has Failedエラーが出る件</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-07-20T20:12:34+09:00" pubdate data-updated="true">Jul 20<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>結論から言うとmonoの問題だった。</p>
-
-<p>参考：</p>
-
-<ul>
-<li><a href="http://d.hatena.ne.jp/unarist/20110601/1306945858">MonoでSSL接続しようとしたら怒られた &ndash; うなてっくろぐ</a></li>
-<li><a href="https://ramorenoc.wordpress.com/2012/12/05/the-authentication-or-decryption-has-failed-mono/">The authentication or decryption has failed – Mono | Code Adventures</a></li>
-<li><a href="http://ubuntuforums.org/showthread.php?t=1841740">Problems using SSL in C#</a></li>
-</ul>
-
-
-<p>なでしこ2でsslにアクセスするとエラーが出る</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>「https://どこかhttpsでアクセスするurl」からHTTPデータ取得してそれを表示</span></code></pre></td></tr></table></div></figure>
-
-
-<p>エラーメッセージはこんな感じ</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[SystemError]Error getting response stream (Write: The authentication or decryption has failed.): SendFailure  at System.Net.HttpWebRequest.EndGetResponse (IAsyncResult asyncResult) [0x00000] in &lt;filename unknown&gt;:0 
-</span><span class='line'>  at System.Net.HttpWebRequest.GetResponse () [0x00000] in &lt;filename unknown&gt;:0 
-</span><span class='line'>  at System.Net.WebClient.GetWebResponse (System.Net.WebRequest request) [0x00000] in &lt;filename unknown&gt;:0 
-</span><span class='line'>  at System.Net.WebClient.ReadAll (System.Net.WebRequest request, System.Object userToken) [0x00000] in &lt;filename unknown&gt;:0 
-</span><span class='line'>  at System.Net.WebClient.DownloadDataCore (System.Uri address, System.Object userToken) [0x00000] in &lt;filename unknown&gt;:0</span></code></pre></td></tr></table></div></figure>
-
-
-<p>調べてみると、コードで何とかなるというのがまず出て来たので、試してみたら対処出来た。C#のコードはこんな感じ</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="k">public</span> <span class="n">Object</span> <span class="nf">_dataGet</span><span class="p">(</span><span class="n">INakoFuncCallInfo</span> <span class="n">info</span><span class="p">)</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="n">System</span><span class="p">.</span><span class="n">Net</span><span class="p">.</span><span class="n">ServicePointManager</span><span class="p">.</span><span class="n">ServerCertificateValidationCallback</span> <span class="p">+=</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">ce</span><span class="p">,</span><span class="n">ca</span><span class="p">,</span><span class="n">p</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="k">true</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">....</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ただし、この対処だとhttpアクセスとhttpsアクセスが大差なくなるみたいなことが書いてあったので、これじゃいかんなともうちょっと調べてみると、要はmonoにルート証明書がインストールされてなかったのが原因らしかった。対処法は参考にしたページほぼそのままで</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>mozroots --import --sync
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>サードパーティーの認証を受入れる場合は</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>certmgr -ssl https://どこかhttpsでアクセスするドメイン
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>この認証本当に受入れていいの？みたいなメッセージが出たら「y」を押せばおk</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1682,6 +1665,10 @@ ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/01/06/track-button-click-at-google-tag-manager/">Google Tag Managerを使ってボタンのクリックを検出する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/12/17/mono-winforms-garbled-on-mac/">Mono Winformsがmacで文字化けする件</a>
       </li>
     
@@ -1695,10 +1682,6 @@ ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
     
       <li class="post">
         <a href="/blog/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04/">ubuntu12.04でpg bulkloadを使う</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/08/25/migrate-from-django-1-dot-7-to-1-dot-8/">Django 1.7から1.8にアップデートしてみた</a>
       </li>
     
   </ul>
@@ -1723,7 +1706,7 @@ ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
 <section>
 <h1>Categories</h1>
 <ul id="categories">
-	<li class='category'><a href='/blog/categories/analytics/'>Analytics (1)</a></li>
+	<li class='category'><a href='/blog/categories/analytics/'>Analytics (2)</a></li>
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (7)</a></li>

@@ -5,13 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Ubuntu12.04でjenkinsのインストールと設定 - shigeponが関心のある技術情報など</title>
+  <title>Google Tag Managerを使ってボタンのクリックを検出する - shigeponが関心のある技術情報など</title>
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Ubuntu 12.04 LTS に Jenkins をインストール &ndash; MELODIC-Xを参考にして設定した。
-Jenkins本体でアップグレード可能らしいので、aptitudeでインストール 1
-$ sudo aptitude install jenkins Nginx設定 1 &hellip;">
+  <meta name="description" content="Google Tag Manager(多分現在はバージョン2)を使ってリンクのクリックをAnalyticsに検出させる方法はちょこちょこ書いてあるけど、ボタンのクリックを検出する方法が書いてなかったのでメモ。例としてIDがhogeのボタンクリックを検出してみる 変数の設定 google tag &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +18,7 @@ $ sudo aptitude install jenkins Nginx設定 1 &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.shigepon.info/blog/2014/06/18/jenkins-setting">
+  <link rel="canonical" href="http://blog.shigepon.info/blog/2016/01/06/track-button-click-at-google-tag-manager">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
@@ -84,7 +82,7 @@ $ sudo aptitude install jenkins Nginx設定 1 &hellip;">
   
   <header>
     
-      <h1 class="entry-title">Ubuntu12.04でjenkinsのインストールと設定</h1>
+      <h1 class="entry-title">Google Tag Managerを使ってボタンのクリックを検出する</h1>
     
     
       <p class="meta">
@@ -100,62 +98,65 @@ $ sudo aptitude install jenkins Nginx設定 1 &hellip;">
   
 
 
-<time datetime="2014-06-18T15:08:25+09:00" pubdate data-updated="true">Jun 18<span>th</span>, 2014</time>
+<time datetime="2016-01-06T11:43:41+09:00" pubdate data-updated="true">Jan 6<span>th</span>, 2016</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p><a href="http://jnst.hateblo.jp/entry/2013/10/03/123012">Ubuntu 12.04 LTS に Jenkins をインストール &ndash; MELODIC-X</a>を参考にして設定した。
-Jenkins本体でアップグレード可能らしいので、aptitudeでインストール</p>
+<div class="entry-content"><p>Google Tag Manager(多分現在はバージョン2)を使ってリンクのクリックをAnalyticsに検出させる方法はちょこちょこ書いてあるけど、ボタンのクリックを検出する方法が書いてなかったのでメモ。例としてIDがhogeのボタンクリックを検出してみる</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install jenkins
-</span></code></pre></td></tr></table></div></figure>
+<h2>変数の設定</h2>
 
+<p>google tag managerのコンテナ画面で、左サイドメニューの「変数」をクリックすると「クリック」という項目が色々ある。初期ではチェックが外れている。これを全てチェックしておく（実際はID指定でクリックを検出したいならClick IDをチェックすれば良いとかあるけど全部チェックしておくと無難）</p>
 
-<h2>Nginx設定</h2>
+<h2>トリガー作成</h2>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>location /jenkins <span class="o">{</span>
-</span><span class='line'>  proxy_pass http://127.0.0.1:8080;
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+<p>同じく左サイドメニューの「トリガー」をクリックする。「新規」ボタンを押してトリガーを新規作成する。そこからは下のようにする</p>
 
+<ul>
+<li>1.イベントを選択→クリック</li>
+<li>2.トリガーを設定、ターゲット→すべての要素→続行をクリック</li>
+<li>3.配信するタイミング→一部のクリック→Click ID、等しいの順に選択→hogeと入力→トリガーを作成ボタンをクリック</li>
+<li>名前を聞かれるので分かる名前にする。例としてfugaとしておく</li>
+</ul>
 
 
+<h2>タグ作成</h2>
 
-<!-- more -->
+<p>同じく左サイドメニューの「タグ」をクリックする。「新規」ボタンを押してタグを新規作成する。そこからは下のようにする</p>
 
-
-<p>で、nginxは起動してたので再読み込み</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo service nginx reload
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Jenkins設定ファイル修正</h2>
-
-<p>jenkinsの設定ファイルは/etc/default/jenkinsにあるので編集
-最下行の起動パラメーターに</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>--prefix<span class="o">=</span>/jenkins
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>を追加。jenkins再起動</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo service jenkins restart
-</span></code></pre></td></tr></table></div></figure>
+<ul>
+<li>1.プロダクトを選択→GoogleAnalytics</li>
+<li>2.タグの種類を選択→ユニバーサル　アナリティクス</li>
+<li>3.タグを設定→下のように設定して続行ボタンをクリック</li>
+<li>トラッキングID→AnalyticsのトラッキングID（UA-xxxx-xxxxxみたいな）</li>
+<li>ディスプレイ広告向け機能を有効にする→どっちでも</li>
+<li>トラッキングタイプ→イベント</li>
+<li>カテゴリ→適当（Buttonとかで良い？）</li>
+<li>アクション→適当（clickとか？）</li>
+<li>ラベル→適当（hogeとか？）</li>
+<li>その他はそのまま</li>
+<li>4.配信するタイミング→クリック</li>
+<li>「既存のクリック　トリガーから選択」が出てくるので作ったトリガーをチェック→「保存」ボタンをクリック</li>
+<li>「タグを作成」ボタンをクリック</li>
+</ul>
 
 
-<p>以上</p>
+<h2>プレビュー</h2>
+
+<p>まだ良く分かってない。作った設定を当てはめる前にチェックが出来るらしい。</p>
+
+<h2>公開</h2>
+
+<p>右上の「公開」ボタンをクリックして出てくるダイアログで「今すぐ公開」をクリックすると作った設定を当てはめることが出来る。</p>
+
+<h2>確認</h2>
+
+<p>Chromeなら<a href="https://chrome.google.com/webstore/detail/tag-assistant-by-google/kejbdjndbnbjgmefkgdddjlbokphdefk">Tag Assistant</a>って拡張があるのでこれをインストールして確認する。実際にクリックしてみてAnalyticsで検出を確認するのでもおk</p>
+
+<p>参考：<a href="http://konygin.net/gtm/tracking-buttons-en/">Buttons tracking at Google Tag Manager 2.0</a></p>
 </div>
 
 
@@ -178,15 +179,21 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
   
 
 
-<time datetime="2014-06-18T15:08:25+09:00" pubdate data-updated="true">Jun 18<span>th</span>, 2014</time>
+<time datetime="2016-01-06T11:43:41+09:00" pubdate data-updated="true">Jan 6<span>th</span>, 2016</time>
       
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/analytics/'>Analytics</a>
+  
+</span>
 
 
     </p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.info/blog/2014/06/18/jenkins-setting/" data-via="shigepon" data-counturl="http://blog.shigepon.info/blog/2014/06/18/jenkins-setting/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.info/blog/2016/01/06/track-button-click-at-google-tag-manager/" data-via="shigepon" data-counturl="http://blog.shigepon.info/blog/2016/01/06/track-button-click-at-google-tag-manager/" >Tweet</a>
   
   
   
@@ -206,10 +213,8 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/06/18/start-django-project/" title="Previous Post: Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずDjangoプロジェクトとアプリを作ってみた">&laquo; Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずDjangoプロジェクトとアプリを作ってみた</a>
+        <a class="basic-alignment left" href="/blog/2015/12/17/mono-winforms-garbled-on-mac/" title="Previous Post: mono winformsがmacで文字化けする件">&laquo; mono winformsがmacで文字化けする件</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/06/19/make-detail-page-using-django-2/" title="Next Post: 詳細ページを作る：DjangoでPostgreSQLとBootstrapを使ったアプリを作ってみた(2)">詳細ページを作る：DjangoでPostgreSQLとBootstrapを使ったアプリを作ってみた(2) &raquo;</a>
       
     </p>
   </footer>

@@ -9,7 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="参考：PHPのエラーログが肥大してPHPが動かなくなった話 ある日、運用しているサービスがサーバエラーを頻出しだしたので、調べてみた。環境はUbuntu、nginx、php-fpm、postgresql。 他のサーバへのdbアクセスがおかしくなったのかと思い、他の方法でdbアクセス→問題無し &hellip;">
+  <meta name="description" content="uwsgi関連ではまった点などをメモ invalid request block size ajaxでサーバ側からデータを読み込むライブラリを使ってると、条件によって502エラーが出てる(=大体djangoとかのプログラム側のエラーで出る)ので、uwsgiのログを調べると、invalid &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,60 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/03/05/uwsgi-memo/">Uwsgiメモ</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-03-05T10:21:54+09:00" pubdate data-updated="true">Mar 5<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>uwsgi関連ではまった点などをメモ</p>
+
+<h2>invalid request block size</h2>
+
+<p>ajaxでサーバ側からデータを読み込むライブラリを使ってると、条件によって502エラーが出てる(=大体djangoとかのプログラム側のエラーで出る)ので、uwsgiのログを調べると、invalid request block sizeというエラーが出てた。</p>
+
+<p>んで、調べてみると、uwsgiがリクエストのサイズが大きすぎるとエラーを吐いているらしい。ライブラリ側で勝手にパラメーター付けて送られてリクエストのサイズが大きくなっているので、こりゃ調整しないとなということで調べてみた。起動時にオプション設定するか、iniファイルで設定したらいけるらしい</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>uwsgi --buffer-size<span class="o">=</span>xxxx
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/03/05/uwsgi-memo/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -580,59 +634,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/25/kobe-dot-r-no-13/">Kobe.R No 13に参加してきました</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-11-25T23:33:42+09:00" pubdate data-updated="true">Nov 25<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>勉強会の話なので丁寧語で。11/24に<a href="http://kobexr.doorkeeper.jp/events/16989">Kobe.R #13</a>があったので参加してきました。<a href="http://blog.shigepon.info/blog/2014/10/28/kobe-dot-r-no-12/">前回</a>は大阪だったのですが今回は三宮で開かれました。今回はオープンデータ特集ということで、Rのネタもちょびっとある予定だったのですが、話がいっぱいあって結局オープンデータの話のみとなりました。Rネタだけでなく、データを扱う全般を範囲としているKobe.Rならではです。</p>
-
-<p>内容盛りだくさんなので、毎度忘れてる人や内容があって申し訳ないですが、感想です。</p>
-
-<h2>オープンデータとLinked Open Data</h2>
-
-<p>古崎さん</p>
-
-<p>Open Dataは今色々イベントやハッカソン、コンテストなどやってますよという話とオープンデータは誰でも自由に使える形で、さらに自分のデータにURI用意したり、他のデータにリンクしたりするともっとデータとしていいよという話でした。あとLinked Open DataはLODと略すそうです。</p>
-
-<p>リンクというのがあまりイメージ出来なかったけど、次の上田さんの発表で実際に動かしているところを見るとなるほどと思いました。</p>
-
-<p>ちなみに、12月7日の日曜日にOIHってとこ（グランドフロント大阪内）でLODハッカソン関西があるそうです。見てる人が居るかどうか知らないけど興味がある人は是非。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/11/25/kobe-dot-r-no-13/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -664,6 +665,10 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/01/06/track-button-click-at-google-tag-manager/">Google Tag Managerを使ってボタンのクリックを検出する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/12/17/mono-winforms-garbled-on-mac/">Mono Winformsがmacで文字化けする件</a>
       </li>
     
@@ -677,10 +682,6 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
     
       <li class="post">
         <a href="/blog/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04/">ubuntu12.04でpg bulkloadを使う</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/08/25/migrate-from-django-1-dot-7-to-1-dot-8/">Django 1.7から1.8にアップデートしてみた</a>
       </li>
     
   </ul>
@@ -705,7 +706,7 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 <section>
 <h1>Categories</h1>
 <ul id="categories">
-	<li class='category'><a href='/blog/categories/analytics/'>Analytics (1)</a></li>
+	<li class='category'><a href='/blog/categories/analytics/'>Analytics (2)</a></li>
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (7)</a></li>

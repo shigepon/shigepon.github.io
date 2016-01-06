@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2016-01-06T09:34:02+09:00</updated>
+  <updated>2016-01-06T12:12:22+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,66 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Google Tag Managerを使ってボタンのクリックを検出する]]></title>
+    <link href="http://blog.shigepon.info/blog/2016/01/06/track-button-click-at-google-tag-manager/"/>
+    <updated>2016-01-06T11:43:41+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2016/01/06/track-button-click-at-google-tag-manager</id>
+    <content type="html"><![CDATA[<p>Google Tag Manager(多分現在はバージョン2)を使ってリンクのクリックをAnalyticsに検出させる方法はちょこちょこ書いてあるけど、ボタンのクリックを検出する方法が書いてなかったのでメモ。例としてIDがhogeのボタンクリックを検出してみる</p>
+
+<h2>変数の設定</h2>
+
+<p>google tag managerのコンテナ画面で、左サイドメニューの「変数」をクリックすると「クリック」という項目が色々ある。初期ではチェックが外れている。これを全てチェックしておく（実際はID指定でクリックを検出したいならClick IDをチェックすれば良いとかあるけど全部チェックしておくと無難）</p>
+
+<h2>トリガー作成</h2>
+
+<p>同じく左サイドメニューの「トリガー」をクリックする。「新規」ボタンを押してトリガーを新規作成する。そこからは下のようにする</p>
+
+<ul>
+<li>1.イベントを選択→クリック</li>
+<li>2.トリガーを設定、ターゲット→すべての要素→続行をクリック</li>
+<li>3.配信するタイミング→一部のクリック→Click ID、等しいの順に選択→hogeと入力→トリガーを作成ボタンをクリック</li>
+<li>名前を聞かれるので分かる名前にする。例としてfugaとしておく</li>
+</ul>
+
+
+<h2>タグ作成</h2>
+
+<p>同じく左サイドメニューの「タグ」をクリックする。「新規」ボタンを押してタグを新規作成する。そこからは下のようにする</p>
+
+<ul>
+<li>1.プロダクトを選択→GoogleAnalytics</li>
+<li>2.タグの種類を選択→ユニバーサル　アナリティクス</li>
+<li>3.タグを設定→下のように設定して続行ボタンをクリック</li>
+<li>トラッキングID→AnalyticsのトラッキングID（UA-xxxx-xxxxxみたいな）</li>
+<li>ディスプレイ広告向け機能を有効にする→どっちでも</li>
+<li>トラッキングタイプ→イベント</li>
+<li>カテゴリ→適当（Buttonとかで良い？）</li>
+<li>アクション→適当（clickとか？）</li>
+<li>ラベル→適当（hogeとか？）</li>
+<li>その他はそのまま</li>
+<li>4.配信するタイミング→クリック</li>
+<li>「既存のクリック　トリガーから選択」が出てくるので作ったトリガーをチェック→「保存」ボタンをクリック</li>
+<li>「タグを作成」ボタンをクリック</li>
+</ul>
+
+
+<h2>プレビュー</h2>
+
+<p>まだ良く分かってない。作った設定を当てはめる前にチェックが出来るらしい。</p>
+
+<h2>公開</h2>
+
+<p>右上の「公開」ボタンをクリックして出てくるダイアログで「今すぐ公開」をクリックすると作った設定を当てはめることが出来る。</p>
+
+<h2>確認</h2>
+
+<p>Chromeなら<a href="https://chrome.google.com/webstore/detail/tag-assistant-by-google/kejbdjndbnbjgmefkgdddjlbokphdefk">Tag Assistant</a>って拡張があるのでこれをインストールして確認する。実際にクリックしてみてAnalyticsで検出を確認するのでもおk</p>
+
+<p>参考：<a href="http://konygin.net/gtm/tracking-buttons-en/">Buttons tracking at Google Tag Manager 2.0</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[mono winformsがmacで文字化けする件]]></title>
@@ -2215,49 +2275,6 @@ ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
 
 
 <p>以上やってみたら、エラーは出ずにプロジェクトをDjango1.7に対応できた。めでたしめでたし。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[uwsgiメモ]]></title>
-    <link href="http://blog.shigepon.info/blog/2015/03/05/uwsgi-memo/"/>
-    <updated>2015-03-05T10:21:54+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2015/03/05/uwsgi-memo</id>
-    <content type="html"><![CDATA[<p>uwsgi関連ではまった点などをメモ</p>
-
-<h2>invalid request block size</h2>
-
-<p>ajaxでサーバ側からデータを読み込むライブラリを使ってると、条件によって502エラーが出てる(=大体djangoとかのプログラム側のエラーで出る)ので、uwsgiのログを調べると、invalid request block sizeというエラーが出てた。</p>
-
-<p>んで、調べてみると、uwsgiがリクエストのサイズが大きすぎるとエラーを吐いているらしい。ライブラリ側で勝手にパラメーター付けて送られてリクエストのサイズが大きくなっているので、こりゃ調整しないとなということで調べてみた。起動時にオプション設定するか、iniファイルで設定したらいけるらしい</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>uwsgi --buffer-size<span class="o">=</span>xxxx
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<!-- more -->
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ini'><span class='line'><span class="err">...</span>
-</span><span class='line'><span class="na">buffer-size</span><span class="o">=</span> <span class="s">xxxx</span>
-</span><span class='line'><span class="err">...</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<!-- more -->
-
-
-<p>参考：<a href="http://stackoverflow.com/questions/15878176/uwsgi-invalid-request-block-size">uwsgi invalid request block size &ndash; Stack Overflow</a></p>
 ]]></content>
   </entry>
   

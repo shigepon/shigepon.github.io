@@ -9,12 +9,10 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Octopressのインストール後に行ったカスタマイズをまとめておきます。 外部リンクを別ウィンドウで開く 下のコードを追加します :source/_inclides/custom/head.html1
-2
-3
-4
-5
-&lt;script language=&quot;JavaScript& &hellip;">
+  <meta name="description" content="rhaco3で作ったWebサービス全体にBasic認証をかけた時にちょっとハマったのでメモ。 症状 rhaco3の認証が入っているサービスで全体にBasic認証をかけると、 トップページに入る時にBasic認証がかかる
+認証完了
+ログインページに移動
+またBasic認証がかかる &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,6 +82,61 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/03/basic-auth/">Basic認証する時に気をつけること</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-03T07:48:33+09:00" pubdate data-updated="true">Feb 3<span>rd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>rhaco3で作ったWebサービス全体にBasic認証をかけた時にちょっとハマったのでメモ。</p>
+
+<h2>症状</h2>
+
+<p>rhaco3の認証が入っているサービスで全体にBasic認証をかけると、</p>
+
+<ol>
+<li>トップページに入る時にBasic認証がかかる</li>
+<li>認証完了</li>
+<li>ログインページに移動</li>
+<li>またBasic認証がかかる</li>
+</ol>
+
+
+<p>というケースが見られました。Webサーバにはnginxを使いました。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/02/03/basic-auth/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -733,6 +786,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/01/06/track-button-click-at-google-tag-manager/">Google Tag Managerを使ってボタンのクリックを検出する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/12/17/mono-winforms-garbled-on-mac/">Mono Winformsがmacで文字化けする件</a>
       </li>
     
@@ -746,10 +803,6 @@
     
       <li class="post">
         <a href="/blog/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04/">ubuntu12.04でpg bulkloadを使う</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/08/25/migrate-from-django-1-dot-7-to-1-dot-8/">Django 1.7から1.8にアップデートしてみた</a>
       </li>
     
   </ul>
@@ -774,7 +827,7 @@
 <section>
 <h1>Categories</h1>
 <ul id="categories">
-	<li class='category'><a href='/blog/categories/analytics/'>Analytics (1)</a></li>
+	<li class='category'><a href='/blog/categories/analytics/'>Analytics (2)</a></li>
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (7)</a></li>
