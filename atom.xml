@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2016-01-06T12:15:00+09:00</updated>
+  <updated>2016-01-06T12:17:29+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -43,14 +43,14 @@
 <ul>
 <li>1.プロダクトを選択→GoogleAnalytics</li>
 <li>2.タグの種類を選択→ユニバーサル　アナリティクス</li>
-<li>3.タグを設定→下のように設定して続行ボタンをクリック</li>
-<li>トラッキングID→AnalyticsのトラッキングID（UA-xxxx-xxxxxみたいな）</li>
-<li>ディスプレイ広告向け機能を有効にする→どっちでも</li>
-<li>トラッキングタイプ→イベント</li>
-<li>カテゴリ→適当（Buttonとかで良い？）</li>
-<li>アクション→適当（clickとか？）</li>
-<li>ラベル→適当（hogeとか？）</li>
-<li>その他はそのまま</li>
+<li>3.タグを設定→下のように設定して続行ボタンをクリック
+++ トラッキングID→AnalyticsのトラッキングID（UA-xxxx-xxxxxみたいな）
+++ ディスプレイ広告向け機能を有効にする→どっちでも
+++ トラッキングタイプ→イベント
+++ カテゴリ→適当（Buttonとかで良い？）
+++ アクション→適当（clickとか？）
+++ ラベル→適当（hogeとか？）
+++ その他はそのまま</li>
 <li>4.配信するタイミング→クリック</li>
 <li>「既存のクリック　トリガーから選択」が出てくるので作ったトリガーをチェック→「保存」ボタンをクリック</li>
 <li>「タグを作成」ボタンをクリック</li>
