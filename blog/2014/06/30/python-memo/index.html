@@ -481,6 +481,21 @@ subprocessを使う。何か昔は別の手法だったらしい。</p>
 <p>こんな感じ。整数ならbasestringをintにするとかやればおk</p>
 
 <p>参考：<a href="http://stackoverflow.com/questions/4843173/how-to-check-if-type-of-a-variable-is-string-in-python">How to check if type of a variable is string in python? &ndash; Stack OverflowHow to check if type of a variable is string in python? &ndash; Stack Overflow</a></p>
+
+<h3>formatにリストを渡す</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">l</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;hoge&#39;</span><span class="p">,</span><span class="s">&#39;fuga&#39;</span><span class="p">,</span><span class="s">&#39;hage&#39;</span><span class="p">]</span>
+</span><span class='line'><span class="k">print</span> <span class="s">&quot;{0},{1},{2}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">l</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">hoge</span><span class="p">,</span><span class="n">fuga</span><span class="p">,</span><span class="n">hage</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じ。</p>
 </div>
 
 
@@ -687,7 +702,7 @@ subprocessを使う。何か昔は別の手法だったらしい。</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - shigepon -
+  Copyright &copy; 2016 - shigepon -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

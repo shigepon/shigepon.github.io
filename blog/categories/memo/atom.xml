@@ -4,7 +4,7 @@
   <title><![CDATA[Category: memo | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/memo/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-12-17T14:04:03+09:00</updated>
+  <updated>2016-01-06T09:34:02+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -605,6 +605,18 @@ select * from member where boss in (select name from member where stage='部長'
 <p>を実行したような感じになる。</p>
 
 <p>参考：<a href="http://stackoverflow.com/questions/8556297/how-to-subquery-in-queryset-in-django">python &ndash; how to subquery in queryset in django? &ndash; Stack Overflow</a></p>
+
+<h2>リダイレクト時にパラメータを渡す</h2>
+
+<p><code>py
+response = redirect('name', param)
+response['Location'] += '?hoge=fuga'
+return response
+</code></p>
+
+<p>でいける</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/3765887/add-request-get-variable-using-django-shortcuts-redirect">add request.GET variable using django.shortcuts.redirect &ndash; Stack Overflow</a></p>
 ]]></content>
   </entry>
   
@@ -967,6 +979,17 @@ if instanceof(hoge, basestring):</p>
 <p>こんな感じ。整数ならbasestringをintにするとかやればおk</p>
 
 <p>参考：<a href="http://stackoverflow.com/questions/4843173/how-to-check-if-type-of-a-variable-is-string-in-python">How to check if type of a variable is string in python? &ndash; Stack OverflowHow to check if type of a variable is string in python? &ndash; Stack Overflow</a></p>
+
+<h3>formatにリストを渡す</h3>
+
+<p>```py
+l = [&lsquo;hoge&rsquo;,&lsquo;fuga&rsquo;,&lsquo;hage&rsquo;]
+print &ldquo;{0},{1},{2}&rdquo;.format(tuple(l))</p>
+
+<p>hoge,fuga,hage
+```</p>
+
+<p>こんな感じ。</p>
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: vim | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/vim/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2015-12-17T14:04:03+09:00</updated>
+  <updated>2016-01-06T09:34:02+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -68,6 +68,24 @@ $ vim -u NONE filename
 </code></p>
 
 <p>でおk</p>
+
+<h2>clipboardを使う</h2>
+
+<p>クリップボードで普通にCtrl+vして大体涙目になってるのでメモ</p>
+
+<p><code>
+:set paste
+</code></p>
+
+<p>んで普通にペーストでおkみたい</p>
+
+<p>戻すには</p>
+
+<p><code>
+:set nopaste
+</code></p>
+
+<p>参考：<a href="http://qiita.com/quwa/items/019250dbca167985fe32">vimでペーストするときインデントさせない &ndash; Qiita</a></p>
 ]]></content>
   </entry>
   

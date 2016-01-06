@@ -677,6 +677,21 @@ def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る
 <p>を実行したような感じになる。</p>
 
 <p>参考：<a href="http://stackoverflow.com/questions/8556297/how-to-subquery-in-queryset-in-django">python &ndash; how to subquery in queryset in django? &ndash; Stack Overflow</a></p>
+
+<h2>リダイレクト時にパラメータを渡す</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">response</span> <span class="o">=</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span>
+</span><span class='line'><span class="n">response</span><span class="p">[</span><span class="s">&#39;Location&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s">&#39;?hoge=fuga&#39;</span>
+</span><span class='line'><span class="k">return</span> <span class="n">response</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でいける</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/3765887/add-request-get-variable-using-django-shortcuts-redirect">add request.GET variable using django.shortcuts.redirect &ndash; Stack Overflow</a></p>
 </div>
 
 
@@ -883,7 +898,7 @@ def a_view(request): hoge = Fuga(request.GET) #新たにインスタンス作る
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - shigepon -
+  Copyright &copy; 2016 - shigepon -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

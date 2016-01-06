@@ -478,6 +478,18 @@
 
 
 <p>path/to/root/error/503.htmlがあれば、メンテナンス画面を表示する。なければ表示しない。一度nginx設定をリロードすればその後はリロードの必要もない。</p>
+
+<h2>末尾に必ずスラッシュを入れる</h2>
+
+<p>djangoで末尾スラッシュで無い場合に上手くurlsを組み立てられなかったりしたので・・・djangoは悪くなく、自分の実装のせいなんだけど。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>rewrite ^([^.]*[^/])$ $1/ permanent;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でおk</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/645853/add-slash-to-the-end-of-every-url-need-rewrite-rule-for-nginx">regex &ndash; Add slash to the end of every url (need rewrite rule for nginx) &ndash; Stack Overflow</a>&#8220;`</p>
 </div>
   
   
@@ -877,7 +889,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - shigepon -
+  Copyright &copy; 2016 - shigepon -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
