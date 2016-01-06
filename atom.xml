@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2016-01-06T12:19:53+09:00</updated>
+  <updated>2016-01-06T12:21:35+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -43,7 +43,9 @@
 <ul>
 <li>1.プロダクトを選択→GoogleAnalytics</li>
 <li>2.タグの種類を選択→ユニバーサル　アナリティクス</li>
-<li>3.タグを設定→下のように設定して続行ボタンをクリック</li>
+<li>3.タグを設定→下のように設定して続行ボタンをクリック
+
+<ul>
 <li>トラッキングID→AnalyticsのトラッキングID（UA-xxxx-xxxxxみたいな）</li>
 <li>ディスプレイ広告向け機能を有効にする→どっちでも</li>
 <li>トラッキングタイプ→イベント</li>
@@ -51,8 +53,14 @@
 <li>アクション→適当（clickとか？）</li>
 <li>ラベル→適当（hogeとか？）</li>
 <li>その他はそのまま</li>
-<li>4.配信するタイミング→クリック</li>
+</ul>
+</li>
+<li>4.配信するタイミング→クリック
+
+<ul>
 <li>「既存のクリック　トリガーから選択」が出てくるので作ったトリガーをチェック→「保存」ボタンをクリック</li>
+</ul>
+</li>
 <li>「タグを作成」ボタンをクリック</li>
 </ul>
 
