@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: MT4 | shigeponが関心のある技術情報など]]></title>
+  <link href="http://blog.shigepon.info/blog/categories/mt4/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.info/"/>
+  <updated>2016-01-15T12:03:06+09:00</updated>
+  <id>http://blog.shigepon.info/</id>
+  <author>
+    <name><![CDATA[shigepon]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[MT4 memo]]></title>
+    <link href="http://blog.shigepon.info/blog/2016/01/07/mt4-memo/"/>
+    <updated>2016-01-07T14:00:25+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2016/01/07/mt4-memo</id>
+    <content type="html"><![CDATA[<p>MT4でEAを書くためのメモ</p>
+
+<h2>時間の扱い</h2>
+
+<!-- more -->
+
+
+<p>時間は秒単位の数値になるので</p>
+
+<p>時間差を出したい場合は</p>
+
+<p><code>
+(t1 - t2)/3600.0
+</code></p>
+
+<p>みたいな扱いで良い
+参考：<a href="http://forum.mql4.com/5907">How to calculate time difference, and return time in hours ? &ndash; MQL4 forum</a></p>
+
+<h2>矢印の表示</h2>
+
+<p><code>
+ObjectCreate("OBJ"+Time[0], OBJ_ARROW, 0, Time[0], Ask)
+</code></p>
+
+<p>みたいに書くと表示出来る"OBJ"+Time[0]が矢印の名前となり、後で色を付けたりするのに使う</p>
+
+<p>参考：<a href="http://forum.mql4.com/54528">How to create arrow on a price chart by EA ? &ndash; MQL4 forum</a></p>
+
+<h2>gmailを使ってメールを送る</h2>
+
+<p>参考：<a href="http://d.hatena.ne.jp/fai_fx/20091110/1257779182">MT4のメール送信サーバにGmail を使う。 &ndash; とあるMetaTraderの備忘秘録</a>にあるような設定を行う。</p>
+
+<p>手順は</p>
+
+<ul>
+<li>オプション→Eメールのタブを開く</li>
+<li>SMTP設定
+
+<ul>
+<li>SMTPサーバー：smtp.gmail.com:465</li>
+<li>SMTPログインID: メアド</li>
+<li>SMTPパスワード: gmailのパスワード</li>
+<li>発信元: 自分のgmailメアド</li>
+<li>送信先: 送信先メアド</li>
+</ul>
+</li>
+<li>Testボタンを押すとテストメールが送られるので、設定が正しいか確認出来る</li>
+<li>OKボタンを押す</li>
+</ul>
+
+
+<p>送信は</p>
+
+<p><code>
+SendMail(題名, 内容);
+</code></p>
+
+<p>でおk。改行は\nでおk。円マークではない。</p>
+
+<h2>バックテストを色々やるとハードディスク容量が足らなくなる</h2>
+
+<ul>
+<li>ファイル→データフォルダを開く</li>
+<li>testerを開く</li>
+<li>中に出来たファイルを消す</li>
+</ul>
+
+
+<p>でおk</p>
+
+<p>参考：<a href="http://www.autotrading-fx.com/mt4-tips/1930.html">MT4のバックテストでハードディスク容量が不足した時の対処法</a></p>
+]]></content>
+  </entry>
+  
+</feed>

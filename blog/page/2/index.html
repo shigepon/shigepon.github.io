@@ -9,9 +9,10 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="結論から言うとmonoの問題だった。 参考： MonoでSSL接続しようとしたら怒られた &ndash; うなてっくろぐ
-The authentication or decryption has failed – Mono | Code Adventures
-Problems using SSL &hellip;">
+  <meta name="description" content="Vmware Esxiがある日 1
+2
+error loading /s.v00
+fatal error: 33 inconsistent data というメッセージを出して起動しなくなったので、修復方法をメモしておく 結論 まず結論から言うと、Vmware Esxiを入れ直すことになった。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +82,444 @@ Problems using SSL &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/08/05/esxi-shows-fatal-error-33/">Vmware Esxiがfatal Error 33を出したのでインストールしなおしてついでに色々試した話</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-08-05T16:45:31+09:00" pubdate data-updated="true">Aug 5<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Vmware Esxiがある日</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>error loading /s.v00
+</span><span class='line'>fatal error: 33 inconsistent data
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>というメッセージを出して起動しなくなったので、修復方法をメモしておく</p>
+
+<h2>結論</h2>
+
+<p>まず結論から言うと、Vmware Esxiを入れ直すことになった。他にも方法があるらしいが、その方法のページが途中で会員登録しないと見れなくなったので、参考にしなかった。</p>
+
+<p>参考：
+<a href="https://communities.vmware.com/thread/342182">error loading s.v00 fatal error 33 inconsistent&hellip; | VMware Communities</a></p>
+
+<h2>Vmware Esxiの入れ直し</h2>
+
+<p>USBにインストールしていたので、要はそのままインストールし直すだけなんだけど、以下手順</p>
+
+<ul>
+<li>Esxiのisoをダウンロード
+
+<ul>
+<li><a href="https://my.vmware.com/jp/web/vmware/login">my vmware</a>からログイン(ユーザー登録はフォームに記入して・・・という良くある方法なので省略)
+&mdash; <a href="https://my.vmware.com/group/vmware/downloads#tab2">製品ダウンロード</a>に移動</li>
+<li>VMware vSphere Hypervisor (ESXi)の横の<a href="https://my.vmware.com/group/vmware/info/slug/datacenter_cloud_infrastructure/vmware_vsphere_hypervisor_esxi/6_0">View Download Components</a>をクリック</li>
+<li>左にバージョン選択用のコンボボックスがあるので、バージョンを選択して、Downloadリンクをクリック</li>
+<li>Registerのボタンが出てる場合、まずクリックして、ライセンスの登録を行う</li>
+<li>License Informationにlicense keysが出るので保存しておく。(Vmware ESXi Clientでのライセンスキー登録に使う)</li>
+<li>ライセンスの登録が済んだらDownload Packages以下の項目からダウンロードするためのリンクが出るのでダウンロードする</li>
+<li><strong><em>AdBlockを入れてるとダウンロードが開始しなかったので注意</em></strong></li>
+</ul>
+</li>
+<li>ダウンロードしたisoをCDに焼く</li>
+<li>Esxiのハード要件を全て満たすハード上でCD起動する</li>
+<li>ESXiをインストールする
+
+<ul>
+<li>Boot MenuでESXi Installerを選択する</li>
+<li>インストールを進めるかどうか聞かれる(Enter)</li>
+<li>ライセンス許諾を聞かれる(F11でおk)</li>
+<li>インストール先を選ぶ(入れたい場所を選ぶ。USB差しておけばUSBも出て選択出来る)</li>
+<li>キーボードレイアウトを選択する</li>
+<li>rootアカウントのパスワードを設定する(タブで移動、2回設定するEnterで完了)</li>
+<li>最後の確認(F11でおk)</li>
+<li>インストール終了後Enterで再起動</li>
+</ul>
+</li>
+</ul>
+
+
+<h2>バージョン5.5、6.0</h2>
+
+<p>今まで入れてたのがEsxiバージョン5.0だったので、ついでに5.5、6.0を試してみた。インストール方法は入れ直し方法と同じ。</p>
+
+<p>で、インストール後にクライアントをDLしてホストに接続してみた。どのバージョンでも問題なく出来たが、Windows XPの端末ではこの2つのバージョンは接続出来ないそうな。</p>
+
+<p>Vmの操作（インベントリへの追加、起動、コンソール表示、終了）は全てのバージョンで同じように出来た。Vmはバージョン5で作ったものだが他のバージョンでの操作も問題ないらしい。これは便利。</p>
+
+<h2>sshでEsxiホストを操作する</h2>
+
+<p>linuxやmacからEsxiホストを操作して、vmの起動、終了とかやりたかったので、ついでに試してみた。手順は以下の通り</p>
+
+<ul>
+<li>EsxiホストでSSHを有効にする
+
+<ul>
+<li>初期画面からCustomize Systemへ移動(F2)</li>
+<li>カーソルを上下移動して「Troubleshooting Options」のところでEnter</li>
+<li>Disable ESXi Shellにカーソルを合わせてEnterを押すとEnable ESXi Shellに変わる</li>
+<li>Disable SSHにカーソルを合わせてEnterを押すとEnable SSHに変わる</li>
+<li>Restart Management Agentsにカーソルを合わせてEnterを押す</li>
+</ul>
+</li>
+<li>ESXiクライアントでSSHを有効にする
+
+<ul>
+<li>インベントリが選択されている状態で、構成(Configuration) &ndash;> セキュリティプロファイル(Security Profile)の上部、サービス(Services)の「プロパティ(Properties)をクリック</li>
+<li>SSHを選択し、オプション(Options)をクリック</li>
+<li>ホストに連動して開始および停止(Start and stop with host)を選択し、サービスコマンドの開始(Start)ボタンを押す。その後okをクリックしてダイアログを消す。</li>
+<li>同中部、ファイアウォール(Firewall)の「プロパティ(Properties)をクリック</li>
+<li>SSHサーバ(SSH Server)をチェック</li>
+<li>ファイアーウォール(Firewall)ボタンをクリック</li>
+<li>IPアドレスの許可設定を行う。任意のIPアドレスからの接続を許可(Allow connections from any IP address)するのが一番楽。</li>
+<li>okをクリックしていって、ダイアログを閉じる</li>
+</ul>
+</li>
+</ul>
+
+
+<p>以上で、linuxやmacから</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>ssh root@ESXiのip
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でインストール時に指定したパスワードを入力するとsshでESXiホストにアクセス出来るようになる。</p>
+
+<p>参考：<a href="http://www.serenity-networks.com/networking/how-to-enable-ssh-on-vmware-esxi-5-5-5-6-all-other-versions/">How To Enable SSH on VMware ESXi 5 / 5.5 / 6 &amp; All Other Versions | Serenity-Networks</a></p>
+
+<h2>ESXiの管理コマンド(ごく一部。追記予定)</h2>
+
+<h3>インベントリへのVMの追加、削除</h3>
+
+<p>追加</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>vim-cmd solo/registervm <span class="o">[</span>vmxのパス.vmx<span class="o">]</span> <span class="o">[</span>vm名<span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>削除</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>vim-cmd vmsvc/unregister <span class="o">[</span>vmのid<span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>vm一覧</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>vim-cmd vmsvc/getallvms
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ここで出て来たvmidをvmのidとして色んなコマンド内で使用する。</p>
+
+<h3>vm起動、シャットダウン</h3>
+
+<p>起動</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>vim-cmd vmsvc/power.on <span class="o">[</span>vmのid<span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>終了</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>vim-cmd vmsvc/power.shutdown <span class="o">[</span>vmのid<span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考：<a href="http://qiita.com/binzume/items/096ce77f73b6e853c342">VMware ESXiをSSHでがんばるぞい(コマンドライン操作色々) &ndash; Qiita</a></p>
+
+<p>ちなみに各コマンドについてはヘルプを出すオプションとか無いみたい。コマンド失敗した時に使用法が出ることもあるが、失敗するまで分からないとか怖いわー。</p>
+
+<h3>ESXiシャットダウン</h3>
+
+<p>シャットダウンと同時に電源を切る作業も必要</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>shutdown.sh <span class="o">&amp;&amp;</span> poweroff
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でおk。USBにインストールしているせいか分からないが、poweroffが無い場合、SSHの設定が再起動後、元に戻っていた。</p>
+
+<p>参考：<a href="http://www.nojokeit.com/2013/02/shut-down-esxi-51-guest-vms-and-host.html">No Joke IT: Shut down ESXi 5.1 guest VMs and the host (free edition) via SSH &ndash; the easy way!</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/07/30/add-relation-to-existing-table-using-django/">Djangoで作成済みテーブルに手動でリレーションを追加する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-07-30T10:46:15+09:00" pubdate data-updated="true">Jul 30<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>リレーションの理解が悪くて酷いコードを組んでいて、それを直した話。</p>
+
+<p>article</p>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th align="left">key</th>
+<th align="right">title</th>
+<th align="right">content</th>
+<th align="right">author_key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td align="left">1</td>
+<td align="right">DjangoでHello World作ってみた</td>
+<td align="right">出来なかった！</td>
+<td align="right">1|</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>author</p>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th align="left">key</th>
+<th align="right">name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td align="left">1</td>
+<td align="right">shigepon|</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>こんなテーブルがあって、author.keyとarticle.author_keyが繋がっている場合に
+ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
+
+<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">class</span> <span class="nc">Article</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">key</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">title</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">content</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">author_key</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">author</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">Author</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">author_key</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Author</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">key</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">name</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>いやー改めて見ると酷い。Articleを100個読み込んで、そのAuthorを出力するだけで、100回以上dbにアクセスしないといけない。という訳でこの酷いコードからリレーションを貼って、さらにdbアクセスが少なくなるように修正したらこうなった</p>
+
+<p>参考：</p>
+
+<ul>
+<li><a href="https://docs.djangoproject.com/en/1.8/ref/models/fields/">Model field reference | Django documentation | Django</a></li>
+<li><a href="https://docs.djangoproject.com/en/1.8/ref/models/querysets/">QuerySet API reference | Django documentation | Django</a></li>
+</ul>
+
+
+<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">class</span> <span class="nc">Article</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">key</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">title</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">content</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">author</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s">&#39;Author&#39;</span><span class="p">,</span> <span class="n">db_column</span><span class="o">=</span><span class="s">&#39;author_key&#39;</span><span class="p">,</span> <span class="n">to_field</span><span class="o">=</span><span class="s">&#39;key&#39;</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s">&#39;articles&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Author</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">key</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">name</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じで適切にForeignKeyフィールドを設定することで、上の構成のテーブルにもリレーションを貼ることが出来た。db_columnでArticle側のリレーションキーになるカラムを指定して、to_fieldでAuthor側のリレーションキーになるカラムを指定する。related_nameは指定しないとエラーが出た。</p>
+
+<p>んで、dbアクセスがなるべく少なくなるように（sqlでjoinを組んでくれるように）views.pyを書いてみると</p>
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">app.models</span> <span class="kn">import</span> <span class="n">Article</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">articles</span> <span class="o">=</span> <span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s">&#39;author&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</span><span class='line'>    <span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいにselect_relatedメソッドを使うとjoinしてくれた。prefetch_relatedってメソッドでも同じように出来る（ちょっと役割は違う）らしいが試していない。ざっくりドキュメントを読むと、ForeignKeyと１対１リレーションにはselect_relatedが良く、Many to ManyやMany to Oneにはprefetch_relatedが良いらしい。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/07/28/use-django-model-outside-django-project/">DjangoモデルをDjangoプロジェクトの外から使う</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-07-28T16:43:55+09:00" pubdate data-updated="true">Jul 28<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>参考：</p>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/shobonengine/20120103/1325535420">外部から Django プロジェクトのデータベースを操作する &ndash; ShobonEngineの日記</a></li>
+<li><a href="http://stackoverflow.com/questions/25537905/django-1-7-throws-django-core-exceptions-appregistrynotready-models-arent-load">python &ndash; Django 1.7 throws django.core.exceptions.AppRegistryNotReady: Models aren&rsquo;t loaded yet &ndash; Stack Overflow</a></li>
+</ul>
+
+
+<p>モデルインポート前に以下の手順が必要</p>
+
+<ul>
+<li>プロジェクトをsys.pathに追加</li>
+<li>DJANGO_SETTINGS_MODULE環境変数がプロジェクトのsettings.pyを指すように指定</li>
+<li>applicationのロードが必要? (上2つだけだとModels aren&rsquo;t loaded yetというエラーが出た)</li>
+</ul>
+
+
+<p>sys.pathにはフルパスを入れれば確実。必要なコードは下のような感じになる。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="c"># encoding: UTF-8</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">sys</span>
+</span><span class='line'><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;/path/to/django/project&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">os</span>
+</span><span class='line'><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;DJANGO_SETTINGS_MODULE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;project.settings&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">from</span> <span class="nn">django.core.wsgi</span> <span class="kn">import</span> <span class="n">get_wsgi_application</span>
+</span><span class='line'><span class="n">application</span> <span class="o">=</span> <span class="n">get_wsgi_application</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">from</span> <span class="nn">application.models</span> <span class="kn">import</span> <span class="n">AModel</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">list</span> <span class="o">=</span> <span class="n">AModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</span><span class='line'><span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -859,166 +1298,6 @@ Problems using SSL &hellip;">
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">Ubuntuのcui環境でなでしこ2をビルドする</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-05-01T08:23:00+09:00" pubdate data-updated="true">May 1<span>st</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>今までmono developでなでしこ2をビルド、テストして、cui環境にアップロードしてたんだけど、面倒になってきたのでcui環境で直接ビルド、テストしてみようと思ったのでついでに開発を始める段階からメモしてみる。</p>
-
-<p>環境はubuntu 12.04とするが、上位バージョンでも問題無いはず</p>
-
-<h1>mono環境の準備</h1>
-
-<p>mono-develをインストールしたらmono関連で必要なものは勝手にインストールされたような気がする。ついでに<a href="http://blog.shigepon.info/blog/2014/08/20/vb-not-work-on-ubuntu/">VisualBasicが動かない件</a>にあるように、mono-vbnc、あとはnunitのインストール</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>aptitude install mono-devel mono-vbnc nunit
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/03/19/use-sparql-with-python/">PythonでSparql使ってLinked Open Dataをいじってみた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-03-19T22:07:12+09:00" pubdate data-updated="true">Mar 19<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>以前<a href="http://blog.shigepon.info/blog/2014/11/25/kobe-dot-r-no-13/">Kobe.R no 13に参加してきました &ndash; shigeponが関心のある技術情報など</a>でLinked Open Dataが気になってたので、Pythonでいじれるライブラリを探してみて遊んでみた。</p>
-
-<p>Sparqlで色々試してみると面白そうなので、pip search sparqlで出た結果とググってみた結果から、SPARQLWrapperが何となく良さげかなと思い、インストールしてみた。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install SPARQLWrapper
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これだけでおk</p>
-
-<p>djangoのshellから使ってみる</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/03/19/use-sparql-with-python/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/">Django 1.6から1.7にアップデートしてみた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-03-09T22:11:02+09:00" pubdate data-updated="true">Mar 9<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Djangoが去年の9月に1.7にバージョンアップしてて、今更ながらアップデートしてみた。色々教えて頂いた<a href="https://twitter.com/key3">@key3</a>さんに感謝！</p>
-
-<p>※注　アップデートの前に必ずデータとかソースとか色々バックアップしておくこと。</p>
-
-<h2>Django本体のアップデート</h2>
-
-<p>Djangoはpipで管理してるので、pipコマンドでアップデート出来る</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install django -U
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1050,23 +1329,23 @@ Problems using SSL &hellip;">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/01/15/use-groonga-for-django-cache/">Use Groonga for Django Cache</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/13/redis-memo/">Redis Memo</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/mt4-memo/">MT4 Memo</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/06/track-button-click-at-google-tag-manager/">Google Tag Managerを使ってボタンのクリックを検出する</a>
       </li>
     
       <li class="post">
         <a href="/blog/2015/12/17/mono-winforms-garbled-on-mac/">Mono Winformsがmacで文字化けする件</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/11/29/output-msil-manually/">Msilを手動で出力する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/11/02/use-mecab-in-python-virtualenv-ubuntu1-12-dot-04/">Virtualenv上のpythonでmecabを使う (Ubuntu1 12.04)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04/">ubuntu12.04でpg bulkloadを使う</a>
       </li>
     
   </ul>
@@ -1095,15 +1374,16 @@ Problems using SSL &hellip;">
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (7)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (21)</a></li>
-<li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (22)</a></li>
+<li class='category'><a href='/blog/categories/groonga/'>Groonga (2)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
+<li class='category'><a href='/blog/categories/mt4/'>MT4 (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (10)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (23)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (24)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
@@ -1111,10 +1391,11 @@ Problems using SSL &hellip;">
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linux/'>linux (12)</a></li>
-<li class='category'><a href='/blog/categories/memo/'>memo (14)</a></li>
+<li class='category'><a href='/blog/categories/memo/'>memo (16)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (8)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
+<li class='category'><a href='/blog/categories/redis/'>redis (1)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>
 <li class='category'><a href='/blog/categories/ruby/'>ruby (9)</a></li>

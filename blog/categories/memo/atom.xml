@@ -4,7 +4,7 @@
   <title><![CDATA[Category: memo | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/memo/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2016-01-06T12:21:35+09:00</updated>
+  <updated>2016-01-15T12:03:06+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,34 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[redis memo]]></title>
+    <link href="http://blog.shigepon.info/blog/2016/01/13/redis-memo/"/>
+    <updated>2016-01-13T21:35:13+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2016/01/13/redis-memo</id>
+    <content type="html"><![CDATA[<p>redisが良く分かってないので、良く使いそうなものをメモしていく。主にredis-clientを使って行く（OSはUbuntu）</p>
+
+<h2>dbの選択</h2>
+
+<p>```sh
+$ redis-client</p>
+
+<blockquote><p>select 1
+```</p></blockquote>
+
+<p>で1番のdbに移動。0から15まである？</p>
+
+<h2>keyの一覧</h2>
+
+<p>```sh</p>
+
+<blockquote><p>keys *
+```</p></blockquote>
+
+<p>で取りあえず一覧してくれる。dbにキーがあるか程度ならこれで。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Javascript memo]]></title>
@@ -114,6 +142,20 @@ buffer-size= xxxx
 
 
 <p>参考：<a href="http://stackoverflow.com/questions/15878176/uwsgi-invalid-request-block-size">uwsgi invalid request block size &ndash; Stack Overflow</a></p>
+
+<h2>ログローテーション</h2>
+
+<p>uwsgi.iniに下のように書く</p>
+
+<p><code>
+[uwsgi]
+daemonize = /path/to/uwsgi/log/hoge-@(exec://date +%%Y-%%m-%%d).log
+log-reopen = true
+</code></p>
+
+<p>すると/path/to/uwsgi/log/hoge-xxxx-xx-xx.log （xx..は日付）というログファイルが出来る。</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/28343262/how-to-create-one-uwsgi-log-file-per-day">logging &ndash; How to create one uwsgi log file per day? &ndash; Stack Overflow</a></p>
 ]]></content>
   </entry>
   
@@ -661,335 +703,6 @@ hoge = Ti.App.Properties.getString("hoge");//取得
 <p>もしくは文字サイズをdpで指定</p>
 
 <p>参考：<a href="http://www.fujimotohajime.net/pukiwiki/index.php?TitaniumMobile%2FAndroid%E3%81%A7%E5%AE%9F%E6%A9%9F%E3%83%86%E3%82%B9%E3%83%88%E3%81%99%E3%82%8B%E3%81%A8%E6%96%87%E5%AD%97%E3%81%8C%E5%B0%8F%E3%81%95%E3%81%84">TitaniumMobile/Androidで実機テストすると文字が小さい &ndash; Wiki</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Python memo]]></title>
-    <link href="http://blog.shigepon.info/blog/2014/06/30/python-memo/"/>
-    <updated>2014-06-30T20:38:44+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2014/06/30/python-memo</id>
-    <content type="html"><![CDATA[<p>Djangoやり始めたので、その過程で記録しておきたいことをメモ。</p>
-
-<h2>pip freezeでWarning: cannot find svn location for distribute==0.6.24dev-r0</h2>
-
-<p><code>sh
-$ sudo pip install --upgrade distribute
-</code></p>
-
-<p>でおk</p>
-
-<h2>pipで一気にインストールする</h2>
-
-<p>pip freezeで出てくる出力をファイルに書き出したものを使うと、別の環境で同じ状態にもっていける。ファイルからバージョン情報を消すと最新の状態でインストール出来る。</p>
-
-<p><code>sh
-$ pip install -r freezed.txt
-</code></p>
-
-<h2>for文でループカウント取得</h2>
-
-<p>参考<a href="http://fujishinko.exblog.jp/7669024">Python 配列をfor文でまわしているときのループカウント取得 : fujishinko 雑記帳</a></p>
-
-<p><code>py
-for i,item in enumerate(['a','b','c']):
-  print i,item
-</code></p>
-
-<!-- more -->
-
-
-<h2>日本語のコマンドライン引数取得</h2>
-
-<p>参考<a href="http://www.yukun.info/blog/2008/07/python-command-line-arguments.html">Python: コマンドライン引数の取得 – sys.argv変数</a></p>
-
-<p>```py :hoge.py</p>
-
-<h1>&ndash;*&ndash; encoding: utf-8 &ndash;*&ndash;</h1>
-
-<p>import sys
-argv = sys.argv
-print argv[1].decode(&ldquo;utf-8&rdquo;)
-```</p>
-
-<p><code>sh
-$ python hoge.py あいうえお
-あいうえお
-$
-</code></p>
-
-<h2>コマンド実行して実行結果を取得</h2>
-
-<p>参考<a href="http://qiita.com/mokemokechicken/items/a84b0aa96b94d1931f08">Python の subprocess で出力を受け取るときは communicate() を使おう &ndash; Qiita</a>
-subprocessを使う。何か昔は別の手法だったらしい。</p>
-
-<p><code>py
-import subprocess
-p = subprocess.Popen("echo 'hoge'",shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-p.wait()
-stdout_data,stderr_data = p.communicate()
-print stdout_data.decode("utf-8").strip()
-</code></p>
-
-<h2>親クラスのメソッド呼び出し</h2>
-
-<p>```py
-class Hoge(object):</p>
-
-<pre><code>def aaa(self,param):
-    print param
-</code></pre>
-
-<p>class Fuga(Hoge):</p>
-
-<pre><code>def bbb(self,param):
-    self.hage = super(Fuga,self).aaa(param)
-</code></pre>
-
-<p>f = Fuga()
-f.bbb(&lsquo;test&rsquo;)
-```</p>
-
-<p>こんな感じ。お作法を忘れがち。</p>
-
-<h2>正規表現オブジェクトのパターンをチェックする方法</h2>
-
-<p>他のライブラリで正規表現が設定されてて、その内容をチェックしたかったので調べてみたら、patternプロパティを見れば良いらしい</p>
-
-<p><code>py
-import re
-r = re.compile('^hoge',re.l)
-print r.pattern
-</code></p>
-
-<p>参考：<a href="http://compgroups.net/comp.lang.python/how-to-print-sre_pattern-regexp-object-text/309372">How to print SRE_Pattern (regexp object) text for debugging purposes? &ndash; comp.lang.python</a></p>
-
-<h2>1ヶ月前の日付を求める</h2>
-
-<p>timedeltaを使うとweeksとかdaysしか指定出来ないので、1ヶ月前の日付を取得しようと思ったら、別の方法が必要になる</p>
-
-<p>``` py
-import time
-from datetime import date</p>
-
-<p>base_date = date(2015,1,3)
-one_month_ago = date.fromtimestamp(time.mktime((base_date.year, base_date.month -1, base_date.day, 0, 0, 0, 0, 0, 0)))
-```</p>
-
-<p>こんな感じで出来る。
-参考：<a href="http://blog.kjirou.net/p/381">[Python] 月の加減算処理ができない？ | それなりブログ</a></p>
-
-<h2>日付表示で良く使うフォーマット</h2>
-
-<p><code>py
-from datetime import date
-print date(2002,12,4).isoformat()
-</code></p>
-
-<p>としておくと、2002-12-04と表示される</p>
-
-<h2>lxmlをインストールしようとしたら、fatal error: libxml/xmlversion.h: No such file or directory</h2>
-
-<p>ライブラリが足らないのでインストールすればおk
-<a href="http://stackoverflow.com/questions/15759150/src-lxml-etree-defs-h931-fatal-error-libxml-xmlversion-h-no-such-file-or-di">python 2.7 &ndash; src/lxml/etree_defs.h:9:31: fatal error: libxml/xmlversion.h: No such file or directory &ndash; Stack Overflow</a></p>
-
-<p><code>sh
-$ sudo aptitude install libxml2-dev libxslt1-dev
-</code></p>
-
-<h2>pythonでsudoを付けたコマンドを実行する</h2>
-
-<p>パスワードをリダイレクトすればおk
-<a href="http://stackoverflow.com/questions/13045593/using-sudo-with-python-script">shell &ndash; Using sudo with Python script &ndash; Stack Overflow</a></p>
-
-<p><code>py
-import os
-p = os.system('echo pass | sudo -S ...')
-os.popen("sudo -S ...","w").write("pass")
-</code></p>
-
-<h2>django rest frameworkでBasic認証のあるサイトを扱う</h2>
-
-<p>basic認証のあるサイトでdjango rest frameworkを使ったjson apiみたいなのを作ろうと思った時に、認証してアクセスしても</p>
-
-<p><code>
-{"detail": "Invalid username/password"}
-</code></p>
-
-<p>みたいなメッセージが帰ってきてうまく情報を取って来れなかった。</p>
-
-<p>```py settings.py
-REST_FRAMEWORK = {</p>
-
-<pre><code>'DEFAULT_AUTHENTICATION_CLASSES': ()
-</code></pre>
-
-<p>}
-```</p>
-
-<p>と認証を削除するといけた
-<a href="http://stackoverflow.com/questions/19693433/django-rest-framework-behind-http-basic-authentication">nginx &ndash; Django Rest Framework behind HTTP Basic Authentication &ndash; Stack Overflow</a></p>
-
-<h2>リストの文字列をリストに変換する</h2>
-
-<p>リクエストでリストの文字列をパラメーターにして送って、それをリストとして評価したかったので、調べてみた。</p>
-
-<p><code>py
-import ast
-hoge = u'["A","B","C"]
-fuga = ast.literal_eval(hoge)
-</code></p>
-
-<p><a href="https://docs.python.org/2/library/ast.html#ast.literal%5Feval">32.2. ast — Abstract Syntax Trees — Python 2.7.10 documentation</a>見ると</p>
-
-<blockquote><p>This can be used for safely evaluating strings containing Python values from untrusted sources without the need to parse the values oneself.</p></blockquote>
-
-<p>と、あるので、変換だけならチェックしなくても問題ない・・・かも？</p>
-
-<p>参考：<a href="http://stackoverflow.com/questions/1894269/convert-string-representation-of-list-to-list-in-python">convert string representation of list to list in python &ndash; Stack Overflow</a></p>
-
-<h2>lxmlで&nbsp;が入った文章をxmlでパース出来ない</h2>
-
-<p>xmlに&nbsp;（空白）が入っている場合に、xmlとしてパースした場合に</p>
-
-<p><code>
-lxml.etree.XMLSyntaxError: Entity 'nbsp' not defined
-</code></p>
-
-<p>みたいなメッセージを出されちゃうことがある。解決策としては</p>
-
-<ul>
-<li>htmlとしてパースする</li>
-<li>xml定義をしっかりやっておく</li>
-<li>＆の部分を適当に置換</li>
-</ul>
-
-
-<p>くらいがある。</p>
-
-<h4>htmlとしてパース</h4>
-
-<p><code>py
-from lxml import etree
-from StringIO import StringIO
-parser = etree.HTMLParser()
-parsed = etree.HTML(StringIO(source), parser)
-</code></p>
-
-<h4>xml定義をしっかり書く</h4>
-
-<p>xmlとしてしっかり書いて、パーサーのパラメータとしてresolve_entities=Falseと指定すれば良いらしい</p>
-
-<p><code>py
-from lxml import etree
-from StringIO import StringIO
-source = """&lt;?xml version="1.0" encoding="utf-8"?&gt;
-&lt;!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
-&lt;hoge&gt;&amp;nbsp;fuga&lt;/hoge&gt;"""
-parser = etree.XMLParser(resolve_entities=False)
-parsed = etree.parse(StringIO(source), parser)
-print etree.tostring(parsed)
-</code></p>
-
-<h4>＆を適当に置換</h4>
-
-<p>一個一個特殊文字をユニコードに変えるという手もあるけど、とても手間なので</p>
-
-<p><code>py
-source = source.replace('&amp;','&amp;amp;')
-</code></p>
-
-<p>とやってからパースすれば通る</p>
-
-<h2>except時にトレースバックを表示</h2>
-
-<p>```py
-import traceback</p>
-
-<p>def hoge():</p>
-
-<pre><code>try:
-    ...
-except Exception as e:
-    traceback.print_exc()
-</code></pre>
-
-<p>```</p>
-
-<p>こんな感じで、tracebackを使えば良い</p>
-
-<p>参考：<a href="https://doughellmann.com/blog/2009/06/19/python-exception-handling-techniques/">Python Exception Handling Techniques | Doug Hellmann</a></p>
-
-<h2>datetimeからタイムスタンプへの変換（逆も)</h2>
-
-<p>```py
-import datetime
-import time</p>
-
-<p>def datetime_to_timestamp(dt):</p>
-
-<pre><code>timestamp = time.mktime(dt.timetuple())
-return timestamp
-</code></pre>
-
-<p>def timestamp_to_datetime(timestamp):</p>
-
-<pre><code>dt = datetime.datetime.fromtimestamp(timestamp)
-return dt
-</code></pre>
-
-<p>```</p>
-
-<p>こんな感じ</p>
-
-<p>参考：<a href="http://uokada.hatenablog.jp/entry/20120217/1329444315">pythonでdatetimeとtimestampを相互変換するコード &ndash; uokadaの見逃し三振は嫌いです</a></p>
-
-<h2>パイプで渡されたデータを受け取る</h2>
-
-<p>```py</p>
-
-<h1>encoding: UTF-8</h1>
-
-<p>import sys
-lines = sys.stdin.readlines()
-for line in lines:</p>
-
-<pre><code>print line
-</code></pre>
-
-<p>```</p>
-
-<p>こんな感じ。ちょっとしたコマンド作る時に使えるのでメモ</p>
-
-<p>参考；<a href="http://studiot.jp/blog/?p=321">[Python]シェルからパイプで渡されたデータをPythonで受け取る « StudioT::DevLog</a></p>
-
-<h2>変数が文字列かチェックする</h2>
-
-<p>文字列が来てる場合はstrptimeやって、他の場合は普通に代入とかそんな場合に、文字列かチェックする必要があるのでメモ</p>
-
-<p>```py
-hoge = &ldquo;fuga&rdquo;
-if instanceof(hoge, basestring):</p>
-
-<pre><code>pass
-</code></pre>
-
-<p>```</p>
-
-<p>こんな感じ。整数ならbasestringをintにするとかやればおk</p>
-
-<p>参考：<a href="http://stackoverflow.com/questions/4843173/how-to-check-if-type-of-a-variable-is-string-in-python">How to check if type of a variable is string in python? &ndash; Stack OverflowHow to check if type of a variable is string in python? &ndash; Stack Overflow</a></p>
-
-<h3>formatにリストを渡す</h3>
-
-<p>```py
-l = [&lsquo;hoge&rsquo;,&lsquo;fuga&rsquo;,&lsquo;hage&rsquo;]
-print &ldquo;{0},{1},{2}&rdquo;.format(tuple(l))</p>
-
-<p>hoge,fuga,hage
-```</p>
-
-<p>こんな感じ。</p>
 ]]></content>
   </entry>
   

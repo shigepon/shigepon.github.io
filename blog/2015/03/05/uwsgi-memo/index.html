@@ -140,6 +140,23 @@
 
 
 <p>参考：<a href="http://stackoverflow.com/questions/15878176/uwsgi-invalid-request-block-size">uwsgi invalid request block size &ndash; Stack Overflow</a></p>
+
+<h2>ログローテーション</h2>
+
+<p>uwsgi.iniに下のように書く</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ini'><span class='line'><span class="k">[uwsgi]</span>
+</span><span class='line'><span class="na">daemonize</span> <span class="o">=</span> <span class="s">/path/to/uwsgi/log/hoge-@(exec://date +%%Y-%%m-%%d).log</span>
+</span><span class='line'><span class="na">log-reopen</span> <span class="o">=</span> <span class="s">true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>すると/path/to/uwsgi/log/hoge-xxxx-xx-xx.log （xx..は日付）というログファイルが出来る。</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/28343262/how-to-create-one-uwsgi-log-file-per-day">logging &ndash; How to create one uwsgi log file per day? &ndash; Stack Overflow</a></p>
 </div>
 
 
@@ -228,23 +245,23 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/01/15/use-groonga-for-django-cache/">Use Groonga for Django Cache</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/13/redis-memo/">Redis Memo</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/mt4-memo/">MT4 Memo</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/06/track-button-click-at-google-tag-manager/">Google Tag Managerを使ってボタンのクリックを検出する</a>
       </li>
     
       <li class="post">
         <a href="/blog/2015/12/17/mono-winforms-garbled-on-mac/">Mono Winformsがmacで文字化けする件</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/11/29/output-msil-manually/">Msilを手動で出力する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/11/02/use-mecab-in-python-virtualenv-ubuntu1-12-dot-04/">Virtualenv上のpythonでmecabを使う (Ubuntu1 12.04)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04/">ubuntu12.04でpg bulkloadを使う</a>
       </li>
     
   </ul>
@@ -273,15 +290,16 @@
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (7)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (21)</a></li>
-<li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (22)</a></li>
+<li class='category'><a href='/blog/categories/groonga/'>Groonga (2)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
+<li class='category'><a href='/blog/categories/mt4/'>MT4 (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (10)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (23)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (24)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
@@ -289,10 +307,11 @@
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linux/'>linux (12)</a></li>
-<li class='category'><a href='/blog/categories/memo/'>memo (14)</a></li>
+<li class='category'><a href='/blog/categories/memo/'>memo (16)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (8)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
+<li class='category'><a href='/blog/categories/redis/'>redis (1)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>
 <li class='category'><a href='/blog/categories/ruby/'>ruby (9)</a></li>

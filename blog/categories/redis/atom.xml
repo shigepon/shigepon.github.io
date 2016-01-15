@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: redis | shigeponが関心のある技術情報など]]></title>
+  <link href="http://blog.shigepon.info/blog/categories/redis/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.info/"/>
+  <updated>2016-01-15T12:03:06+09:00</updated>
+  <id>http://blog.shigepon.info/</id>
+  <author>
+    <name><![CDATA[shigepon]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[redis memo]]></title>
+    <link href="http://blog.shigepon.info/blog/2016/01/13/redis-memo/"/>
+    <updated>2016-01-13T21:35:13+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2016/01/13/redis-memo</id>
+    <content type="html"><![CDATA[<p>redisが良く分かってないので、良く使いそうなものをメモしていく。主にredis-clientを使って行く（OSはUbuntu）</p>
+
+<h2>dbの選択</h2>
+
+<p>```sh
+$ redis-client</p>
+
+<blockquote><p>select 1
+```</p></blockquote>
+
+<p>で1番のdbに移動。0から15まである？</p>
+
+<h2>keyの一覧</h2>
+
+<p>```sh</p>
+
+<blockquote><p>keys *
+```</p></blockquote>
+
+<p>で取りあえず一覧してくれる。dbにキーがあるか程度ならこれで。</p>
+]]></content>
+  </entry>
+  
+</feed>

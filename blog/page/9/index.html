@@ -9,10 +9,8 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="rhaco3で作ったWebサービス全体にBasic認証をかけた時にちょっとハマったのでメモ。 症状 rhaco3の認証が入っているサービスで全体にBasic認証をかけると、 トップページに入る時にBasic認証がかかる
-認証完了
-ログインページに移動
-またBasic認証がかかる &hellip;">
+  <meta name="description" content="svn使っててはまることが結構あるのでメモ ubuntuでsvnコマンドすると認証失敗する場合 1
+Password for ‘(null)’ GNOME keyring: というメッセージが表示される場合、gnome-keyringというやつが邪魔をしているらしい。ログイン情報を削除すれば解決 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +80,169 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/11/svn-memo/">Svn Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-11T11:53:32+09:00" pubdate data-updated="true">Feb 11<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>svn使っててはまることが結構あるのでメモ</p>
+
+<h2>ubuntuでsvnコマンドすると認証失敗する場合</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Password <span class="k">for</span> ‘<span class="o">(</span>null<span class="o">)</span>’ GNOME keyring:
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>というメッセージが表示される場合、gnome-keyringというやつが邪魔をしているらしい。ログイン情報を削除すれば解決。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rm ~/.gnome2/keyrings/login.keyring
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/02/11/svn-memo/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/11/sqlite-memo/">Sqlite Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-11T11:48:39+09:00" pubdate data-updated="true">Feb 11<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>SQLiteでたまに使う操作をメモ</p>
+
+<h2>テーブルの存在チェック</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">sqlite_master</span> <span class="k">WHERE</span> <span class="k">type</span><span class="o">=</span><span class="s1">&#39;table&#39;</span> <span class="k">AND</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;テーブル名&#39;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/10/unity-memo/">Unity Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-10T23:25:11+09:00" pubdate data-updated="true">Feb 10<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>unity使ってこれから何か作っていこうと思うのでめも。</p>
+
+<h3>最初にやったこと</h3>
+
+<p><a href="http://uinyan.com/unity_7days_kusoge_challenge/">【Unity】素人が7日間クソゲーを作り続けてわかったこと – uinyan. com</a>に載っていた<a href="http://japan.unity3d.com/developer/document/tutorial/my-first-unity/01.html">UNITY &ndash; Developer &ndash; はじめての Unity &ndash; 第1回 世界の「骨格」をつくろう</a>に沿ってブロックとボールを作ってみた。<br/>
+実際にどう操作するかは<a href="https://www.google.com/url?q=http://dotinstall.com/&amp;usd=2&amp;usg=AFQjCNHZtbpqtTDbVeGhAQfx3_H-UUYI1Q">ドットインストールのUnity講座</a>を参考にした。</p>
+
+<h3>物をバウンドさせる</h3>
+
+<p> physicalMaterialでBouncinessに数値を入れる。1とか。1でバウンド時の力のロスが無い。</p>
+
+<h3>効果音を鳴らす</h3>
+
+<ul>
+<li><a href="http://www.senses-circuit.com/material/se_game.html">フリー効果音素材HP</a>などから音源をダウンロード</li>
+<li>Assetに音源をドラッグアンドドロップして追加</li>
+<li>追加したいオブジェクトでAddComponentボタンからComponent>Audio>Audio Sourceを選択</li>
+<li>Audio ClipにAssetに入れた音源を入れる。</li>
+<li>Audio Sourceコンポーネント内で3D Sound Setting>Min Distanceを10くらいに設定</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/02/10/unity-memo/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -589,175 +750,9 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/28/nadesiko-lua/">なでしこでLuaエディタ？を作る（ネタ）</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-28T21:37:03+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>なでしこではLuaを使えるので、なでしこのGUIと組み合わせたら簡単にLuaエディタ作れるんじゃね？ということで作ってみました。（ただのネタです）</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>母艦は「メインフォーム」
-</span><span class='line'>そのクライアントW=640#数値
-</span><span class='line'>そのクライアントH=400#数値
-</span><span class='line'>そのタイトル=「なでしこ」#文字列
-</span><span class='line'>※ ---
-</span><span class='line'>LuaエディタとはTエディタ##生成
-</span><span class='line'>そのX=8#数値
-</span><span class='line'>そのY=8#数値
-</span><span class='line'>そのW=616#数値
-</span><span class='line'>そのH=344#数値
-</span><span class='line'>そのテキスト=「」#文字列
-</span><span class='line'>そのスクロールバー=「」#文字列
-</span><span class='line'>※ ---
-</span><span class='line'>Luaボタンとはボタン##生成
-</span><span class='line'>そのX=280#数値
-</span><span class='line'>そのY=360#数値
-</span><span class='line'>そのW=64#数値
-</span><span class='line'>そのH=32#数値
-</span><span class='line'>そのテキスト=「luaする」#文字列
-</span><span class='line'>そのクリックした時は～Luaボタン__クリックした時#イベント
-</span><span class='line'>※※※積み木デザイナ:ここまで※
-</span><span class='line'>●Luaボタン__クリックした時　　# ここにイベントを書きます。
-</span><span class='line'># 字下げした部分がイベント範囲です。
-</span><span class='line'>  エラー監視
-</span><span class='line'>      ソース=Luaエディタのテキスト
-</span><span class='line'>      A=50
-</span><span class='line'>      結果とは変数
-</span><span class='line'>      LUA(&quot;---
-</span><span class='line'>      {ソース}
-</span><span class='line'>      ---&quot;)
-</span><span class='line'>  エラーならば
-</span><span class='line'>      「エラー」と言う。</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/01/28/nadesiko-lua/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/28/postgresql-memo/">PostgreSQLメモ</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-28T21:24:42+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>rhaco2をPostgreSQL8.3で使えるように色々調べていくうちに学んだメモ。</p>
-
-<h2>insert時に「デフォルト値を入れる」だけの処理をしたい場合</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">insert</span> <span class="k">into</span> <span class="err">テーブル名</span> <span class="k">default</span> <span class="n">value</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でOK</p>
-
-<h2>integerのカラムとかにlikeを適用したい場合</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="err">テーブル名</span> <span class="k">where</span> <span class="n">id</span><span class="p">::</span><span class="nb">text</span> <span class="k">like</span> <span class="o">&amp;#</span><span class="mi">039</span><span class="p">;</span><span class="o">%</span><span class="n">abc</span><span class="o">%&amp;#</span><span class="mi">039</span><span class="p">;;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/01/28/postgresql-memo/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/10/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -786,23 +781,23 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/01/15/use-groonga-for-django-cache/">Use Groonga for Django Cache</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/13/redis-memo/">Redis Memo</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/mt4-memo/">MT4 Memo</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/06/track-button-click-at-google-tag-manager/">Google Tag Managerを使ってボタンのクリックを検出する</a>
       </li>
     
       <li class="post">
         <a href="/blog/2015/12/17/mono-winforms-garbled-on-mac/">Mono Winformsがmacで文字化けする件</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/11/29/output-msil-manually/">Msilを手動で出力する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/11/02/use-mecab-in-python-virtualenv-ubuntu1-12-dot-04/">Virtualenv上のpythonでmecabを使う (Ubuntu1 12.04)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04/">ubuntu12.04でpg bulkloadを使う</a>
       </li>
     
   </ul>
@@ -831,15 +826,16 @@
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (7)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (21)</a></li>
-<li class='category'><a href='/blog/categories/groonga/'>Groonga (1)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (22)</a></li>
+<li class='category'><a href='/blog/categories/groonga/'>Groonga (2)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
+<li class='category'><a href='/blog/categories/mt4/'>MT4 (1)</a></li>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (10)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (23)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (24)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
@@ -847,10 +843,11 @@
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linux/'>linux (12)</a></li>
-<li class='category'><a href='/blog/categories/memo/'>memo (14)</a></li>
+<li class='category'><a href='/blog/categories/memo/'>memo (16)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (8)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
+<li class='category'><a href='/blog/categories/redis/'>redis (1)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>
 <li class='category'><a href='/blog/categories/ruby/'>ruby (9)</a></li>

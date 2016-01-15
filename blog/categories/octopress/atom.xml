@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Octopress | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/octopress/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2016-01-06T12:21:35+09:00</updated>
+  <updated>2016-01-15T12:03:06+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -39,6 +39,17 @@ $(document).ready( function () {
 
 
 <p>のようにJavascriptで対応します</p>
+
+<h2>一覧表示での表示範囲を決めるマークダウン</h2>
+
+<p>```</p>
+
+<!-- more -->
+
+
+<p>```</p>
+
+<p>これを書けばおk</p>
 ]]></content>
   </entry>
   

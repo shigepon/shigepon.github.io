@@ -1,0 +1,415 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>use groonga for django cache - shigeponが関心のある技術情報など</title>
+  <meta name="author" content="shigepon">
+
+  
+  <meta name="description" content="djangoのキャッシュバックエンドとして、Redisを使ってみたけど、慣れてないし、しばらくしたらメモリを圧迫したせいかdjangoがタイムアウトを連発しだしたので、こりゃだめだと思い、groongaを試してみた流れを書いておく。groongaは全文検索エンジンだけど、 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.shigepon.info/blog/2016/01/15/use-groonga-for-django-cache">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<script language="JavaScript">
+	$(document).ready( function () {
+	   $("a[href^='http']:not([href*='" + location.hostname + "'])").attr('target', '_blank');
+	})
+</script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-6001470-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+</hgroup>
+
+</header>
+  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.shigepon.info" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav> -->
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Use Groonga for Django Cache</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-01-15T01:43:58+09:00" pubdate data-updated="true">Jan 15<span>th</span>, 2016</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>djangoのキャッシュバックエンドとして、Redisを使ってみたけど、慣れてないし、しばらくしたらメモリを圧迫したせいかdjangoがタイムアウトを連発しだしたので、こりゃだめだと思い、<a href="http://groonga.org/ja/">groonga</a>を試してみた流れを書いておく。groongaは全文検索エンジンだけど、kvsみたいな使い方も出来る。詳しくはgroongaのページを読めば分かる、はず。</p>
+
+<h2>groonga側の設定</h2>
+
+<p>どうも<a href="http://groonga.org/ja/docs/server/memcached.html">Memcachedバイナリプロトコルが使える</a>らしい。マニュアルのページからおもむろに</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>groonga -d --protocol memcached hoge
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とやるとhogeというファイルが出来た（hogeがデータベース名かつファイル名）。んで、</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>groonga -c
+</span><span class='line'>&gt; table_list
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とするとテーブルが無い。出来てない。これじゃアクセス出来ないんじゃね？と思い（間違ってたんだけど）ググると固定のテーブル名、カラム名になってうんたらかんたらと書いていた。</p>
+
+<p>そこで「決まった名前でテーブルを手動で作らないといけない」と思い込み、指定するべきテーブル名をググってBingして探して1時間以上、ソースからやっとテーブル名がMemcacheで・・・と分かった時点で<strong>テーブル、カラムはgroonga側で自動で作成する</strong>ことに気づいた。どうもバイナリプロトコルでアクセスがあった瞬間にテーブル、カラムを作るみたい。なので、上のコマンドだけで良かったみたい。えーそうなのー＞＜。こんな簡単なのになんでハマったのか・・・＞＜</p>
+
+<p>ちなみにこのコマンドの場合、ポートは10041となる。</p>
+
+<h2>django側の設定</h2>
+
+<p>groonga側の設定でハマった理由はdjangoのキャッシュフレームワークでdjango.core.cache.backends.memcached.MemcachedCacheを使うと全然キャッシュしてくれなかったことにある。</p>
+
+<p>このライブラリが<strong>バイナリプロトコルを使っていない</strong>というのに全く気付かず、絶対groonga側でテーブル作ってないからだと勘違いして1時間以上無駄にしてしまった。</p>
+
+<p>で、結論としては<a href="https://github.com/jaysonsantos/django-bmemcached">Django-BMemcached</a>を使えば問題なくキャッシュしてくれる。他にもバイナリプロトコルを使うライブラリに<a href="https://github.com/django-pylibmc/django-pylibmc">django-pylibmc</a>があるけど、これは何故か接続の段階で止まってしまった。</p>
+
+<p>手順としてはこんな感じ</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install libmemcached-dev
+</span><span class='line'><span class="nv">$ </span>pip install django-bmemcached
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>aptitudeの部分は要らないかも（django-pylibmcを入れる時に怒られて入れたので、もしかして必要無いかもしれない）</p>
+
+<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">CACHES</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="s">&#39;default&#39;</span><span class="p">:{</span>
+</span><span class='line'>        <span class="s">&#39;BACKEND&#39;</span><span class="p">:</span><span class="s">&#39;django_bmemcached.memcached.BMemcached&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s">&#39;LOCATION&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;127.0.0.1:10041&#39;</span><span class="p">],</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これはローカルで上のような形でgroongaのサーバを作った場合の設定。
+これで普通のキャッシュを扱うプログラム書けばちゃんとデータをgroongaに入れてくれた。</p>
+
+<p>めでたしめでたし。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">shigepon</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-01-15T01:43:58+09:00" pubdate data-updated="true">Jan 15<span>th</span>, 2016</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/django/'>Django</a>, <a class='category' href='/blog/categories/groonga/'>Groonga</a>, <a class='category' href='/blog/categories/python/'>Python</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.info/blog/2016/01/15/use-groonga-for-django-cache/" data-via="shigepon" data-counturl="http://blog.shigepon.info/blog/2016/01/15/use-groonga-for-django-cache/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    
+      <div class="related_posts">
+	<h1>Related Posts</h1>
+	<ul>
+		
+	</ul>
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/01/13/redis-memo/" title="Previous Post: redis memo">&laquo; redis memo</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <ul id="recent_posts">
+      <li class="post">
+      <a href="http://blog.shigepon.info" alt="Home"><img src="/images/Home.png"></a>
+      <a href="http://blog.shigepon.info/archives/" alt="Archives"><img src="/images/Calendar.png"></a>
+      <a href="mailto:" alt="E-Mail"><img src="/images/Envelope.png"></a>
+      <a href="http://blog.shigepon.info/atom.xml" alt="subscribe feed"><img src="/images/rss_big.png"></a>
+      </li>
+  </ul>
+</section>
+<section>
+  <h1>About Me</h1>
+  <p>A little something about me.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/01/15/use-groonga-for-django-cache/">Use Groonga for Django Cache</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/13/redis-memo/">Redis Memo</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/07/mt4-memo/">MT4 Memo</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/06/track-button-click-at-google-tag-manager/">Google Tag Managerを使ってボタンのクリックを検出する</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/17/mono-winforms-garbled-on-mac/">Mono Winformsがmacで文字化けする件</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      getTwitterFeed("shigepon", , );
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <p>Follow <a href="http://twitter.com/shigepon">@shigepon</a></p>
+  
+</section>
+
+<section>
+<h1>Categories</h1>
+<ul id="categories">
+	<li class='category'><a href='/blog/categories/analytics/'>Analytics (2)</a></li>
+<li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
+<li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
+<li class='category'><a href='/blog/categories/csharp/'>CSharp (7)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (22)</a></li>
+<li class='category'><a href='/blog/categories/groonga/'>Groonga (2)</a></li>
+<li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
+<li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
+<li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
+<li class='category'><a href='/blog/categories/mt4/'>MT4 (1)</a></li>
+<li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
+<li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
+<li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (10)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (24)</a></li>
+<li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
+<li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
+<li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
+<li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
+<li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
+<li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (12)</a></li>
+<li class='category'><a href='/blog/categories/memo/'>memo (16)</a></li>
+<li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
+<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (8)</a></li>
+<li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
+<li class='category'><a href='/blog/categories/redis/'>redis (1)</a></li>
+<li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
+<li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>
+<li class='category'><a href='/blog/categories/ruby/'>ruby (9)</a></li>
+<li class='category'><a href='/blog/categories/sqlite/'>sqlite (1)</a></li>
+<li class='category'><a href='/blog/categories/svn/'>svn (1)</a></li>
+<li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>
+<li class='category'><a href='/blog/categories/uwsgi/'>uwsgi (1)</a></li>
+<li class='category'><a href='/blog/categories/vim/'>vim (2)</a></li>
+<li class='category'><a href='/blog/categories/vmware/'>vmware (1)</a></li>
+
+</ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/shigepon">@shigepon</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'shigepon',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - shigepon -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
