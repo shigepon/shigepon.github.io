@@ -624,6 +624,78 @@
 <li>&mdash;list-tasks: playbookで行う内容をリストアップ</li>
 </ul>
 
+
+<h2>ansibleで鍵認証のsshで処理したい</h2>
+
+<p>-c paramikoでなく-c sshを使うとssh_configの値を使うことが出来る　</p>
+
+<h2>ansibleで鍵認証のsshで処理したい</h2>
+
+<p>-c paramikoでなく-c sshを使うとssh_configの値を使うことが出来る。　</p>
+
+<p>参考：<a href="https://github.com/ansible/ansible/issues/1172">ansible is not using .ssh/config · Issue #1172 · ansible/ansible</a></p>
+
+<h2>チェック時の注意点</h2>
+
+<ul>
+<li><p>何かをaptとかでインストールしてそのアプリを使って何かインストールしようとするとエラーが出る</p></li>
+<li><p>aptにリポジトリ追加して、アップデートして何かインストールしようとするとエラーが出る</p></li>
+</ul>
+
+
+<p>どちらも実際に動かすとエラーは出ない</p>
+
+<h2>postgresqlのデータベースロケール設定</h2>
+
+<p>ロケール設定してから一旦サービスを再起動する</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Install language-pack-ja</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">apt</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">name=language-pack-ja</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">set locale</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">locale_gen</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">name=ja_JP.UTF-8 state=present</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">first restart</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">service</span><span class="p-Indicator">:</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="s">&#39;postgresql&#39;</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">state</span><span class="p-Indicator">:</span> <span class="s">&#39;restarted&#39;</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">drop database stock if exist</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">sudo_user</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">postgres</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">postgresql_db</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">name=stock state=absent</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">create database stock</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">sudo_user</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">postgres</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">postgresql_db</span><span class="p-Indicator">:</span> <span class="p-Indicator">&gt;</span>
+</span><span class='line'>    <span class="no">name=stock-</span>
+</span><span class='line'>    <span class="no">encoding=&#39;UTF-8&#39;</span>
+</span><span class='line'>    <span class="no">lc_collate=&#39;ja_JP.UTF-8&#39;</span>
+</span><span class='line'>    <span class="no">lc_ctype=&#39;ja_JP.UTF-8&#39;</span>
+</span><span class='line'>    <span class="no">template=&#39;template0&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考：<a href="http://serverfault.com/questions/491237/postgresql-9-2-invalid-locale-name-on-ubuntu-12-04">Postgresql 9.2 &ldquo;invalid locale name&rdquo; on Ubuntu 12.04 &ndash; Server Fault</a></p>
+
+<h2>replaceとlineinfile</h2>
+
+<p>単純な置換、削除ならreplaceが直感的なので良い。
+追加とかある場合はlineinfileが色々できて良い。</p>
 </div>
   
   
