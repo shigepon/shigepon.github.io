@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: ansible | shigeponが関心のある技術情報など]]></title>
+  <link href="http://blog.shigepon.info/blog/categories/ansible/atom.xml" rel="self"/>
+  <link href="http://blog.shigepon.info/"/>
+  <updated>2016-01-18T11:55:21+09:00</updated>
+  <id>http://blog.shigepon.info/</id>
+  <author>
+    <name><![CDATA[shigepon]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[ansible memo]]></title>
+    <link href="http://blog.shigepon.info/blog/2014/07/01/ansible-memo/"/>
+    <updated>2014-07-01T16:56:06+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2014/07/01/ansible-memo</id>
+    <content type="html"><![CDATA[<p>ansibleで自分が欲しい情報が色んなページに散らばっていたので、メモ</p>
+
+<h3>ansible-playbookのオプション</h3>
+
+<ul>
+<li>-K: sudoのパスワード入力</li>
+<li>-C (&mdash;check): 実際に実行しないでチェックしてくれる</li>
+<li>-l name: hostsファイルに[name]と書かれたホストにのみ実行</li>
+<li>-i hostsfile: 初期状態では/etc/ansible/hostsを見に行くので、自分で指定したい場合に</li>
+<li>&mdash;syntax-check: playbookの書式チェック。書いて最初にやるといい</li>
+<li>&mdash;list-tasks: playbookで行う内容をリストアップ</li>
+</ul>
+
+
+<h2>ansibleで鍵認証のsshで処理したい</h2>
+
+<p>-c paramikoでなく-c sshを使うとssh_configの値を使うことが出来る　</p>
+
+<h2>ansibleで鍵認証のsshで処理したい</h2>
+
+<p>-c paramikoでなく-c sshを使うとssh_configの値を使うことが出来る。　</p>
+
+<p>参考：<a href="https://github.com/ansible/ansible/issues/1172">ansible is not using .ssh/config · Issue #1172 · ansible/ansible</a></p>
+
+<h2>チェック時の注意点</h2>
+
+<ul>
+<li><p>何かをaptとかでインストールしてそのアプリを使って何かインストールしようとするとエラーが出る</p></li>
+<li><p>aptにリポジトリ追加して、アップデートして何かインストールしようとするとエラーが出る</p></li>
+</ul>
+
+
+<p>どちらも実際に動かすとエラーは出ない</p>
+
+<h2>postgresqlのデータベースロケール設定</h2>
+
+<p>ロケール設定してから一旦サービスを再起動する</p>
+
+<p>```yml</p>
+
+<pre><code>- name: Install language-pack-ja 
+  apt: name=language-pack-ja
+- name: set locale
+  locale_gen: name=ja_JP.UTF-8 state=present
+- name: first restart
+  service:
+    name: 'postgresql'
+    state: 'restarted'
+- name: drop database stock if exist
+  sudo_user: postgres
+  postgresql_db: name=stock state=absent
+- name: create database stock
+  sudo_user: postgres
+  postgresql_db: &gt;
+    name=stock-
+    encoding='UTF-8'
+    lc_collate='ja_JP.UTF-8'
+    lc_ctype='ja_JP.UTF-8'
+    template='template0'
+</code></pre>
+
+<p>```
+参考：<a href="http://serverfault.com/questions/491237/postgresql-9-2-invalid-locale-name-on-ubuntu-12-04">Postgresql 9.2 &ldquo;invalid locale name&rdquo; on Ubuntu 12.04 &ndash; Server Fault</a></p>
+
+<h2>replaceとlineinfile</h2>
+
+<p>単純な置換、削除ならreplaceが直感的なので良い。
+追加とかある場合はlineinfileが色々できて良い。</p>
+
+<h2>virtualenv関連</h2>
+
+<p>virtualenvのインストールだけならpipでいけるが、virtualenvの環境を初期化しておきたいのでこんな感じ</p>
+
+<p>```yml</p>
+
+<pre><code>- name: install virtualenv
+  pip: name=virtualenv state=latest
+- name: initialize virtualenv
+  command: virtualenv /path/to/env creates="/path/to/env"
+- name: install request on vertualenv
+  pip:
+    name=requests
+    virtualenv=/path/to/env
+</code></pre>
+
+<p>```</p>
+
+<p>requestsは最低でも入れておかないとssl関連のwarningが出る</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/29991041/why-am-i-getting-insecureplatformwarning-on-mac">python &ndash; Why am I getting InsecurePlatformWarning on mac? &ndash; Stack Overflow</a>、<a href="http://stackoverflow.com/questions/26402123/ansible-creating-a-virtualenv">python &ndash; Ansible creating a virtualenv &ndash; Stack Overflow</a></p>
+]]></content>
+  </entry>
+  
+</feed>
