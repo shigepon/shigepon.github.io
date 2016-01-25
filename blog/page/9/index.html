@@ -9,8 +9,18 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="svn使っててはまることが結構あるのでメモ ubuntuでsvnコマンドすると認証失敗する場合 1
-Password for ‘(null)’ GNOME keyring: というメッセージが表示される場合、gnome-keyringというやつが邪魔をしているらしい。ログイン情報を削除すれば解決 &hellip;">
+  <meta name="description" content="ググってみたけど無かったのでメモ。
+単純に.vimrcに 1
+2
+3
+4
+5
+6
+7
+let dbext_default_profile=""
+let dbext_default_type="PGSQL"
+let dbext_default_user="username"
+let &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +90,118 @@ Password for ‘(null)’ GNOME keyring: というメッセージが表示され
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/28/vim-dbext-postgresql/">dbext.vimでpostgresqlにアクセスする</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-28T11:48:20+09:00" pubdate data-updated="true">Feb 28<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ググってみたけど無かったのでメモ。
+単純に.vimrcに</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>let dbext_default_profile=""
+</span><span class='line'>let dbext_default_type="PGSQL"
+</span><span class='line'>let dbext_default_user="username"
+</span><span class='line'>let dbext_default_passwd="password"
+</span><span class='line'>let dbext_default_dbname="dbname"
+</span><span class='line'>let dbext_default_host="host"
+</span><span class='line'>let dbext_default_port="port"</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/02/28/vim-dbext-postgresql/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/26/rails-startup/">Ruby on Railsを入れてみた</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-26T14:51:16+09:00" pubdate data-updated="true">Feb 26<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>rhaco使わないでWebサービス作るならもうPHP使わずに他の言語でやってみようかなと思い、
+DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強という意味を込めてRailsでやってみることにした。</p>
+
+<p>とりあえずまずはインストール出来ないと話にならないので、Railsをインストールしてみた話。</p>
+
+<p>Ubuntu使ってるので、aptitude install railsでさくっと終わるかなと思ってTwitterで何となく</p>
+
+<blockquote><p>shigepon: railsはバージョンいくつを使うと吉なんでしょ？</p></blockquote>
+
+<p>とつぶやいたら、@sugamasaoさんから</p>
+
+<blockquote><p>sugamasao: @shigepon しがらみがなければ、最新の4.0.2が良いと思います。お試しで触って見るなら、4.1のbeta版を使って見ても良いかもしれません〜</p></blockquote>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/02/26/rails-startup/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -619,137 +741,6 @@ Password for ‘(null)’ GNOME keyring: というメッセージが表示され
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/28/nadesiko-plugin-cs/">C#で作ったdllをC++/CLIで使う</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-28T22:27:58+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><strong>画像やファイルが無くなっていますがご了承下さい</strong></p>
-
-<p>なでしこでプラグインを作る時にC#を使いたかったので、本格的にdllを作る前に、C++/CLIからMessageBoxを表示する程度のC#のdllを呼び出してみました。</p>
-
-<p>C#のdllコード</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>using System;
-</span><span class='line'>using System.Collections.Generic;
-</span><span class='line'>using System.Windows.Forms;
-</span><span class='line'>using System.Text;
-</span><span class='line'>namespace ClassLibrary1{
-</span><span class='line'>    public class Class1
-</span><span class='line'>    {
-</span><span class='line'>        public static void Method1()
-</span><span class='line'>        {
-</span><span class='line'>            MessageBox.Show(&quot;method1&quot;);
-</span><span class='line'>        }
-</span><span class='line'>    }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/01/28/nadesiko-plugin-cs/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/28/nadesiko-plugin/">C++/CLIでなでしこのプラグインを作る方法(Visual C++ Express Edition)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-28T21:45:15+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>なでしこでプラグインを作る時にC#を使いたかったので、その前段階としてC++/CLIでプラグインを作る方法を探ってみました。</p>
-
-<p>C++/CLIが使えると、.Netを使えるようになり、C#で作ったdllもVC++の参照設定から読み込んで使えるようになります。</p>
-
-<p>なでしこにはC++でプラグイン開発するためのsdkがあります。</p>
-
-<p>ただし、VC++で使用するには<a href="http://www.himanavi.net/cgi/nade-bbs2/cbbs.cgi?mode=one&amp;number=7462&amp;type=7446&amp;space=60&amp;no=0">なでしこ質問掲示板</a>にあるような設定をしなければいけません。（以下引用）</p>
-
-<ol>
-<li>Win32プロジェクトを作成</li>
-<li>plugins_sdk_cからソースを追加</li>
-<li>dnako_import.defを作成</li>
-<li>すべての構成でプロジェクトのプロパティを修正　全般→文字セットを「マルチ バイト文字セットを使用する」に変更　リンカ→入力→モジュール定義ファイルに「dnako_import.def」と入力</li>
-<li>ビルド</li>
-</ol>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/01/28/nadesiko-plugin/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/10/">&larr; Older</a>
@@ -781,6 +772,14 @@ Password for ‘(null)’ GNOME keyring: というメッセージが表示され
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/">Install and Setting Up Fluent-pluhin-groonga Using Ansible</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/19/log-view-parameter-before-caching-for-django/">Djangoでcache使ってる間でも呼び出されたviewとかパラメーターをログに書き出したい</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/15/use-groonga-for-django-cache/">Use Groonga for Django Cache</a>
       </li>
     
@@ -790,14 +789,6 @@ Password for ‘(null)’ GNOME keyring: というメッセージが表示され
     
       <li class="post">
         <a href="/blog/2016/01/07/mt4-memo/">MT4 Memo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/01/06/track-button-click-at-google-tag-manager/">Google Tag Managerを使ってボタンのクリックを検出する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/12/17/mono-winforms-garbled-on-mac/">Mono Winformsがmacで文字化けする件</a>
       </li>
     
   </ul>
@@ -826,7 +817,7 @@ Password for ‘(null)’ GNOME keyring: というメッセージが表示され
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (7)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (22)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (23)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (2)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
@@ -835,13 +826,14 @@ Password for ‘(null)’ GNOME keyring: というメッセージが表示され
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (10)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (25)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (26)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
-<li class='category'><a href='/blog/categories/ansible/'>ansible (1)</a></li>
+<li class='category'><a href='/blog/categories/ansible/'>ansible (2)</a></li>
 <li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
+<li class='category'><a href='/blog/categories/groonga/'>groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linux/'>linux (12)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (17)</a></li>
@@ -851,7 +843,7 @@ Password for ‘(null)’ GNOME keyring: というメッセージが表示され
 <li class='category'><a href='/blog/categories/redis/'>redis (1)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>
-<li class='category'><a href='/blog/categories/ruby/'>ruby (9)</a></li>
+<li class='category'><a href='/blog/categories/ruby/'>ruby (10)</a></li>
 <li class='category'><a href='/blog/categories/sqlite/'>sqlite (1)</a></li>
 <li class='category'><a href='/blog/categories/svn/'>svn (1)</a></li>
 <li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>

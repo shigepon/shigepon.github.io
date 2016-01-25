@@ -9,8 +9,15 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="Djangoやり始めたので、その過程で記録しておきたいことをメモ。 pip freezeでWarning: cannot find svn location for distribute==0.6.24dev-r0 1
-$ sudo pip install --upgrade distribute &hellip;">
+  <meta name="description" content="データの一覧表示 あとで参考ページとか追記する予定。
+データの一覧表示には何種類かファイルが必要（モデル、ビュー、テンプレート、URLディスパッチャー）。
+それぞれこんな感じで用意する。 モデル models.py1
+2
+3
+4
+5
+6
+from django.db import models &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +87,111 @@ $ sudo pip install --upgrade distribute &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/02/django-show-list-with-paging/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-02T11:51:44+09:00" pubdate data-updated="true">Jul 2<span>nd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>データの一覧表示</h2>
+
+<p>あとで参考ページとか追記する予定。
+データの一覧表示には何種類かファイルが必要（モデル、ビュー、テンプレート、URLディスパッチャー）。
+それぞれこんな感じで用意する。</p>
+
+<h3>モデル</h3>
+
+<figure class='code'><figcaption><span>models.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">Bocho</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">court</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
+</span><span class='line'>    <span class="o">....</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/07/02/django-show-list-with-paging/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/01/ansible-memo/">Ansible Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-01T16:56:06+09:00" pubdate data-updated="true">Jul 1<span>st</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ansibleで自分が欲しい情報が色んなページに散らばっていたので、メモ</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/07/01/ansible-memo/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -585,122 +697,6 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/06/07/build-php-with-phpenv/">Phpenvとphp-buildを使って適当なバージョンのphpをビルドする</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-06-07T00:42:03+09:00" pubdate data-updated="true">Jun 7<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>基本は<a href="http://d.hatena.ne.jp/hnw/20130626">php-buildで複数バージョンのPHP-FPMを用意する &ndash; hnwの日記</a>を参考にして進める</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>curl https://raw.github.com/CHH/phpenv/master/bin/phpenv-install.sh | bash
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これが何故か上手くいかなかったので</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>wget https://raw.github.com/CHH/phpenv/master/bin/phpenv-install.sh
-</span><span class='line'><span class="nv">$ </span>chmod +x phpenv-install.sh
-</span><span class='line'><span class="nv">$ </span>./phpenv-install.sh
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/06/07/build-php-with-phpenv/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/06/06/difficult-to-use-rails/">Railsやりにくいから挫折しそうという話</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-06-06T10:38:10+09:00" pubdate data-updated="true">Jun 6<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>今までphpの<a href="http://rhaco.org">rhaco</a>というドマイナーなフレームワークを使ってきてたので、メジャーなフレームワークでも使ってみるかー。ついでにrubyの練習にもなるかーと思ってRails4をはじめたんだけど、なんかこー色々自分の開発方法に合ってないような気がするので挫折する。</p>
-
-<p>使いにくいなと思った点はメリットとの二律背反の部分もあるんだけど、次のような感じ</p>
-
-<ul>
-<li>モデルをコマンドで作ると、テーブル名が勝手に複数形になる</li>
-<li>viewでurl表示させたりするのが面倒。きっとやり方知らないだけだろうけど。</li>
-<li>コマンドありきで作っていくので、手作業でどこまで修正して良いか分からない</li>
-<li>どんな流れで処理が進むのかさっぱり分からない（フレームワークが大きすぎるから？）。本読めって話だろうけど・・・なー(めんどい)。</li>
-<li>分からない時に聞く相手が居ない</li>
-<li>バージョンによってやり方が結構変わるみたいで、ググってもそれが正しい手法か分からない時がある（これはrhacoも同じだからrhacoにも何とかして欲しいとこではある）</li>
-<li>Capistrano+nginx+unicornで結構ハマってそれだけで挫折しそうになった。未だにちゃんとunicornをリロード出来ない。</li>
-<li>メジャーなフレームワークのはずなのに、ちょこちょこバッドノウハウない？違う？</li>
-<li>SassやCoffeeScriptがデフォみたいなのがやだ</li>
-<li>いちいちgemファイルでほにゃららしないと上手く動かない？Bootstrapとか。そしてgemがあるかどうかをいちいちググって探さないといけない。</li>
-</ul>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/06/06/difficult-to-use-rails/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -732,6 +728,14 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/">Install and Setting Up Fluent-pluhin-groonga Using Ansible</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/19/log-view-parameter-before-caching-for-django/">Djangoでcache使ってる間でも呼び出されたviewとかパラメーターをログに書き出したい</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/15/use-groonga-for-django-cache/">Use Groonga for Django Cache</a>
       </li>
     
@@ -741,14 +745,6 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
     
       <li class="post">
         <a href="/blog/2016/01/07/mt4-memo/">MT4 Memo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/01/06/track-button-click-at-google-tag-manager/">Google Tag Managerを使ってボタンのクリックを検出する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/12/17/mono-winforms-garbled-on-mac/">Mono Winformsがmacで文字化けする件</a>
       </li>
     
   </ul>
@@ -777,7 +773,7 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (7)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (22)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (23)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (2)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
@@ -786,13 +782,14 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (10)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (25)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (26)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
-<li class='category'><a href='/blog/categories/ansible/'>ansible (1)</a></li>
+<li class='category'><a href='/blog/categories/ansible/'>ansible (2)</a></li>
 <li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
+<li class='category'><a href='/blog/categories/groonga/'>groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linux/'>linux (12)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (17)</a></li>
@@ -802,7 +799,7 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
 <li class='category'><a href='/blog/categories/redis/'>redis (1)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>
-<li class='category'><a href='/blog/categories/ruby/'>ruby (9)</a></li>
+<li class='category'><a href='/blog/categories/ruby/'>ruby (10)</a></li>
 <li class='category'><a href='/blog/categories/sqlite/'>sqlite (1)</a></li>
 <li class='category'><a href='/blog/categories/svn/'>svn (1)</a></li>
 <li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2016-01-18T11:55:21+09:00</updated>
+  <updated>2016-01-25T09:29:02+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,75 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[djangoでcache使ってる間でも呼び出されたviewとかパラメーターをログに書き出したい]]></title>
+    <link href="http://blog.shigepon.info/blog/2016/01/19/log-view-parameter-before-caching-for-django/"/>
+    <updated>2016-01-19T18:50:33+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2016/01/19/log-view-parameter-before-caching-for-django</id>
+    <content type="html"><![CDATA[<p>djangoのログ機能を使って、呼び出されたview名とかパラメーターとかを書き出してたんだけど、viewでキャッシュを使うとログを書いてくれなくなるので、それをなんとかしたいという話。</p>
+
+<p>コードにするとこんな感じ</p>
+
+<p>```py views.py
+&hellip;
+from django.views.decorators.cache import cache_page
+import logging
+logger = logging.getLogger(&ldquo;hoge&rdquo;)</p>
+
+<p>@cache_page(60<em>60</em>24*30)
+def index(request, param1, param2):</p>
+
+<pre><code>logger.info(u"param1:{0} param2:{1}".format(param1, param2))
+...
+</code></pre>
+
+<p>```</p>
+
+<!-- more -->
+
+
+<p>こうするとキャッシュが効いてしまって、1回アクセスした時以外ログが出なくなってしまう。アクセスログ的
+な使い方をしたい時に困ってしまう。アクセスログはnginxとかそこらへんのログに任せてた方が良いような気もするが、
+django内で何とかしたかったのでrequest_startedシグナルを使って下のようにした</p>
+
+<p>```py views.py
+from django.views.decorators.cache import cache_page
+import logging
+logger = logging.getLogger(&ldquo;hoge&rdquo;)</p>
+
+<p>@cache_page(60<em>60</em>24*30)
+def index(request, param1, param2):</p>
+
+<pre><code>logger.info(u"param1:{0} param2:{1}".format(param1, param2))
+...
+</code></pre>
+
+<h1>ここから追記</h1>
+
+<p>from django.core.signals import request_started
+import copy
+from django.core.handlers.wsgi import WSGIRequest
+from django.core.urlresolvers import resolve
+def log_before_view(**kwargs):</p>
+
+<pre><code>try:
+    handler = kwargs["sender"]
+    environ = copy.copy(kwargs["environ"])
+    request = WSGIRequest(environ)
+    match = resolve(request.path_info)
+    if len(match.args) == 2:
+        logger.info(u"param1:{0} param2:{1}".format(param1, param2))
+except:
+    pass
+</code></pre>
+
+<p>request_started.connect(log_before_view)
+```</p>
+
+<p>これでキャッシュが効いてる状態でもログを取ることが出来る</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[use groonga for django cache]]></title>
@@ -382,50 +451,6 @@ def index(request):</p>
 <p>```</p>
 
 <p>みたいにselect_relatedメソッドを使うとjoinしてくれた。prefetch_relatedってメソッドでも同じように出来る（ちょっと役割は違う）らしいが試していない。ざっくりドキュメントを読むと、ForeignKeyと１対１リレーションにはselect_relatedが良く、Many to ManyやMany to Oneにはprefetch_relatedが良いらしい。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[DjangoモデルをDjangoプロジェクトの外から使う]]></title>
-    <link href="http://blog.shigepon.info/blog/2015/07/28/use-django-model-outside-django-project/"/>
-    <updated>2015-07-28T16:43:55+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2015/07/28/use-django-model-outside-django-project</id>
-    <content type="html"><![CDATA[<p>参考：</p>
-
-<ul>
-<li><a href="http://d.hatena.ne.jp/shobonengine/20120103/1325535420">外部から Django プロジェクトのデータベースを操作する &ndash; ShobonEngineの日記</a></li>
-<li><a href="http://stackoverflow.com/questions/25537905/django-1-7-throws-django-core-exceptions-appregistrynotready-models-arent-load">python &ndash; Django 1.7 throws django.core.exceptions.AppRegistryNotReady: Models aren&rsquo;t loaded yet &ndash; Stack Overflow</a></li>
-</ul>
-
-
-<p>モデルインポート前に以下の手順が必要</p>
-
-<ul>
-<li>プロジェクトをsys.pathに追加</li>
-<li>DJANGO_SETTINGS_MODULE環境変数がプロジェクトのsettings.pyを指すように指定</li>
-<li>applicationのロードが必要? (上2つだけだとModels aren&rsquo;t loaded yetというエラーが出た)</li>
-</ul>
-
-
-<p>sys.pathにはフルパスを入れれば確実。必要なコードは下のような感じになる。</p>
-
-<p>```py</p>
-
-<h1>encoding: UTF-8</h1>
-
-<p>import sys
-sys.path.append(&lsquo;/path/to/django/project&rsquo;)
-import os
-os.environ[&lsquo;DJANGO_SETTINGS_MODULE&rsquo;] = &lsquo;project.settings&rsquo;</p>
-
-<p>from django.core.wsgi import get_wsgi_application
-application = get_wsgi_application()</p>
-
-<p>from application.models import AModel</p>
-
-<p>list = AModel.objects.all()
-&hellip;
-```</p>
 ]]></content>
   </entry>
   

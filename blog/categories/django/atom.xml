@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Django | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/django/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2016-01-18T11:55:21+09:00</updated>
+  <updated>2016-01-25T09:29:02+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,75 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[djangoでcache使ってる間でも呼び出されたviewとかパラメーターをログに書き出したい]]></title>
+    <link href="http://blog.shigepon.info/blog/2016/01/19/log-view-parameter-before-caching-for-django/"/>
+    <updated>2016-01-19T18:50:33+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2016/01/19/log-view-parameter-before-caching-for-django</id>
+    <content type="html"><![CDATA[<p>djangoのログ機能を使って、呼び出されたview名とかパラメーターとかを書き出してたんだけど、viewでキャッシュを使うとログを書いてくれなくなるので、それをなんとかしたいという話。</p>
+
+<p>コードにするとこんな感じ</p>
+
+<p>```py views.py
+&hellip;
+from django.views.decorators.cache import cache_page
+import logging
+logger = logging.getLogger(&ldquo;hoge&rdquo;)</p>
+
+<p>@cache_page(60<em>60</em>24*30)
+def index(request, param1, param2):</p>
+
+<pre><code>logger.info(u"param1:{0} param2:{1}".format(param1, param2))
+...
+</code></pre>
+
+<p>```</p>
+
+<!-- more -->
+
+
+<p>こうするとキャッシュが効いてしまって、1回アクセスした時以外ログが出なくなってしまう。アクセスログ的
+な使い方をしたい時に困ってしまう。アクセスログはnginxとかそこらへんのログに任せてた方が良いような気もするが、
+django内で何とかしたかったのでrequest_startedシグナルを使って下のようにした</p>
+
+<p>```py views.py
+from django.views.decorators.cache import cache_page
+import logging
+logger = logging.getLogger(&ldquo;hoge&rdquo;)</p>
+
+<p>@cache_page(60<em>60</em>24*30)
+def index(request, param1, param2):</p>
+
+<pre><code>logger.info(u"param1:{0} param2:{1}".format(param1, param2))
+...
+</code></pre>
+
+<h1>ここから追記</h1>
+
+<p>from django.core.signals import request_started
+import copy
+from django.core.handlers.wsgi import WSGIRequest
+from django.core.urlresolvers import resolve
+def log_before_view(**kwargs):</p>
+
+<pre><code>try:
+    handler = kwargs["sender"]
+    environ = copy.copy(kwargs["environ"])
+    request = WSGIRequest(environ)
+    match = resolve(request.path_info)
+    if len(match.args) == 2:
+        logger.info(u"param1:{0} param2:{1}".format(param1, param2))
+except:
+    pass
+</code></pre>
+
+<p>request_started.connect(log_before_view)
+```</p>
+
+<p>これでキャッシュが効いてる状態でもログを取ることが出来る</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[use groonga for django cache]]></title>
@@ -312,98 +381,6 @@ application = get_wsgi_application()</p>
 <p>list = AModel.objects.all()
 &hellip;
 ```</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Djangoで複数データベースを使用する]]></title>
-    <link href="http://blog.shigepon.info/blog/2015/07/07/use-multiple-databases-in-django/"/>
-    <updated>2015-07-07T12:33:37+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2015/07/07/use-multiple-databases-in-django</id>
-    <content type="html"><![CDATA[<p>Djangoでは複数データベースを扱える。でも色々コーディングや設定が必要なのでメモしておく。参考：<a href="https://docs.djangoproject.com/en/1.7/topics/db/multi-db/">Multiple databases | Django documentation | Django</a>。対応バージョンはDjango 1.7。使ったデータベースはPostgreSQL。</p>
-
-<h2>settings.py</h2>
-
-<p>settings.pyで複数データベースの接続設定をする</p>
-
-<p>```py settings.py
-DATABASES = {</p>
-
-<pre><code>'default': {
-    'NAME': 'app_data',
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'USER': 'postgres_user',
-    'PASSWORD': 's3krit'
-},
-'users': {
-    'NAME': 'user_data',
-    'ENGINE': 'django.db.backends.mysql',
-    'USER': 'mysql_user',
-    'PASSWORD': 'priv4te'
-}
-</code></pre>
-
-<p>}
-```</p>
-
-<p>参考ページのをそのまま使った。さらに追加も出来る。</p>
-
-<h2>ここまでの設定でのマイグレーション</h2>
-
-<p><code>sh
-$ python manage.py migrate
-</code></p>
-
-<p>だとdefault設定のデータベースへのマイグレーション、</p>
-
-<p><code>sh
-$ python manage.py migrate --database=users
-</code></p>
-
-<p>とするとusersで設定したデータベースへのマイグレーションとなる。
-何も設定していないと、それぞれのデータベースに全アプリケーションの全てのモデルが反映される。</p>
-
-<h2>データベースに保存するアプリ、モデルを限定したい</h2>
-
-<p>ルーティング設定をする。</p>
-
-<p><code>py settings.py
-DATABASE_ROUTERS = ['myproject.routers.Router']
-</code></p>
-
-<p>settings.pyはこんな感じ。んでmyprojectフォルダにrouters.pyを作成して例えばuserアプリのものだけusersデータベースを使うという設定の場合次のように書く</p>
-
-<p>```py routers.py
-class Router(object):</p>
-
-<pre><code>def db_for_read(self, model, **hints):
-    #ここでランダムに選択すると、dbの負荷分散っぽいことが出来る
-    #例：return random.choice['default','users']
-    if model._meta.app_label == "user":
-        return "users"
-    return "default"
-def db_for_write(self, model, **hints):
-    if model._meta.app_label == "user":
-        return "users"
-    return "default"
-def allow_relation(self, obj1, obj2, **hints):
-    #Trueはリレーションを認める、Falseは認めない、Noneはこのコードでは関知しないという意味
-    return None
-def allow_migrate(self, db, model):
-    #userアプリの場合はusers設定のデータベースへmigrate。
-    #他のアプリはusers以外のデータベースへmigrateする設定
-    if model._meta.app_label == "user"
-        return db == "users":
-    else:
-        return True
-    return False
-</code></pre>
-
-<p>```</p>
-
-<p>routers.pyをちゃんと書かないと、色々不具合が出る（例：管理用のモデルがmigrateできないとか）ので気をつけた方が良い。</p>
-
-<p>上に紹介した参考ページには色々コードが書いてあるので、参考になる。</p>
 ]]></content>
   </entry>
   

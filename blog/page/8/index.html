@@ -9,12 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="rhaco3を使ってる人なんて世界で何人居るのかなと思いつつ、あまりに情報が少ないので、メモ書きしていく。
-大きめネタは別記事にまとめるが小さいネタはここに追記する。 Daoで作ったSQLを確認する方法 Daoを継承したモデルとして、Hogeモデルがあるとして 1
-2
-3
-4
-\Hoge:: &hellip;">
+  <meta name="description" content="本日、OpenSSLの重大バグが発覚。インターネットの大部分に影響の可能性 | TechCrunch Japanというニュースで 過去2年以内のあらゆるバージョンのOpenSSLが走るシステムで、システムメモリー上にある大量のデータを暴露することが可能 と書いてあった、これはまずいので、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,6 +79,173 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/04/08/update-openssl-security-patch/">Ubuntuでopensslのsecurity Patchを当てる</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-08T14:39:21+09:00" pubdate data-updated="true">Apr 8<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>本日、<a href="http://jp.techcrunch.com/2014/04/08/20140407massive-security-bug-in-openssl-could-effect-a-huge-chunk-of-the-internet/">OpenSSLの重大バグが発覚。インターネットの大部分に影響の可能性 | TechCrunch Japan</a>というニュースで</p>
+
+<blockquote><p>過去2年以内のあらゆるバージョンのOpenSSLが走るシステムで、システムメモリー上にある大量のデータを暴露することが可能</p></blockquote>
+
+<p>と書いてあった、これはまずいので、あわててセキュリティパッチを当てたので手順をメモ。 OSはUbuntu 12.04LTS。</p>
+
+<p>Ubuntuでは<a href="http://www.ubuntu.com/usn/usn-2165-1/">USN-2165-1: OpenSSL vulnerabilities | Ubuntu</a>にあるように、Ubuntu 13.10、12.10、12.04 LTSでセキュリティパッチが出ている（2014年4月7日現在)。ということでaptを使えばセキュリティパッチを当てることが出来る。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo apt-get update
+</span><span class='line'><span class="nv">$ </span>sudo apt-get upgrade
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/04/08/update-openssl-security-patch/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/20/nginx-memo/">Nginx Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-20T16:04:53+09:00" pubdate data-updated="true">Mar 20<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Nginxで503コードのページをカスタマイズする</h2>
+
+<p>なるべく手軽にメンテナンスページを出すための手順</p>
+
+<ul>
+<li>path/to/root/error/503.htmlにページを用意する。</li>
+<li>path/to/root/error/以下に画像やcss、javascriptなど必要なものを用意する。</li>
+<li>nginxの設定を変更する。必要な部分だけ抜粋</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>server {
+</span><span class='line'>  server_name xxx.xxx;
+</span><span class='line'>        set $maintenance false;
+</span><span class='line'>        if (-f $document_root/error/503.html ){
+</span><span class='line'>                set $maintenance true;
+</span><span class='line'>        }
+</span><span class='line'>        if ($uri ~ "^/error/") {
+</span><span class='line'>            set $maintenance false;
+</span><span class='line'>        }
+</span><span class='line'>        if ($remote_addr = XXX.XXX.XXX.XXX ){
+</span><span class='line'>                set $maintenance false;#指定したIPからのアクセスは普通に見れるようにする
+</span><span class='line'>        }
+</span><span class='line'>        if ($maintenance = true) {
+</span><span class='line'>                return 503;
+</span><span class='line'>        }
+</span><span class='line'>        error_page 503 @maintenance;
+</span><span class='line'>        location @maintenance {
+</span><span class='line'>                rewrite ^(.*)$ /error/503.html break;
+</span><span class='line'>                expires 0;
+</span><span class='line'>        }
+</span><span class='line'>        location /error/ {}
+</span><span class='line'>
+</span><span class='line'>&lt;!-- more --&gt;
+</span><span class='line'>
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>path/to/root/error/503.htmlがあれば、メンテナンス画面を表示する。なければ表示しない。一度nginx設定をリロードすればその後はリロードの必要もない。</p>
+
+<h2>末尾に必ずスラッシュを入れる</h2>
+
+<p>djangoで末尾スラッシュで無い場合に上手くurlsを組み立てられなかったりしたので・・・djangoは悪くなく、自分の実装のせいなんだけど。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>rewrite ^([^.]*[^/])$ $1/ permanent;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でおk</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/645853/add-slash-to-the-end-of-every-url-need-rewrite-rule-for-nginx">regex &ndash; Add slash to the end of every url (need rewrite rule for nginx) &ndash; Stack Overflow</a>&#8220;`</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -588,118 +750,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/28/vim-dbext-postgresql/">dbext.vimでpostgresqlにアクセスする</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-28T11:48:20+09:00" pubdate data-updated="true">Feb 28<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>ググってみたけど無かったのでメモ。
-単純に.vimrcに</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>let dbext_default_profile=""
-</span><span class='line'>let dbext_default_type="PGSQL"
-</span><span class='line'>let dbext_default_user="username"
-</span><span class='line'>let dbext_default_passwd="password"
-</span><span class='line'>let dbext_default_dbname="dbname"
-</span><span class='line'>let dbext_default_host="host"
-</span><span class='line'>let dbext_default_port="port"</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/02/28/vim-dbext-postgresql/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/26/rails-startup/">Ruby on Railsを入れてみた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-26T14:51:16+09:00" pubdate data-updated="true">Feb 26<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>rhaco使わないでWebサービス作るならもうPHP使わずに他の言語でやってみようかなと思い、
-DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強という意味を込めてRailsでやってみることにした。</p>
-
-<p>とりあえずまずはインストール出来ないと話にならないので、Railsをインストールしてみた話。</p>
-
-<p>Ubuntu使ってるので、aptitude install railsでさくっと終わるかなと思ってTwitterで何となく</p>
-
-<blockquote><p>shigepon: railsはバージョンいくつを使うと吉なんでしょ？</p></blockquote>
-
-<p>とつぶやいたら、@sugamasaoさんから</p>
-
-<blockquote><p>sugamasao: @shigepon しがらみがなければ、最新の4.0.2が良いと思います。お試しで触って見るなら、4.1のbeta版を使って見ても良いかもしれません〜</p></blockquote>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/02/26/rails-startup/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/9/">&larr; Older</a>
@@ -731,6 +781,14 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/">Install and Setting Up Fluent-pluhin-groonga Using Ansible</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/19/log-view-parameter-before-caching-for-django/">Djangoでcache使ってる間でも呼び出されたviewとかパラメーターをログに書き出したい</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/15/use-groonga-for-django-cache/">Use Groonga for Django Cache</a>
       </li>
     
@@ -740,14 +798,6 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
     
       <li class="post">
         <a href="/blog/2016/01/07/mt4-memo/">MT4 Memo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/01/06/track-button-click-at-google-tag-manager/">Google Tag Managerを使ってボタンのクリックを検出する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/12/17/mono-winforms-garbled-on-mac/">Mono Winformsがmacで文字化けする件</a>
       </li>
     
   </ul>
@@ -776,7 +826,7 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (7)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (22)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (23)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (2)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
@@ -785,13 +835,14 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (10)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (25)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (26)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
-<li class='category'><a href='/blog/categories/ansible/'>ansible (1)</a></li>
+<li class='category'><a href='/blog/categories/ansible/'>ansible (2)</a></li>
 <li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
+<li class='category'><a href='/blog/categories/groonga/'>groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linux/'>linux (12)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (17)</a></li>
@@ -801,7 +852,7 @@ DjangoとRailsを迷ったあげく、ChefでRuby使うからRubyの勉強とい
 <li class='category'><a href='/blog/categories/redis/'>redis (1)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>
-<li class='category'><a href='/blog/categories/ruby/'>ruby (9)</a></li>
+<li class='category'><a href='/blog/categories/ruby/'>ruby (10)</a></li>
 <li class='category'><a href='/blog/categories/sqlite/'>sqlite (1)</a></li>
 <li class='category'><a href='/blog/categories/svn/'>svn (1)</a></li>
 <li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>

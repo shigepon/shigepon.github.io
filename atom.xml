@@ -4,7 +4,7 @@
   <title><![CDATA[shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2016-01-18T11:55:21+09:00</updated>
+  <updated>2016-01-25T09:29:02+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,327 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[install and setting up fluent-pluhin-groonga using ansible]]></title>
+    <link href="http://blog.shigepon.info/blog/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/"/>
+    <updated>2016-01-23T14:32:43+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible</id>
+    <content type="html"><![CDATA[<p>ログ集計に何使うか迷ったんだけど、fluentdに<a href="https://github.com/groonga/fluent-plugin-groonga">fluent-plugin-groonga</a>ってのがあったのでfluentdを使ってgroongaにログを集計していくとこまでをやった。rbenvから色々やろうとしたら面倒だった。</p>
+
+<h2>rbenvを使う</h2>
+
+<p>バージョン管理が面倒なので、やっぱrbenv使わないといかんっしょと思ってやった。<a href="http://qiita.com/katsuhiko/items/56935225754a90d58314">Ansible と Vagrant を使って Rails 開発環境（Ubuntu + rbenv + MySQL5.6 + node.js）を構築する &ndash; Qiita</a>を参考にして変数を適当にしたりsudoのとこを変更したりして出来た</p>
+
+<!-- more -->
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="nn">---</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">hosts</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">all</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">user</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">hoge</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">tasks</span><span class="p-Indicator">:</span>
+</span><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Install dependencies for rbenv</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">sudo</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">yes</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">apt</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">name= state=latest</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">with_items</span><span class="p-Indicator">:</span>
+</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">git</span>
+</span><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Install rbenv</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">git</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">repo=https://github.com/sstephenson/rbenv.git dest=~/.rbenv</span>
+</span><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Add ~.rbenv/bin to PATH</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">lineinfile</span><span class="p-Indicator">:</span> <span class="p-Indicator">&gt;</span>
+</span><span class='line'>        <span class="no">dest=&quot;~/.bashrc&quot;</span>
+</span><span class='line'>        <span class="no">line=&quot;export PATH=$HOME/.rbenv/bin:$PATH&quot;</span>
+</span><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Eval rbenv init in ~/.bashrc</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">lineinfile</span><span class="p-Indicator">:</span> <span class="p-Indicator">&gt;</span>
+</span><span class='line'>        <span class="no">dest=&quot;~/.bashrc&quot;</span>
+</span><span class='line'>        <span class="no">line=&#39;eval &quot;$(rbenv init -)&quot;&#39;</span>
+</span><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Install dependencies for ruby-build (see. https://github.com/sstephenson/ruby-build/wiki)</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">apt</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">name= state=latest</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">with_items</span><span class="p-Indicator">:</span>
+</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">autoconf</span>
+</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">bison</span>
+</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">build-essential</span>
+</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">libssl-dev</span>
+</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">libyaml-dev</span>
+</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">libreadline6-dev</span>
+</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">zlib1g-dev</span>
+</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">libncurses5-dev</span>
+</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">libffi-dev</span>
+</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">libgdbm3</span>
+</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">libgdbm-dev</span>
+</span><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Install ruby-build as rbenv plugin</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">git</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">repo=https://github.com/sstephenson/ruby-build.git dest=~/.rbenv/plugins/ruby-build</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Check if version is installed ruby</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">shell</span><span class="p-Indicator">:</span> <span class="s">&quot;~/.rbenv/bin/rbenv</span><span class="nv"> </span><span class="s">versions</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">grep</span><span class="nv"> </span><span class="s">&quot;</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">register</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">rbenv_check_install</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">changed_when</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">False</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">ignore_errors</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">yes</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Install ruby</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">command</span><span class="p-Indicator">:</span> <span class="s">&quot;~/.rbenv/bin/rbenv</span><span class="nv"> </span><span class="s">install</span><span class="nv"> </span><span class="s">&quot;</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">when</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">rbenv_check_install|failed</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Check if version is the default ruby version</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">shell</span><span class="p-Indicator">:</span> <span class="s">&quot;~/.rbenv/bin/rbenv</span><span class="nv"> </span><span class="s">version</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">grep</span><span class="nv"> </span><span class="s">&quot;</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">register</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">rbenv_check_default</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">changed_when</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">False</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">ignore_errors</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">yes</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Set default ruby version</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">command</span><span class="p-Indicator">:</span> <span class="s">&quot;~/.rbenv/bin/rbenv</span><span class="nv"> </span><span class="s">global</span><span class="nv"> </span><span class="s">&quot;</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">when</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">rbenv_check_default|failed</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>rbenv_ruby_versionはインベントリファイルで設定しておく。</p>
+
+<p>shellのところrbenvだけにしたら何回やってもエラーで止まってしまった。なので結局rbenvはフルパス指定にした。bashrcに書いた分その後色々やった時に書いたので.profileでも良いかも知れない。</p>
+
+<h2>fluentdのインストール</h2>
+
+<p>こっから面倒だった。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Gem install fluentd</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">gem</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">name=</span>
+</span><span class='line'>   <span class="l-Scalar-Plain">executable=~/.rbenv/versions//bin/gem user_install=no</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">with_items</span><span class="p-Indicator">:</span>
+</span><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">fluentd</span>
+</span><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">fluent-plugin-groonga</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>たったこれだけ書くのに2時間くらい掛かったorz。fluentdをインストールする前にtd-agentから何とかならないか試したり、gemがなかなかrbenvでインストールしたバージョンになってくれなかったり、fluentdが変な場所にインストールされたり・・・でも結論としてはこれでおk。フルパス指定とuserinstall=noがポイントかな。</p>
+
+<h2>fluentdの設定</h2>
+
+<p>設定やったこと無かったので、ここが手探りになるのは仕方ない。includeのパスを間違えてて設定を読み込めないとか色々しょーもないハマりをした。ログが正しく送られてるかどうかはsourceのタグをdebug.accessに変えて、デバッグ表示させてtailがちゃんとされているか確認→実際にlog.accessでやってみるという手順で行った</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">setup fluentd dir</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">command</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">~/.rbenv/versions//bin/fluentd --setup /path/to/fluent/config/file</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">- name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">set fluent.conf</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">lineinfile</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">dest=/path/to/fluent/config/file/fluent.conf insertafter=EOF line=&quot;@include conf.d/*&quot; state=present</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">- name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">create conf.d folder</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">file</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">path=/path/to/fluent/config/file/conf.d state=directory</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">- name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">copy groonga.fluentd.conf</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">copy</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">src=groonga.fluentd.conf dest=~/path/to/fluent/config/file/conf.d</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;source&gt;</span>
+</span><span class='line'>    type tail
+</span><span class='line'>    format ltsv
+</span><span class='line'>    tag log.access
+</span><span class='line'>    path /path/to/log/file
+</span><span class='line'>    pos_file /path/to/pos/file
+</span><span class='line'><span class="nt">&lt;/source&gt;</span>
+</span><span class='line'><span class="nt">&lt;match</span> <span class="err">log.*</span><span class="nt">&gt;</span>
+</span><span class='line'>    type groonga
+</span><span class='line'>    store_table logs
+</span><span class='line'>    host xxx.xxx.xxx.xx
+</span><span class='line'>    port xxxxx
+</span><span class='line'><span class="nt">&lt;/match&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>としてIPがxxx.xxx.xxx.xxでポートがxxxxxのところにgroongaを用意すると勝手にフィールドとか色々作ってログを保存してくれるようになる。ちなみにfluentdの開始コマンドは</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>fluentd -c /path/to/fluent/config/file -vv &amp;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とした。</p>
+
+<p>とりあえずここまでで十分ハマった。</p>
+
+<h2>td-agentは使わない</h2>
+
+<p>使用OSがubuntuなので、td-agentを使ってみたんだが、rbenv上のgemでインストールしたfluent-plugin-groongaを読み込む方法が最後まで分かんなかったので使わないことにした。td-agentだとserveceコマンドでリスタートとかやってくれるので楽なんだけどなー。</p>
+
+<p>参考：<a href="http://mhag.hatenablog.com/entry/2014/07/04/151415">Ubuntu 14.04 LTS に Fluentd をインストールする &ndash; ´・ω・)＜ときどき書くよ</a>, <a href="http://qiita.com/h5y1m141@github/items/74029cab9706971c8dbe">Rubyが参照してるgemのパスやインストール済gemを確認する方法 &ndash; Qiita</a>, <a href="http://qiita.com/groonga/items/5c674be9daf25054c14c">Fluentdで集めたデータをGroongaに格納する方法 &ndash; Qiita</a>, <a href="http://chocoby.jp/blog/2013/03/05/fluentd-ltsv/">fluentd で LTSV がサポートされたのでメモ &ndash; 暇人じゃない</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[djangoでcache使ってる間でも呼び出されたviewとかパラメーターをログに書き出したい]]></title>
+    <link href="http://blog.shigepon.info/blog/2016/01/19/log-view-parameter-before-caching-for-django/"/>
+    <updated>2016-01-19T18:50:33+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2016/01/19/log-view-parameter-before-caching-for-django</id>
+    <content type="html"><![CDATA[<p>djangoのログ機能を使って、呼び出されたview名とかパラメーターとかを書き出してたんだけど、viewでキャッシュを使うとログを書いてくれなくなるので、それをなんとかしたいという話。</p>
+
+<p>コードにするとこんな感じ</p>
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">django.views.decorators.cache</span> <span class="kn">import</span> <span class="n">cache_page</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">logging</span>
+</span><span class='line'><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&quot;hoge&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@cache_page</span><span class="p">(</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">30</span><span class="p">)</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">param1</span><span class="p">,</span> <span class="n">param2</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">u&quot;param1:{0} param2:{1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">param1</span><span class="p">,</span> <span class="n">param2</span><span class="p">))</span>
+</span><span class='line'>    <span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!-- more -->
+
+
+<p>こうするとキャッシュが効いてしまって、1回アクセスした時以外ログが出なくなってしまう。アクセスログ的
+な使い方をしたい時に困ってしまう。アクセスログはnginxとかそこらへんのログに任せてた方が良いような気もするが、
+django内で何とかしたかったのでrequest_startedシグナルを使って下のようにした</p>
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">from</span> <span class="nn">django.views.decorators.cache</span> <span class="kn">import</span> <span class="n">cache_page</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">logging</span>
+</span><span class='line'><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&quot;hoge&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@cache_page</span><span class="p">(</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">30</span><span class="p">)</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">param1</span><span class="p">,</span> <span class="n">param2</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">u&quot;param1:{0} param2:{1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">param1</span><span class="p">,</span> <span class="n">param2</span><span class="p">))</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'><span class="c">#ここから追記</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">django.core.signals</span> <span class="kn">import</span> <span class="n">request_started</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">copy</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">django.core.handlers.wsgi</span> <span class="kn">import</span> <span class="n">WSGIRequest</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">django.core.urlresolvers</span> <span class="kn">import</span> <span class="n">resolve</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">log_before_view</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">try</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">handler</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&quot;sender&quot;</span><span class="p">]</span>
+</span><span class='line'>        <span class="n">environ</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s">&quot;environ&quot;</span><span class="p">])</span>
+</span><span class='line'>        <span class="n">request</span> <span class="o">=</span> <span class="n">WSGIRequest</span><span class="p">(</span><span class="n">environ</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">match</span> <span class="o">=</span> <span class="n">resolve</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">path_info</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+</span><span class='line'>            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">u&quot;param1:{0} param2:{1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">param1</span><span class="p">,</span> <span class="n">param2</span><span class="p">))</span>
+</span><span class='line'>    <span class="k">except</span><span class="p">:</span>
+</span><span class='line'>        <span class="k">pass</span>
+</span><span class='line'><span class="n">request_started</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">log_before_view</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これでキャッシュが効いてる状態でもログを取ることが出来る</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[use groonga for django cache]]></title>
@@ -2015,175 +2336,6 @@ ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
 
 
 <p>という形でプロファイルが表示出来た。もーこれでいーや。ということでやったのはここまで。まだまだだけど、取りあえずプロファイル結果を出すまでだけでハマったし、次回やっても同じようにハマりそうなのでメモしておく。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Jenkinsでなでしこ2をCIする]]></title>
-    <link href="http://blog.shigepon.info/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/"/>
-    <updated>2015-05-08T09:19:18+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins</id>
-    <content type="html"><![CDATA[<p><a href="http://blog.shigepon.info/blog/2015/05/05/nunit-console-test-for-nadesiko2/">なでしこ2をubuntu cuiでテストする &ndash; shigeponが関心のある技術情報など</a>
-までやったので、CIできると便利かなと思ってやってみた。と言いつつ、単にやってみたかっただけ。mono developとかvisual studio使って開発する場合も同じように出来ると思う。例によって環境はUbuntu 12.04</p>
-
-<p>参考：</p>
-
-<ul>
-<li><a href="http://d.hatena.ne.jp/Crest/20121220/1356023823">.NETとJenkinsで始めるCI開発 &ndash; CREST’S WEBLOG</a></li>
-<li><a href="http://blog.bekijkhet.com/2013/01/create-mono-c-buildserver-using-jenkins.html">Create a Mono C# Buildserver using Jenkins and GitHub ~ BroersA Blog</a></li>
-</ul>
-
-
-<h2>1. Jenkinsインストール</h2>
-
-<p>(略) 追記するかも？</p>
-
-<!-- more -->
-
-
-<h2>2. Jenkins設定</h2>
-
-<!-- more -->
-
-
-<h3>一般</h3>
-
-<p>(略) 追記するかも？</p>
-
-<h3>C#関連</h3>
-
-<p>Jenkins > Jenkinsの管理 > プラグインの管理 > 利用可能(タブ)</p>
-
-<p>からプラグインをインストールする。インストールするプラグインは</p>
-
-<ul>
-<li>GIT Plugin</li>
-<li>MSBuild Plugin</li>
-<li>NUnit plugin</li>
-</ul>
-
-
-<p>Jenkins > Jenkinsの管理 > システム設定</p>
-
-<p>から</p>
-
-<p>MSBuildの項目を編集。</p>
-
-<ul>
-<li>インストール済みMSBuild&hellip;をクリック</li>
-<li>name</li>
-<li>適当（とりあえず「mono」とした）</li>
-<li>Path to MSBuild</li>
-<li>/usr/bin/xbuild  (Warning出るけど気にしない)</li>
-<li>Default Parameters</li>
-<li>なし(Debugでビルドするかとか指定したりするかも。)</li>
-<li>適用ボタンを押す</li>
-</ul>
-
-
-<p>Gitの項目は編集したか覚えてないけど</p>
-
-<ul>
-<li>Path to Git executable</li>
-<li>/usr/bin/git</li>
-</ul>
-
-
-<p>くらいやっとけばいいかも？　</p>
-
-<h2>3. プロジェクト作成</h2>
-
-<p>Jenkins > 新規ジョブ作成　から</p>
-
-<ul>
-<li>ジョブ名</li>
-<li>適当(nadesiko2とか付けてみた)</li>
-<li>フリースタイル・プロジェクトのビルドを選択</li>
-<li>OKボタンを押す</li>
-</ul>
-
-
-<h2>4. プロジェクト設定</h2>
-
-<p>プロジェクトの設定画面に移動するので編集。Jenkins > プロジェクト(今回はnadesiko2) > 設定　からいつでも編集可能。</p>
-
-<ul>
-<li>ソースコード管理</li>
-<li>Gitを選択</li>
-<li>Repository URL</li>
-<li> なでしこ2のリポジトリの場所。今回は<a href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">ubuntuのcui環境でなでしこ2をビルドする &ndash; shigeponが関心のある技術情報など</a>の続きなので/home/username/nadesiko2</li>
-<li>Branches to build</li>
-<li> なでしこ2では変更点はpull requestする予定なので、pull requestする時のブランチを指定した。ここは色んな設定がありえる。</li>
-<li>ビルド・トリガ</li>
-<li>SCMをポーリングを選択</li>
-<li>スケジュール</li>
-<li> H/30 * * * * (大体30分おき)</li>
-<li>ビルド</li>
-<li>ビルド手順の追加 > Build a Visual Studio project or solution using MSBuild</li>
-<li>Build a Visual Studio project or solution using MSBuildの設定</li>
-<li> MSBuild Version
-
-<ul>
-<li>monoを選択</li>
-</ul>
-</li>
-<li> MSBuild Build File
-
-<ul>
-<li>cnakoのソリューションファイルとしてNako2_CNako.slnを指定した。プラグインのソリューションファイルでも出来ると思う</li>
-</ul>
-</li>
-<li>ビルド手順の追加 > シェルの実行(Windowsだと多分Windowsバッチコマンドの実行)</li>
-<li>シェルの実行</li>
-<li> nunit-console $WORKSPACE/CNako2Test/bin/Debug/CNako2Test.dll -xml cnako2test.xml -noshadow</li>
-<li>ビルド後の処理</li>
-<li>ビルド後の処理の追加 > Publish NUnit test result report</li>
-<li>cnako2test.xml</li>
-</ul>
-
-
-<h2>5. 実行</h2>
-
-<p>Jenkins > プロジェクト(今回はnadesiko2)
-で、ビルド実行をクリックすると実行してくれる。あと、gitの指定したブランチでコミットした後もこの設定の場合30分おきにコミットをチェックしてビルドを実行してくれる。まだまだテストが通ってない部分もあるので、結果は失敗になるけど、とりあえずこれで進められる。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[なでしこ2をubuntu cuiでテストする]]></title>
-    <link href="http://blog.shigepon.info/blog/2015/05/05/nunit-console-test-for-nadesiko2/"/>
-    <updated>2015-05-05T23:02:32+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2015/05/05/nunit-console-test-for-nadesiko2</id>
-    <content type="html"><![CDATA[<p><a href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">ubuntuのcui環境でなでしこ2をビルドする</a>の続きで、cui環境でなでしこ2のテストを実行してみる。</p>
-
-<p>cui環境でnunitを実行するには<a href="http://www.nunit.org/index.php?p=nunit-console&amp;r=2.5.10">nunit-console</a>を使う。なでしこ2のテストを実行するにはテスト関連のdllをnunitで実行すると良い。コマンドはなでしこ2をインストールしたディレクトリでこんな感じ。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>nunit-console CNako2Test/bin/Debug/CNako2Test.dll
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>プラグインのテスト(NakoPluginTest)プロジェクトでは外部ファイルを利用するので</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>nunit-console NakoPluginTest/bin/Debug/NakoPluginTest.dll
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<!-- more -->
-
-
-<p>だと、外部ファイルを読み込むテスト（例えばTest_read）で、Could not find fileと怒られる。なので、コマンドにnoshadowオプションを付ける。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>nunit-console -noshadow NakoPluginTest/bin/Debug/NakoPluginTest.dll
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とすると、外部ファイルを読み込んでくれる。
-これでcui環境でなでしこ2をビルドからテストまで出来る。</p>
 ]]></content>
   </entry>
   

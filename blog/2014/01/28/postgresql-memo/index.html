@@ -448,6 +448,17 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 
 
 <p>とか加えるとカンマ区切りになる</p>
+
+<h2>配列フィールドがhogeを含む条件をsqlで</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="k">select</span> * from hoge where arr <span class="o">&amp;&amp;</span> <span class="s1">&#39;fuga&#39;</span>;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でarrという配列フィールドにfugaを含むものを取り出せる。良く使いそうなのでメモ</p>
+
+<p>参考：<a href="https://www.postgresql.jp/document/9.4/html/functions-array.html">配列関数と演算子</a></p>
 </div>
 
 
@@ -534,6 +545,14 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/">Install and Setting Up Fluent-pluhin-groonga Using Ansible</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/19/log-view-parameter-before-caching-for-django/">Djangoでcache使ってる間でも呼び出されたviewとかパラメーターをログに書き出したい</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/15/use-groonga-for-django-cache/">Use Groonga for Django Cache</a>
       </li>
     
@@ -543,14 +562,6 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
     
       <li class="post">
         <a href="/blog/2016/01/07/mt4-memo/">MT4 Memo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/01/06/track-button-click-at-google-tag-manager/">Google Tag Managerを使ってボタンのクリックを検出する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/12/17/mono-winforms-garbled-on-mac/">Mono Winformsがmacで文字化けする件</a>
       </li>
     
   </ul>
@@ -579,7 +590,7 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (7)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (22)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (23)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (2)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
@@ -588,13 +599,14 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (10)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (25)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (26)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
-<li class='category'><a href='/blog/categories/ansible/'>ansible (1)</a></li>
+<li class='category'><a href='/blog/categories/ansible/'>ansible (2)</a></li>
 <li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
+<li class='category'><a href='/blog/categories/groonga/'>groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linux/'>linux (12)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (17)</a></li>
@@ -604,7 +616,7 @@ insert into テーブル名 default value; でOK integerのカラムとかにlik
 <li class='category'><a href='/blog/categories/redis/'>redis (1)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>
-<li class='category'><a href='/blog/categories/ruby/'>ruby (9)</a></li>
+<li class='category'><a href='/blog/categories/ruby/'>ruby (10)</a></li>
 <li class='category'><a href='/blog/categories/sqlite/'>sqlite (1)</a></li>
 <li class='category'><a href='/blog/categories/svn/'>svn (1)</a></li>
 <li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>

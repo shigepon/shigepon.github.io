@@ -9,7 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="djangoのキャッシュバックエンドとして、Redisを使ってみたけど、慣れてないし、しばらくしたらメモリを圧迫したせいかdjangoがタイムアウトを連発しだしたので、こりゃだめだと思い、groongaを試してみた流れを書いておく。groongaは全文検索エンジンだけど、 &hellip;">
+  <meta name="description" content="ログ集計に何使うか迷ったんだけど、fluentdにfluent-plugin-groongaってのがあったのでfluentdを使ってgroongaにログを集計していくとこまでをやった。rbenvから色々やろうとしたら面倒だった。 rbenvを使う バージョン管理が面倒なので、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,117 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/">Install and Setting Up Fluent-pluhin-groonga Using Ansible</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-01-23T14:32:43+09:00" pubdate data-updated="true">Jan 23<span>rd</span>, 2016</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ログ集計に何使うか迷ったんだけど、fluentdに<a href="https://github.com/groonga/fluent-plugin-groonga">fluent-plugin-groonga</a>ってのがあったのでfluentdを使ってgroongaにログを集計していくとこまでをやった。rbenvから色々やろうとしたら面倒だった。</p>
+
+<h2>rbenvを使う</h2>
+
+<p>バージョン管理が面倒なので、やっぱrbenv使わないといかんっしょと思ってやった。<a href="http://qiita.com/katsuhiko/items/56935225754a90d58314">Ansible と Vagrant を使って Rails 開発環境（Ubuntu + rbenv + MySQL5.6 + node.js）を構築する &ndash; Qiita</a>を参考にして変数を適当にしたりsudoのとこを変更したりして出来た</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/01/19/log-view-parameter-before-caching-for-django/">Djangoでcache使ってる間でも呼び出されたviewとかパラメーターをログに書き出したい</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-01-19T18:50:33+09:00" pubdate data-updated="true">Jan 19<span>th</span>, 2016</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>djangoのログ機能を使って、呼び出されたview名とかパラメーターとかを書き出してたんだけど、viewでキャッシュを使うとログを書いてくれなくなるので、それをなんとかしたいという話。</p>
+
+<p>コードにするとこんな感じ</p>
+
+<figure class='code'><figcaption><span>views.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">django.views.decorators.cache</span> <span class="kn">import</span> <span class="n">cache_page</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">logging</span>
+</span><span class='line'><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&quot;hoge&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@cache_page</span><span class="p">(</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">30</span><span class="p">)</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">param1</span><span class="p">,</span> <span class="n">param2</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">u&quot;param1:{0} param2:{1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">param1</span><span class="p">,</span> <span class="n">param2</span><span class="p">))</span>
+</span><span class='line'>    <span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/01/19/log-view-parameter-before-caching-for-django/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -1172,238 +1283,6 @@ Ubuntu12.04でインストールしたけど、他のバージョンでもほぼ
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/08/25/migrate-from-django-1-dot-7-to-1-dot-8/">Django 1.7から1.8にアップデートしてみた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-08-25T15:39:02+09:00" pubdate data-updated="true">Aug 25<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://blog.shigepon.info/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/">1.6の時</a>と同様にpipでアップデートした。</p>
-
-<h2>注意点</h2>
-
-<p>個人的に作っているアプリでアップデートした際にコード変更が必要だった点は以下の通り。他にも色々使えなくなった命令とかあるみたいだけど引っ掛からなかったので省略。詳しくは<a href="https://docs.djangoproject.com/en/1.8/releases/1.8/#features-removed-in-1-8">Django 1.8 release notes | Django documentation | Django</a>で見ることが出来る。</p>
-
-<h3>urls.pyで指定するnamespace</h3>
-
-<p>urls.pyでapp_nameを指定した場合に必ずnamespaceを指定する必要があるようになった。</p>
-
-<figure class='code'><figcaption><span>urls.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">url</span><span class="p">(</span><span class="s">r&#39;^&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s">&#39;hoge.urls&#39;</span><span class="p">,</span><span class="n">app_name</span><span class="o">=</span><span class="s">&#39;hoge&#39;</span><span class="p">)),</span><span class="c">#これはダメ</span>
-</span><span class='line'><span class="n">url</span><span class="p">(</span><span class="s">r&#39;^&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s">&#39;hoge.urls&#39;</span><span class="p">,</span><span class="n">app_name</span><span class="o">=</span><span class="s">&#39;hoge&#39;</span><span class="p">,</span><span class="n">namespace</span><span class="o">=</span><span class="s">&#39;hoge&#39;</span><span class="p">)),</span><span class="c">#これはOK</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ダメなコード実装してた場合は、reverseでurlを作ってる箇所にも修正が必要になる。</p>
-
-<h3>transactionについて</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">transaction</span><span class="o">.</span><span class="n">commit_unless_managed</span><span class="p">()</span>
-</span><span class='line'>
-</span><span class='line'><span class="err">みたいなメソッドが無くなってた。</span>
-</span><span class='line'>
-</span><span class='line'><span class="c">## migrate関連でのハマりポイント（2015-10-20追記）</span>
-</span><span class='line'>
-</span><span class='line'><span class="mf">1.7</span><span class="err">から</span><span class="mf">1.8</span><span class="err">にバージョンアップすると、マイグレーションでエラーが出る。普通に</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>sh
-$ python manage.py makemigrations
-$ python manage.py migrate</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">とすると</span><span class="n">migrate</span><span class="err">コマンドで</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>sh
-Error creating new content types. Please make sure contenttypes</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">というメッセージが出てコマンドが途中で終わってしまう。調べて結果データベース上で</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ALTER TABLE django_content_type DROP COLUMN name;</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="err">を実行することで対処できた。要はカラムが一個要らなくなったみたい。</span>
-</span><span class='line'>
-</span><span class='line'><span class="err">参考：</span><span class="p">[</span><span class="n">django</span> <span class="o">-</span> <span class="n">Error</span> <span class="n">creating</span> <span class="n">new</span> <span class="n">content</span> <span class="n">types</span><span class="o">.</span> <span class="n">Please</span> <span class="n">make</span> <span class="n">sure</span> <span class="n">contenttypes</span> <span class="ow">is</span> <span class="n">migrated</span> <span class="n">before</span> <span class="n">trying</span> <span class="n">to</span> <span class="n">migrate</span> <span class="n">apps</span> <span class="n">individually</span> <span class="o">-</span> <span class="n">Stack</span> <span class="n">Overflow</span><span class="p">](</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">stackoverflow</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">questions</span><span class="o">/</span><span class="mi">29917442</span><span class="o">/</span><span class="n">error</span><span class="o">-</span><span class="n">creating</span><span class="o">-</span><span class="n">new</span><span class="o">-</span><span class="n">content</span><span class="o">-</span><span class="n">types</span><span class="o">-</span><span class="n">please</span><span class="o">-</span><span class="n">make</span><span class="o">-</span><span class="n">sure</span><span class="o">-</span><span class="n">contenttypes</span><span class="o">-</span><span class="ow">is</span><span class="o">-</span><span class="n">migrated</span><span class="o">-</span><span class="n">befo</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="c">## adminでユーザー追加するとnot null制限に引っ掛かるエラー（2015-10-26追記）</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>admin画面でユーザーを追加すると「last_loginがnot null制限あるのにnullを入れようとした」と怒られた。</p>
-
-<p>対策をググると普通にmigrateコマンドすればおkと書いてあるのに出来なかったのでsqlで対応してみた</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">alter</span> <span class="n">table</span> <span class="n">auth_user</span> <span class="n">alter</span> <span class="n">column</span> <span class="n">last_login</span> <span class="n">drop</span> <span class="ow">not</span> <span class="n">null</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これでユーザー追加出来るようになった</p>
-
-<h2>嬉しい点</h2>
-
-<p>色々あるみたいだけど、PostgreSQLを使っているので、特にPostgreSQL使ってる場合に、独自のフィールドを使えるようになった点が嬉しい。ArrayFieldとか、わざわざリレーション作りたくない時とか便利そう。</p>
-
-<p><a href="https://docs.djangoproject.com/en/1.8/ref/contrib/postgres/fields/">Djangoドキュメントによる説明</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/08/12/javascript-memo/">Javascript Memo</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-08-12T09:01:59+09:00" pubdate data-updated="true">Aug 12<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Javascript関連のメモ</p>
-
-<h2>HighChartで日本時間をx軸に利用</h2>
-
-<p>チャートを表示するライブラリに<a href="http://www.highcharts.com/">HighChart</a>ってのを使ってるけど、横軸の時間がUTCになってしまうので、ちょっとはまった。</p>
-
-<p>こうすればいいらしい</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">Highcharts</span><span class="p">.</span><span class="nx">setOptions</span><span class="p">({</span>
-</span><span class='line'>    <span class="nx">global</span><span class="o">:</span> <span class="p">{</span>
-</span><span class='line'>        <span class="nx">useUTC</span><span class="o">:</span> <span class="kc">false</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">});</span>
-</span><span class='line'><span class="kd">var</span> <span class="nx">chart</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HighChart</span><span class="p">(...);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>グローバルな設定として使うらしい。
-参考（ほぼそのまま）<a href="http://mtc.hatenablog.com/">mtcdotcom&rsquo;s blog</a></p>
-
-<h2>HighChartでチャートをクリックするとUncaught TypeError: undefined is not a functionが出る</h2>
-
-<p>Chromeでのみ確認。Google翻訳の拡張機能を切ればおk</p>
-
-<p>参考：<a href="http://stackoverflow.com/questions/30498335/highcharts-always-console-error-ablout-bubble-compiled-js">javascript &ndash; highcharts always console error ablout bubble_compiled.js? &ndash; Stack Overflow</a></p>
-
-<h2>bootstrap3のタブ変更時に何か実行したい</h2>
-
-<p>タブの中身を表示する時に何か実行させたい時は次のようにすればおk</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">&quot;nav nav-tabs&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'> <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">&quot;active&quot;</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;#tab1&quot;</span> <span class="na">data-toggle=</span><span class="s">&quot;tab&quot;</span><span class="nt">&gt;</span>Tab1<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
-</span><span class='line'> <span class="nt">&lt;li</span> <span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;#tab2&quot;</span> <span class="na">data-toggle=</span><span class="s">&quot;tab&quot;</span><span class="nt">&gt;</span>Tab2<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
-</span><span class='line'><span class="nt">&lt;/ul&gt;</span>
-</span><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;tab-content&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'> <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;tab-pane active&quot;</span> <span class="na">id=</span><span class="s">&quot;tab1&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>   Tab1 content
-</span><span class='line'> <span class="nt">&lt;/div&gt;</span>
-</span><span class='line'> <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;tab-pane&quot;</span> <span class="na">id=</span><span class="s">&quot;tab2&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>   Tab2 content
-</span><span class='line'> <span class="nt">&lt;/div&gt;</span>
-</span><span class='line'><span class="nt">&lt;/div&gt;</span>
-</span><span class='line'><span class="nt">&lt;script&gt;</span>
-</span><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;a[data-toggle=&quot;tab&quot;]&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;shown.bs.tab&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
-</span><span class='line'>    <span class="p">...</span>
-</span><span class='line'><span class="p">});</span>
-</span><span class='line'><span class="nt">&lt;/script&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>shown.bs.tabってイベントがあるらしい。</p>
-
-<p>参考：<a href="http://stackoverflow.com/questions/20705905/bootstrap-3-jquery-event-for-active-tab-change">Bootstrap 3 jquery event for active tab change &ndash; Stack Overflow</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1433,6 +1312,14 @@ Error creating new content types. Please make sure contenttypes</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/">Install and Setting Up Fluent-pluhin-groonga Using Ansible</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/19/log-view-parameter-before-caching-for-django/">Djangoでcache使ってる間でも呼び出されたviewとかパラメーターをログに書き出したい</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/15/use-groonga-for-django-cache/">Use Groonga for Django Cache</a>
       </li>
     
@@ -1442,14 +1329,6 @@ Error creating new content types. Please make sure contenttypes</p>
     
       <li class="post">
         <a href="/blog/2016/01/07/mt4-memo/">MT4 Memo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/01/06/track-button-click-at-google-tag-manager/">Google Tag Managerを使ってボタンのクリックを検出する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/12/17/mono-winforms-garbled-on-mac/">Mono Winformsがmacで文字化けする件</a>
       </li>
     
   </ul>
@@ -1478,7 +1357,7 @@ Error creating new content types. Please make sure contenttypes</p>
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
 <li class='category'><a href='/blog/categories/csharp/'>CSharp (7)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (22)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (23)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (2)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
@@ -1487,13 +1366,14 @@ Error creating new content types. Please make sure contenttypes</p>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (10)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (25)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (26)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
-<li class='category'><a href='/blog/categories/ansible/'>ansible (1)</a></li>
+<li class='category'><a href='/blog/categories/ansible/'>ansible (2)</a></li>
 <li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
+<li class='category'><a href='/blog/categories/groonga/'>groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linux/'>linux (12)</a></li>
 <li class='category'><a href='/blog/categories/memo/'>memo (17)</a></li>
@@ -1503,7 +1383,7 @@ Error creating new content types. Please make sure contenttypes</p>
 <li class='category'><a href='/blog/categories/redis/'>redis (1)</a></li>
 <li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
 <li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>
-<li class='category'><a href='/blog/categories/ruby/'>ruby (9)</a></li>
+<li class='category'><a href='/blog/categories/ruby/'>ruby (10)</a></li>
 <li class='category'><a href='/blog/categories/sqlite/'>sqlite (1)</a></li>
 <li class='category'><a href='/blog/categories/svn/'>svn (1)</a></li>
 <li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>
