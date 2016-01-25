@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ansible | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/ansible/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2016-01-25T09:29:02+09:00</updated>
+  <updated>2016-01-25T09:32:17+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[install and setting up fluent-pluhin-groonga using ansible]]></title>
+    <title type="html"><![CDATA[fluent-plugin-groongaをインストールして動かすまでをAnsibleでやってみた]]></title>
     <link href="http://blog.shigepon.info/blog/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/"/>
     <updated>2016-01-23T14:32:43+09:00</updated>
     <id>http://blog.shigepon.info/blog/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible</id>
