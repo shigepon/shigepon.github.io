@@ -1,0 +1,415 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>インストールしたfluentdをserviceから使えるようにする - shigeponが関心のある技術情報など</title>
+  <meta name="author" content="shigepon">
+
+  
+  <meta name="description" content="前回の続き rbenvのgemを使ってインストールしたfluentdはserviceからの起動スクリプトが無いので、service fluentd startみたいなことをしたければ自分で登録するしかない。 でも1からスクリプトを書くのは面倒なので、td-agentのスクリプトを利用することにした &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.shigepon.info/blog/2016/01/25/enable-service-fluentd-start">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="shigeponが関心のある技術情報など" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<script language="JavaScript">
+	$(document).ready( function () {
+	   $("a[href^='http']:not([href*='" + location.hostname + "'])").attr('target', '_blank');
+	})
+</script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-6001470-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+</hgroup>
+
+</header>
+  <!-- <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.shigepon.info" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav> -->
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">インストールしたfluentdをserviceから使えるようにする</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-01-25T21:20:26+09:00" pubdate data-updated="true">Jan 25<span>th</span>, 2016</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><a href="http://blog.shigepon.info/blog/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/">前回</a>の続き</p>
+
+<p>rbenvのgemを使ってインストールしたfluentdはserviceからの起動スクリプトが無いので、service fluentd startみたいなことをしたければ自分で登録するしかない。</p>
+
+<p>でも1からスクリプトを書くのは面倒なので、td-agentのスクリプトを利用することにした。
+まずはtd-agentのインストール、削除</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install td-agent
+</span><span class='line'><span class="nv">$ </span>sudo aptitude remove td-agent
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>削除してもserviceで使うスクリプトは残るみたいなので、これを元に起動スクリプトを作る。</p>
+
+<!-- more -->
+
+
+<p>td-agentの起動スクリプトは</p>
+
+<p>/etc/init.d/td-agentにある。</p>
+
+<p>td-agentをfluentdに変えて、編集した。編集内容は主に以下の通り</p>
+
+<ul>
+<li>td-agentをfluentdに変更</li>
+<li>DAEMONをfluentdまでのパスに変更</li>
+<li>USER、GROUPをfluentdをインストールしたユーザー、グループに変更</li>
+<li>DAEMON_ARGSに&#8221;&mdash;config /path/to/config&#8221;を追加</li>
+<li>/var/log/fluentd/fluentd.logを作っておく。ユーザー、グループはfluentdのユーザー、グループにする</li>
+</ul>
+
+
+<p>必要無くて消して良い部分も結構ある気がするが、とりあえず動く為に最小限の修正にしておく。
+最後にserviceに登録するために</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo update-rc.d fluentd defaults
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でserviceにfluentdが登録される。ちなみにスクリプトのデバッグは</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bash -x /etc/init.d/fluentd start
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とすればある程度出来るので、変なエラーが出ないかはここでチェックしてしまうと良い。</p>
+
+<p>以上をansibleで動かすようにしてみた。</p>
+
+<p>参考：</p>
+
+<ul>
+<li><a href="http://l-w-i.net/t/ubuntu/service_001.txt">[Ubuntu] サービスを有効化/無効化する方法 &ndash; Life with IT</a></li>
+<li><a href="http://askubuntu.com/questions/36200/how-to-debug-upstart-scripts">debugging &ndash; how to debug upstart scripts? &ndash; Ask Ubuntu</a></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">shigepon</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-01-25T21:20:26+09:00" pubdate data-updated="true">Jan 25<span>th</span>, 2016</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/linux/'>linux</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.shigepon.info/blog/2016/01/25/enable-service-fluentd-start/" data-via="shigepon" data-counturl="http://blog.shigepon.info/blog/2016/01/25/enable-service-fluentd-start/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    
+      <div class="related_posts">
+	<h1>Related Posts</h1>
+	<ul>
+		
+	</ul>
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/" title="Previous Post: fluent-plugin-groongaをインストールして動かすまでをAnsibleでやってみた">&laquo; fluent-plugin-groongaをインストールして動かすまでをAnsibleでやってみた</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2016/01/29/pcl-memo/" title="Next Post: PCLメモ">PCLメモ &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <ul id="recent_posts">
+      <li class="post">
+      <a href="http://blog.shigepon.info" alt="Home"><img src="/images/Home.png"></a>
+      <a href="http://blog.shigepon.info/archives/" alt="Archives"><img src="/images/Calendar.png"></a>
+      <a href="mailto:" alt="E-Mail"><img src="/images/Envelope.png"></a>
+      <a href="http://blog.shigepon.info/atom.xml" alt="subscribe feed"><img src="/images/rss_big.png"></a>
+      </li>
+  </ul>
+</section>
+<section>
+  <h1>About Me</h1>
+  <p>A little something about me.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/02/09/migrate-from-django-1-dot-8-to-1-dot-9/">Django 1.8から1.9へアップした時に気にする点</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/29/pcl-memo/">PCLメモ</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/25/enable-service-fluentd-start/">インストールしたfluentdをserviceから使えるようにする</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/">fluent-plugin-groongaをインストールして動かすまでをAnsibleでやってみた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/19/log-view-parameter-before-caching-for-django/">Djangoでcache使ってる間でも呼び出されたviewとかパラメーターをログに書き出したい</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      getTwitterFeed("shigepon", , );
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <p>Follow <a href="http://twitter.com/shigepon">@shigepon</a></p>
+  
+</section>
+
+<section>
+<h1>Categories</h1>
+<ul id="categories">
+	<li class='category'><a href='/blog/categories/analytics/'>Analytics (2)</a></li>
+<li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
+<li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
+<li class='category'><a href='/blog/categories/csharp/'>CSharp (8)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (24)</a></li>
+<li class='category'><a href='/blog/categories/groonga/'>Groonga (2)</a></li>
+<li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
+<li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
+<li class='category'><a href='/blog/categories/lua/'>Lua (1)</a></li>
+<li class='category'><a href='/blog/categories/mt4/'>MT4 (1)</a></li>
+<li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
+<li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
+<li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (10)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (27)</a></li>
+<li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
+<li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
+<li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
+<li class='category'><a href='/blog/categories/ansible/'>ansible (2)</a></li>
+<li class='category'><a href='/blog/categories/event/'>event (4)</a></li>
+<li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
+<li class='category'><a href='/blog/categories/groonga/'>groonga (1)</a></li>
+<li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (13)</a></li>
+<li class='category'><a href='/blog/categories/memo/'>memo (18)</a></li>
+<li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
+<li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (8)</a></li>
+<li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
+<li class='category'><a href='/blog/categories/redis/'>redis (1)</a></li>
+<li class='category'><a href='/blog/categories/rhaco/'>rhaco (3)</a></li>
+<li class='category'><a href='/blog/categories/rhaco3/'>rhaco3 (1)</a></li>
+<li class='category'><a href='/blog/categories/ruby/'>ruby (10)</a></li>
+<li class='category'><a href='/blog/categories/sqlite/'>sqlite (1)</a></li>
+<li class='category'><a href='/blog/categories/svn/'>svn (1)</a></li>
+<li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>
+<li class='category'><a href='/blog/categories/uwsgi/'>uwsgi (1)</a></li>
+<li class='category'><a href='/blog/categories/vim/'>vim (2)</a></li>
+<li class='category'><a href='/blog/categories/vmware/'>vmware (1)</a></li>
+
+</ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/shigepon">@shigepon</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'shigepon',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - shigepon -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

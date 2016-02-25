@@ -4,7 +4,7 @@
   <title><![CDATA[Category: memo | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/memo/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2016-01-25T09:32:17+09:00</updated>
+  <updated>2016-02-25T09:36:40+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,59 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[PCLメモ]]></title>
+    <link href="http://blog.shigepon.info/blog/2016/01/29/pcl-memo/"/>
+    <updated>2016-01-29T08:42:31+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2016/01/29/pcl-memo</id>
+    <content type="html"><![CDATA[<p>マルチプラットフォーム用に開発するにはPCL(ポータブル・クラス・ライブラリ)を使うと良いらしいのだが情報が少ない気がするので、調べたことをメモしていく</p>
+
+<p>それにしてもどこかに.netでこう書いてるものをPCLで書くには・・・みたいな書籍とかサイトとか無いものか。現在はstack</p>
+
+<h2>基本事項</h2>
+
+<p>プロジェクト生成時にポータブルライブラリを選択すればPCLで開発出来るようになる。すでに.netのプロジェクトで開発している場合にPCLにする方法はシラン。</p>
+
+<p>.netで使ってる機能で使えなくなるものが多い。ファイルアクセスなんかがSystem.IOに入ってなくて出来なくなるので、NugetでPCL関連のライブラリを調べるのは必須</p>
+
+<p>参考：<a href="http://www.buildinsider.net/mobile/insidexamarin/13">Xamarinと、ポータブル・クラス・ライブラリ（PCL） &ndash; Build Insider</a></p>
+
+<h2>ファイルアクセス</h2>
+
+<p><a href="https://github.com/dsplaisted/PCLStorage">PCL Storage</a>を使うとよしなにやってくれる。Nugetから入れれば使えるようになる。</p>
+
+<h2>使えなくなるメソッドが結構ある</h2>
+
+<p>例えばSystem.Type.GetPropertyでPropertyInfoを取得しようとしても、メソッド無いので無理。この場合はSystem.Refrectionを使う</p>
+
+<p><code>csharp
+using System.Refrection
+...
+PropertyInfo p = typeof(Hoge).GetRuntimeProperty("property");
+</code></p>
+
+<p>いちいちこういうのがあるので、結構大変。</p>
+
+<h2>TypeよりはなるべくTypeInfoを使うのが良さげ</h2>
+
+<p>PCLだとType.IsClassとか無いけどTypeInfo.IsClassはある。</p>
+
+<p>```csharp
+assembly.DefinedTypes</p>
+
+<pre><code>.Where(x =&gt; x.IsClass &amp;&amp; !x.IsAbstract &amp;&amp; x.ImplementedInterfaces
+    .Any(i =&gt; i.GetTypeInfo().IsGenericType &amp;&amp; i.GetGenericTypeDefinition() == commandHandlerOpenGenericType))
+.Select(x =&gt; x.AsType())
+</code></pre>
+
+<p>```</p>
+
+<p>みたいにして必要なインターフェースを持つクラスの型情報を取り出すとか出来る</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/20524263/portable-class-library-reflection">c# &ndash; Portable Class Library Reflection &ndash; Stack Overflow</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[redis memo]]></title>
@@ -659,50 +712,6 @@ return response
 <p>でいける</p>
 
 <p>参考：<a href="http://stackoverflow.com/questions/3765887/add-request-get-variable-using-django-shortcuts-redirect">add request.GET variable using django.shortcuts.redirect &ndash; Stack Overflow</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Titanium Mobileメモ]]></title>
-    <link href="http://blog.shigepon.info/blog/2014/11/23/titanium-mobile-memo/"/>
-    <updated>2014-11-23T09:48:44+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2014/11/23/titanium-mobile-memo</id>
-    <content type="html"><![CDATA[<p>Titanium Mobileに関するメモ</p>
-
-<h2>アプリ固有の設定を登録する</h2>
-
-<p>アプリを終了して、再起動させた時も保存される設定をしたい時はTitanium.App.Propertiesを使う</p>
-
-<p><code>js
-Ti.App.Properties.setString("hoge","fuga");//設定
-hoge = Ti.App.Properties.getString("hoge");//取得
-</code></p>
-
-<p>stringを例にしてるが、ListとかObjectとかBoolとか色々入れられる。</p>
-
-<!-- more -->
-
-
-<h2>Titanium MobileのUIで本家以外に参考にしてるサイト</h2>
-
-<p><a href="https://code.google.com/p/titanium-mobile-doc-ja/w/list">Wiki Pages &ndash; titanium-mobile-doc-ja &ndash; Appcelerator Titanium Mobileに関するドキュメントを日本語でまとめていくプロジェクト &ndash; Google Project Hosting</a></p>
-
-<h2>Android実機で文字が小さくなる</h2>
-
-<p>```xml tiapp.xml
-<android xmlns:android="http://schemas.android.com/apk/res/android"></p>
-
-<pre><code>&lt;manifest&gt;
-     &lt;supports-screens android:anyDensity="false"/&gt;
-&lt;/manifest&gt;
-</code></pre>
-
-<p></android>
-```</p>
-
-<p>もしくは文字サイズをdpで指定</p>
-
-<p>参考：<a href="http://www.fujimotohajime.net/pukiwiki/index.php?TitaniumMobile%2FAndroid%E3%81%A7%E5%AE%9F%E6%A9%9F%E3%83%86%E3%82%B9%E3%83%88%E3%81%99%E3%82%8B%E3%81%A8%E6%96%87%E5%AD%97%E3%81%8C%E5%B0%8F%E3%81%95%E3%81%84">TitaniumMobile/Androidで実機テストすると文字が小さい &ndash; Wiki</a></p>
 ]]></content>
   </entry>
   

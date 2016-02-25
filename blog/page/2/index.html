@@ -9,7 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="1.6の時と同様にpipでアップデートした。 注意点 個人的に作っているアプリでアップデートした際にコード変更が必要だった点は以下の通り。他にも色々使えなくなった命令とかあるみたいだけど引っ掛からなかったので省略。詳しくはDjango 1.8 release notes | Django &hellip;">
+  <meta name="description" content="何個か方法がある。とりあえずは雑多にメモ書きしておく 一行一行全て手動で出力する System.Refrection、System.Refrection.Emitを使ってilを直接書き出していく方法。 参考： c# &ndash; Reflection.Emit: AssemblyBuilder. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,715 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/11/29/output-msil-manually/">Msilを手動で出力する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-29T20:40:36+09:00" pubdate data-updated="true">Nov 29<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>何個か方法がある。とりあえずは雑多にメモ書きしておく</p>
+
+<h2>一行一行全て手動で出力する</h2>
+
+<p>System.Refrection、System.Refrection.Emitを使ってilを直接書き出していく方法。</p>
+
+<p>参考：
+ <a href="http://stackoverflow.com/questions/15600142/reflection-emit-assemblybuilder-setentrypoint-does-not-set-entry-point">c# &ndash; Reflection.Emit: AssemblyBuilder.SetEntryPoint does not set entry point &ndash; Stack Overflow</a>ゆーてもこれそのままやっても.netは知らないけどmonoだと動かなかったりするので、修正が必要。動くコードはこちら</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+</span><span class='line'><span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+</span><span class='line'><span class="k">using</span> <span class="nn">System.Linq</span><span class="p">;</span>
+</span><span class='line'><span class="k">using</span> <span class="nn">System.Text</span><span class="p">;</span>
+</span><span class='line'><span class="k">using</span> <span class="nn">System.Reflection</span><span class="p">;</span>
+</span><span class='line'><span class="k">using</span> <span class="nn">System.Reflection.Emit</span><span class="p">;</span>
+</span><span class='line'><span class="k">using</span> <span class="nn">System.IO</span><span class="p">;</span>
+</span><span class='line'><span class="k">using</span> <span class="nn">System.Diagnostics</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">namespace</span> <span class="nn">iltest</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">class</span> <span class="nc">Program</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="k">const</span> <span class="kt">string</span> <span class="n">ASSEMBLY_NAME</span> <span class="p">=</span> <span class="s">&quot;IL_Test&quot;</span><span class="p">;</span>
+</span><span class='line'>            <span class="n">AssemblyBuilder</span> <span class="n">assemblyBuilder</span> <span class="p">=</span> <span class="n">AppDomain</span><span class="p">.</span><span class="n">CurrentDomain</span><span class="p">.</span><span class="n">DefineDynamicAssembly</span><span class="p">(</span> <span class="k">new</span> <span class="n">AssemblyName</span><span class="p">(</span><span class="n">ASSEMBLY_NAME</span><span class="p">),</span> <span class="n">AssemblyBuilderAccess</span><span class="p">.</span><span class="n">Save</span><span class="p">);</span>
+</span><span class='line'>            <span class="n">ModuleBuilder</span> <span class="n">moduleBuilder</span> <span class="p">=</span> <span class="n">assemblyBuilder</span><span class="p">.</span><span class="n">DefineDynamicModule</span><span class="p">(</span><span class="n">ASSEMBLY_NAME</span><span class="p">,</span> <span class="s">&quot;test.exe&quot;</span><span class="p">);</span>
+</span><span class='line'>            <span class="n">TypeBuilder</span> <span class="n">typeBuilder</span> <span class="p">=</span> <span class="n">moduleBuilder</span><span class="p">.</span><span class="n">DefineType</span><span class="p">(</span><span class="s">&quot;Program&quot;</span><span class="p">,</span> <span class="n">TypeAttributes</span><span class="p">.</span><span class="n">Class</span> <span class="p">|</span> <span class="n">TypeAttributes</span><span class="p">.</span><span class="n">Public</span><span class="p">);</span>
+</span><span class='line'>            <span class="n">MethodBuilder</span> <span class="n">methodBuilder</span> <span class="p">=</span> <span class="n">typeBuilder</span><span class="p">.</span><span class="n">DefineMethod</span><span class="p">(</span> <span class="s">&quot;Main&quot;</span><span class="p">,</span> <span class="n">MethodAttributes</span><span class="p">.</span><span class="n">HideBySig</span><span class="p">|</span><span class="n">MethodAttributes</span><span class="p">.</span><span class="n">Public</span> <span class="p">|</span> <span class="n">MethodAttributes</span><span class="p">.</span><span class="n">Static</span><span class="p">,</span> <span class="k">typeof</span><span class="p">(</span><span class="k">void</span><span class="p">),</span> <span class="k">new</span> <span class="n">Type</span><span class="p">[]</span> <span class="p">{</span> <span class="k">typeof</span><span class="p">(</span><span class="kt">string</span><span class="p">[])</span> <span class="p">});</span>
+</span><span class='line'>            <span class="n">ILGenerator</span> <span class="n">gen</span> <span class="p">=</span> <span class="n">methodBuilder</span><span class="p">.</span><span class="n">GetILGenerator</span><span class="p">();</span>
+</span><span class='line'>            <span class="n">gen</span><span class="p">.</span><span class="n">Emit</span><span class="p">(</span><span class="n">OpCodes</span><span class="p">.</span><span class="n">Ldstr</span><span class="p">,</span> <span class="s">&quot;Hello, World!&quot;</span><span class="p">);</span>
+</span><span class='line'>            <span class="n">gen</span><span class="p">.</span><span class="n">Emit</span><span class="p">(</span><span class="n">OpCodes</span><span class="p">.</span><span class="n">Call</span><span class="p">,</span> <span class="k">typeof</span><span class="p">(</span><span class="n">Console</span><span class="p">).</span><span class="n">GetMethod</span><span class="p">(</span><span class="s">&quot;WriteLine&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">Type</span><span class="p">[]</span> <span class="p">{</span> <span class="k">typeof</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="p">}));</span>
+</span><span class='line'>            <span class="n">gen</span><span class="p">.</span><span class="n">Emit</span><span class="p">(</span><span class="n">OpCodes</span><span class="p">.</span><span class="n">Ldc_I4_1</span><span class="p">);</span>
+</span><span class='line'>            <span class="n">gen</span><span class="p">.</span><span class="n">Emit</span><span class="p">(</span><span class="n">OpCodes</span><span class="p">.</span><span class="n">Call</span><span class="p">,</span> <span class="k">typeof</span><span class="p">(</span><span class="n">Console</span><span class="p">).</span><span class="n">GetMethod</span><span class="p">(</span><span class="s">&quot;ReadKey&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">Type</span><span class="p">[]</span> <span class="p">{</span> <span class="k">typeof</span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">}));</span>
+</span><span class='line'>            <span class="n">gen</span><span class="p">.</span><span class="n">Emit</span> <span class="p">(</span><span class="n">OpCodes</span><span class="p">.</span><span class="n">Pop</span><span class="p">);</span>
+</span><span class='line'>            <span class="n">gen</span><span class="p">.</span><span class="n">Emit</span> <span class="p">(</span><span class="n">OpCodes</span><span class="p">.</span><span class="n">Ret</span><span class="p">);</span>
+</span><span class='line'>            <span class="n">typeBuilder</span><span class="p">.</span><span class="n">CreateType</span><span class="p">();</span>
+</span><span class='line'>            <span class="n">assemblyBuilder</span><span class="p">.</span><span class="n">SetEntryPoint</span><span class="p">(</span><span class="n">methodBuilder</span><span class="p">,</span> <span class="n">PEFileKinds</span><span class="p">.</span><span class="n">ConsoleApplication</span><span class="p">);</span>
+</span><span class='line'>            <span class="n">File</span><span class="p">.</span><span class="n">Delete</span><span class="p">(</span><span class="s">&quot;test.exe&quot;</span><span class="p">);</span>
+</span><span class='line'>            <span class="n">assemblyBuilder</span><span class="p">.</span><span class="n">Save</span><span class="p">(</span><span class="s">&quot;test.exe&quot;</span><span class="p">);</span>
+</span><span class='line'>            <span class="n">Process</span><span class="p">.</span><span class="n">Start</span><span class="p">(</span><span class="s">&quot;test.exe&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>手順は大雑把に</p>
+
+<ul>
+<li>出力したいファイルの情報を作る。(Mainの1行目〜3行目)</li>
+<li>class、メソッドを作る(4, 5行目)</li>
+<li>ilを書き出す(6 〜 13行目)</li>
+<li>エントリーポイントを作る(14行目)</li>
+<li>ファイルを出力する(16行目)</li>
+<li>実行する(17行目)</li>
+</ul>
+
+
+<p>OpCOdesに関してはここをチェックした<a href="https://msdn.microsoft.com/en-us/library/system.reflection.emit.opcodes_fields(v=vs.110">OpCodes Fields (System.Reflection.Emit)</a>.aspx)</p>
+
+<p>実際にどういうilコードを書けば良いかは、一回C#でビルドしたものを</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>monodis hoge.exe
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいにしてilコードを表示させると良い</p>
+
+<h2>一旦ビルドしたものを手動で修正する</h2>
+
+<p>何個か選択肢があるみたいだが、<a href="http://www.mono-project.com/docs/tools+libraries/libraries/Mono.Cecil/">Mono.Cecil</a>を使ったので、Mono.Cecilについてのみ書く。</p>
+
+<p>色々情報はあるんだけど、どうもバージョンの違いによって作法が若干変わるみたい。なので、これは2015/11/29時点の情報(バージョン0.9.6)になる。</p>
+
+<p>test.exeにConsole.WriteLine(&ldquo;injected!&rdquo;)を追加するにはこんな感じで</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+</span><span class='line'><span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+</span><span class='line'><span class="k">using</span> <span class="nn">System.Linq</span><span class="p">;</span>
+</span><span class='line'><span class="k">using</span> <span class="nn">System.Text</span><span class="p">;</span>
+</span><span class='line'><span class="k">using</span> <span class="nn">System.IO</span><span class="p">;</span>
+</span><span class='line'><span class="k">using</span> <span class="nn">System.Diagnostics</span><span class="p">;</span>
+</span><span class='line'><span class="k">using</span> <span class="nn">Mono.Cecil</span><span class="p">;</span>
+</span><span class='line'><span class="k">using</span> <span class="nn">Mono.Cecil.Cil</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">namespace</span> <span class="nn">ceciltest</span><span class="p">{</span>
+</span><span class='line'> <span class="k">class</span> <span class="nc">Program</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span> <span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">asm</span> <span class="p">=</span> <span class="n">AssemblyDefinition</span><span class="p">.</span><span class="n">ReadAssembly</span><span class="p">(</span><span class="s">@&quot;test.exe&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">mainDef</span> <span class="p">=</span> <span class="n">asm</span><span class="p">.</span><span class="n">MainModule</span><span class="p">.</span><span class="n">Types</span><span class="p">.</span><span class="n">OfType</span><span class="p">&lt;</span><span class="n">TypeDefinition</span><span class="p">&gt;().</span><span class="n">Single</span><span class="p">(</span><span class="n">t</span> <span class="p">=&gt;</span> <span class="n">t</span><span class="p">.</span><span class="n">Name</span> <span class="p">==</span> <span class="s">&quot;MainClass&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">MethodDefinition</span> <span class="n">mainMethod</span> <span class="p">=</span> <span class="n">mainDef</span><span class="p">.</span><span class="n">Methods</span><span class="p">.</span><span class="n">OfType</span><span class="p">&lt;</span><span class="n">MethodDefinition</span><span class="p">&gt;().</span><span class="n">Single</span><span class="p">(</span><span class="n">m</span> <span class="p">=&gt;</span> <span class="n">m</span><span class="p">.</span><span class="n">Name</span> <span class="p">==</span> <span class="s">&quot;Main&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">Instruction</span> <span class="n">ret</span> <span class="p">=</span> <span class="n">mainMethod</span><span class="p">.</span><span class="n">Body</span><span class="p">.</span><span class="n">Instructions</span><span class="p">.</span><span class="n">Last</span><span class="p">(</span><span class="n">i</span> <span class="p">=&gt;</span> <span class="n">i</span><span class="p">.</span><span class="n">OpCode</span> <span class="p">==</span> <span class="n">OpCodes</span><span class="p">.</span><span class="n">Ret</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">mainMethod</span><span class="p">.</span><span class="n">Body</span><span class="p">.</span><span class="n">Instructions</span><span class="p">.</span><span class="n">Remove</span> <span class="p">(</span><span class="n">ret</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">mainMethod</span><span class="p">.</span><span class="n">Body</span><span class="p">.</span><span class="n">Instructions</span><span class="p">.</span><span class="n">Add</span> <span class="p">(</span><span class="n">Instruction</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">Mono</span><span class="p">.</span><span class="n">Cecil</span><span class="p">.</span><span class="n">Cil</span><span class="p">.</span><span class="n">OpCodes</span><span class="p">.</span><span class="n">Ldstr</span><span class="p">,</span><span class="s">&quot;injected!&quot;</span><span class="p">));</span>
+</span><span class='line'>        <span class="kt">var</span> <span class="n">writeLineMethod</span> <span class="p">=</span> <span class="k">typeof</span><span class="p">(</span><span class="n">Console</span><span class="p">).</span><span class="n">GetMethod</span><span class="p">(</span><span class="s">&quot;WriteLine&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">Type</span><span class="p">[]</span> <span class="p">{</span> <span class="k">typeof</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="p">});</span>
+</span><span class='line'>        <span class="kt">var</span> <span class="n">writeLineRef</span> <span class="p">=</span> <span class="n">asm</span><span class="p">.</span><span class="n">MainModule</span><span class="p">.</span><span class="n">ImportReference</span><span class="p">(</span><span class="n">writeLineMethod</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">mainMethod</span><span class="p">.</span><span class="n">Body</span><span class="p">.</span><span class="n">Instructions</span><span class="p">.</span><span class="n">Add</span> <span class="p">(</span><span class="n">Instruction</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">OpCodes</span><span class="p">.</span><span class="n">Call</span><span class="p">,</span> <span class="n">writeLineRef</span><span class="p">));</span>
+</span><span class='line'>        <span class="n">mainMethod</span><span class="p">.</span><span class="n">Body</span><span class="p">.</span><span class="n">Instructions</span><span class="p">.</span><span class="n">Add</span> <span class="p">(</span><span class="n">Instruction</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">OpCodes</span><span class="p">.</span><span class="n">Ret</span><span class="p">));</span>
+</span><span class='line'>        <span class="n">asm</span><span class="p">.</span><span class="n">Write</span><span class="p">(</span><span class="s">&quot;test.modified.exe&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'> <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>大雑把にやってることはこんな感じ</p>
+
+<ul>
+<li>ビルドしたもの(dllとかexeとか)をアセンブリとして読み込む(Main関数の1行目)</li>
+<li>変更したいクラス、メソッドを取り出す(2, 3行目)</li>
+<li>メソッド内のilを修正(追加とか削除とか)</li>
+<li>Main内に元々あるretを削除(4, 5行目)</li>
+<li>出力したい文字列を設定する(6行目)</li>
+<li>Console.WriteLineを定義(7行目)</li>
+<li>Callする為の参照を作る(8行目)。</li>
+<li>Console.WriteLineをCallする(9行目)</li>
+<li>消したretを再度追加</li>
+<li>修正したものを書き出し(11行目)</li>
+</ul>
+
+
+<h3>雑多</h3>
+
+<ul>
+<li>他の情報でImportとあるのはImportReferenceになっている</li>
+<li>型やメソッドなど参照で登録するのでImportReferenceを使う。アセンブリ内で独自に定義している型の場合は別の作法が必要。</li>
+</ul>
+
+
+<p>参考：
++ <a href="http://mono.1490590.n4.nabble.com/TypeReference-of-bool-td1550891.html">Mono &ndash; Cecil &ndash; TypeReference of bool</a>
++ <a href="http://vx.thomazi.me/posts/net-injection-cecil/">.Net injection with Mono.Cecil(全てのメソッドを修正する例)</a></p>
+
+<p>他参考資料</p>
+
+<ul>
+<li><a href="http://home.a00.itscom.net/hatada/_toc/dotnet.html#dotnet">.NET &amp; C#</a></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/11/02/use-mecab-in-python-virtualenv-ubuntu1-12-dot-04/">Virtualenv上のpythonでmecabを使う (Ubuntu1 12.04)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-02T17:28:17+09:00" pubdate data-updated="true">Nov 2<span>nd</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ubuntu 12.04でapt使ってmecabをインストールしている状態、virtualenvのpythonに切り替えているところからスタート</p>
+
+<h2>先に結論</h2>
+
+<p>mecabをソースからインストールして最新版にして、natto-pyをpipでインストールすれば出来た。</p>
+
+<h2>1. mecab-pythonをvirtualenv上で使用してみる</h2>
+
+<p>ファイルにmecab-pythonを置いてる場所を指定して、pip使えば良い</p>
+
+<figure class='code'><figcaption><span>requirements.txt</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>https://mecab.googlecode.com/files/mecab-python-0.996.tar.gz
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install -r requirements.txt
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これでvirtualenv上にmecab-pythonをインストール出来た。
+参考：<a href="http://qiita.com/hagino3000/items/4cb73fb53537c0714044">travisでpython-mecabを動かしたい時の設定 &ndash; Qiita</a></p>
+
+<p>でもこれでおもむろに</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">MeCab</span>
+</span><span class='line'><span class="n">m</span> <span class="o">=</span> <span class="n">MeCab</span><span class="o">.</span><span class="n">Tagger</span><span class="p">(</span><span class="s">&#39;-Ochasen&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="k">print</span> <span class="s">&#39;今日は良い天気&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>エラーが出たorz</p>
+
+<h2>2. natto-pyを使ってみる</h2>
+
+<p>pip search mecabで調べて、その後ググると、natto-pyってのがmecab使えるライブラリであるっぽいのでインストールしてみた</p>
+
+<p>参考：<a href="https://github.com/buruzaemon/natto-py">buruzaemon/natto-py</a></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install natto-py
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これだけでインストール出来た。使ってみたらインストールしてあるmecabのバージョンが古過ぎて使えないと怒られたorz。</p>
+
+<h2>3. mecabを最新バージョンにする</h2>
+
+<p>仕方ないので</p>
+
+<h3>aptのmecabをアンインストール</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude remove mecab
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>mecabをソースからインストール</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>wget https://drive.google.com/uc?export<span class="o">=</span>download&amp;id<span class="o">=</span>0B4y35FiV1wh7cENtOXlicTFaRUE
+</span><span class='line'><span class="nv">$ </span>tar zxvf mecab-0.996.tar.gz
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>mecab-0.996
+</span><span class='line'><span class="nv">$ </span>./configure
+</span><span class='line'><span class="nv">$ </span>make
+</span><span class='line'><span class="nv">$ </span>make check
+</span><span class='line'><span class="nv">$ </span>sudo make install
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>mecab辞書のインストール</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>wget https://drive.google.com/uc?export<span class="o">=</span>download&amp;id<span class="o">=</span>0B4y35FiV1wh7MWVlSDBCSXZMTXM
+</span><span class='line'><span class="nv">$ </span>tar zvxf mecab-ipadic-2.7.0-20070801.tar.gz
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>mecab-ipadic-2.7.0-20070801
+</span><span class='line'><span class="nv">$ </span>./configure --with-charset<span class="o">=</span>utf8
+</span><span class='line'><span class="nv">$ </span>make
+</span><span class='line'><span class="nv">$ </span>sudo make install
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>urlはそれぞれ<a href="http://taku910.github.io/mecab/#download">mecabのページ</a>からリンクされているものを用いた。</p>
+
+<p>参考：<a href="http://tatsuyaoiw.hatenablog.com/entry/20120414/1334397985">MeCabのインストール方法 &ndash; tatsuyaoiw.hatenablog.com</a></p>
+
+<h2>natto-pyを改めて使う</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="c"># coding: utf-8↲</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">natto</span> <span class="kn">import</span> <span class="n">MeCab</span>
+</span><span class='line'><span class="n">nm</span> <span class="o">=</span> <span class="n">MeCab</span><span class="p">()</span>
+</span><span class='line'><span class="k">print</span> <span class="n">nm</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&#39;ピンチの時には必ずヒーローが現れる。&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="c"># MeCab result as a single string</span>
+</span><span class='line'><span class="err">ピンチ</span>    <span class="err">名詞</span><span class="p">,</span><span class="err">一般</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">ピンチ</span><span class="p">,</span><span class="err">ピンチ</span><span class="p">,</span><span class="err">ピンチ</span>
+</span><span class='line'><span class="err">の</span>      <span class="err">助詞</span><span class="p">,</span><span class="err">連体化</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">の</span><span class="p">,</span><span class="err">ノ</span><span class="p">,</span><span class="err">ノ</span>
+</span><span class='line'><span class="err">時</span>      <span class="err">名詞</span><span class="p">,</span><span class="err">非自立</span><span class="p">,</span><span class="err">副詞可能</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">時</span><span class="p">,</span><span class="err">トキ</span><span class="p">,</span><span class="err">トキ</span>
+</span><span class='line'><span class="err">に</span>      <span class="err">助詞</span><span class="p">,</span><span class="err">格助詞</span><span class="p">,</span><span class="err">一般</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">に</span><span class="p">,</span><span class="err">ニ</span><span class="p">,</span><span class="err">ニ</span>
+</span><span class='line'><span class="err">は</span>      <span class="err">助詞</span><span class="p">,</span><span class="err">係助詞</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">は</span><span class="p">,</span><span class="err">ハ</span><span class="p">,</span><span class="err">ワ</span>
+</span><span class='line'><span class="err">必ず</span>    <span class="err">副詞</span><span class="p">,</span><span class="err">助詞類接続</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">必ず</span><span class="p">,</span><span class="err">カナラズ</span><span class="p">,</span><span class="err">カナラズ</span>
+</span><span class='line'><span class="err">ヒーロー</span>  <span class="err">名詞</span><span class="p">,</span><span class="err">一般</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">ヒーロー</span><span class="p">,</span><span class="err">ヒーロー</span><span class="p">,</span><span class="err">ヒーロー</span>
+</span><span class='line'><span class="err">が</span>      <span class="err">助詞</span><span class="p">,</span><span class="err">格助詞</span><span class="p">,</span><span class="err">一般</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">が</span><span class="p">,</span><span class="err">ガ</span><span class="p">,</span><span class="err">ガ</span>
+</span><span class='line'><span class="err">現れる</span>  <span class="err">動詞</span><span class="p">,</span><span class="err">自立</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">一段</span><span class="p">,</span><span class="err">基本形</span><span class="p">,</span><span class="err">現れる</span><span class="p">,</span><span class="err">アラワレル</span><span class="p">,</span><span class="err">アラワレル</span>
+</span><span class='line'><span class="err">。</span>      <span class="err">記号</span><span class="p">,</span><span class="err">句点</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">。</span><span class="p">,</span><span class="err">。</span><span class="p">,</span><span class="err">。</span>
+</span><span class='line'><span class="n">EOS</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>うまくいった。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04/">ubuntu12.04でpg bulkloadを使う</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-09-24T08:50:36+09:00" pubdate data-updated="true">Sep 24<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>pg_bulkloadを使いたくなるケース</p>
+
+<ul>
+<li>大量のデータをインポートしたい</li>
+<li>中にはエラーがあるデータがちょこちょこある</li>
+</ul>
+
+
+<p>に当てはまったので、インストールからやってみた。
+やったこと順に列記するので最低限の手順ではないと思う。</p>
+
+<p>rpmからインストールする方法でなく、ソースからやってみることにした。
+Ubuntu12.04でインストールしたけど、他のバージョンでもほぼ同じだと思う。</p>
+
+<h2>ソースの取得</h2>
+
+<p>まずは最新のstableをgithubから取ってくる。ブログ執筆時はこんな感じ。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone -b VERSION3_1_STABLE https://github.com/ossc-db/pg_bulkload.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>make(失敗)</h2>
+
+<p>おもむろにmakeしてみると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>pg_bulkload
+</span><span class='line'><span class="nv">$ </span>make
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>するとpgxs.xmlが無い！というエラーが出て来た</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>Makefile:17: /usr/lib/postgresql/9.4/lib/pgxs/src/makefiles/pgxs.mk: そのようなファイルやディレクトリはありません
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>postgresqlは9.2しか入れてないはずなのに何故か9.4のファイルが無いとか言われた。</p>
+
+<h2>試行錯誤(失敗)</h2>
+
+<p>どうもMakefileを調べてみると、ここで出てくるバージョンはpg_configコマンドで取得するバージョンらしい。面倒なので、手動で9.2のファイルを設定するように変更して、さらにpgxs.mkを入れるためにpostgresql-server-dev-9.2をaptitudeでインストールした。</p>
+
+<p>で、おもむろにmakeすると・・・</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo make
+</span><span class='line'>....
+</span><span class='line'>/usr/include/postgresql/libpq-fe.h:547:1: エラー: 不明な型名 ‘pg_int64’ です
+</span><span class='line'>/usr/include/postgresql/libpq-fe.h:547:50: エラー: 不明な型名 ‘pg_int64’ です
+</span><span class='line'>/usr/include/postgresql/libpq-fe.h:551:1: エラー: 不明な型名 ‘pg_int64’ です
+</span><span class='line'>/usr/include/postgresql/libpq-fe.h:553:48: エラー: 不明な型名 ‘pg_int64’ です
+</span><span class='line'>make<span class="o">[</span>1<span class="o">]</span>: *** <span class="o">[</span>pg_bulkload.o<span class="o">]</span> エラー 1
+</span><span class='line'>make<span class="o">[</span>1<span class="o">]</span>: ディレクトリ <span class="sb">`</span>/****/pg_bulkload/bin<span class="err">&#39;</span> から出ます
+</span><span class='line'>make: *** <span class="o">[</span>all<span class="o">]</span> エラー 2
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と結局エラーが出てしまった。ググって調べるとどうもlibpqのバージョンが関連するらしい。調べてみると</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>aptitude show libpq-dev
+</span><span class='line'>パッケージ: libpq-dev
+</span><span class='line'>状態: インストール済み
+</span><span class='line'>自動的にインストールされた: いいえ
+</span><span class='line'>バージョン: 9.4.0-1.pgdg12.4+1
+</span><span class='line'>....
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>バージョンが9.4になっていたorz。多分だけど、9.2でpg_bulkloadをインストールするにはlibpqをダウングレードしないといけないっぽい。それは面倒なのでpostgresqlのバージョン9.4をインストールすることでバージョンを合わせることにした</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install postgresql-9.4
+</span><span class='line'><span class="nv">$ </span>sudo aptitude install postgresql-server-dev-9.4
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>インストールの途中でlibpq-devは削除することになった。</p>
+
+<h2>make(成功)</h2>
+
+<p>バージョンを合わせたので、makeしてみると今度はライブラリが足らないというエラーが出た</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo make
+</span><span class='line'>....
+</span><span class='line'>/usr/bin/ld: cannot find -lpam
+</span><span class='line'>/usr/bin/ld: cannot find -ledit
+</span><span class='line'>collect2: ld はステータス 1 で終了しました
+</span><span class='line'>make<span class="o">[</span>1<span class="o">]</span>: *** <span class="o">[</span>pg_bulkload<span class="o">]</span> エラー 1
+</span><span class='line'>make<span class="o">[</span>1<span class="o">]</span>: ディレクトリ <span class="sb">`</span>/***/pg_bulkload/bin<span class="err">&#39;</span> から出ます
+</span><span class='line'>make: *** <span class="o">[</span>all<span class="o">]</span> エラー 2
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これはubuntuではlibpam-devとlibedit-devが足らないという意味らしいので、aptitudeからインストールした。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install libpam-dev
+</span><span class='line'><span class="nv">$ </span>sudo aptitude install libedit-dev
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以上の作業でpg_bulkloadのmakeに成功した</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo make
+</span><span class='line'><span class="nv">$ </span>sudo make install
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>使ってみる</h2>
+
+<p>pg_bulkloadはbinフォルダ内にある。使い方は</p>
+
+<ul>
+<li>設定ファイルを書く</li>
+<li>csvファイルを用意する</li>
+<li>実行する</li>
+</ul>
+
+
+<p>となる。</p>
+
+<h3>設定ファイルを書く</h3>
+
+<p>設定ファイルの例はこんな感じ(下のコマンドの場合、example.ctlで保存しておく)、bin/data内にも例があるので参考になる。
+この設定は</p>
+
+<ul>
+<li>リダイレクトでcsvファイルを入力する。</li>
+<li>リレーションをチェックする。リレーションにミスがある場合はエラーにする</li>
+<li>タブ区切り</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">TYPE</span> <span class="o">=</span> CSV
+</span><span class='line'><span class="nv">INPUT</span> <span class="o">=</span> stdin
+</span><span class='line'><span class="nv">TABLE</span> <span class="o">=</span> table_name
+</span><span class='line'><span class="nv">CHECK_CONSTRAINTS</span> <span class="o">=</span> YES
+</span><span class='line'><span class="nv">DELIMITER</span> <span class="o">=</span> <span class="s2">&quot;   &quot;</span> <span class="c">#タブの場合</span>
+</span><span class='line'><span class="nv">WRITER</span> <span class="o">=</span> DIRECT
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>コマンドはこんな感じ</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>./pg_bulkload example.ctl --dbname db_name  &lt; csv_name.csv
+</span><span class='line'>NOTICE: BULK LOAD START
+</span><span class='line'>NOTICE: BULK LOAD END
+</span><span class='line'>    0 Rows skipped.
+</span><span class='line'>    10 Rows successfully loaded.
+</span><span class='line'>    0 Rows not loaded due to parse errors.
+</span><span class='line'>    0 Rows not loaded due to duplicate errors.
+</span><span class='line'>    0 Rows replaced with new rows.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>csvファイルはpsqlで\d table_nameで表示される順序にしておくこと。でないとパースエラーが出る。</p>
+
+<h2>順序が変わる場合</h2>
+
+<p>csvファイル内のフィールド順序をdb内の順序と違うものにしたい場合や、idなど、データを省略したい場合はフィルタを指定出来る。フィルタは</p>
+
+<ul>
+<li>db内に関数を作る</li>
+<li>設定ファイルでフィルタを指定</li>
+</ul>
+
+
+<p>で設定する。</p>
+
+<p>フィルタの例</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">CREATE</span> <span class="k">FUNCTION</span> <span class="n">sample_filter</span><span class="p">(</span><span class="nb">integer</span><span class="p">,</span> <span class="nb">text</span><span class="p">,</span> <span class="nb">text</span><span class="p">,</span> <span class="nb">real</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">.</span><span class="mi">05</span><span class="p">)</span> <span class="k">RETURNS</span> <span class="n">record</span>
+</span><span class='line'>    <span class="k">AS</span> <span class="err">$$</span> <span class="k">SELECT</span> <span class="err">$</span><span class="mi">1</span> <span class="o">*</span> <span class="err">$</span><span class="mi">4</span><span class="p">,</span> <span class="k">upper</span><span class="p">(</span><span class="err">$</span><span class="mi">3</span><span class="p">)</span> <span class="err">$$</span>
+</span><span class='line'>    <span class="k">LANGUAGE</span> <span class="k">SQL</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>設定ファイル</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">TYPE</span> <span class="o">=</span> <span class="n">CSV</span>
+</span><span class='line'><span class="k">INPUT</span> <span class="o">=</span> <span class="k">stdin</span>
+</span><span class='line'><span class="k">TABLE</span> <span class="o">=</span> <span class="k">table_name</span>
+</span><span class='line'><span class="n">CHECK_CONSTRAINTS</span> <span class="o">=</span> <span class="n">YES</span>
+</span><span class='line'><span class="k">DELIMITER</span> <span class="o">=</span> <span class="ss">&quot;   &quot;</span> <span class="o">#</span><span class="err">タブの場合</span>
+</span><span class='line'><span class="n">WRITER</span> <span class="o">=</span> <span class="n">DIRECT</span>
+</span><span class='line'><span class="n">FILTER</span> <span class="o">=</span> <span class="n">sample_filter</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>出来てない点（追記予定）</h2>
+
+<ul>
+<li>MULTI_PROCESS = YESの時に認証失敗する件</li>
+</ul>
+
+
+<p>参考：</p>
+
+<ul>
+<li><a href="http://pgbulkload.projects.pgfoundry.org/pg_bulkload.html#filter">pg_bulkload</a></li>
+<li><a href="http://www.atmarkit.co.jp/flinux/rensai/linuxtips/a115makeerror.html">makeで「/usr/bin/ld: cannot find」と表示されるときは － ＠IT</a></li>
+<li><a href="http://pgfoundry.org/forum/forum.php?thread_id=2851&amp;forum_id=1004&amp;group_id=1000261">pgFoundry: Forum: help</a></li>
+<li><a href="https://github.com/ossc-db/pg_bulkload">ossc-db/pg_bulkload</a></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -915,507 +1624,6 @@ ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/07/07/use-multiple-databases-in-django/">Djangoで複数データベースを使用する</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-07-07T12:33:37+09:00" pubdate data-updated="true">Jul 7<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Djangoでは複数データベースを扱える。でも色々コーディングや設定が必要なのでメモしておく。参考：<a href="https://docs.djangoproject.com/en/1.7/topics/db/multi-db/">Multiple databases | Django documentation | Django</a>。対応バージョンはDjango 1.7。使ったデータベースはPostgreSQL。</p>
-
-<h2>settings.py</h2>
-
-<p>settings.pyで複数データベースの接続設定をする</p>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>    <span class="s">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span class='line'>        <span class="s">&#39;NAME&#39;</span><span class="p">:</span> <span class="s">&#39;app_data&#39;</span><span class="p">,</span>
-</span><span class='line'>        <span class="s">&#39;ENGINE&#39;</span><span class="p">:</span> <span class="s">&#39;django.db.backends.postgresql_psycopg2&#39;</span><span class="p">,</span>
-</span><span class='line'>        <span class="s">&#39;USER&#39;</span><span class="p">:</span> <span class="s">&#39;postgres_user&#39;</span><span class="p">,</span>
-</span><span class='line'>        <span class="s">&#39;PASSWORD&#39;</span><span class="p">:</span> <span class="s">&#39;s3krit&#39;</span>
-</span><span class='line'>    <span class="p">},</span>
-</span><span class='line'>    <span class="s">&#39;users&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span class='line'>        <span class="s">&#39;NAME&#39;</span><span class="p">:</span> <span class="s">&#39;user_data&#39;</span><span class="p">,</span>
-</span><span class='line'>        <span class="s">&#39;ENGINE&#39;</span><span class="p">:</span> <span class="s">&#39;django.db.backends.mysql&#39;</span><span class="p">,</span>
-</span><span class='line'>        <span class="s">&#39;USER&#39;</span><span class="p">:</span> <span class="s">&#39;mysql_user&#39;</span><span class="p">,</span>
-</span><span class='line'>        <span class="s">&#39;PASSWORD&#39;</span><span class="p">:</span> <span class="s">&#39;priv4te&#39;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>参考ページのをそのまま使った。さらに追加も出来る。</p>
-
-<h2>ここまでの設定でのマイグレーション</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py migrate
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>だとdefault設定のデータベースへのマイグレーション、</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py migrate --database<span class="o">=</span>users
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とするとusersで設定したデータベースへのマイグレーションとなる。
-何も設定していないと、それぞれのデータベースに全アプリケーションの全てのモデルが反映される。</p>
-
-<h2>データベースに保存するアプリ、モデルを限定したい</h2>
-
-<p>ルーティング設定をする。</p>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">DATABASE_ROUTERS</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;myproject.routers.Router&#39;</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>settings.pyはこんな感じ。んでmyprojectフォルダにrouters.pyを作成して例えばuserアプリのものだけusersデータベースを使うという設定の場合次のように書く</p>
-
-<figure class='code'><figcaption><span>routers.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">class</span> <span class="nc">Router</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">db_for_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="o">**</span><span class="n">hints</span><span class="p">):</span>
-</span><span class='line'>        <span class="c">#ここでランダムに選択すると、dbの負荷分散っぽいことが出来る</span>
-</span><span class='line'>        <span class="c">#例：return random.choice[&#39;default&#39;,&#39;users&#39;]</span>
-</span><span class='line'>        <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span> <span class="o">==</span> <span class="s">&quot;user&quot;</span><span class="p">:</span>
-</span><span class='line'>            <span class="k">return</span> <span class="s">&quot;users&quot;</span>
-</span><span class='line'>        <span class="k">return</span> <span class="s">&quot;default&quot;</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">db_for_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="o">**</span><span class="n">hints</span><span class="p">):</span>
-</span><span class='line'>        <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span> <span class="o">==</span> <span class="s">&quot;user&quot;</span><span class="p">:</span>
-</span><span class='line'>            <span class="k">return</span> <span class="s">&quot;users&quot;</span>
-</span><span class='line'>        <span class="k">return</span> <span class="s">&quot;default&quot;</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">allow_relation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj1</span><span class="p">,</span> <span class="n">obj2</span><span class="p">,</span> <span class="o">**</span><span class="n">hints</span><span class="p">):</span>
-</span><span class='line'>        <span class="c">#Trueはリレーションを認める、Falseは認めない、Noneはこのコードでは関知しないという意味</span>
-</span><span class='line'>        <span class="k">return</span> <span class="bp">None</span>
-</span><span class='line'>    <span class="k">def</span> <span class="nf">allow_migrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
-</span><span class='line'>        <span class="c">#userアプリの場合はusers設定のデータベースへmigrate。</span>
-</span><span class='line'>        <span class="c">#他のアプリはusers以外のデータベースへmigrateする設定</span>
-</span><span class='line'>        <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span> <span class="o">==</span> <span class="s">&quot;user&quot;</span>
-</span><span class='line'>            <span class="k">return</span> <span class="n">db</span> <span class="o">==</span> <span class="s">&quot;users&quot;</span><span class="p">:</span>
-</span><span class='line'>        <span class="k">else</span><span class="p">:</span>
-</span><span class='line'>            <span class="k">return</span> <span class="bp">True</span>
-</span><span class='line'>        <span class="k">return</span> <span class="bp">False</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>routers.pyをちゃんと書かないと、色々不具合が出る（例：管理用のモデルがmigrateできないとか）ので気をつけた方が良い。</p>
-
-<p>上に紹介した参考ページには色々コードが書いてあるので、参考になる。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/07/03/make-admin-page-using-django/">Django1.7でPostgreSQLとBootstrap使ったアプリを作ってみた(1.5):管理ページを作ってみた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-07-03T21:59:10+09:00" pubdate data-updated="true">Jul 3<span>rd</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Django1.6.5でアプリを作ってみたってネタをやってたけど、Django1.7にバージョンアップしたので、タイトルを変えた。ついでにDjango1.7だとINSTALLED_APPにdjango.contrib.authを入れておかないとエラーが出るケースがある（例えば<a href="http://www.django-rest-framework.org/">Django REST framework</a>でエラーが出た）ので、エラー出ないように最初に管理ページを用意しておくと良いと思う。</p>
-
-<p>管理ページを用意する手順はこんな感じ</p>
-
-<h2>settings.pyに設定を書く</h2>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'>    <span class="s">&#39;django.contrib.admin&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="s">&#39;django.contrib.auth&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="o">...</span>
-</span><span class='line'><span class="p">)</span>
-</span><span class='line'><span class="n">MIDDLEWARE_CLASSES</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'>    <span class="s">&#39;django.contrib.auth.middleware.AuthenticationMiddleware&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="o">...</span>
-</span><span class='line'><span class="p">)</span>
-</span><span class='line'><span class="n">TEMPLATE_CONTEXT_PROCESSORS</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'>    <span class="s">&#39;django.contrib.auth.context_processors.auth&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="o">...</span>
-</span><span class='line'><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>migrate</h2>
-
-<p>マイグレーションしておく</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py makemigrations
-</span><span class='line'><span class="nv">$ </span>python manage.py migrate
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>マルチデータベースでやろうとして反映されずにハマったりしたけど、それはまた別の記事で書くかも</p>
-
-<h2>管理アカウントを作る</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py createsuperuser
-</span><span class='line'>Username: hoge
-</span><span class='line'>Email address: hoge@example.com
-</span><span class='line'>Password: ********
-</span><span class='line'>Password <span class="o">(</span>again<span class="o">)</span>: ********
-</span><span class='line'>Superuser created successfully.
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>って出来るとおk</p>
-
-<h2>urls.pyを書く</h2>
-
-<figure class='code'><figcaption><span>urls.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="n">url</span><span class="p">(</span><span class="s">r&#39;^admin/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">urls</span><span class="p">)),</span>
-</span><span class='line'>    <span class="o">...</span>
-</span><span class='line'><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな感じで作って</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py runserver
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とすると、127.0.0.1/adminにアクセスすると管理画面へのログイン画面が出る。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/07/01/profiling-django/">Djangoをプロファイリングする</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-07-01T09:06:13+09:00" pubdate data-updated="true">Jul 1<span>st</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>作ってるWebサービスが条件によってえらい重くなるので、ボトルネックを探すためにプロファイラを動かしてみようと考えてやってみたらそこそこハマった。</p>
-
-<p>先に結論：</p>
-
-<p><strong>Middleware使ってブラウザに表示させるのが楽だった</strong></p>
-
-<p>条件</p>
-
-<ul>
-<li>cui環境なので、プロファイル結果は画像作るかブラウザ表示するかのどちらか</li>
-<li>コードに埋めこまない形</li>
-</ul>
-
-
-<p>まず参考にしたのは公式ページの<a href="https://code.djangoproject.com/wiki/ProfilingDjango">ProfilingDjango – Django</a>。ざっくりとした結果が知りたかったのでrunprofileserverを試してみることにした。</p>
-
-<h2>開発サーバでやってみる（runprofileserver）</h2>
-
-<p>django-extensionの一機能で</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install django-extensions
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>でインストールして、</p>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">INSTALLED_APP</span> <span class="o">=</span> <span class="p">(</span><span class="o">...</span>
-</span><span class='line'>   <span class="s">&#39;django_extensions&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>で設定して</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py runprofileserver
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とすると、よしなに/tmpフォルダ内にプロファイル結果を吐き出してくれる開発用サーバだそうで、これは便利そうと思い、やってみた。</p>
-
-<h3>結果を画像にしようとしてハマる</h3>
-
-<p>プロファイル結果からgraphviz通して画像にしたらブラウザから確認出来るし楽なんじゃね？とか良く考えると不毛なことを考えたのが間違いのもと。普通にKCacheGrind使ってろって話なんだけど、やってみた</p>
-
-<p>ツールとして使ったもの</p>
-
-<ul>
-<li><a href="https://github.com/jrfonseca/gprof2dot">gprof2dot</a>、プロファイル結果をdotファイルに変換する</li>
-<li>graphviz、dotファイルを画像に変換する</li>
-</ul>
-
-
-<p>話にならなかったもの（良く考えるとこのケースで使えないの当たり前なのに使おうとして失敗したもの）</p>
-
-<ul>
-<li>xdebugtoolkit、単純にxdebugの結果でないとそりゃ使えないよねと納得した</li>
-</ul>
-
-
-<p>あまり良く分かってなかったので、KCacheGrind互換で出力しておけば、色んなソフト使ってよしなに出来るんじゃね？と思ってみた。んでKCacheGrind互換出力ってcallgrind形式ってことだよね！と勝手に思い込んでた</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py runprofileserver --kcachegrind
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>おもむろにdotファイルに変換!</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>path/to/gprof2dot -o out.dot -f callgrind /tmp/xxx.prof
-</span><span class='line'>....
-</span><span class='line'>AssertionError
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>うまくいかない。何かの計算値がこうなるはずなのにならないよ！とか怒られてる。って良く考えたらKCacheGrind互換の出力がcallgrind形式って保証がどこにもない！</p>
-
-<p>ってことで、あれこれドキュメント読んでたら、runprofileserverはhotshot使ってるとか何とか書いてあるから、何も指定しなかったらhotshotでの形式になる・・・ってことは全然説明されてないけど-fのオプションはpstatsで良いんじゃね？</p>
-
-<p>と勝手に予想して</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>python manage.py runprofileserver
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>path/to/gprof2dot -o out.dot -f pstats /tmp/xxx.prof
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とやるとout.dotが出来ましたとさ。あとは色んなとこに書いてある（例えば<a href="http://stackoverflow.com/questions/9279144/interpreting-callgrind-data">ここ</a>）ように、dotファイルを画像ファイルに変換すると、ちゃんと画像が出来上がった。</p>
-
-<p>ただ・・・・、まだ設定分かってないからだと思うんだけど、出来上がった画像にはviewやmodelのメソッドが一切書かれておらず、この情報だけからボトルネック探すのかなりキツイんじゃね？ということだけが分かった。</p>
-
-<h3>同一ドメインのurlを内部で呼び出してハマる</h3>
-
-<p>何故かURLによってプロファイル作るのが途中で止まって、サーバもレスポンスを返してくれなくなった。問題箇所を調べると、どうも内部で同じrunprofileserverで管理しているurlにアクセスすると止まっちゃう模様。別サーバを立てて、そこにアクセスするようにすれば、問題無く動作した。</p>
-
-<h2>手間なのでMiddlewareでプロファイルすることにした</h2>
-
-<p>いちいち開発中の状態なのにサーバ2つ立てて面倒だったり、結局作った画像見ても良く分からなかったので、今度はMiddlewareに埋め込むタイプを試してみた。</p>
-
-<h3>取りあえず動かなくてハマる</h3>
-
-<p>Extendedって書いてあるしということで<a href="https://djangosnippets.org/snippets/605/">djangosnippets: Extended Profiling Middleware</a>を試してみた。</p>
-
-<p>手順は</p>
-
-<ul>
-<li>↑のページのファイルをダウンロード（コード右上にダウンロードボタンがある）</li>
-<li>適当な名前を付けてimport出来る適当な場所に配置。（オラはmodulesってとこにprofiler.pyという名前を付けて置いてみた）</li>
-<li>settings.pyにmiddlewareを登録する</li>
-<li>プロファイルしたいURLにprof=というパラメータを付けてブラウザでアクセスする</li>
-</ul>
-
-
-<p>って感じ。settings.pyは</p>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">MIDDLEWARE_CLASSES</span> <span class="o">=</span> <span class="p">(</span>
-</span><span class='line'><span class="o">...</span>
-</span><span class='line'>    <span class="s">&#39;modules.profiler.ProfileMiddleware&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな感じ。で、上のようにブラウザでアクセスするとエラー・・・</p>
-
-<figure class='code'><figcaption><span>settings.py</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="ne">AttributeError</span><span class="p">:</span> <span class="s">&#39;WSGIRequest&#39;</span> <span class="nb">object</span> <span class="n">has</span> <span class="n">no</span> <span class="n">attribute</span> <span class="s">&#39;has_key&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>なので、コード上で</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">request</span><span class="o">.</span><span class="n">has_key</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>となっているところを</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">has_key</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と変更すると上手く動いた。ProfileMiddlewareのページ内コメントを見ると</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="s">&#39;prof&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と変更しても動くらしい。んで、プロファイルしたいurlにprof=をパラメータとして付けてアクセスすると、ブラウザ上に</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="mi">47793</span> <span class="n">function</span> <span class="n">calls</span> <span class="p">(</span><span class="mi">42681</span> <span class="n">primitive</span> <span class="n">calls</span><span class="p">)</span> <span class="ow">in</span> <span class="mf">0.907</span> <span class="n">seconds</span>
-</span><span class='line'>
-</span><span class='line'>   <span class="n">Ordered</span> <span class="n">by</span><span class="p">:</span> <span class="n">internal</span> <span class="n">time</span><span class="p">,</span> <span class="n">call</span> <span class="n">count</span>
-</span><span class='line'>
-</span><span class='line'>   <span class="n">ncalls</span>  <span class="n">tottime</span>  <span class="n">percall</span>  <span class="n">cumtime</span>  <span class="n">percall</span> <span class="n">filename</span><span class="p">:</span><span class="n">lineno</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
-</span><span class='line'>        <span class="mi">3</span>    <span class="mf">0.608</span>    <span class="mf">0.203</span>    <span class="mf">0.608</span>    <span class="mf">0.203</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">db</span><span class="o">/</span><span class="n">backends</span><span class="o">/</span><span class="n">utils</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">58</span><span class="p">(</span><span class="n">execute</span><span class="p">)</span>
-</span><span class='line'>       <span class="mi">30</span>    <span class="mf">0.112</span>    <span class="mf">0.004</span>    <span class="mf">0.112</span>    <span class="mf">0.004</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">socket</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">406</span><span class="p">(</span><span class="n">readline</span><span class="p">)</span>
-</span><span class='line'>       <span class="mi">12</span>    <span class="mf">0.050</span>    <span class="mf">0.004</span>    <span class="mf">0.050</span>    <span class="mf">0.004</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">socket</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">223</span><span class="p">(</span><span class="n">meth</span><span class="p">)</span>
-</span><span class='line'><span class="o">....</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>という形でプロファイルが表示出来た。もーこれでいーや。ということでやったのはここまで。まだまだだけど、取りあえずプロファイル結果を出すまでだけでハマったし、次回やっても同じようにハマりそうなのでメモしておく。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1447,23 +1655,23 @@ ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/02/09/migrate-from-django-1-dot-8-to-1-dot-9/">Django 1.8から1.9へアップした時に気にする点</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/29/pcl-memo/">PCLメモ</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/25/enable-service-fluentd-start/">インストールしたfluentdをserviceから使えるようにする</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/">fluent-plugin-groongaをインストールして動かすまでをAnsibleでやってみた</a>
       </li>
     
       <li class="post">
         <a href="/blog/2016/01/19/log-view-parameter-before-caching-for-django/">Djangoでcache使ってる間でも呼び出されたviewとかパラメーターをログに書き出したい</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/01/15/use-groonga-for-django-cache/">Use Groonga for Django Cache</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/01/13/redis-memo/">Redis Memo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/01/07/mt4-memo/">MT4 Memo</a>
       </li>
     
   </ul>
@@ -1491,8 +1699,8 @@ ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
 	<li class='category'><a href='/blog/categories/analytics/'>Analytics (2)</a></li>
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
-<li class='category'><a href='/blog/categories/csharp/'>CSharp (7)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (23)</a></li>
+<li class='category'><a href='/blog/categories/csharp/'>CSharp (8)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (24)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (2)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
@@ -1501,7 +1709,7 @@ ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (10)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (26)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (27)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
@@ -1510,8 +1718,8 @@ ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (12)</a></li>
-<li class='category'><a href='/blog/categories/memo/'>memo (17)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (13)</a></li>
+<li class='category'><a href='/blog/categories/memo/'>memo (18)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (8)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>

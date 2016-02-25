@@ -9,7 +9,24 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="本日、OpenSSLの重大バグが発覚。インターネットの大部分に影響の可能性 | TechCrunch Japanというニュースで 過去2年以内のあらゆるバージョンのOpenSSLが走るシステムで、システムメモリー上にある大量のデータを暴露することが可能 と書いてあった、これはまずいので、 &hellip;">
+  <meta name="description" content="まだデプロイ作業を途中までしか確認していないので、とりあえずハマったポイントを書いておく。 デプロイ作業をテストしてみたらこんなエラーが出た 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+$ bundle exec cap production deploy: &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +96,198 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/">Capistrano3でbitbucketからデプロイしようとしたらハマった話</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-04T10:04:00+09:00" pubdate data-updated="true">May 4<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>まだデプロイ作業を途中までしか確認していないので、とりあえずハマったポイントを書いておく。
+ デプロイ作業をテストしてみたらこんなエラーが出た</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>bundle <span class="nb">exec </span>cap production deploy:check
+</span><span class='line'> INFO <span class="o">[</span>5f874a7e<span class="o">]</span> Running /usr/bin/env mkdir -p /tmp/hoge/ on fuga
+</span><span class='line'>DEBUG <span class="o">[</span>5f874a7e<span class="o">]</span> Command: /usr/bin/env mkdir -p /tmp/hoge/
+</span><span class='line'> INFO <span class="o">[</span>5f874a7e<span class="o">]</span> Finished in 0.321 seconds with <span class="nb">exit </span>status 0 <span class="o">(</span>successful<span class="o">)</span>.
+</span><span class='line'>DEBUG Uploading /tmp/hoge/git-ssh.sh 0.0%
+</span><span class='line'> INFO Uploading /tmp/hoge/git-ssh.sh 100.0%
+</span><span class='line'> INFO <span class="o">[</span>c2bf6ab8<span class="o">]</span> Running /usr/bin/env chmod +x /tmp/hoge/git-ssh.sh on fuga
+</span><span class='line'>DEBUG <span class="o">[</span>c2bf6ab8<span class="o">]</span> Command: /usr/bin/env chmod +x /tmp/hoge/git-ssh.sh
+</span><span class='line'> INFO <span class="o">[</span>c2bf6ab8<span class="o">]</span> Finished in 0.031 seconds with <span class="nb">exit </span>status 0 <span class="o">(</span>successful<span class="o">)</span>.
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span> Running /usr/bin/env git ls-remote -h git@bitbucket.org:fuga/hoge.git on fuga
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span> Command: <span class="o">(</span> <span class="nv">GIT_ASKPASS</span><span class="o">=</span>/bin/echo <span class="nv">GIT_SSH</span><span class="o">=</span>/tmp/hoge/git-ssh.sh /usr/bin/env git ls-remote -h git@bitbucket.org:fuga/hoge.git <span class="o">)</span>
+</span><span class='line'>DEBUG <span class="o">[</span>cb27da31<span class="o">]</span>    Error reading response length from authentication socket
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span>    Permission denied <span class="o">(</span>publickey<span class="o">)</span>.
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span>    
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span>    fatal: The remote end hung up unexpectedly
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span>    
+</span><span class='line'>DEBUG <span class="o">[</span>ef8c5c38<span class="o">]</span> Finished in 2.287 seconds with <span class="nb">exit </span>status 128 <span class="o">(</span>failed<span class="o">)</span>.
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/02/use-nginxand-unicorn-on-sakura-vps/">Nginx,unicornをさくらvpsにインストールしてrailsアプリを手動でデプロイしてみる</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-02T15:10:23+09:00" pubdate data-updated="true">May 2<span>nd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>さくらvpsのUbuntu12.04にnginxとunicornをインストールしてローカル環境に作ったRailsアプリを手動でアップロードして表示させてみた。何となくユニコーンって名前が好きなので、unicornを使うことにした。</p>
+
+<h2>nginxインストール</h2>
+
+<p>nginxは本当は手動でインストールするのがいいんだろうけど、面倒なので</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install nginx
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でインストール</p>
+
+<h2>unicornインストール</h2>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/02/use-nginxand-unicorn-on-sakura-vps/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/04/09/git-memo/">Git Memo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-09T12:36:49+09:00" pubdate data-updated="true">Apr 9<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>git関連のメモ</p>
+
+<h3>変更履歴を見る</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git log -p
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で全体の変更履歴</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git log -p filename
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/04/09/git-memo/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -240,6 +449,56 @@
 <p>でおk</p>
 
 <p>参考：<a href="http://stackoverflow.com/questions/645853/add-slash-to-the-end-of-every-url-need-rewrite-rule-for-nginx">regex &ndash; Add slash to the end of every url (need rewrite rule for nginx) &ndash; Stack Overflow</a>&#8220;`</p>
+
+<h2>書式チェック</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo nginx -t -c /path/to/nginx.conf
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でチェック出来る</p>
+
+<p>参考：<a href="http://qiita.com/yaotti/items/bd6774888a790c00e6fd">nginxで設定ファイルチェック &ndash; Qiita</a></p>
+
+<h2>ltsvでログを取る</h2>
+
+<p>※　まずerror_logでは指定出来ないので注意</p>
+
+<p>ログのフォーマットにltsvを追加する。/etc/nginx/nginx.conf内でも
+/etc/nginx/conf.d/*.conf内でもおk</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>log_format ltsv  <span class="s2">&quot;time:$time_local&quot;</span>
+</span><span class='line'>                <span class="s2">&quot;\thost:$remote_addr&quot;</span>
+</span><span class='line'>                <span class="s2">&quot;\tforwardedfor:$http_x_forwarded_for&quot;</span>
+</span><span class='line'>                <span class="s2">&quot;\treq:$request&quot;</span>
+</span><span class='line'>                <span class="s2">&quot;\tstatus:$status&quot;</span>
+</span><span class='line'>                <span class="s2">&quot;\tsize:$body_bytes_sent&quot;</span>
+</span><span class='line'>                <span class="s2">&quot;\treferer:$http_referer&quot;</span>
+</span><span class='line'>                <span class="s2">&quot;\tua:$http_user_agent&quot;</span>
+</span><span class='line'>                <span class="s2">&quot;\treqtime:$request_time&quot;</span>
+</span><span class='line'>                <span class="s2">&quot;\tvhost:$host&quot;</span>;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>sites-available内でのaccess_logの設定を以下のように変更</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>access_log /var/log/nginx/access.log ltsv;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考：<a href="http://toshitanian.hatenablog.com/entry/2013/10/25/023838">nginxのerror_logはformat指定できない． &ndash; としたにあんの左脳</a></p>
 </div>
   
   
@@ -552,204 +811,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/09/how-to-block-bot-access-from-google-analytics/">Google Analyticsからbotアクセスを取り除く</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-09T21:53:40+09:00" pubdate data-updated="true">Mar 9<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>参考ページ<a href="http://www.lunametrics.com/blog/2013/09/05/filter-bots-google-analytics/#sr=d&amp;m=n&amp;cp=d&amp;ct=-tmc&amp;ts=1394369739">How to Block Bots from Your Google Analytics</a></p>
-
-<p>ここ数日Google Analyticsにアメリカからリファラ無し直帰率100%近くのアクセスを大量に発見。
-どう考えてもbotですどうも(ry
-本当はGoogle Analyticsに自動でフィルタして欲しいけど、どうもフィルタしてないので、自力でフィルタ設定しないといけないみたい。</p>
-
-<p>上のリンクを参考に設定してみる</p>
-
-<ul>
-<li>アナリティクス設定→ ビュー→フィルタと移動</li>
-<li>「新しいボタン」をクリック</li>
-</ul>
-
-
-<h3>設定は以下の通り</h3>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/03/09/how-to-block-bot-access-from-google-analytics/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/07/linux-command-memo/">Linux Command Memo</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-07T08:50:21+09:00" pubdate data-updated="true">Mar 7<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>アクセスログのIPアドレスを集計してみる</h2>
-
-<p>参考：<a href="http://blog.livedoor.jp/stock_value/archives/51443839.html">Linux サーバーでお手軽にログの集計：こっそりと。 &ndash; livedoor Blog（ブログ）</a></p>
-
-<p>Google Analyticsでリファラ無しの変なアクセスが増えたので、アクセスログからIPを集計してみた。
-アクセスログの書式はLTSVでこんな感じ</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>time:07/Mar/2014:06:25:22 +0900       host::11.22.33.46       forwardedfor:-  req:GET / HTTP/1.1   status:200      size:1       referer:-ua:Mozilla/5.0 (***)      reqtime:0.777   cache:- runtime:-       vhost:hoge.fuga</span></code></pre></td></tr></table></div></figure>
-
-
-<p>なんか色々ソフト使うのとか面倒だったのでgrepとかawkでほげほげした。要はhost:11.22.33.44に当たる箇所を取り出して表示回数をまとめれば良い。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ cat access.log | grep -v -i "bot" | grep "referer:-" | grep "status:200" | awk '{print $3}' | sort | uniq -c</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/03/07/linux-command-memo/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/01/vim-memo/">Vim Memo</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-01T14:14:10+09:00" pubdate data-updated="true">Mar 1<span>st</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>vimでsnippet</h2>
-
-<p>色々方法があるみたいだけど、neocomplecacheを入れているので、それと相性が良さそうな（作者が同じ）プラグインを入れた</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>NeoBundle 'Shougo/neosnippet'
-</span><span class='line'>NeoBundle 'Shougo/neosnippet-snippets'
-</span><span class='line'>
-</span><span class='line'>" Plugin key-mappings.
-</span><span class='line'>imap &lt;C-k&gt;     &lt;Plug&gt;(neosnippet_expand_or_jump)
-</span><span class='line'>smap &lt;C-k&gt;     &lt;Plug&gt;(neosnippet_expand_or_jump)
-</span><span class='line'>xmap &lt;C-k&gt;     &lt;Plug&gt;(neosnippet_expand_target)
-</span><span class='line'>" " SuperTab like snippets behavior.
-</span><span class='line'>imap &lt;expr&gt;&lt;TAB&gt; neosnippet#expandable_or_jumpable() ?
-</span><span class='line'>\ "\&lt;Plug&gt;(neosnippet_expand_or_jump)"
-</span><span class='line'>\: pumvisible() ? "\&lt;C-n&gt;" : "\&lt;TAB&gt;"
-</span><span class='line'>smap &lt;expr&gt;&lt;TAB&gt; neosnippet#expandable_or_jumpable() ?
-</span><span class='line'>\ "\&lt;Plug&gt;(neosnippet_expand_or_jump)"
-</span><span class='line'>\: "\&lt;TAB&gt;"
-</span><span class='line'>"
-</span><span class='line'>" " For snippet_complete marker.
-</span><span class='line'>if has('conceal')
-</span><span class='line'>  set conceallevel=2 concealcursor=i
-</span><span class='line'>endif</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/03/01/vim-memo/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/9/">&larr; Older</a>
@@ -781,23 +842,23 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/02/09/migrate-from-django-1-dot-8-to-1-dot-9/">Django 1.8から1.9へアップした時に気にする点</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/29/pcl-memo/">PCLメモ</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/25/enable-service-fluentd-start/">インストールしたfluentdをserviceから使えるようにする</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/">fluent-plugin-groongaをインストールして動かすまでをAnsibleでやってみた</a>
       </li>
     
       <li class="post">
         <a href="/blog/2016/01/19/log-view-parameter-before-caching-for-django/">Djangoでcache使ってる間でも呼び出されたviewとかパラメーターをログに書き出したい</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/01/15/use-groonga-for-django-cache/">Use Groonga for Django Cache</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/01/13/redis-memo/">Redis Memo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/01/07/mt4-memo/">MT4 Memo</a>
       </li>
     
   </ul>
@@ -825,8 +886,8 @@
 	<li class='category'><a href='/blog/categories/analytics/'>Analytics (2)</a></li>
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
-<li class='category'><a href='/blog/categories/csharp/'>CSharp (7)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (23)</a></li>
+<li class='category'><a href='/blog/categories/csharp/'>CSharp (8)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (24)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (2)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
@@ -835,7 +896,7 @@
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (10)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (26)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (27)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
@@ -844,8 +905,8 @@
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (12)</a></li>
-<li class='category'><a href='/blog/categories/memo/'>memo (17)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (13)</a></li>
+<li class='category'><a href='/blog/categories/memo/'>memo (18)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (8)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>

@@ -182,6 +182,56 @@ path/to/root/error/以下に画像やcss、javascriptなど必要なものを用
 <p>でおk</p>
 
 <p>参考：<a href="http://stackoverflow.com/questions/645853/add-slash-to-the-end-of-every-url-need-rewrite-rule-for-nginx">regex &ndash; Add slash to the end of every url (need rewrite rule for nginx) &ndash; Stack Overflow</a>&#8220;`</p>
+
+<h2>書式チェック</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo nginx -t -c /path/to/nginx.conf
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でチェック出来る</p>
+
+<p>参考：<a href="http://qiita.com/yaotti/items/bd6774888a790c00e6fd">nginxで設定ファイルチェック &ndash; Qiita</a></p>
+
+<h2>ltsvでログを取る</h2>
+
+<p>※　まずerror_logでは指定出来ないので注意</p>
+
+<p>ログのフォーマットにltsvを追加する。/etc/nginx/nginx.conf内でも
+/etc/nginx/conf.d/*.conf内でもおk</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>log_format ltsv  <span class="s2">&quot;time:$time_local&quot;</span>
+</span><span class='line'>                <span class="s2">&quot;\thost:$remote_addr&quot;</span>
+</span><span class='line'>                <span class="s2">&quot;\tforwardedfor:$http_x_forwarded_for&quot;</span>
+</span><span class='line'>                <span class="s2">&quot;\treq:$request&quot;</span>
+</span><span class='line'>                <span class="s2">&quot;\tstatus:$status&quot;</span>
+</span><span class='line'>                <span class="s2">&quot;\tsize:$body_bytes_sent&quot;</span>
+</span><span class='line'>                <span class="s2">&quot;\treferer:$http_referer&quot;</span>
+</span><span class='line'>                <span class="s2">&quot;\tua:$http_user_agent&quot;</span>
+</span><span class='line'>                <span class="s2">&quot;\treqtime:$request_time&quot;</span>
+</span><span class='line'>                <span class="s2">&quot;\tvhost:$host&quot;</span>;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>sites-available内でのaccess_logの設定を以下のように変更</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>access_log /var/log/nginx/access.log ltsv;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考：<a href="http://toshitanian.hatenablog.com/entry/2013/10/25/023838">nginxのerror_logはformat指定できない． &ndash; としたにあんの左脳</a></p>
 </div>
 
 
@@ -270,23 +320,23 @@ path/to/root/error/以下に画像やcss、javascriptなど必要なものを用
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/02/09/migrate-from-django-1-dot-8-to-1-dot-9/">Django 1.8から1.9へアップした時に気にする点</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/29/pcl-memo/">PCLメモ</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/25/enable-service-fluentd-start/">インストールしたfluentdをserviceから使えるようにする</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/">fluent-plugin-groongaをインストールして動かすまでをAnsibleでやってみた</a>
       </li>
     
       <li class="post">
         <a href="/blog/2016/01/19/log-view-parameter-before-caching-for-django/">Djangoでcache使ってる間でも呼び出されたviewとかパラメーターをログに書き出したい</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/01/15/use-groonga-for-django-cache/">Use Groonga for Django Cache</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/01/13/redis-memo/">Redis Memo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/01/07/mt4-memo/">MT4 Memo</a>
       </li>
     
   </ul>
@@ -314,8 +364,8 @@ path/to/root/error/以下に画像やcss、javascriptなど必要なものを用
 	<li class='category'><a href='/blog/categories/analytics/'>Analytics (2)</a></li>
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
-<li class='category'><a href='/blog/categories/csharp/'>CSharp (7)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (23)</a></li>
+<li class='category'><a href='/blog/categories/csharp/'>CSharp (8)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (24)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (2)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
@@ -324,7 +374,7 @@ path/to/root/error/以下に画像やcss、javascriptなど必要なものを用
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (10)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (26)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (27)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
@@ -333,8 +383,8 @@ path/to/root/error/以下に画像やcss、javascriptなど必要なものを用
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (12)</a></li>
-<li class='category'><a href='/blog/categories/memo/'>memo (17)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (13)</a></li>
+<li class='category'><a href='/blog/categories/memo/'>memo (18)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (8)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>

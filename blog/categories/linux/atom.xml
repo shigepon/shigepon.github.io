@@ -4,7 +4,7 @@
   <title><![CDATA[Category: linux | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2016-01-25T09:32:17+09:00</updated>
+  <updated>2016-02-25T09:36:40+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,70 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[インストールしたfluentdをserviceから使えるようにする]]></title>
+    <link href="http://blog.shigepon.info/blog/2016/01/25/enable-service-fluentd-start/"/>
+    <updated>2016-01-25T21:20:26+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2016/01/25/enable-service-fluentd-start</id>
+    <content type="html"><![CDATA[<p><a href="http://blog.shigepon.info/blog/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/">前回</a>の続き</p>
+
+<p>rbenvのgemを使ってインストールしたfluentdはserviceからの起動スクリプトが無いので、service fluentd startみたいなことをしたければ自分で登録するしかない。</p>
+
+<p>でも1からスクリプトを書くのは面倒なので、td-agentのスクリプトを利用することにした。
+まずはtd-agentのインストール、削除</p>
+
+<p><code>sh
+$ sudo aptitude install td-agent
+$ sudo aptitude remove td-agent
+</code></p>
+
+<p>削除してもserviceで使うスクリプトは残るみたいなので、これを元に起動スクリプトを作る。</p>
+
+<!-- more -->
+
+
+<p>td-agentの起動スクリプトは</p>
+
+<p>/etc/init.d/td-agentにある。</p>
+
+<p>td-agentをfluentdに変えて、編集した。編集内容は主に以下の通り</p>
+
+<ul>
+<li>td-agentをfluentdに変更</li>
+<li>DAEMONをfluentdまでのパスに変更</li>
+<li>USER、GROUPをfluentdをインストールしたユーザー、グループに変更</li>
+<li>DAEMON_ARGSに"&mdash;config /path/to/config"を追加</li>
+<li>/var/log/fluentd/fluentd.logを作っておく。ユーザー、グループはfluentdのユーザー、グループにする</li>
+</ul>
+
+
+<p>必要無くて消して良い部分も結構ある気がするが、とりあえず動く為に最小限の修正にしておく。
+最後にserviceに登録するために</p>
+
+<p><code>sh
+$ sudo update-rc.d fluentd defaults
+</code></p>
+
+<p>でserviceにfluentdが登録される。ちなみにスクリプトのデバッグは</p>
+
+<p><code>sh
+$ bash -x /etc/init.d/fluentd start
+</code></p>
+
+<p>とすればある程度出来るので、変なエラーが出ないかはここでチェックしてしまうと良い。</p>
+
+<p>以上をansibleで動かすようにしてみた。</p>
+
+<p>参考：</p>
+
+<ul>
+<li><a href="http://l-w-i.net/t/ubuntu/service_001.txt">[Ubuntu] サービスを有効化/無効化する方法 &ndash; Life with IT</a></li>
+<li><a href="http://askubuntu.com/questions/36200/how-to-debug-upstart-scripts">debugging &ndash; how to debug upstart scripts? &ndash; Ask Ubuntu</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[virtualenv上のpythonでmecabを使う (ubuntu1 12.04)]]></title>
@@ -455,39 +519,6 @@ $ sudo aptitude install swftools
 
 <p>Jenkins > プロジェクト(今回はnadesiko2)
 で、ビルド実行をクリックすると実行してくれる。あと、gitの指定したブランチでコミットした後もこの設定の場合30分おきにコミットをチェックしてビルドを実行してくれる。まだまだテストが通ってない部分もあるので、結果は失敗になるけど、とりあえずこれで進められる。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[なでしこ2をubuntu cuiでテストする]]></title>
-    <link href="http://blog.shigepon.info/blog/2015/05/05/nunit-console-test-for-nadesiko2/"/>
-    <updated>2015-05-05T23:02:32+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2015/05/05/nunit-console-test-for-nadesiko2</id>
-    <content type="html"><![CDATA[<p><a href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">ubuntuのcui環境でなでしこ2をビルドする</a>の続きで、cui環境でなでしこ2のテストを実行してみる。</p>
-
-<p>cui環境でnunitを実行するには<a href="http://www.nunit.org/index.php?p=nunit-console&amp;r=2.5.10">nunit-console</a>を使う。なでしこ2のテストを実行するにはテスト関連のdllをnunitで実行すると良い。コマンドはなでしこ2をインストールしたディレクトリでこんな感じ。</p>
-
-<p><code>sh
-$ nunit-console CNako2Test/bin/Debug/CNako2Test.dll
-</code></p>
-
-<p>プラグインのテスト(NakoPluginTest)プロジェクトでは外部ファイルを利用するので</p>
-
-<p><code>sh
-$ nunit-console NakoPluginTest/bin/Debug/NakoPluginTest.dll
-</code></p>
-
-<!-- more -->
-
-
-<p>だと、外部ファイルを読み込むテスト（例えばTest_read）で、Could not find fileと怒られる。なので、コマンドにnoshadowオプションを付ける。</p>
-
-<p><code>sh
-$ nunit-console -noshadow NakoPluginTest/bin/Debug/NakoPluginTest.dll
-</code></p>
-
-<p>とすると、外部ファイルを読み込んでくれる。
-これでcui環境でなでしこ2をビルドからテストまで出来る。</p>
 ]]></content>
   </entry>
   

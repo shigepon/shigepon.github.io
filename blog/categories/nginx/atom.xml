@@ -4,7 +4,7 @@
   <title><![CDATA[Category: nginx | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/nginx/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2016-01-25T09:32:17+09:00</updated>
+  <updated>2016-02-25T09:36:40+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -73,6 +73,47 @@ rewrite ^([^.]*[^/])$ $1/ permanent;
 <p>でおk</p>
 
 <p>参考：<a href="http://stackoverflow.com/questions/645853/add-slash-to-the-end-of-every-url-need-rewrite-rule-for-nginx">regex &ndash; Add slash to the end of every url (need rewrite rule for nginx) &ndash; Stack Overflow</a>```</p>
+
+<h2>書式チェック</h2>
+
+<p><code>sh
+$ sudo nginx -t -c /path/to/nginx.conf
+</code></p>
+
+<p>でチェック出来る</p>
+
+<p>参考：<a href="http://qiita.com/yaotti/items/bd6774888a790c00e6fd">nginxで設定ファイルチェック &ndash; Qiita</a></p>
+
+<h2>ltsvでログを取る</h2>
+
+<p>※　まずerror_logでは指定出来ないので注意</p>
+
+<p>ログのフォーマットにltsvを追加する。/etc/nginx/nginx.conf内でも
+/etc/nginx/conf.d/*.conf内でもおk</p>
+
+<p>```
+log_format ltsv  &ldquo;time:$time_local&rdquo;</p>
+
+<pre><code>            "\thost:$remote_addr"
+            "\tforwardedfor:$http_x_forwarded_for"
+            "\treq:$request"
+            "\tstatus:$status"
+            "\tsize:$body_bytes_sent"
+            "\treferer:$http_referer"
+            "\tua:$http_user_agent"
+            "\treqtime:$request_time"
+            "\tvhost:$host";
+</code></pre>
+
+<p>```</p>
+
+<p>sites-available内でのaccess_logの設定を以下のように変更</p>
+
+<p><code>
+access_log /var/log/nginx/access.log ltsv;
+</code></p>
+
+<p>参考：<a href="http://toshitanian.hatenablog.com/entry/2013/10/25/023838">nginxのerror_logはformat指定できない． &ndash; としたにあんの左脳</a></p>
 ]]></content>
   </entry>
   

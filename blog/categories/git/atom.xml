@@ -4,7 +4,7 @@
   <title><![CDATA[Category: git | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/git/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2016-01-25T09:32:17+09:00</updated>
+  <updated>2016-02-25T09:36:40+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -145,6 +145,16 @@ $ git branch -m &lt;oldname&gt; &lt;newname&gt;
 </code></p>
 
 <p>参考：<a href="http://stackoverflow.com/questions/6591213/how-do-you-rename-the-local-branch">git &ndash; How do you rename the local branch? &ndash; Stack Overflow</a></p>
+
+<h2>日本語ファイルの出力</h2>
+
+<p><code>
+$ git config --global core.quotepath false
+</code></p>
+
+<p>と先にやっておくと日本語ファイル名もちゃんと表示される</p>
+
+<p>参考：<a href="http://tobysoft.net/wiki/index.php?git%2F%C6%FC%CB%DC%B8%EC%A5%D5%A5%A1%A5%A4%A5%EB%CC%BE%A4%F2git%20status%A4%CA%A4%C9%A4%C7%C9%BD%BC%A8%A4%B9%A4%EB%CA%FD%CB%A1">git/日本語ファイル名をgit statusなどで表示する方法 &ndash; TOBY SOFT wiki</a></p>
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2016-01-25T09:32:17+09:00</updated>
+  <updated>2016-02-25T09:36:40+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,33 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[django 1.8から1.9へアップした時に気にする点]]></title>
+    <link href="http://blog.shigepon.info/blog/2016/02/09/migrate-from-django-1-dot-8-to-1-dot-9/"/>
+    <updated>2016-02-09T15:59:36+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2016/02/09/migrate-from-django-1-dot-8-to-1-dot-9</id>
+    <content type="html"><![CDATA[<h2>django.utils.log.NullHandlerが使えない</h2>
+
+<p>logging.NullHandlerに変わってる。というかdjango.utils.log.NullHandlerはエリアスだったのね。</p>
+
+<p>参考：<a href="http://www.monotalk.xyz/blog/no-module-named-djangoutilslognullhandler-djangoutilslog-is-not-a-package/">No module named &lsquo;django.utils.log.NullHandler&rsquo;; &lsquo;django.utils.log&rsquo; is not a package | Monotalk</a></p>
+
+<h2>No module named context_processors</h2>
+
+<p>django-allauthを入れてると出てくるエラーメッセージ。TEMPLATESのcontext_processorsに'django.template.context_processors.request'を加えれば良いらしい。</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/32828536/django-no-module-named-context-processors-error-after-reboot">python &ndash; Django: &ldquo;No module named context_processors&rdquo; error after reboot &ndash; Stack Overflow</a></p>
+
+<h2>Enable &lsquo;django.contrib.auth.context_processors.auth&rsquo; in your TEMPLATES setting in order to use the admin application.</h2>
+
+<p>TEMPLATE_CONTEXT_PROCESSORSがTMPLATESに変わったらしい。</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/30005127/django-admin-breaks-after-upgrading-to-1-8-1">Django admin breaks after upgrading to 1.8.1 &ndash; Stack Overflow</a></p>
+
+<p>とりあえずここまで</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[djangoでcache使ってる間でも呼び出されたviewとかパラメーターをログに書き出したい]]></title>
@@ -333,124 +360,6 @@ alter table auth_user alter column last_login drop not null;
 <p>色々あるみたいだけど、PostgreSQLを使っているので、特にPostgreSQL使ってる場合に、独自のフィールドを使えるようになった点が嬉しい。ArrayFieldとか、わざわざリレーション作りたくない時とか便利そう。</p>
 
 <p><a href="https://docs.djangoproject.com/en/1.8/ref/contrib/postgres/fields/">Djangoドキュメントによる説明</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Djangoで作成済みテーブルに手動でリレーションを追加する]]></title>
-    <link href="http://blog.shigepon.info/blog/2015/07/30/add-relation-to-existing-table-using-django/"/>
-    <updated>2015-07-30T10:46:15+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2015/07/30/add-relation-to-existing-table-using-django</id>
-    <content type="html"><![CDATA[<p>リレーションの理解が悪くて酷いコードを組んでいて、それを直した話。</p>
-
-<p>article</p>
-
-<table>
-<thead>
-<tr>
-<th></th>
-<th align="left">key</th>
-<th align="right">title</th>
-<th align="right">content</th>
-<th align="right">author_key</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td></td>
-<td align="left">1</td>
-<td align="right">DjangoでHello World作ってみた</td>
-<td align="right">出来なかった！</td>
-<td align="right">1|</td>
-</tr>
-</tbody>
-</table>
-
-
-<p>author</p>
-
-<table>
-<thead>
-<tr>
-<th></th>
-<th align="left">key</th>
-<th align="right">name</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td></td>
-<td align="left">1</td>
-<td align="right">shigepon|</td>
-</tr>
-</tbody>
-</table>
-
-
-<p>こんなテーブルがあって、author.keyとarticle.author_keyが繋がっている場合に
-ArticleモデルをDjango使い始めの時はこんな風に作ってた</p>
-
-<p>```py models.py
-class Article(models.Model):</p>
-
-<pre><code>key=models.IntegerField(primary_key=True)
-title=models.TextField()
-content=models.TextField()
-author_key=models.IntegerField()
-def author(self):
-    return Author.objects.get(key=self.author_key)
-</code></pre>
-
-<p>class Author(models.Model):</p>
-
-<pre><code>key=models.IntegerField(primary_key=True)
-name=models.TextField()
-</code></pre>
-
-<p>```</p>
-
-<p>いやー改めて見ると酷い。Articleを100個読み込んで、そのAuthorを出力するだけで、100回以上dbにアクセスしないといけない。という訳でこの酷いコードからリレーションを貼って、さらにdbアクセスが少なくなるように修正したらこうなった</p>
-
-<p>参考：</p>
-
-<ul>
-<li><a href="https://docs.djangoproject.com/en/1.8/ref/models/fields/">Model field reference | Django documentation | Django</a></li>
-<li><a href="https://docs.djangoproject.com/en/1.8/ref/models/querysets/">QuerySet API reference | Django documentation | Django</a></li>
-</ul>
-
-
-<p>```py models.py
-class Article(models.Model):</p>
-
-<pre><code>key=models.IntegerField(primary_key=True)
-title=models.TextField()
-content=models.TextField()
-author=models.ForeignKey('Author', db_column='author_key', to_field='key', related_name='articles')
-</code></pre>
-
-<p>class Author(models.Model):</p>
-
-<pre><code>key=models.IntegerField(primary_key=True)
-name=models.TextField()
-</code></pre>
-
-<p>```</p>
-
-<p>こんな感じで適切にForeignKeyフィールドを設定することで、上の構成のテーブルにもリレーションを貼ることが出来た。db_columnでArticle側のリレーションキーになるカラムを指定して、to_fieldでAuthor側のリレーションキーになるカラムを指定する。related_nameは指定しないとエラーが出た。</p>
-
-<p>んで、dbアクセスがなるべく少なくなるように（sqlでjoinを組んでくれるように）views.pyを書いてみると</p>
-
-<p>```py views.py
-from app.models import Article
-def index(request):</p>
-
-<pre><code>articles = Article.objects.select_related('author').all()
-...
-</code></pre>
-
-<p>```</p>
-
-<p>みたいにselect_relatedメソッドを使うとjoinしてくれた。prefetch_relatedってメソッドでも同じように出来る（ちょっと役割は違う）らしいが試していない。ざっくりドキュメントを読むと、ForeignKeyと１対１リレーションにはselect_relatedが良く、Many to ManyやMany to Oneにはprefetch_relatedが良いらしい。</p>
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: CSharp | shigeponが関心のある技術情報など]]></title>
   <link href="http://blog.shigepon.info/blog/categories/csharp/atom.xml" rel="self"/>
   <link href="http://blog.shigepon.info/"/>
-  <updated>2016-01-25T09:32:17+09:00</updated>
+  <updated>2016-02-25T09:36:40+09:00</updated>
   <id>http://blog.shigepon.info/</id>
   <author>
     <name><![CDATA[shigepon]]></name>
@@ -12,6 +12,59 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[PCLメモ]]></title>
+    <link href="http://blog.shigepon.info/blog/2016/01/29/pcl-memo/"/>
+    <updated>2016-01-29T08:42:31+09:00</updated>
+    <id>http://blog.shigepon.info/blog/2016/01/29/pcl-memo</id>
+    <content type="html"><![CDATA[<p>マルチプラットフォーム用に開発するにはPCL(ポータブル・クラス・ライブラリ)を使うと良いらしいのだが情報が少ない気がするので、調べたことをメモしていく</p>
+
+<p>それにしてもどこかに.netでこう書いてるものをPCLで書くには・・・みたいな書籍とかサイトとか無いものか。現在はstack</p>
+
+<h2>基本事項</h2>
+
+<p>プロジェクト生成時にポータブルライブラリを選択すればPCLで開発出来るようになる。すでに.netのプロジェクトで開発している場合にPCLにする方法はシラン。</p>
+
+<p>.netで使ってる機能で使えなくなるものが多い。ファイルアクセスなんかがSystem.IOに入ってなくて出来なくなるので、NugetでPCL関連のライブラリを調べるのは必須</p>
+
+<p>参考：<a href="http://www.buildinsider.net/mobile/insidexamarin/13">Xamarinと、ポータブル・クラス・ライブラリ（PCL） &ndash; Build Insider</a></p>
+
+<h2>ファイルアクセス</h2>
+
+<p><a href="https://github.com/dsplaisted/PCLStorage">PCL Storage</a>を使うとよしなにやってくれる。Nugetから入れれば使えるようになる。</p>
+
+<h2>使えなくなるメソッドが結構ある</h2>
+
+<p>例えばSystem.Type.GetPropertyでPropertyInfoを取得しようとしても、メソッド無いので無理。この場合はSystem.Refrectionを使う</p>
+
+<p><code>csharp
+using System.Refrection
+...
+PropertyInfo p = typeof(Hoge).GetRuntimeProperty("property");
+</code></p>
+
+<p>いちいちこういうのがあるので、結構大変。</p>
+
+<h2>TypeよりはなるべくTypeInfoを使うのが良さげ</h2>
+
+<p>PCLだとType.IsClassとか無いけどTypeInfo.IsClassはある。</p>
+
+<p>```csharp
+assembly.DefinedTypes</p>
+
+<pre><code>.Where(x =&gt; x.IsClass &amp;&amp; !x.IsAbstract &amp;&amp; x.ImplementedInterfaces
+    .Any(i =&gt; i.GetTypeInfo().IsGenericType &amp;&amp; i.GetGenericTypeDefinition() == commandHandlerOpenGenericType))
+.Select(x =&gt; x.AsType())
+</code></pre>
+
+<p>```</p>
+
+<p>みたいにして必要なインターフェースを持つクラスの型情報を取り出すとか出来る</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/20524263/portable-class-library-reflection">c# &ndash; Portable Class Library Reflection &ndash; Stack Overflow</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[mono winformsがmacで文字化けする件]]></title>
@@ -464,55 +517,6 @@ $ cd cnako2/bin/Debug/
 $ mono cnako2.exe test.nako
 なでしこ最高！
 </code></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[C#で作ったdllをなでしこで使う]]></title>
-    <link href="http://blog.shigepon.info/blog/2014/01/28/nadesiko-plugin-cs2/"/>
-    <updated>2014-01-28T22:42:43+09:00</updated>
-    <id>http://blog.shigepon.info/blog/2014/01/28/nadesiko-plugin-cs2</id>
-    <content type="html"><![CDATA[<p>C#のdllを呼び出せるように、C#のdllを参照した後、Plugin.cppの一部を以下のように書き換えました</p>
-
-<p>```
-PHiValue __stdcall sample01(DWORD param) {</p>
-
-<pre><code>PHiValue result;
-ClassLibrary1::Class1::Method1();
-result = nako_var_new(NULL);
-hi_setStr(result&amp;cedil; &amp;quot;abc&amp;quot;&amp;cedil; sizeof(&amp;quot;abc&amp;quot;));
-return result;
-</code></pre>
-
-<p>}
-NAKO_API(void) ImportNakoFunction(void) {</p>
-
-<pre><code>// ユーザー命令の追加
-nako_addFunction(&amp;quot;sample01&amp;quot;&amp;cedil;&amp;quot;&amp;quot;&amp;cedil; sample01&amp;cedil; 0);
-</code></pre>
-
-<p>}
-```</p>
-
-<!-- more -->
-
-
-<p>なでしこ側のソースは以下のようにして呼び出してみました</p>
-
-<p><code>
-結果=sample01
-結果を言う
-</code></p>
-
-<p>これでダイアログボックスに「method1」が表示され、続いて「abc」が表示されればOKです。</p>
-
-<p>しかし・・・結果は外部例外　E0434F4Dを出力してちゃんと動きませんでしたorz。この例外はtry&hellip;catchで掴もうとしても掴めません。どうも処理の関数（ここではsample01）に入った瞬間にエラーを返してしまうようです。ちなみにこのコードでググっても原因は理解できませんでした。ということで、クジラ飛行机氏（なでしこ作者）にメールで泣きつきました。</p>
-
-<p>すると</p>
-
-<blockquote><p>vnako.exe と同じフォルダに配置したらエラー出ませんでした。たぶん、plug-ins フォルダにパスを通さない限り、DLLがもう一方を参照できなくなるのだと思います。</p></blockquote>
-
-<p>という返事が！まじで！？と思い試してみると・・・上手くいくじゃないですか！これでC#で作ったdllもなでしこで利用できるようになりました。</p>
 ]]></content>
   </entry>
   

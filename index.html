@@ -9,7 +9,7 @@
   <meta name="author" content="shigepon">
 
   
-  <meta name="description" content="ログ集計に何使うか迷ったんだけど、fluentdにfluent-plugin-groongaってのがあったのでfluentdを使ってgroongaにログを集計していくとこまでをやった。rbenvから色々やろうとしたら面倒だった。 rbenvを使う バージョン管理が面倒なので、 &hellip;">
+  <meta name="description" content="django.utils.log.NullHandlerが使えない logging.NullHandlerに変わってる。というかdjango.utils.log.NullHandlerはエリアスだったのね。 参考：No module named &lsquo;django.utils.log. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,199 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/02/09/migrate-from-django-1-dot-8-to-1-dot-9/">Django 1.8から1.9へアップした時に気にする点</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-02-09T15:59:36+09:00" pubdate data-updated="true">Feb 9<span>th</span>, 2016</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>django.utils.log.NullHandlerが使えない</h2>
+
+<p>logging.NullHandlerに変わってる。というかdjango.utils.log.NullHandlerはエリアスだったのね。</p>
+
+<p>参考：<a href="http://www.monotalk.xyz/blog/no-module-named-djangoutilslognullhandler-djangoutilslog-is-not-a-package/">No module named &lsquo;django.utils.log.NullHandler&rsquo;; &lsquo;django.utils.log&rsquo; is not a package | Monotalk</a></p>
+
+<h2>No module named context_processors</h2>
+
+<p>django-allauthを入れてると出てくるエラーメッセージ。TEMPLATESのcontext_processorsに&#8217;django.template.context_processors.request&#8217;を加えれば良いらしい。</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/32828536/django-no-module-named-context-processors-error-after-reboot">python &ndash; Django: &ldquo;No module named context_processors&rdquo; error after reboot &ndash; Stack Overflow</a></p>
+
+<h2>Enable &lsquo;django.contrib.auth.context_processors.auth&rsquo; in your TEMPLATES setting in order to use the admin application.</h2>
+
+<p>TEMPLATE_CONTEXT_PROCESSORSがTMPLATESに変わったらしい。</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/30005127/django-admin-breaks-after-upgrading-to-1-8-1">Django admin breaks after upgrading to 1.8.1 &ndash; Stack Overflow</a></p>
+
+<p>とりあえずここまで</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/01/29/pcl-memo/">PCLメモ</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-01-29T08:42:31+09:00" pubdate data-updated="true">Jan 29<span>th</span>, 2016</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>マルチプラットフォーム用に開発するにはPCL(ポータブル・クラス・ライブラリ)を使うと良いらしいのだが情報が少ない気がするので、調べたことをメモしていく</p>
+
+<p>それにしてもどこかに.netでこう書いてるものをPCLで書くには・・・みたいな書籍とかサイトとか無いものか。現在はstack</p>
+
+<h2>基本事項</h2>
+
+<p>プロジェクト生成時にポータブルライブラリを選択すればPCLで開発出来るようになる。すでに.netのプロジェクトで開発している場合にPCLにする方法はシラン。</p>
+
+<p>.netで使ってる機能で使えなくなるものが多い。ファイルアクセスなんかがSystem.IOに入ってなくて出来なくなるので、NugetでPCL関連のライブラリを調べるのは必須</p>
+
+<p>参考：<a href="http://www.buildinsider.net/mobile/insidexamarin/13">Xamarinと、ポータブル・クラス・ライブラリ（PCL） &ndash; Build Insider</a></p>
+
+<h2>ファイルアクセス</h2>
+
+<p><a href="https://github.com/dsplaisted/PCLStorage">PCL Storage</a>を使うとよしなにやってくれる。Nugetから入れれば使えるようになる。</p>
+
+<h2>使えなくなるメソッドが結構ある</h2>
+
+<p>例えばSystem.Type.GetPropertyでPropertyInfoを取得しようとしても、メソッド無いので無理。この場合はSystem.Refrectionを使う</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">using</span> <span class="nn">System.Refrection</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'><span class="n">PropertyInfo</span> <span class="n">p</span> <span class="p">=</span> <span class="k">typeof</span><span class="p">(</span><span class="n">Hoge</span><span class="p">).</span><span class="n">GetRuntimeProperty</span><span class="p">(</span><span class="s">&quot;property&quot;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>いちいちこういうのがあるので、結構大変。</p>
+
+<h2>TypeよりはなるべくTypeInfoを使うのが良さげ</h2>
+
+<p>PCLだとType.IsClassとか無いけどTypeInfo.IsClassはある。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="n">assembly</span><span class="p">.</span><span class="n">DefinedTypes</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">Where</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">IsClass</span> <span class="p">&amp;&amp;</span> <span class="p">!</span><span class="n">x</span><span class="p">.</span><span class="n">IsAbstract</span> <span class="p">&amp;&amp;</span> <span class="n">x</span><span class="p">.</span><span class="n">ImplementedInterfaces</span>
+</span><span class='line'>        <span class="p">.</span><span class="n">Any</span><span class="p">(</span><span class="n">i</span> <span class="p">=&gt;</span> <span class="n">i</span><span class="p">.</span><span class="n">GetTypeInfo</span><span class="p">().</span><span class="n">IsGenericType</span> <span class="p">&amp;&amp;</span> <span class="n">i</span><span class="p">.</span><span class="n">GetGenericTypeDefinition</span><span class="p">()</span> <span class="p">==</span> <span class="n">commandHandlerOpenGenericType</span><span class="p">))</span>
+</span><span class='line'>    <span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">AsType</span><span class="p">())</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>みたいにして必要なインターフェースを持つクラスの型情報を取り出すとか出来る</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/20524263/portable-class-library-reflection">c# &ndash; Portable Class Library Reflection &ndash; Stack Overflow</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/01/25/enable-service-fluentd-start/">インストールしたfluentdをserviceから使えるようにする</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-01-25T21:20:26+09:00" pubdate data-updated="true">Jan 25<span>th</span>, 2016</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://blog.shigepon.info/blog/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/">前回</a>の続き</p>
+
+<p>rbenvのgemを使ってインストールしたfluentdはserviceからの起動スクリプトが無いので、service fluentd startみたいなことをしたければ自分で登録するしかない。</p>
+
+<p>でも1からスクリプトを書くのは面倒なので、td-agentのスクリプトを利用することにした。
+まずはtd-agentのインストール、削除</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install td-agent
+</span><span class='line'><span class="nv">$ </span>sudo aptitude remove td-agent
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>削除してもserviceで使うスクリプトは残るみたいなので、これを元に起動スクリプトを作る。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/01/25/enable-service-fluentd-start/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -574,715 +767,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/11/29/output-msil-manually/">Msilを手動で出力する</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-11-29T20:40:36+09:00" pubdate data-updated="true">Nov 29<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>何個か方法がある。とりあえずは雑多にメモ書きしておく</p>
-
-<h2>一行一行全て手動で出力する</h2>
-
-<p>System.Refrection、System.Refrection.Emitを使ってilを直接書き出していく方法。</p>
-
-<p>参考：
- <a href="http://stackoverflow.com/questions/15600142/reflection-emit-assemblybuilder-setentrypoint-does-not-set-entry-point">c# &ndash; Reflection.Emit: AssemblyBuilder.SetEntryPoint does not set entry point &ndash; Stack Overflow</a>ゆーてもこれそのままやっても.netは知らないけどmonoだと動かなかったりするので、修正が必要。動くコードはこちら</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
-</span><span class='line'><span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
-</span><span class='line'><span class="k">using</span> <span class="nn">System.Linq</span><span class="p">;</span>
-</span><span class='line'><span class="k">using</span> <span class="nn">System.Text</span><span class="p">;</span>
-</span><span class='line'><span class="k">using</span> <span class="nn">System.Reflection</span><span class="p">;</span>
-</span><span class='line'><span class="k">using</span> <span class="nn">System.Reflection.Emit</span><span class="p">;</span>
-</span><span class='line'><span class="k">using</span> <span class="nn">System.IO</span><span class="p">;</span>
-</span><span class='line'><span class="k">using</span> <span class="nn">System.Diagnostics</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">namespace</span> <span class="nn">iltest</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">class</span> <span class="nc">Program</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">{</span>
-</span><span class='line'>            <span class="k">const</span> <span class="kt">string</span> <span class="n">ASSEMBLY_NAME</span> <span class="p">=</span> <span class="s">&quot;IL_Test&quot;</span><span class="p">;</span>
-</span><span class='line'>            <span class="n">AssemblyBuilder</span> <span class="n">assemblyBuilder</span> <span class="p">=</span> <span class="n">AppDomain</span><span class="p">.</span><span class="n">CurrentDomain</span><span class="p">.</span><span class="n">DefineDynamicAssembly</span><span class="p">(</span> <span class="k">new</span> <span class="n">AssemblyName</span><span class="p">(</span><span class="n">ASSEMBLY_NAME</span><span class="p">),</span> <span class="n">AssemblyBuilderAccess</span><span class="p">.</span><span class="n">Save</span><span class="p">);</span>
-</span><span class='line'>            <span class="n">ModuleBuilder</span> <span class="n">moduleBuilder</span> <span class="p">=</span> <span class="n">assemblyBuilder</span><span class="p">.</span><span class="n">DefineDynamicModule</span><span class="p">(</span><span class="n">ASSEMBLY_NAME</span><span class="p">,</span> <span class="s">&quot;test.exe&quot;</span><span class="p">);</span>
-</span><span class='line'>            <span class="n">TypeBuilder</span> <span class="n">typeBuilder</span> <span class="p">=</span> <span class="n">moduleBuilder</span><span class="p">.</span><span class="n">DefineType</span><span class="p">(</span><span class="s">&quot;Program&quot;</span><span class="p">,</span> <span class="n">TypeAttributes</span><span class="p">.</span><span class="n">Class</span> <span class="p">|</span> <span class="n">TypeAttributes</span><span class="p">.</span><span class="n">Public</span><span class="p">);</span>
-</span><span class='line'>            <span class="n">MethodBuilder</span> <span class="n">methodBuilder</span> <span class="p">=</span> <span class="n">typeBuilder</span><span class="p">.</span><span class="n">DefineMethod</span><span class="p">(</span> <span class="s">&quot;Main&quot;</span><span class="p">,</span> <span class="n">MethodAttributes</span><span class="p">.</span><span class="n">HideBySig</span><span class="p">|</span><span class="n">MethodAttributes</span><span class="p">.</span><span class="n">Public</span> <span class="p">|</span> <span class="n">MethodAttributes</span><span class="p">.</span><span class="n">Static</span><span class="p">,</span> <span class="k">typeof</span><span class="p">(</span><span class="k">void</span><span class="p">),</span> <span class="k">new</span> <span class="n">Type</span><span class="p">[]</span> <span class="p">{</span> <span class="k">typeof</span><span class="p">(</span><span class="kt">string</span><span class="p">[])</span> <span class="p">});</span>
-</span><span class='line'>            <span class="n">ILGenerator</span> <span class="n">gen</span> <span class="p">=</span> <span class="n">methodBuilder</span><span class="p">.</span><span class="n">GetILGenerator</span><span class="p">();</span>
-</span><span class='line'>            <span class="n">gen</span><span class="p">.</span><span class="n">Emit</span><span class="p">(</span><span class="n">OpCodes</span><span class="p">.</span><span class="n">Ldstr</span><span class="p">,</span> <span class="s">&quot;Hello, World!&quot;</span><span class="p">);</span>
-</span><span class='line'>            <span class="n">gen</span><span class="p">.</span><span class="n">Emit</span><span class="p">(</span><span class="n">OpCodes</span><span class="p">.</span><span class="n">Call</span><span class="p">,</span> <span class="k">typeof</span><span class="p">(</span><span class="n">Console</span><span class="p">).</span><span class="n">GetMethod</span><span class="p">(</span><span class="s">&quot;WriteLine&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">Type</span><span class="p">[]</span> <span class="p">{</span> <span class="k">typeof</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="p">}));</span>
-</span><span class='line'>            <span class="n">gen</span><span class="p">.</span><span class="n">Emit</span><span class="p">(</span><span class="n">OpCodes</span><span class="p">.</span><span class="n">Ldc_I4_1</span><span class="p">);</span>
-</span><span class='line'>            <span class="n">gen</span><span class="p">.</span><span class="n">Emit</span><span class="p">(</span><span class="n">OpCodes</span><span class="p">.</span><span class="n">Call</span><span class="p">,</span> <span class="k">typeof</span><span class="p">(</span><span class="n">Console</span><span class="p">).</span><span class="n">GetMethod</span><span class="p">(</span><span class="s">&quot;ReadKey&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">Type</span><span class="p">[]</span> <span class="p">{</span> <span class="k">typeof</span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">}));</span>
-</span><span class='line'>            <span class="n">gen</span><span class="p">.</span><span class="n">Emit</span> <span class="p">(</span><span class="n">OpCodes</span><span class="p">.</span><span class="n">Pop</span><span class="p">);</span>
-</span><span class='line'>            <span class="n">gen</span><span class="p">.</span><span class="n">Emit</span> <span class="p">(</span><span class="n">OpCodes</span><span class="p">.</span><span class="n">Ret</span><span class="p">);</span>
-</span><span class='line'>            <span class="n">typeBuilder</span><span class="p">.</span><span class="n">CreateType</span><span class="p">();</span>
-</span><span class='line'>            <span class="n">assemblyBuilder</span><span class="p">.</span><span class="n">SetEntryPoint</span><span class="p">(</span><span class="n">methodBuilder</span><span class="p">,</span> <span class="n">PEFileKinds</span><span class="p">.</span><span class="n">ConsoleApplication</span><span class="p">);</span>
-</span><span class='line'>            <span class="n">File</span><span class="p">.</span><span class="n">Delete</span><span class="p">(</span><span class="s">&quot;test.exe&quot;</span><span class="p">);</span>
-</span><span class='line'>            <span class="n">assemblyBuilder</span><span class="p">.</span><span class="n">Save</span><span class="p">(</span><span class="s">&quot;test.exe&quot;</span><span class="p">);</span>
-</span><span class='line'>            <span class="n">Process</span><span class="p">.</span><span class="n">Start</span><span class="p">(</span><span class="s">&quot;test.exe&quot;</span><span class="p">);</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>手順は大雑把に</p>
-
-<ul>
-<li>出力したいファイルの情報を作る。(Mainの1行目〜3行目)</li>
-<li>class、メソッドを作る(4, 5行目)</li>
-<li>ilを書き出す(6 〜 13行目)</li>
-<li>エントリーポイントを作る(14行目)</li>
-<li>ファイルを出力する(16行目)</li>
-<li>実行する(17行目)</li>
-</ul>
-
-
-<p>OpCOdesに関してはここをチェックした<a href="https://msdn.microsoft.com/en-us/library/system.reflection.emit.opcodes_fields(v=vs.110">OpCodes Fields (System.Reflection.Emit)</a>.aspx)</p>
-
-<p>実際にどういうilコードを書けば良いかは、一回C#でビルドしたものを</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>monodis hoge.exe
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>みたいにしてilコードを表示させると良い</p>
-
-<h2>一旦ビルドしたものを手動で修正する</h2>
-
-<p>何個か選択肢があるみたいだが、<a href="http://www.mono-project.com/docs/tools+libraries/libraries/Mono.Cecil/">Mono.Cecil</a>を使ったので、Mono.Cecilについてのみ書く。</p>
-
-<p>色々情報はあるんだけど、どうもバージョンの違いによって作法が若干変わるみたい。なので、これは2015/11/29時点の情報(バージョン0.9.6)になる。</p>
-
-<p>test.exeにConsole.WriteLine(&ldquo;injected!&rdquo;)を追加するにはこんな感じで</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
-</span><span class='line'><span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
-</span><span class='line'><span class="k">using</span> <span class="nn">System.Linq</span><span class="p">;</span>
-</span><span class='line'><span class="k">using</span> <span class="nn">System.Text</span><span class="p">;</span>
-</span><span class='line'><span class="k">using</span> <span class="nn">System.IO</span><span class="p">;</span>
-</span><span class='line'><span class="k">using</span> <span class="nn">System.Diagnostics</span><span class="p">;</span>
-</span><span class='line'><span class="k">using</span> <span class="nn">Mono.Cecil</span><span class="p">;</span>
-</span><span class='line'><span class="k">using</span> <span class="nn">Mono.Cecil.Cil</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">namespace</span> <span class="nn">ceciltest</span><span class="p">{</span>
-</span><span class='line'> <span class="k">class</span> <span class="nc">Program</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span> <span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="n">asm</span> <span class="p">=</span> <span class="n">AssemblyDefinition</span><span class="p">.</span><span class="n">ReadAssembly</span><span class="p">(</span><span class="s">@&quot;test.exe&quot;</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">mainDef</span> <span class="p">=</span> <span class="n">asm</span><span class="p">.</span><span class="n">MainModule</span><span class="p">.</span><span class="n">Types</span><span class="p">.</span><span class="n">OfType</span><span class="p">&lt;</span><span class="n">TypeDefinition</span><span class="p">&gt;().</span><span class="n">Single</span><span class="p">(</span><span class="n">t</span> <span class="p">=&gt;</span> <span class="n">t</span><span class="p">.</span><span class="n">Name</span> <span class="p">==</span> <span class="s">&quot;MainClass&quot;</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">MethodDefinition</span> <span class="n">mainMethod</span> <span class="p">=</span> <span class="n">mainDef</span><span class="p">.</span><span class="n">Methods</span><span class="p">.</span><span class="n">OfType</span><span class="p">&lt;</span><span class="n">MethodDefinition</span><span class="p">&gt;().</span><span class="n">Single</span><span class="p">(</span><span class="n">m</span> <span class="p">=&gt;</span> <span class="n">m</span><span class="p">.</span><span class="n">Name</span> <span class="p">==</span> <span class="s">&quot;Main&quot;</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">Instruction</span> <span class="n">ret</span> <span class="p">=</span> <span class="n">mainMethod</span><span class="p">.</span><span class="n">Body</span><span class="p">.</span><span class="n">Instructions</span><span class="p">.</span><span class="n">Last</span><span class="p">(</span><span class="n">i</span> <span class="p">=&gt;</span> <span class="n">i</span><span class="p">.</span><span class="n">OpCode</span> <span class="p">==</span> <span class="n">OpCodes</span><span class="p">.</span><span class="n">Ret</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">mainMethod</span><span class="p">.</span><span class="n">Body</span><span class="p">.</span><span class="n">Instructions</span><span class="p">.</span><span class="n">Remove</span> <span class="p">(</span><span class="n">ret</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">mainMethod</span><span class="p">.</span><span class="n">Body</span><span class="p">.</span><span class="n">Instructions</span><span class="p">.</span><span class="n">Add</span> <span class="p">(</span><span class="n">Instruction</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">Mono</span><span class="p">.</span><span class="n">Cecil</span><span class="p">.</span><span class="n">Cil</span><span class="p">.</span><span class="n">OpCodes</span><span class="p">.</span><span class="n">Ldstr</span><span class="p">,</span><span class="s">&quot;injected!&quot;</span><span class="p">));</span>
-</span><span class='line'>        <span class="kt">var</span> <span class="n">writeLineMethod</span> <span class="p">=</span> <span class="k">typeof</span><span class="p">(</span><span class="n">Console</span><span class="p">).</span><span class="n">GetMethod</span><span class="p">(</span><span class="s">&quot;WriteLine&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">Type</span><span class="p">[]</span> <span class="p">{</span> <span class="k">typeof</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="p">});</span>
-</span><span class='line'>        <span class="kt">var</span> <span class="n">writeLineRef</span> <span class="p">=</span> <span class="n">asm</span><span class="p">.</span><span class="n">MainModule</span><span class="p">.</span><span class="n">ImportReference</span><span class="p">(</span><span class="n">writeLineMethod</span><span class="p">);</span>
-</span><span class='line'>        <span class="n">mainMethod</span><span class="p">.</span><span class="n">Body</span><span class="p">.</span><span class="n">Instructions</span><span class="p">.</span><span class="n">Add</span> <span class="p">(</span><span class="n">Instruction</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">OpCodes</span><span class="p">.</span><span class="n">Call</span><span class="p">,</span> <span class="n">writeLineRef</span><span class="p">));</span>
-</span><span class='line'>        <span class="n">mainMethod</span><span class="p">.</span><span class="n">Body</span><span class="p">.</span><span class="n">Instructions</span><span class="p">.</span><span class="n">Add</span> <span class="p">(</span><span class="n">Instruction</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="n">OpCodes</span><span class="p">.</span><span class="n">Ret</span><span class="p">));</span>
-</span><span class='line'>        <span class="n">asm</span><span class="p">.</span><span class="n">Write</span><span class="p">(</span><span class="s">&quot;test.modified.exe&quot;</span><span class="p">);</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'> <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>大雑把にやってることはこんな感じ</p>
-
-<ul>
-<li>ビルドしたもの(dllとかexeとか)をアセンブリとして読み込む(Main関数の1行目)</li>
-<li>変更したいクラス、メソッドを取り出す(2, 3行目)</li>
-<li>メソッド内のilを修正(追加とか削除とか)</li>
-<li>Main内に元々あるretを削除(4, 5行目)</li>
-<li>出力したい文字列を設定する(6行目)</li>
-<li>Console.WriteLineを定義(7行目)</li>
-<li>Callする為の参照を作る(8行目)。</li>
-<li>Console.WriteLineをCallする(9行目)</li>
-<li>消したretを再度追加</li>
-<li>修正したものを書き出し(11行目)</li>
-</ul>
-
-
-<h3>雑多</h3>
-
-<ul>
-<li>他の情報でImportとあるのはImportReferenceになっている</li>
-<li>型やメソッドなど参照で登録するのでImportReferenceを使う。アセンブリ内で独自に定義している型の場合は別の作法が必要。</li>
-</ul>
-
-
-<p>参考：
-+ <a href="http://mono.1490590.n4.nabble.com/TypeReference-of-bool-td1550891.html">Mono &ndash; Cecil &ndash; TypeReference of bool</a>
-+ <a href="http://vx.thomazi.me/posts/net-injection-cecil/">.Net injection with Mono.Cecil(全てのメソッドを修正する例)</a></p>
-
-<p>他参考資料</p>
-
-<ul>
-<li><a href="http://home.a00.itscom.net/hatada/_toc/dotnet.html#dotnet">.NET &amp; C#</a></li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/11/02/use-mecab-in-python-virtualenv-ubuntu1-12-dot-04/">Virtualenv上のpythonでmecabを使う (Ubuntu1 12.04)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-11-02T17:28:17+09:00" pubdate data-updated="true">Nov 2<span>nd</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>ubuntu 12.04でapt使ってmecabをインストールしている状態、virtualenvのpythonに切り替えているところからスタート</p>
-
-<h2>先に結論</h2>
-
-<p>mecabをソースからインストールして最新版にして、natto-pyをpipでインストールすれば出来た。</p>
-
-<h2>1. mecab-pythonをvirtualenv上で使用してみる</h2>
-
-<p>ファイルにmecab-pythonを置いてる場所を指定して、pip使えば良い</p>
-
-<figure class='code'><figcaption><span>requirements.txt</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>https://mecab.googlecode.com/files/mecab-python-0.996.tar.gz
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install -r requirements.txt
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これでvirtualenv上にmecab-pythonをインストール出来た。
-参考：<a href="http://qiita.com/hagino3000/items/4cb73fb53537c0714044">travisでpython-mecabを動かしたい時の設定 &ndash; Qiita</a></p>
-
-<p>でもこれでおもむろに</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="kn">import</span> <span class="nn">MeCab</span>
-</span><span class='line'><span class="n">m</span> <span class="o">=</span> <span class="n">MeCab</span><span class="o">.</span><span class="n">Tagger</span><span class="p">(</span><span class="s">&#39;-Ochasen&#39;</span><span class="p">)</span>
-</span><span class='line'><span class="k">print</span> <span class="s">&#39;今日は良い天気&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>エラーが出たorz</p>
-
-<h2>2. natto-pyを使ってみる</h2>
-
-<p>pip search mecabで調べて、その後ググると、natto-pyってのがmecab使えるライブラリであるっぽいのでインストールしてみた</p>
-
-<p>参考：<a href="https://github.com/buruzaemon/natto-py">buruzaemon/natto-py</a></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>pip install natto-py
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これだけでインストール出来た。使ってみたらインストールしてあるmecabのバージョンが古過ぎて使えないと怒られたorz。</p>
-
-<h2>3. mecabを最新バージョンにする</h2>
-
-<p>仕方ないので</p>
-
-<h3>aptのmecabをアンインストール</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude remove mecab
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>mecabをソースからインストール</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>wget https://drive.google.com/uc?export<span class="o">=</span>download&amp;id<span class="o">=</span>0B4y35FiV1wh7cENtOXlicTFaRUE
-</span><span class='line'><span class="nv">$ </span>tar zxvf mecab-0.996.tar.gz
-</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>mecab-0.996
-</span><span class='line'><span class="nv">$ </span>./configure
-</span><span class='line'><span class="nv">$ </span>make
-</span><span class='line'><span class="nv">$ </span>make check
-</span><span class='line'><span class="nv">$ </span>sudo make install
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>mecab辞書のインストール</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>wget https://drive.google.com/uc?export<span class="o">=</span>download&amp;id<span class="o">=</span>0B4y35FiV1wh7MWVlSDBCSXZMTXM
-</span><span class='line'><span class="nv">$ </span>tar zvxf mecab-ipadic-2.7.0-20070801.tar.gz
-</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>mecab-ipadic-2.7.0-20070801
-</span><span class='line'><span class="nv">$ </span>./configure --with-charset<span class="o">=</span>utf8
-</span><span class='line'><span class="nv">$ </span>make
-</span><span class='line'><span class="nv">$ </span>sudo make install
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>urlはそれぞれ<a href="http://taku910.github.io/mecab/#download">mecabのページ</a>からリンクされているものを用いた。</p>
-
-<p>参考：<a href="http://tatsuyaoiw.hatenablog.com/entry/20120414/1334397985">MeCabのインストール方法 &ndash; tatsuyaoiw.hatenablog.com</a></p>
-
-<h2>natto-pyを改めて使う</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="c"># coding: utf-8↲</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">natto</span> <span class="kn">import</span> <span class="n">MeCab</span>
-</span><span class='line'><span class="n">nm</span> <span class="o">=</span> <span class="n">MeCab</span><span class="p">()</span>
-</span><span class='line'><span class="k">print</span> <span class="n">nm</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&#39;ピンチの時には必ずヒーローが現れる。&#39;</span><span class="p">)</span>
-</span><span class='line'><span class="c"># MeCab result as a single string</span>
-</span><span class='line'><span class="err">ピンチ</span>    <span class="err">名詞</span><span class="p">,</span><span class="err">一般</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">ピンチ</span><span class="p">,</span><span class="err">ピンチ</span><span class="p">,</span><span class="err">ピンチ</span>
-</span><span class='line'><span class="err">の</span>      <span class="err">助詞</span><span class="p">,</span><span class="err">連体化</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">の</span><span class="p">,</span><span class="err">ノ</span><span class="p">,</span><span class="err">ノ</span>
-</span><span class='line'><span class="err">時</span>      <span class="err">名詞</span><span class="p">,</span><span class="err">非自立</span><span class="p">,</span><span class="err">副詞可能</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">時</span><span class="p">,</span><span class="err">トキ</span><span class="p">,</span><span class="err">トキ</span>
-</span><span class='line'><span class="err">に</span>      <span class="err">助詞</span><span class="p">,</span><span class="err">格助詞</span><span class="p">,</span><span class="err">一般</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">に</span><span class="p">,</span><span class="err">ニ</span><span class="p">,</span><span class="err">ニ</span>
-</span><span class='line'><span class="err">は</span>      <span class="err">助詞</span><span class="p">,</span><span class="err">係助詞</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">は</span><span class="p">,</span><span class="err">ハ</span><span class="p">,</span><span class="err">ワ</span>
-</span><span class='line'><span class="err">必ず</span>    <span class="err">副詞</span><span class="p">,</span><span class="err">助詞類接続</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">必ず</span><span class="p">,</span><span class="err">カナラズ</span><span class="p">,</span><span class="err">カナラズ</span>
-</span><span class='line'><span class="err">ヒーロー</span>  <span class="err">名詞</span><span class="p">,</span><span class="err">一般</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">ヒーロー</span><span class="p">,</span><span class="err">ヒーロー</span><span class="p">,</span><span class="err">ヒーロー</span>
-</span><span class='line'><span class="err">が</span>      <span class="err">助詞</span><span class="p">,</span><span class="err">格助詞</span><span class="p">,</span><span class="err">一般</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">が</span><span class="p">,</span><span class="err">ガ</span><span class="p">,</span><span class="err">ガ</span>
-</span><span class='line'><span class="err">現れる</span>  <span class="err">動詞</span><span class="p">,</span><span class="err">自立</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">一段</span><span class="p">,</span><span class="err">基本形</span><span class="p">,</span><span class="err">現れる</span><span class="p">,</span><span class="err">アラワレル</span><span class="p">,</span><span class="err">アラワレル</span>
-</span><span class='line'><span class="err">。</span>      <span class="err">記号</span><span class="p">,</span><span class="err">句点</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">,</span><span class="err">。</span><span class="p">,</span><span class="err">。</span><span class="p">,</span><span class="err">。</span>
-</span><span class='line'><span class="n">EOS</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>うまくいった。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04/">ubuntu12.04でpg bulkloadを使う</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-09-24T08:50:36+09:00" pubdate data-updated="true">Sep 24<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>pg_bulkloadを使いたくなるケース</p>
-
-<ul>
-<li>大量のデータをインポートしたい</li>
-<li>中にはエラーがあるデータがちょこちょこある</li>
-</ul>
-
-
-<p>に当てはまったので、インストールからやってみた。
-やったこと順に列記するので最低限の手順ではないと思う。</p>
-
-<p>rpmからインストールする方法でなく、ソースからやってみることにした。
-Ubuntu12.04でインストールしたけど、他のバージョンでもほぼ同じだと思う。</p>
-
-<h2>ソースの取得</h2>
-
-<p>まずは最新のstableをgithubから取ってくる。ブログ執筆時はこんな感じ。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone -b VERSION3_1_STABLE https://github.com/ossc-db/pg_bulkload.git
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>make(失敗)</h2>
-
-<p>おもむろにmakeしてみると</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>pg_bulkload
-</span><span class='line'><span class="nv">$ </span>make
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>するとpgxs.xmlが無い！というエラーが出て来た</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'>Makefile:17: /usr/lib/postgresql/9.4/lib/pgxs/src/makefiles/pgxs.mk: そのようなファイルやディレクトリはありません
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>postgresqlは9.2しか入れてないはずなのに何故か9.4のファイルが無いとか言われた。</p>
-
-<h2>試行錯誤(失敗)</h2>
-
-<p>どうもMakefileを調べてみると、ここで出てくるバージョンはpg_configコマンドで取得するバージョンらしい。面倒なので、手動で9.2のファイルを設定するように変更して、さらにpgxs.mkを入れるためにpostgresql-server-dev-9.2をaptitudeでインストールした。</p>
-
-<p>で、おもむろにmakeすると・・・</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo make
-</span><span class='line'>....
-</span><span class='line'>/usr/include/postgresql/libpq-fe.h:547:1: エラー: 不明な型名 ‘pg_int64’ です
-</span><span class='line'>/usr/include/postgresql/libpq-fe.h:547:50: エラー: 不明な型名 ‘pg_int64’ です
-</span><span class='line'>/usr/include/postgresql/libpq-fe.h:551:1: エラー: 不明な型名 ‘pg_int64’ です
-</span><span class='line'>/usr/include/postgresql/libpq-fe.h:553:48: エラー: 不明な型名 ‘pg_int64’ です
-</span><span class='line'>make<span class="o">[</span>1<span class="o">]</span>: *** <span class="o">[</span>pg_bulkload.o<span class="o">]</span> エラー 1
-</span><span class='line'>make<span class="o">[</span>1<span class="o">]</span>: ディレクトリ <span class="sb">`</span>/****/pg_bulkload/bin<span class="err">&#39;</span> から出ます
-</span><span class='line'>make: *** <span class="o">[</span>all<span class="o">]</span> エラー 2
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と結局エラーが出てしまった。ググって調べるとどうもlibpqのバージョンが関連するらしい。調べてみると</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>aptitude show libpq-dev
-</span><span class='line'>パッケージ: libpq-dev
-</span><span class='line'>状態: インストール済み
-</span><span class='line'>自動的にインストールされた: いいえ
-</span><span class='line'>バージョン: 9.4.0-1.pgdg12.4+1
-</span><span class='line'>....
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>バージョンが9.4になっていたorz。多分だけど、9.2でpg_bulkloadをインストールするにはlibpqをダウングレードしないといけないっぽい。それは面倒なのでpostgresqlのバージョン9.4をインストールすることでバージョンを合わせることにした</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install postgresql-9.4
-</span><span class='line'><span class="nv">$ </span>sudo aptitude install postgresql-server-dev-9.4
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>インストールの途中でlibpq-devは削除することになった。</p>
-
-<h2>make(成功)</h2>
-
-<p>バージョンを合わせたので、makeしてみると今度はライブラリが足らないというエラーが出た</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo make
-</span><span class='line'>....
-</span><span class='line'>/usr/bin/ld: cannot find -lpam
-</span><span class='line'>/usr/bin/ld: cannot find -ledit
-</span><span class='line'>collect2: ld はステータス 1 で終了しました
-</span><span class='line'>make<span class="o">[</span>1<span class="o">]</span>: *** <span class="o">[</span>pg_bulkload<span class="o">]</span> エラー 1
-</span><span class='line'>make<span class="o">[</span>1<span class="o">]</span>: ディレクトリ <span class="sb">`</span>/***/pg_bulkload/bin<span class="err">&#39;</span> から出ます
-</span><span class='line'>make: *** <span class="o">[</span>all<span class="o">]</span> エラー 2
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これはubuntuではlibpam-devとlibedit-devが足らないという意味らしいので、aptitudeからインストールした。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo aptitude install libpam-dev
-</span><span class='line'><span class="nv">$ </span>sudo aptitude install libedit-dev
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>以上の作業でpg_bulkloadのmakeに成功した</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>sudo make
-</span><span class='line'><span class="nv">$ </span>sudo make install
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>使ってみる</h2>
-
-<p>pg_bulkloadはbinフォルダ内にある。使い方は</p>
-
-<ul>
-<li>設定ファイルを書く</li>
-<li>csvファイルを用意する</li>
-<li>実行する</li>
-</ul>
-
-
-<p>となる。</p>
-
-<h3>設定ファイルを書く</h3>
-
-<p>設定ファイルの例はこんな感じ(下のコマンドの場合、example.ctlで保存しておく)、bin/data内にも例があるので参考になる。
-この設定は</p>
-
-<ul>
-<li>リダイレクトでcsvファイルを入力する。</li>
-<li>リレーションをチェックする。リレーションにミスがある場合はエラーにする</li>
-<li>タブ区切り</li>
-</ul>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">TYPE</span> <span class="o">=</span> CSV
-</span><span class='line'><span class="nv">INPUT</span> <span class="o">=</span> stdin
-</span><span class='line'><span class="nv">TABLE</span> <span class="o">=</span> table_name
-</span><span class='line'><span class="nv">CHECK_CONSTRAINTS</span> <span class="o">=</span> YES
-</span><span class='line'><span class="nv">DELIMITER</span> <span class="o">=</span> <span class="s2">&quot;   &quot;</span> <span class="c">#タブの場合</span>
-</span><span class='line'><span class="nv">WRITER</span> <span class="o">=</span> DIRECT
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>コマンドはこんな感じ</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>./pg_bulkload example.ctl --dbname db_name  &lt; csv_name.csv
-</span><span class='line'>NOTICE: BULK LOAD START
-</span><span class='line'>NOTICE: BULK LOAD END
-</span><span class='line'>    0 Rows skipped.
-</span><span class='line'>    10 Rows successfully loaded.
-</span><span class='line'>    0 Rows not loaded due to parse errors.
-</span><span class='line'>    0 Rows not loaded due to duplicate errors.
-</span><span class='line'>    0 Rows replaced with new rows.
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>csvファイルはpsqlで\d table_nameで表示される順序にしておくこと。でないとパースエラーが出る。</p>
-
-<h2>順序が変わる場合</h2>
-
-<p>csvファイル内のフィールド順序をdb内の順序と違うものにしたい場合や、idなど、データを省略したい場合はフィルタを指定出来る。フィルタは</p>
-
-<ul>
-<li>db内に関数を作る</li>
-<li>設定ファイルでフィルタを指定</li>
-</ul>
-
-
-<p>で設定する。</p>
-
-<p>フィルタの例</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">CREATE</span> <span class="k">FUNCTION</span> <span class="n">sample_filter</span><span class="p">(</span><span class="nb">integer</span><span class="p">,</span> <span class="nb">text</span><span class="p">,</span> <span class="nb">text</span><span class="p">,</span> <span class="nb">real</span> <span class="k">DEFAULT</span> <span class="mi">0</span><span class="p">.</span><span class="mi">05</span><span class="p">)</span> <span class="k">RETURNS</span> <span class="n">record</span>
-</span><span class='line'>    <span class="k">AS</span> <span class="err">$$</span> <span class="k">SELECT</span> <span class="err">$</span><span class="mi">1</span> <span class="o">*</span> <span class="err">$</span><span class="mi">4</span><span class="p">,</span> <span class="k">upper</span><span class="p">(</span><span class="err">$</span><span class="mi">3</span><span class="p">)</span> <span class="err">$$</span>
-</span><span class='line'>    <span class="k">LANGUAGE</span> <span class="k">SQL</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>設定ファイル</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">TYPE</span> <span class="o">=</span> <span class="n">CSV</span>
-</span><span class='line'><span class="k">INPUT</span> <span class="o">=</span> <span class="k">stdin</span>
-</span><span class='line'><span class="k">TABLE</span> <span class="o">=</span> <span class="k">table_name</span>
-</span><span class='line'><span class="n">CHECK_CONSTRAINTS</span> <span class="o">=</span> <span class="n">YES</span>
-</span><span class='line'><span class="k">DELIMITER</span> <span class="o">=</span> <span class="ss">&quot;   &quot;</span> <span class="o">#</span><span class="err">タブの場合</span>
-</span><span class='line'><span class="n">WRITER</span> <span class="o">=</span> <span class="n">DIRECT</span>
-</span><span class='line'><span class="n">FILTER</span> <span class="o">=</span> <span class="n">sample_filter</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>出来てない点（追記予定）</h2>
-
-<ul>
-<li>MULTI_PROCESS = YESの時に認証失敗する件</li>
-</ul>
-
-
-<p>参考：</p>
-
-<ul>
-<li><a href="http://pgbulkload.projects.pgfoundry.org/pg_bulkload.html#filter">pg_bulkload</a></li>
-<li><a href="http://www.atmarkit.co.jp/flinux/rensai/linuxtips/a115makeerror.html">makeで「/usr/bin/ld: cannot find」と表示されるときは － ＠IT</a></li>
-<li><a href="http://pgfoundry.org/forum/forum.php?thread_id=2851&amp;forum_id=1004&amp;group_id=1000261">pgFoundry: Forum: help</a></li>
-<li><a href="https://github.com/ossc-db/pg_bulkload">ossc-db/pg_bulkload</a></li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1312,23 +796,23 @@ Ubuntu12.04でインストールしたけど、他のバージョンでもほぼ
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/02/09/migrate-from-django-1-dot-8-to-1-dot-9/">Django 1.8から1.9へアップした時に気にする点</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/29/pcl-memo/">PCLメモ</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/01/25/enable-service-fluentd-start/">インストールしたfluentdをserviceから使えるようにする</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/">fluent-plugin-groongaをインストールして動かすまでをAnsibleでやってみた</a>
       </li>
     
       <li class="post">
         <a href="/blog/2016/01/19/log-view-parameter-before-caching-for-django/">Djangoでcache使ってる間でも呼び出されたviewとかパラメーターをログに書き出したい</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/01/15/use-groonga-for-django-cache/">Use Groonga for Django Cache</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/01/13/redis-memo/">Redis Memo</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/01/07/mt4-memo/">MT4 Memo</a>
       </li>
     
   </ul>
@@ -1356,8 +840,8 @@ Ubuntu12.04でインストールしたけど、他のバージョンでもほぼ
 	<li class='category'><a href='/blog/categories/analytics/'>Analytics (2)</a></li>
 <li class='category'><a href='/blog/categories/bootstrap/'>Bootstrap (8)</a></li>
 <li class='category'><a href='/blog/categories/cplusplus/'>CPlusPlus (3)</a></li>
-<li class='category'><a href='/blog/categories/csharp/'>CSharp (7)</a></li>
-<li class='category'><a href='/blog/categories/django/'>Django (23)</a></li>
+<li class='category'><a href='/blog/categories/csharp/'>CSharp (8)</a></li>
+<li class='category'><a href='/blog/categories/django/'>Django (24)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>Groonga (2)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>Javascript (1)</a></li>
 <li class='category'><a href='/blog/categories/linkedopendata/'>LinkedOpenData (1)</a></li>
@@ -1366,7 +850,7 @@ Ubuntu12.04でインストールしたけど、他のバージョンでもほぼ
 <li class='category'><a href='/blog/categories/octopress/'>Octopress (1)</a></li>
 <li class='category'><a href='/blog/categories/php/'>PHP (1)</a></li>
 <li class='category'><a href='/blog/categories/postgresql/'>PostgreSQL (10)</a></li>
-<li class='category'><a href='/blog/categories/python/'>Python (26)</a></li>
+<li class='category'><a href='/blog/categories/python/'>Python (27)</a></li>
 <li class='category'><a href='/blog/categories/r/'>R (4)</a></li>
 <li class='category'><a href='/blog/categories/rails/'>Rails (9)</a></li>
 <li class='category'><a href='/blog/categories/titanium/'>Titanium (3)</a></li>
@@ -1375,8 +859,8 @@ Ubuntu12.04でインストールしたけど、他のバージョンでもほぼ
 <li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
 <li class='category'><a href='/blog/categories/groonga/'>groonga (1)</a></li>
 <li class='category'><a href='/blog/categories/javascript/'>javascript (1)</a></li>
-<li class='category'><a href='/blog/categories/linux/'>linux (12)</a></li>
-<li class='category'><a href='/blog/categories/memo/'>memo (17)</a></li>
+<li class='category'><a href='/blog/categories/linux/'>linux (13)</a></li>
+<li class='category'><a href='/blog/categories/memo/'>memo (18)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko/'>nadesiko (7)</a></li>
 <li class='category'><a href='/blog/categories/nadesiko2/'>nadesiko2 (8)</a></li>
 <li class='category'><a href='/blog/categories/nginx/'>nginx (2)</a></li>
