@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.thoz.org/" rel="alternate"></link><link href="http://blog.thoz.org/feeds/postgresql.atom.xml" rel="self"></link><id>http://blog.thoz.org/</id><updated>2014-02-28T11:48:20+09:00</updated><entry><title>dbext.vimでpostgresqlにアクセスする</title><link href="http://blog.thoz.org/2014/02/28/vim-dbext-postgresql/" rel="alternate"></link><updated>2014-02-28T11:48:20+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-02-28:2014/02/28/vim-dbext-postgresql/</id><summary type="html">&lt;p&gt;ググってみたけど無かったのでメモ。
+単純に.vimrcに&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;let dbext_default_profile=&amp;quot;&amp;quot;
+let dbext_default_type=&amp;quot;PGSQL&amp;quot;
+let dbext_default_user=&amp;quot;username&amp;quot;
+let dbext_default_passwd=&amp;quot;password&amp;quot;
+let dbext_default_dbname=&amp;quot;dbname&amp;quot;
+let dbext_default_host=&amp;quot;host&amp;quot;
+let dbext_default_port=&amp;quot;port&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;と入力してvimを再起動して&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="k"&gt;Select&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="k"&gt;from&lt;/span&gt; &lt;span class="n"&gt;hoge&lt;/span&gt; &lt;span class="k"&gt;limit&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;と何かのテーブルから１行だけ出力してみようとしてみたけど&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;dbext&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;PostgreSQL&lt;/span&gt; &lt;span class="n"&gt;requires&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;$HOME/.pgpass&amp;#39;&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;order&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;authenticate&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;span class="n"&gt;This&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt; &lt;span class="k"&gt;is&lt;/span&gt; &lt;span class="n"&gt;missing&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;span class="n"&gt;If&lt;/span&gt; &lt;span class="n"&gt;you&lt;/span&gt; &lt;span class="n"&gt;are&lt;/span&gt; &lt;span class="n"&gt;using&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="n"&gt;local&lt;/span&gt; &lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;you&lt;/span&gt; &lt;span class="n"&gt;can&lt;/span&gt; &lt;span class="n"&gt;create&lt;/span&gt; &lt;span class="n"&gt;an&lt;/span&gt; &lt;span class="n"&gt;empty&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;pgpass&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;  &lt;span class="n"&gt;The&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;
+&lt;span class="n"&gt;inary&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;psql&amp;#39;&lt;/span&gt; &lt;span class="n"&gt;does&lt;/span&gt; &lt;span class="n"&gt;not&lt;/span&gt; &lt;span class="n"&gt;accept&lt;/span&gt; &lt;span class="n"&gt;commandline&lt;/span&gt; &lt;span class="n"&gt;passwords&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;というエラーメッセージが！
+どうもpsqlがコマンドラインでパスワードを受け付けないので、パスワード設定しても意味ないみたい。
+なので、~/.pgpassに&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;host&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;port&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;dbname&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;username&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;password&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;を入力したらエラー無く動いた。良かった良かった。
+ちなみに.vimrcに書いたパスワード設定を消すと、それはそれでパスワード聞かれるので残しておいた方がいい。&lt;/p&gt;</summary><category term="vim"></category><category term="PostgreSQL"></category></entry></feed>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.thoz.org/" rel="alternate"></link><link href="http://blog.thoz.org/feeds/google.atom.xml" rel="self"></link><id>http://blog.thoz.org/</id><updated>2014-03-09T21:53:40+09:00</updated><entry><title>Google Analyticsからbotアクセスを取り除く</title><link href="http://blog.thoz.org/2014/03/09/how-to-block-bot-access-from-google-analytics/" rel="alternate"></link><updated>2014-03-09T21:53:40+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-03-09:2014/03/09/how-to-block-bot-access-from-google-analytics/</id><summary type="html">&lt;p&gt;参考ページ&lt;a href="http://www.lunametrics.com/blog/2013/09/05/filter-bots-google-analytics/#sr=d&amp;amp;m=n&amp;amp;cp=d&amp;amp;ct=-tmc&amp;amp;ts=1394369739"&gt;How to Block Bots from Your Google Analytics&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;ここ数日Google Analyticsにアメリカからリファラ無し直帰率100%近くのアクセスを大量に発見。
+どう考えてもbotですどうも(ry 
+本当はGoogle Analyticsに自動でフィルタして欲しいけど、どうもフィルタしてないので、自力でフィルタ設定しないといけないみたい。&lt;/p&gt;
+&lt;p&gt;上のリンクを参考に設定してみる&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;アナリティクス設定→ ビュー→フィルタと移動&lt;/li&gt;
+&lt;li&gt;「新しいボタン」をクリック&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;設定は以下の通り&lt;/h3&gt;
+&lt;!-- more --&gt;
+
+&lt;ul&gt;
+&lt;li&gt;新しいフィルタを作成&lt;/li&gt;
+&lt;li&gt;フィルタ名：適当（Smart Bot 除外）とか？&lt;/li&gt;
+&lt;li&gt;フィルタの種類：カスタムフィルタ&lt;/li&gt;
+&lt;li&gt;除外&lt;/li&gt;
+&lt;li&gt;フィルタフィールド：ISPドメインからのトラフィック&lt;/li&gt;
+&lt;li&gt;フィルタパターン：^(microsoft corp(oration)?|inktomi corporation|yahoo! inc.|google inc.|stumbleupon inc.)$|gomez&lt;/li&gt;
+&lt;li&gt;大文字小文字を区別：いいえ&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- more --&gt;
+
+&lt;ul&gt;
+&lt;li&gt;「保存」をクリック&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これでフィルタできるけど、フィルタをかける以前の情報には反映しない。 
+参考ページに設定テンプレートがあったのでここでもリンクしておく 
+&lt;a href="https://www.google.com/analytics/web/template?uid=svscm2YdTe6s0yJeGHQM4Q"&gt;Smart Botを除外するテンプレート&lt;/a&gt;&lt;/p&gt;</summary><category term="google"></category></entry></feed>

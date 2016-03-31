@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.thoz.org/" rel="alternate"></link><link href="http://blog.thoz.org/feeds/linux.atom.xml" rel="self"></link><id>http://blog.thoz.org/</id><updated>2014-04-08T14:39:21+09:00</updated><entry><title>Ubuntuでopensslのsecurity patchを当てる</title><link href="http://blog.thoz.org/2014/04/08/update-openssl-security-patch/" rel="alternate"></link><updated>2014-04-08T14:39:21+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-04-08:2014/04/08/update-openssl-security-patch/</id><summary type="html">&lt;p&gt;本日、&lt;a href="http://jp.techcrunch.com/2014/04/08/20140407massive-security-bug-in-openssl-could-effect-a-huge-chunk-of-the-internet/"&gt;OpenSSLの重大バグが発覚。インターネットの大部分に影響の可能性 | TechCrunch Japan&lt;/a&gt;というニュースで&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;過去2年以内のあらゆるバージョンのOpenSSLが走るシステムで、システムメモリー上にある大量のデータを暴露することが可能&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;と書いてあった、これはまずいので、あわててセキュリティパッチを当てたので手順をメモ。 OSはUbuntu 12.04LTS。&lt;/p&gt;
+&lt;p&gt;Ubuntuでは&lt;a href="http://www.ubuntu.com/usn/usn-2165-1/"&gt;USN-2165-1: OpenSSL vulnerabilities | Ubuntu&lt;/a&gt;にあるように、Ubuntu 13.10、12.10、12.04 LTSでセキュリティパッチが出ている（2014年4月7日現在)。ということでaptを使えばセキュリティパッチを当てることが出来る。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo apt-get update
+$ sudo apt-get upgrade
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;または&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude update
+$ sudo aptitude upgrade
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でおk。ただしopenssl versionでバージョン確認してもパッチが当たったかどうか良く分からないので以下のコマンドで確認&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ dpkg -l &lt;span class="p"&gt;|&lt;/span&gt; grep openssl
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Ubuntu 12.04LTSの場合&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ii  openssl                              1.0.1-4ubuntu5.12                   Secure Socket Layer &lt;span class="o"&gt;(&lt;/span&gt;SSL&lt;span class="o"&gt;)&lt;/span&gt; binary and related cryptographic tools
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;と出ればおk。確認してないけど、Ubuntu 13.10なら1.0.1e-3ubuntu1.2、Ubuntu 12.10なら1.0.1c-3ubuntu2.7と出ていればおk。&lt;/p&gt;</summary><category term="linux"></category></entry></feed>

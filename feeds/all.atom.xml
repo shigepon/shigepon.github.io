@@ -4754,7 +4754,7 @@ app/views/events/index.html.erbを次のように書き換える&lt;/p&gt;
 &lt;/ul&gt;
 &lt;p&gt;これでフィルタできるけど、フィルタをかける以前の情報には反映しない。 
 参考ページに設定テンプレートがあったのでここでもリンクしておく 
-&lt;a href="https://www.google.com/analytics/web/template?uid=svscm2YdTe6s0yJeGHQM4Q"&gt;Smart Botを除外するテンプレート&lt;/a&gt;&lt;/p&gt;</summary><category term="Analytics"></category></entry><entry><title>linux command memo</title><link href="http://blog.thoz.org/2014/03/07/linux-command-memo/" rel="alternate"></link><updated>2014-03-07T08:50:21+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-03-07:2014/03/07/linux-command-memo/</id><summary type="html">&lt;h2&gt;アクセスログのIPアドレスを集計してみる&lt;/h2&gt;
+&lt;a href="https://www.google.com/analytics/web/template?uid=svscm2YdTe6s0yJeGHQM4Q"&gt;Smart Botを除外するテンプレート&lt;/a&gt;&lt;/p&gt;</summary><category term="google"></category></entry><entry><title>linux command memo</title><link href="http://blog.thoz.org/2014/03/07/linux-command-memo/" rel="alternate"></link><updated>2014-03-07T08:50:21+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-03-07:2014/03/07/linux-command-memo/</id><summary type="html">&lt;h2&gt;アクセスログのIPアドレスを集計してみる&lt;/h2&gt;
 &lt;p&gt;参考：&lt;a href="http://blog.livedoor.jp/stock_value/archives/51443839.html"&gt;Linux サーバーでお手軽にログの集計：こっそりと。 - livedoor Blog（ブログ）&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Google Analyticsでリファラ無しの変なアクセスが増えたので、アクセスログからIPを集計してみた。
 アクセスログの書式はLTSVでこんな感じ&lt;/p&gt;
