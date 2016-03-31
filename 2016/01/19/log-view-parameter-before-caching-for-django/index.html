@@ -105,24 +105,25 @@ shigeponが関心のある技術情報など            </a>
                 </div>
                 <p>djangoのログ機能を使って、呼び出されたview名とかパラメーターとかを書き出してたんだけど、viewでキャッシュを使うとログを書いてくれなくなるので、それをなんとかしたいという話。</p>
 <p>コードにするとこんな感じ</p>
-<p>```py views.py
-...
-from django.views.decorators.cache import cache_page
-import logging
-logger = logging.getLogger("hoge")</p>
-<p>@cache_page(60<em>60</em>24*30)
-def index(request, param1, param2):
-    logger.info(u"param1:{0} param2:{1}".format(param1, param2))
-    ...</p>
-<div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="err">!</span><span class="o">--</span> <span class="n">more</span> <span class="o">--&gt;</span>
-
-<span class="err">こうするとキャッシュが効いてしまって、</span><span class="mi">1</span><span class="err">回アクセスした時以外ログが出なくなってしまう。アクセスログ的</span>
-<span class="err">な使い方をしたい時に困ってしまう。アクセスログは</span><span class="n">nginx</span><span class="err">とかそこらへんのログに任せてた方が良いような気もするが、</span>
-<span class="n">django</span><span class="err">内で何とかしたかったので</span><span class="n">request_started</span><span class="err">シグナルを使って下のようにした</span>
-
-<span class="sb">``</span><span class="err">`</span><span class="n">py</span> <span class="n">views</span><span class="o">.</span><span class="n">py</span>
+<div class="highlight"><pre><span></span><span class="o">...</span>
 <span class="kn">from</span> <span class="nn">django.views.decorators.cache</span> <span class="kn">import</span> <span class="n">cache_page</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;hoge&quot;</span><span class="p">)</span>
+
+<span class="nd">@cache_page</span><span class="p">(</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">30</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">param1</span><span class="p">,</span> <span class="n">param2</span><span class="p">):</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">u&quot;param1:{0} param2:{1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">param1</span><span class="p">,</span> <span class="n">param2</span><span class="p">))</span>
+    <span class="o">...</span>
+</pre></div>
+
+
+<!-- more -->
+
+<p>こうするとキャッシュが効いてしまって、1回アクセスした時以外ログが出なくなってしまう。アクセスログ的
+な使い方をしたい時に困ってしまう。アクセスログはnginxとかそこらへんのログに任せてた方が良いような気もするが、
+django内で何とかしたかったのでrequest_startedシグナルを使って下のようにした</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> 
+<span class="kn">import</span> <span class="n">logging</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;hoge&quot;</span><span class="p">)</span>
 
 <span class="nd">@cache_page</span><span class="p">(</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">30</span><span class="p">)</span>

@@ -256,24 +256,25 @@ $ sudo aptitude remove td-agent
 &lt;p&gt;使用OSがubuntuなので、td-agentを使ってみたんだが、rbenv上のgemでインストールしたfluent-plugin-groongaを読み込む方法が最後まで分かんなかったので使わないことにした。td-agentだとserveceコマンドでリスタートとかやってくれるので楽なんだけどなー。&lt;/p&gt;
 &lt;p&gt;参考：&lt;a href="http://mhag.hatenablog.com/entry/2014/07/04/151415"&gt;Ubuntu 14.04 LTS に Fluentd をインストールする - ´・ω・)＜ときどき書くよ&lt;/a&gt;, &lt;a href="http://qiita.com/h5y1m141@github/items/74029cab9706971c8dbe"&gt;Rubyが参照してるgemのパスやインストール済gemを確認する方法 - Qiita&lt;/a&gt;, &lt;a href="http://qiita.com/groonga/items/5c674be9daf25054c14c"&gt;Fluentdで集めたデータをGroongaに格納する方法 - Qiita&lt;/a&gt;, &lt;a href="http://chocoby.jp/blog/2013/03/05/fluentd-ltsv/"&gt;fluentd で LTSV がサポートされたのでメモ - 暇人じゃない&lt;/a&gt;&lt;/p&gt;</summary><category term="groonga"></category><category term="ansible"></category><category term="ruby"></category></entry><entry><title>djangoでcache使ってる間でも呼び出されたviewとかパラメーターをログに書き出したい</title><link href="http://blog.thoz.org/2016/01/19/log-view-parameter-before-caching-for-django/" rel="alternate"></link><updated>2016-01-19T18:50:33+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2016-01-19:2016/01/19/log-view-parameter-before-caching-for-django/</id><summary type="html">&lt;p&gt;djangoのログ機能を使って、呼び出されたview名とかパラメーターとかを書き出してたんだけど、viewでキャッシュを使うとログを書いてくれなくなるので、それをなんとかしたいという話。&lt;/p&gt;
 &lt;p&gt;コードにするとこんな感じ&lt;/p&gt;
-&lt;p&gt;```py views.py
-...
-from django.views.decorators.cache import cache_page
-import logging
-logger = logging.getLogger("hoge")&lt;/p&gt;
-&lt;p&gt;@cache_page(60&lt;em&gt;60&lt;/em&gt;24*30)
-def index(request, param1, param2):
-    logger.info(u"param1:{0} param2:{1}".format(param1, param2))
-    ...&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="err"&gt;!&lt;/span&gt;&lt;span class="o"&gt;--&lt;/span&gt; &lt;span class="n"&gt;more&lt;/span&gt; &lt;span class="o"&gt;--&amp;gt;&lt;/span&gt;
-
-&lt;span class="err"&gt;こうするとキャッシュが効いてしまって、&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="err"&gt;回アクセスした時以外ログが出なくなってしまう。アクセスログ的&lt;/span&gt;
-&lt;span class="err"&gt;な使い方をしたい時に困ってしまう。アクセスログは&lt;/span&gt;&lt;span class="n"&gt;nginx&lt;/span&gt;&lt;span class="err"&gt;とかそこらへんのログに任せてた方が良いような気もするが、&lt;/span&gt;
-&lt;span class="n"&gt;django&lt;/span&gt;&lt;span class="err"&gt;内で何とかしたかったので&lt;/span&gt;&lt;span class="n"&gt;request_started&lt;/span&gt;&lt;span class="err"&gt;シグナルを使って下のようにした&lt;/span&gt;
-
-&lt;span class="sb"&gt;``&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt; &lt;span class="n"&gt;views&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.views.decorators.cache&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;cache_page&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;logging&lt;/span&gt;
+&lt;span class="n"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getLogger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;hoge&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="nd"&gt;@cache_page&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;60&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;60&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;24&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;30&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;param1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;param2&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;logger&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;u&amp;quot;param1:{0} param2:{1}&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;param1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;param2&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;こうするとキャッシュが効いてしまって、1回アクセスした時以外ログが出なくなってしまう。アクセスログ的
+な使い方をしたい時に困ってしまう。アクセスログはnginxとかそこらへんのログに任せてた方が良いような気もするが、
+django内で何とかしたかったのでrequest_startedシグナルを使って下のようにした&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; 
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;logging&lt;/span&gt;
 &lt;span class="n"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getLogger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;hoge&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 &lt;span class="nd"&gt;@cache_page&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;60&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;60&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;24&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;30&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
