@@ -268,4 +268,146 @@ Time Elapsed 00:00:06.1095450
 
 &lt;!-- more --&gt;
 
-&lt;p&gt;を追加インストールしておこうということだった。情報無かったので結構はまった。&lt;/p&gt;</summary><category term="linux"></category><category term="nadesiko2"></category></entry></feed>
+&lt;p&gt;を追加インストールしておこうということだった。情報無かったので結構はまった。&lt;/p&gt;</summary><category term="linux"></category><category term="nadesiko2"></category></entry><entry><title>なでしこ2のプラグインを作る方法</title><link href="http://blog.thoz.org/2014/01/29/nadesiko2-make-plugin/" rel="alternate"></link><updated>2014-01-29T09:49:17+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-01-29:2014/01/29/nadesiko2-make-plugin/</id><summary type="html">&lt;p&gt;2015-12-01：情報が古くなったので古い部分を修正しました。&lt;/p&gt;
+&lt;p&gt;なでしこ2でプラグインを作りたい人向けというニッチすぎるネタです。現在なでしこの時期バージョンなでしこ2が開発中です(えらい長いこと開発中です)が、構文の実装がある程度終わっているので、プラグインを開発することが出来ます。try catchの実装どうするかなーとか考えて進んでないですが、それはそれ。&lt;/p&gt;
+&lt;p&gt;なでしこ2はC#で組まれているので、プラグインもC#で組むことができます。&lt;/p&gt;
+&lt;h2&gt;準備&lt;/h2&gt;
+&lt;p&gt;~~まずは準備として、なでしこ2のソースをsvnでチェックアウトします。 &lt;a href="http://code.google.com/p/nadesiko2/source/checkout"&gt;URL&lt;/a&gt;~~&lt;/p&gt;
+&lt;p&gt;まずは準備として、なでしこ2のソースをGithubからクローンします。 ~~&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git clone https://github.com/kujirahand/nadesiko2.git
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;~~SharpDevelopで開発中なので、SharpDevelopでソリューションを開きます。~~XamarinやVisualStudioで開発出来るので、そこらへんでソリューションを開きます。&lt;/p&gt;
+&lt;p&gt;cnakoをビルドする必要があるので、Nako2_CNakoソリューション(Nako2_CNako.sln)を開いて、cnako2プロジェクトをビルドしておきます。cnako2/bin/Debugフォルダにcnako2.exeが出来ます。これをなでしこ2のコード実行に使います。&lt;/p&gt;
+&lt;h2&gt;プラグイン作成&lt;/h2&gt;
+&lt;p&gt;プラグイン作成には今まで作成したプラグインがNakoPluginXXXというプロジェクト名であるので、それを参考にすれば良いわけですが、軽く説明しておきます。&lt;/p&gt;
+&lt;p&gt;プラグインのソースは下のようになります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cm"&gt;/*&lt;/span&gt;
+&lt;span class="cm"&gt; * Created by SharpDevelop.&lt;/span&gt;
+&lt;span class="cm"&gt; * User: shigepon&lt;/span&gt;
+&lt;span class="cm"&gt; * Date: 2011/04/04&lt;/span&gt;
+&lt;span class="cm"&gt; * Time: 9:42&lt;/span&gt;
+&lt;span class="cm"&gt; *&lt;/span&gt;
+&lt;span class="cm"&gt; * To change this template use Tools | Options | Coding | Edit Standard Headers.&lt;/span&gt;
+&lt;span class="cm"&gt; */&lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;System&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;System.Collections.Generic&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;System.Text&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;Libnako.JPNCompiler&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;NakoPlugin&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;namespace&lt;/span&gt; &lt;span class="nn"&gt;NakoPluginSample&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;NakoPluginSample&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;INakoPlugin&lt;/span&gt;    &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;_description&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="p"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;quot&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="err"&gt;サンプルプラグイン&lt;/span&gt;&lt;span class="p"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;quot&lt;/span&gt;&lt;span class="p"&gt;;;&lt;/span&gt;
+        &lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="n"&gt;_version&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="m"&gt;1.0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="c1"&gt;//&amp;lt;del&amp;gt; プラグイン共通の部分 &amp;lt;/del&amp;gt;&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="n"&gt;TargetNakoVersion&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="m"&gt;2.0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="n"&gt;Used&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;Name&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;GetType&lt;/span&gt;&lt;span class="p"&gt;().&lt;/span&gt;&lt;span class="n"&gt;FullName&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="n"&gt;PluginVersion&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;_version&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;Description&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;_description&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="c1"&gt;//&amp;lt;del&amp;gt; 関数の定義 &amp;lt;/del&amp;gt;&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;DefineFunction&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;INakoPluginBank&lt;/span&gt; &lt;span class="n"&gt;bank&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;        &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="n"&gt;bank&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;AddFunc&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="err"&gt;関数名&lt;/span&gt;&lt;span class="p"&gt;}&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;cedil&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="err"&gt;なでしこ形式の引数&lt;/span&gt;&lt;span class="p"&gt;}&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;cedil&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="err"&gt;戻り値の形式&lt;/span&gt;&lt;span class="p"&gt;}&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;cedil&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="err"&gt;実際の呼び出し先&lt;/span&gt;&lt;span class="p"&gt;}&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;cedil&lt;/span&gt;&lt;span class="p"&gt;;{&lt;/span&gt;&lt;span class="err"&gt;関数の説明&lt;/span&gt;&lt;span class="p"&gt;}&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;cedil&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="err"&gt;関数のよみかた&lt;/span&gt;&lt;span class="p"&gt;});&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="c1"&gt;// プラグインの初期化処理&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;PluginInit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;INakoInterpreter&lt;/span&gt; &lt;span class="n"&gt;runner&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;        &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="c1"&gt;// プラグインの終了処理&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;PluginFin&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;INakoInterpreter&lt;/span&gt; &lt;span class="n"&gt;runner&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;        &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+       &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="n"&gt;Object&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="err"&gt;実際の処理&lt;/span&gt;&lt;span class="p"&gt;}(&lt;/span&gt;&lt;span class="n"&gt;INakoFuncCallInfo&lt;/span&gt; &lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+            &lt;span class="p"&gt;...&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;実装時に大事なとこを説明します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;まずプラグイン共通部分とPluginInit、PluginFinはコピペでもかまわないと思います。私もまだ初期処理、終了処理の必要なプラグインは作っていません。&lt;/li&gt;
+&lt;li&gt;なでしこ上での関数呼び出し方法の定義はDefineFunctionで行います。bank.AddFuncメソッドで関数を追加できます。メソッド内の引数は下のように設定します。
+++ 関数名はなでしこで呼び出す名前になります。（例：文字検索）なでしこで使う助詞を使わないとか、他の命令の名称とかぶらないなどの制限があります。
+++ なでしこ形式の引数は「SでAを」のようになでしこで一般的に使う形式で指定します。引数を参照渡しにしたい場合は「{参照渡し}SでAを」のように指定します。助詞を複数指定したい場合は「SでAを|Sが」という形式で指定します。参照渡しを使う場合は実装が少々複雑になります。後日やり方を書こうと思います。
+++ 戻り値の形式はenum NakoVarTypeで指定します。(Void&amp;cedil; Int&amp;cedil; Double&amp;cedil; String&amp;cedil; Array)
+++ 実際の呼び出し先はそのままメソッド名を指定します。(_hogeとか)
+++ 関数の説明と関数のよみかたは分かりやすさの為に必要です。個人用なら適当でも良いと思います。（多分今後エディタとかそういうのにつかわれると思います）&lt;/li&gt;
+&lt;li&gt;実際の処理は必ずINakoFuncCallInfo型のインスタンスを引数に取ります。なでしこで渡された引数はこのインスタンスから取得します。取得方法は以下&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;long&lt;/span&gt; &lt;span class="n"&gt;l&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;StackPopAsInt&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="n"&gt;d&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;StackPopAsDouble&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;StackPopAsString&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;span class="n"&gt;Object&lt;/span&gt; &lt;span class="n"&gt;o&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;StackPop&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;&lt;span class="c1"&gt;//配列の場合はこれを使う&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;~~StackPopメソッドで得られる値はNakoVariable型なので、ちょっと扱いが難しくなります。実際の処理の実装方法はまた今度~~&lt;/p&gt;
+&lt;h2&gt;簡単なプラグイン&lt;/h2&gt;
+&lt;p&gt;例として「なでしこ」という文字があったら、「なでしこ2最高！」と変換するだけの命令として「アピール」という命令を作ってみます。仕様は次のようにしてみます。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;引数は文字列として助詞は「を」を使う&lt;/li&gt;
+&lt;li&gt;引数は１つ&lt;/li&gt;
+&lt;li&gt;プラグイン名はNakoPluginAppealとする&lt;/li&gt;
+&lt;li&gt;実装用のメソッドは_appealとする&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Xamarinでの作成手順は次のようになります（多分VisualStudioでも似たようなもん）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Nako2_Pluginsソリューション(Nako2_Plugins.slnを開く)で新しいプロジェクトとしてNakoPluginAppealという名前のC#のライブラリを作ります。（ソリューションで歯車アイコンクリック（又は右クリック））→追加→新しいプロジェクトを追加→ダイアログでC#をクリック→ライブラリを選択→名前をNakoPluginAppealとする→OK）&lt;/li&gt;
+&lt;li&gt;参照にNakoPluginを追加する（NakoPluginAppealの参照で歯車アイコンクリック（又は右クリック）→参照アセンブリの編集→ダイアログで.NETアセンブリタブを選択→NakoPlugin.dllをチェック、又は閲覧ボタンからNakoPlugin.dllを選ぶ→OK）&lt;/li&gt;
+&lt;li&gt;NakoPluginAppeal.csを編集する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;NakoPluginAppeal&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cs&lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;System&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;System.Text&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;Libnako.JPNCompiler&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;NakoPlugin&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;namespace&lt;/span&gt; &lt;span class="nn"&gt;NakoPluginAppeal&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;NakoPluginAppeal&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;INakoPlugin&lt;/span&gt;    &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;_description&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="p"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;quot&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="err"&gt;サンプルプラグイン&lt;/span&gt;&lt;span class="p"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;quot&lt;/span&gt;&lt;span class="p"&gt;;;&lt;/span&gt;
+        &lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="n"&gt;_version&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="m"&gt;1.0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="c1"&gt;//&amp;lt;del&amp;gt; プラグイン共通の部分 &amp;lt;/del&amp;gt;&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="n"&gt;TargetNakoVersion&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="m"&gt;2.0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="n"&gt;Used&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;Name&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;GetType&lt;/span&gt;&lt;span class="p"&gt;().&lt;/span&gt;&lt;span class="n"&gt;FullName&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="n"&gt;PluginVersion&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;_version&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;Description&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;_description&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="c1"&gt;//&amp;lt;del&amp;gt; 関数の定義 &amp;lt;/del&amp;gt;&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;DefineFunction&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;INakoPluginBank&lt;/span&gt; &lt;span class="n"&gt;bank&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;        &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="n"&gt;bank&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;AddFunc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;アピール&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Aを&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;NakoVarType&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;_appeal&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;なでしこ2をアピールする&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;あぴーる&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="c1"&gt;// プラグインの初期化処理&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;PluginInit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;INakoInterpreter&lt;/span&gt; &lt;span class="n"&gt;runner&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;        &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="c1"&gt;// プラグインの終了処理&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;PluginFin&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;INakoInterpreter&lt;/span&gt; &lt;span class="n"&gt;runner&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;        &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="nf"&gt;_appeal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;INakoFuncCallInfo&lt;/span&gt; &lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+            &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;fr&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;StackPopAsString&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;fr&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;なでしこ&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;なでしこ2最高！&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;ビルドする&lt;/li&gt;
+&lt;li&gt;NakoPluginAppeal/bin/Debug/NakoPluginAppeal.dllをcnako2/bin/Debug/にコピー&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;実行するなでしこ2のコードは次のようになります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;A = 「なでしこ」をアピール
+Aを表示
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;これをcnako2/bin/Debug/test.nakoに保存&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;あとは下のコマンドを実行すれば結果が表示されます&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; cnako2/bin/Debug/
+$ mono cnako2.exe test.nako
+なでしこ最高！
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="nadesiko"></category><category term="nadesiko2"></category><category term="CSharp"></category></entry></feed>
