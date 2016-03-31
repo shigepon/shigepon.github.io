@@ -1,5 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.thoz.org/" rel="alternate"></link><link href="http://blog.thoz.org/feeds/python.atom.xml" rel="self"></link><id>http://blog.thoz.org/</id><updated>2016-03-07T21:41:38+09:00</updated><entry><title>uwsgiの管理にsupervisordを使う</title><link href="http://blog.thoz.org/2016/03/07/use-supervisord-to-control-uwsgi/" rel="alternate"></link><updated>2016-03-07T21:41:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2016-03-07:2016/03/07/use-supervisord-to-control-uwsgi/</id><summary type="html">&lt;p&gt;Ansibleで環境構築する時にuwsgiの再起動をservice使ってやりたかったので、supervisorにuwsgiを登録し、supervisorをserviceに登録するためにsupervisorについて調べてみたメモ&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.thoz.org/" rel="alternate"></link><link href="http://blog.thoz.org/feeds/python.atom.xml" rel="self"></link><id>http://blog.thoz.org/</id><updated>2016-03-31T17:30:00+09:00</updated><entry><title>github pageのブログツールをoctopressからpelicanに移行しました</title><link href="http://blog.thoz.org/2016/03/31/migrate_octopress_github_page_to_pelican/" rel="alternate"></link><updated>2016-03-31T17:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.thoz.org,2016-03-31:2016/03/31/migrate_octopress_github_page_to_pelican/</id><summary type="html">&lt;p&gt;別のブログを&lt;a href="http://docs.getpelican.com/en/3.6.3/"&gt;pelican&lt;/a&gt;で始めようと思っているので、このブログもpelicanで管理することにしたので作業内容をメモしておく&lt;/p&gt;
+&lt;h2&gt;ローカル側にpelicanをインストール&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ pip install pelican Markdown
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;github pagesのリポジトリをclone&lt;/h2&gt;
+&lt;p&gt;今回はgithubのユーザーページのリポジトリ（username.github.io）を/path/to/pelicanにクローンした。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; /path/to/pelican
+$ git clone https://github.com/username/username.github.io
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;cloneすると色々ファイルが入っているので全部削除した&lt;/p&gt;
+&lt;h2&gt;pelicanの初期設定を行う&lt;/h2&gt;
+&lt;p&gt;pelicanの初期設定はpelican-quickstartコマンドで行った&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ pelican-quickstart
+&amp;gt; Where &lt;span class="k"&gt;do&lt;/span&gt; you want to create your new web site? &lt;span class="o"&gt;[&lt;/span&gt;.&lt;span class="o"&gt;]&lt;/span&gt; .
+&amp;gt; What will be the title of this web site? blog title
+&amp;gt; Who will be the author of this web site? shigepon
+&amp;gt; What will be the default language of this web site? &lt;span class="o"&gt;[&lt;/span&gt;en&lt;span class="o"&gt;]&lt;/span&gt; ja
+&amp;gt; Do you want to specify a URL prefix? e.g., http://example.com   &lt;span class="o"&gt;(&lt;/span&gt;Y/n&lt;span class="o"&gt;)&lt;/span&gt; 
+&amp;gt; What is your URL prefix? &lt;span class="o"&gt;(&lt;/span&gt;see above example&lt;span class="p"&gt;;&lt;/span&gt; no trailing slash&lt;span class="o"&gt;)&lt;/span&gt; blog.shigepon.info
+&amp;gt; Do you want to &lt;span class="nb"&gt;enable&lt;/span&gt; article pagination? &lt;span class="o"&gt;(&lt;/span&gt;Y/n&lt;span class="o"&gt;)&lt;/span&gt; 
+&amp;gt; How many articles per page &lt;span class="k"&gt;do&lt;/span&gt; you want? &lt;span class="o"&gt;[&lt;/span&gt;10&lt;span class="o"&gt;]&lt;/span&gt; 
+&amp;gt; What is your &lt;span class="nb"&gt;time&lt;/span&gt; zone? &lt;span class="o"&gt;[&lt;/span&gt;Europe/Paris&lt;span class="o"&gt;]&lt;/span&gt; Asia/Tokyo
+&amp;gt; Do you want to generate a Fabfile/Makefile to automate generation and publishing? &lt;span class="o"&gt;(&lt;/span&gt;Y/n&lt;span class="o"&gt;)&lt;/span&gt; 
+&amp;gt; Do you want an auto-reload &lt;span class="p"&gt;&amp;amp;&lt;/span&gt; simpleHTTP script to assist with theme and site development? &lt;span class="o"&gt;(&lt;/span&gt;Y/n&lt;span class="o"&gt;)&lt;/span&gt; 
+&amp;gt; Do you want to upload your website using FTP? &lt;span class="o"&gt;(&lt;/span&gt;y/N&lt;span class="o"&gt;)&lt;/span&gt; 
+&amp;gt; Do you want to upload your website using SSH? &lt;span class="o"&gt;(&lt;/span&gt;y/N&lt;span class="o"&gt;)&lt;/span&gt; 
+&amp;gt; Do you want to upload your website using Dropbox? &lt;span class="o"&gt;(&lt;/span&gt;y/N&lt;span class="o"&gt;)&lt;/span&gt; 
+&amp;gt; Do you want to upload your website using S3? &lt;span class="o"&gt;(&lt;/span&gt;y/N&lt;span class="o"&gt;)&lt;/span&gt; 
+&amp;gt; Do you want to upload your website using Rackspace Cloud Files? &lt;span class="o"&gt;(&lt;/span&gt;y/N&lt;span class="o"&gt;)&lt;/span&gt; 
+&amp;gt; Do you want to upload your website using GitHub Pages? &lt;span class="o"&gt;(&lt;/span&gt;y/N&lt;span class="o"&gt;)&lt;/span&gt; y
+&amp;gt; Is this your personal page &lt;span class="o"&gt;(&lt;/span&gt;username.github.io&lt;span class="o"&gt;)&lt;/span&gt;? &lt;span class="o"&gt;(&lt;/span&gt;y/N&lt;span class="o"&gt;)&lt;/span&gt; y
+&amp;gt; Done. Your new project is available at ...
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;octopressで今迄作成していたmarkdownファイルを移動&lt;/h2&gt;
+&lt;p&gt;pelicanの初期設定を行ったらcontentフォルダが出来るので、そこにブログ内容を移動した。
+/path/to/octopressにoctopressが入っているとして以下のようにして今迄作成したブログの内容を移動した&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cp /path/to/octopress/source/_posts/*.markdown /path/to/pelican/content
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;markdownファイルを編集&lt;/h2&gt;
+&lt;p&gt;octopressのmarkdownファイルの中でそのままではpelicanで使用出来ない部分があるので編集した。編集内容はこんな感じ。１個１個修正するのは面倒なのでなるべくsedで変更した。&lt;/p&gt;
+&lt;p&gt;元々のファイルはこんな感じ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;---
+title: &amp;quot;タイトル&amp;quot;
+date: 2016-03-08 09:50:36 +0900
+comments: true
+categories: [&amp;quot;hoge&amp;quot;, &amp;quot;fuga&amp;quot;]
+---
+
+## 見出し
+....
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;categoriesの変更&lt;/h3&gt;
+&lt;p&gt;categoriesをtagsに変更して、&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p p-Indicator"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;hoge&amp;quot;&lt;/span&gt;&lt;span class="p p-Indicator"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;fuga&amp;quot;&lt;/span&gt;&lt;span class="p p-Indicator"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;を&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;hoge, fuga
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;になるように変更した&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed -e &lt;span class="s1"&gt;&amp;#39;s/^categories/tags/g&amp;#39;&lt;/span&gt; -i content/*.markdown
+$ sed -e &lt;span class="s1"&gt;&amp;#39;/^tags/ s/\&amp;quot;//g&amp;#39;&lt;/span&gt; -i content/*.markdown
+$ sed -e &lt;span class="s1"&gt;&amp;#39;/^tags/ s/\[//g&amp;#39;&lt;/span&gt; -i content/*.markdown
+$ sed -e &lt;span class="s1"&gt;&amp;#39;/^tags/ s/\]//g&amp;#39;&lt;/span&gt; -i content/*.markdown
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;comments, layoutなど要らない部分の削除&lt;/h3&gt;
+&lt;p&gt;layoutやcommentsは使わないし、ファイル内の「---」の部分も要らないので削除した&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed -e &lt;span class="s1"&gt;&amp;#39;/^layout:/ d&amp;#39;&lt;/span&gt; -i content/*.markdown
+$ sed -e &lt;span class="s1"&gt;&amp;#39;/^comments:/ d&amp;#39;&lt;/span&gt; -i content/*.markdown
+$ sed -e &lt;span class="s1"&gt;&amp;#39;/^---:/ d&amp;#39;&lt;/span&gt; -i content/*.markdown
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;summary, categoryの追加&lt;/h3&gt;
+&lt;p&gt;summaryはoctpressでは&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;!-- more --&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;を使ってるので、それをそのまま使いたい場合は&lt;a href="https://github.com/getpelican/pelican-plugins/tree/master/summary"&gt;summaryプラグイン&lt;/a&gt;を使うと良い・・・らしい。試してないけど。&lt;/p&gt;
+&lt;p&gt;今回はsummaryを空白にしたかったので、「summary:」を追加した。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sed -e &lt;span class="s1"&gt;&amp;#39;/^tags:/ i summary:&amp;#39;&lt;/span&gt; -i content/*.markdown
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;カテゴリは記事によって違うので、さすがに手入力しないといけない（tagsの項目を使いたいが、pelicanは複数カテゴリを扱えないので上手く出来ない）。なので、とりあえず&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sed -e &lt;span class="s1"&gt;&amp;#39;/^tags:/ i category:&amp;#39;&lt;/span&gt; -i content/*.markdown
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じで空欄とした&lt;/p&gt;
+&lt;h2&gt;urlの扱いをoctopressに合わせる&lt;/h2&gt;
+&lt;p&gt;octopressでは/year/month/day/title/
+みたいなurlになる。pelicanでは/title/だけなので、合わせるように設定すると良い&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#pelicanconf.py&lt;/span&gt;
+&lt;span class="c1"&gt;#ファイル名からslugを取得&lt;/span&gt;
+&lt;span class="n"&gt;FILENAME_METADATA&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;(?P&amp;lt;date&amp;gt;\d{4}-\d{2}-\d{2})-(?P&amp;lt;slug&amp;gt;.*)&amp;#39;&lt;/span&gt;
+&lt;span class="c1"&gt;#得られたslugからhtml生成時のurlと保存先を指定&lt;/span&gt;
+&lt;span class="n"&gt;ARTICLE_URL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;{date:%Y}/{date:%m}/{date:&lt;/span&gt;&lt;span class="si"&gt;%d&lt;/span&gt;&lt;span class="s1"&gt;}/{slug}/&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;ARTICLE_SAVE_AS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;{date:%Y}/{date:%m}/{date:&lt;/span&gt;&lt;span class="si"&gt;%d&lt;/span&gt;&lt;span class="s1"&gt;}/{slug}/index.html&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;github pageへのアップ&lt;/h2&gt;
+&lt;p&gt;記事が出来たので、とりあえずgithub pageへアップ出来れば完成。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ make github
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;あとはユーザー名とパスワード聞かれるので、入力すればアップ出来た。&lt;/p&gt;
+&lt;p&gt;参考：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://jhshi.me/2015/10/11/migrating-from-octopress-to-pelican/"&gt;Migrating from Octopress to Pelican - Pearls in Life&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://daikishimada.github.io/pelican-start.html"&gt;Pelican + Github Pages でブログを作った話 | Futon note&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://a-slide.github.io/blog/github-pelican"&gt;Create a github hosted Pelican blog with a Bootstrap3 theme - Drowned In Genomics&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ちなみにこれから作成していく記事は別に2016_03_31_hogefuga.markdownみたいな形式にしないでも大丈夫。hogefuga.mdとかでも問題無い。&lt;/p&gt;</summary><category term="python"></category><category term="pelican"></category><category term="octopress"></category></entry><entry><title>uwsgiの管理にsupervisordを使う</title><link href="http://blog.thoz.org/2016/03/07/use-supervisord-to-control-uwsgi/" rel="alternate"></link><updated>2016-03-07T21:41:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2016-03-07:2016/03/07/use-supervisord-to-control-uwsgi/</id><summary type="html">&lt;p&gt;Ansibleで環境構築する時にuwsgiの再起動をservice使ってやりたかったので、supervisorにuwsgiを登録し、supervisorをserviceに登録するためにsupervisorについて調べてみたメモ&lt;/p&gt;
 &lt;p&gt;色々はまったりして参考にしたのは以下のサイト&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://d.zinrai.info/blog/html/2013/10/17/freebsd_supervisor_uwsgi.html"&gt;Supervisorを使ってuWSGIを管理 — command not found:&lt;/a&gt;&lt;/li&gt;
