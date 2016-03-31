@@ -1,0 +1,1757 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.thoz.org/" rel="alternate"></link><link href="http://blog.thoz.org/feeds/python.atom.xml" rel="self"></link><id>http://blog.thoz.org/</id><updated>2016-03-07T21:41:38+09:00</updated><entry><title>uwsgiの管理にsupervisordを使う</title><link href="http://blog.thoz.org/2016/03/07/use-supervisord-to-control-uwsgi/" rel="alternate"></link><updated>2016-03-07T21:41:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2016-03-07:2016/03/07/use-supervisord-to-control-uwsgi/</id><summary type="html">&lt;p&gt;Ansibleで環境構築する時にuwsgiの再起動をservice使ってやりたかったので、supervisorにuwsgiを登録し、supervisorをserviceに登録するためにsupervisorについて調べてみたメモ&lt;/p&gt;
+&lt;p&gt;色々はまったりして参考にしたのは以下のサイト&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://d.zinrai.info/blog/html/2013/10/17/freebsd_supervisor_uwsgi.html"&gt;Supervisorを使ってuWSGIを管理 — command not found:&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://stackoverflow.com/questions/10716159/nginx-and-supervisor-setup-in-ubuntu"&gt;python - nginx and supervisor setup in Ubuntu - Stack Overflow&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://serverfault.com/questions/163392/supervisor-always-quit-process-with-exit-status-0-not-expected"&gt;supervisord - Supervisor always quit process with 'exit status 0; not expected' - Server Fault&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://stackoverflow.com/questions/34631806/fail-during-installation-of-pillow-python-module-in-linux"&gt;Fail during installation of Pillow (Python module) in Linux - Stack Overflow&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;ざっくり手順&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;uwsgiのiniファイルを用意&lt;/li&gt;
+&lt;li&gt;virtualenvでsupervisordをインストール&lt;/li&gt;
+&lt;li&gt;supervisord.confを書く&lt;/li&gt;
+&lt;li&gt;aptでsupervisorをインストールして削除&lt;/li&gt;
+&lt;li&gt;/etc/init.d/supervisorを編集&lt;/li&gt;
+&lt;li&gt;service起動&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;uwsgiのiniファイルを用意&lt;/h3&gt;
+&lt;p&gt;省略&lt;/p&gt;
+&lt;h3&gt;virtualenvでsupervisordをインストール&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ pip install supervisord
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;supervisord.conf、xxx.iniを書く&lt;/h3&gt;
+&lt;p&gt;全体の設定はsupervisord.confで、個別のuwsgiに関する設定はxxx.iniで行うようにした&lt;/p&gt;
+&lt;p&gt;supervisord.confは適当に次のように編集した&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;sudo使うならchownをrootに、でなければ現在のユーザーに&lt;/li&gt;
+&lt;li&gt;pidfileを適当にtmpフォルダに設定&lt;/li&gt;
+&lt;li&gt;includeでincludeしたいファイルを指定する（例えば下のような感じで書く）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[include]&lt;/span&gt;
+&lt;span class="na"&gt;files&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/path/to/*.ini&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;xxx.iniにはuwsgiコマンドを指定する。stopasgroupオプションは有効にする&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[hoge:fuga]&lt;/span&gt;
+&lt;span class="na"&gt;command&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/path/to/virtualenv/bin/uwsgi /path/to/xxx.ini&lt;/span&gt;
+&lt;span class="na"&gt;stopasgroup&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;true&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;aptでsupervisorをインストールして削除&lt;/h3&gt;
+&lt;p&gt;virtualenvでsupervisorをインストールしたいけど、service登録用のスクリプトは欲しかったのでこの作業をした&lt;/p&gt;
+&lt;p&gt;要はapt-getしてるだけなので省略&lt;/p&gt;
+&lt;h3&gt;/etc/init.d/supervisorを編集&lt;/h3&gt;
+&lt;p&gt;編集カ所は&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;DAEMONに書くsupervisordのパスをvirtuaalenvでインストールしたところにする（/path/to/virtualenv/bin/supervisord）&lt;/li&gt;
+&lt;li&gt;LOGDIRを適当にログを書き出したい場所に指定&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;service起動&lt;/h3&gt;
+&lt;p&gt;pip installのとこでrootでインストールした場合は&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo service supervisor start
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;現在のユーザーでインストールした場合はsudo要らないかも&lt;/p&gt;
+&lt;h2&gt;注意&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;uwsgiはコマンドでデーモン化しないこと。デーモン化しちゃうとコントロール出来ない&lt;/li&gt;
+&lt;li&gt;pillowをインストールできないと怒られることがある。必要なライブラリはUbuntu14なら、zlib1g-dev, libtiff5-dev, libjpeg8-dev, libfreetype6-dev, liblcms2-dev, libwebp-dev, tcl8.6-dev, tk8.6-dev, python-tk&lt;/li&gt;
+&lt;li&gt;パーミッションに気をつける。ソケットとかログとか&lt;/li&gt;
+&lt;/ul&gt;</summary><category term="python"></category><category term="uwsgi"></category></entry><entry><title>django 1.8から1.9へアップした時に気にする点</title><link href="http://blog.thoz.org/2016/02/09/migrate-from-django-1-dot-8-to-1-dot-9/" rel="alternate"></link><updated>2016-02-09T15:59:36+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2016-02-09:2016/02/09/migrate-from-django-1-dot-8-to-1-dot-9/</id><summary type="html">&lt;h2&gt;django.utils.log.NullHandlerが使えない&lt;/h2&gt;
+&lt;p&gt;logging.NullHandlerに変わってる。というかdjango.utils.log.NullHandlerはエリアスだったのね。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://www.monotalk.xyz/blog/no-module-named-djangoutilslognullhandler-djangoutilslog-is-not-a-package/"&gt;No module named 'django.utils.log.NullHandler'; 'django.utils.log' is not a package | Monotalk&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;No module named context_processors&lt;/h2&gt;
+&lt;p&gt;django-allauthを入れてると出てくるエラーメッセージ。TEMPLATESのcontext_processorsに'django.template.context_processors.request'を加えれば良いらしい。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/32828536/django-no-module-named-context-processors-error-after-reboot"&gt;python - Django: "No module named context_processors" error after reboot - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Enable 'django.contrib.auth.context_processors.auth' in your TEMPLATES setting in order to use the admin application.&lt;/h2&gt;
+&lt;p&gt;TEMPLATE_CONTEXT_PROCESSORSがTMPLATESに変わったらしい。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/30005127/django-admin-breaks-after-upgrading-to-1-8-1"&gt;Django admin breaks after upgrading to 1.8.1 - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;とりあえずここまで&lt;/p&gt;</summary><category term="python"></category><category term="django"></category></entry><entry><title>fluent-plugin-groongaをインストールして動かすまでをAnsibleでやってみた</title><link href="http://blog.thoz.org/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/" rel="alternate"></link><updated>2016-01-23T14:32:43+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2016-01-23:2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/</id><summary type="html">&lt;p&gt;ログ集計に何使うか迷ったんだけど、fluentdに&lt;a href="https://github.com/groonga/fluent-plugin-groonga"&gt;fluent-plugin-groonga&lt;/a&gt;ってのがあったのでfluentdを使ってgroongaにログを集計していくとこまでをやった。rbenvから色々やろうとしたら面倒だった。&lt;/p&gt;
+&lt;h2&gt;rbenvを使う&lt;/h2&gt;
+&lt;p&gt;バージョン管理が面倒なので、やっぱrbenv使わないといかんっしょと思ってやった。&lt;a href="http://qiita.com/katsuhiko/items/56935225754a90d58314"&gt;Ansible と Vagrant を使って Rails 開発環境（Ubuntu + rbenv + MySQL5.6 + node.js）を構築する - Qiita&lt;/a&gt;を参考にして変数を適当にしたりsudoのとこを変更したりして出来た&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="x"&gt;---&lt;/span&gt;
+&lt;span class="x"&gt;- hosts: all&lt;/span&gt;
+&lt;span class="x"&gt;  user: hoge&lt;/span&gt;
+&lt;span class="x"&gt;  tasks:&lt;/span&gt;
+&lt;span class="x"&gt;    - name: Install dependencies for rbenv&lt;/span&gt;
+&lt;span class="x"&gt;      sudo: yes&lt;/span&gt;
+&lt;span class="x"&gt;      apt: name=&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;item&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt; state=latest&lt;/span&gt;
+&lt;span class="x"&gt;      with_items:&lt;/span&gt;
+&lt;span class="x"&gt;        - git&lt;/span&gt;
+&lt;span class="x"&gt;    - name: Install rbenv&lt;/span&gt;
+&lt;span class="x"&gt;      git: repo=https://github.com/sstephenson/rbenv.git dest=~/.rbenv&lt;/span&gt;
+&lt;span class="x"&gt;    - name: Add ~.rbenv/bin to PATH&lt;/span&gt;
+&lt;span class="x"&gt;      lineinfile: &amp;gt;&lt;/span&gt;
+&lt;span class="x"&gt;        dest=&amp;quot;~/.bashrc&amp;quot;&lt;/span&gt;
+&lt;span class="x"&gt;        line=&amp;quot;export PATH=$HOME/.rbenv/bin:$PATH&amp;quot;&lt;/span&gt;
+&lt;span class="x"&gt;    - name: Eval rbenv init in ~/.bashrc&lt;/span&gt;
+&lt;span class="x"&gt;      lineinfile: &amp;gt;&lt;/span&gt;
+&lt;span class="x"&gt;        dest=&amp;quot;~/.bashrc&amp;quot;&lt;/span&gt;
+&lt;span class="x"&gt;        line=&amp;#39;eval &amp;quot;$(rbenv init -)&amp;quot;&amp;#39;&lt;/span&gt;
+&lt;span class="x"&gt;    - name: Install dependencies for ruby-build (see. https://github.com/sstephenson/ruby-build/wiki)&lt;/span&gt;
+&lt;span class="x"&gt;      apt: name=&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;item&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt; state=latest&lt;/span&gt;
+&lt;span class="x"&gt;      with_items:&lt;/span&gt;
+&lt;span class="x"&gt;        - autoconf&lt;/span&gt;
+&lt;span class="x"&gt;        - bison&lt;/span&gt;
+&lt;span class="x"&gt;        - build-essential&lt;/span&gt;
+&lt;span class="x"&gt;        - libssl-dev&lt;/span&gt;
+&lt;span class="x"&gt;        - libyaml-dev&lt;/span&gt;
+&lt;span class="x"&gt;        - libreadline6-dev&lt;/span&gt;
+&lt;span class="x"&gt;        - zlib1g-dev&lt;/span&gt;
+&lt;span class="x"&gt;        - libncurses5-dev&lt;/span&gt;
+&lt;span class="x"&gt;        - libffi-dev&lt;/span&gt;
+&lt;span class="x"&gt;        - libgdbm3&lt;/span&gt;
+&lt;span class="x"&gt;        - libgdbm-dev&lt;/span&gt;
+&lt;span class="x"&gt;    - name: Install ruby-build as rbenv plugin&lt;/span&gt;
+&lt;span class="x"&gt;      git: repo=https://github.com/sstephenson/ruby-build.git dest=~/.rbenv/plugins/ruby-build&lt;/span&gt;
+
+&lt;span class="x"&gt;    - name: Check if version is installed ruby&lt;/span&gt;
+&lt;span class="x"&gt;      shell: &amp;quot;~/.rbenv/bin/rbenv versions | grep &lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;rbenv_ruby_version&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt;&amp;quot;&lt;/span&gt;
+&lt;span class="x"&gt;      register: rbenv_check_install&lt;/span&gt;
+&lt;span class="x"&gt;      changed_when: False&lt;/span&gt;
+&lt;span class="x"&gt;      ignore_errors: yes&lt;/span&gt;
+
+&lt;span class="x"&gt;    - name: Install ruby&lt;/span&gt;
+&lt;span class="x"&gt;      command: &amp;quot;~/.rbenv/bin/rbenv install &lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;rbenv_ruby_version&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt;&amp;quot;&lt;/span&gt;
+&lt;span class="x"&gt;      when: rbenv_check_install|failed&lt;/span&gt;
+
+&lt;span class="x"&gt;    - name: Check if version is the default ruby version&lt;/span&gt;
+&lt;span class="x"&gt;      shell: &amp;quot;~/.rbenv/bin/rbenv version | grep &lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;rbenv_ruby_version&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt;&amp;quot;&lt;/span&gt;
+&lt;span class="x"&gt;      register: rbenv_check_default&lt;/span&gt;
+&lt;span class="x"&gt;      changed_when: False&lt;/span&gt;
+&lt;span class="x"&gt;      ignore_errors: yes&lt;/span&gt;
+
+&lt;span class="x"&gt;    - name: Set default ruby version&lt;/span&gt;
+&lt;span class="x"&gt;      command: &amp;quot;~/.rbenv/bin/rbenv global &lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;rbenv_ruby_version&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt;&amp;quot;&lt;/span&gt;
+&lt;span class="x"&gt;      when: rbenv_check_default|failed&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;rbenv_ruby_versionはインベントリファイルで設定しておく。&lt;/p&gt;
+&lt;p&gt;shellのところrbenvだけにしたら何回やってもエラーで止まってしまった。なので結局rbenvはフルパス指定にした。bashrcに書いた分その後色々やった時に書いたので.profileでも良いかも知れない。&lt;/p&gt;
+&lt;h2&gt;fluentdのインストール&lt;/h2&gt;
+&lt;p&gt;こっから面倒だった。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="x"&gt;    - name: Gem install fluentd&lt;/span&gt;
+&lt;span class="x"&gt;      gem: name=&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;item&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
+&lt;span class="x"&gt;       executable=~/.rbenv/versions/&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;rbenv_ruby_version&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt;/bin/gem user_install=no&lt;/span&gt;
+&lt;span class="x"&gt;      with_items:&lt;/span&gt;
+&lt;span class="x"&gt;        - fluentd&lt;/span&gt;
+&lt;span class="x"&gt;        - fluent-plugin-groonga&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;たったこれだけ書くのに2時間くらい掛かったorz。fluentdをインストールする前にtd-agentから何とかならないか試したり、gemがなかなかrbenvでインストールしたバージョンになってくれなかったり、fluentdが変な場所にインストールされたり・・・でも結論としてはこれでおk。フルパス指定とuserinstall=noがポイントかな。&lt;/p&gt;
+&lt;h2&gt;fluentdの設定&lt;/h2&gt;
+&lt;p&gt;設定やったこと無かったので、ここが手探りになるのは仕方ない。includeのパスを間違えてて設定を読み込めないとか色々しょーもないハマりをした。ログが正しく送られてるかどうかはsourceのタグをdebug.accessに変えて、デバッグ表示させてtailがちゃんとされているか確認→実際にlog.accessでやってみるという手順で行った&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="x"&gt;- name: setup fluentd dir&lt;/span&gt;
+&lt;span class="x"&gt;      command: ~/.rbenv/versions/&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;rbenv_ruby_version&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt;/bin/fluentd --setup /path/to/fluent/config/file&lt;/span&gt;
+&lt;span class="x"&gt;    - name: set fluent.conf&lt;/span&gt;
+&lt;span class="x"&gt;      lineinfile: dest=/path/to/fluent/config/file/fluent.conf insertafter=EOF line=&amp;quot;@include conf.d/*&amp;quot; state=present&lt;/span&gt;
+&lt;span class="x"&gt;    - name: create conf.d folder&lt;/span&gt;
+&lt;span class="x"&gt;      file: path=/path/to/fluent/config/file/conf.d state=directory&lt;/span&gt;
+&lt;span class="x"&gt;    - name: copy groonga.fluentd.conf&lt;/span&gt;
+&lt;span class="x"&gt;      copy: src=groonga.fluentd.conf dest=~/path/to/fluent/config/file/conf.d&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;source&amp;gt;&lt;/span&gt;
+    type tail
+    format ltsv
+    tag log.access
+    path /path/to/log/file
+    pos_file /path/to/pos/file
+&lt;span class="nt"&gt;&amp;lt;/source&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;match&lt;/span&gt; &lt;span class="err"&gt;log.*&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    type groonga
+    store_table logs
+    host xxx.xxx.xxx.xx
+    port xxxxx
+&lt;span class="nt"&gt;&amp;lt;/match&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;としてIPがxxx.xxx.xxx.xxでポートがxxxxxのところにgroongaを用意すると勝手にフィールドとか色々作ってログを保存してくれるようになる。ちなみにfluentdの開始コマンドは&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ fluentd -c /path/to/fluent/config/file -vv &lt;span class="p"&gt;&amp;amp;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とした。&lt;/p&gt;
+&lt;p&gt;とりあえずここまでで十分ハマった。&lt;/p&gt;
+&lt;h2&gt;td-agentは使わない&lt;/h2&gt;
+&lt;p&gt;使用OSがubuntuなので、td-agentを使ってみたんだが、rbenv上のgemでインストールしたfluent-plugin-groongaを読み込む方法が最後まで分かんなかったので使わないことにした。td-agentだとserveceコマンドでリスタートとかやってくれるので楽なんだけどなー。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://mhag.hatenablog.com/entry/2014/07/04/151415"&gt;Ubuntu 14.04 LTS に Fluentd をインストールする - ´・ω・)＜ときどき書くよ&lt;/a&gt;, &lt;a href="http://qiita.com/h5y1m141@github/items/74029cab9706971c8dbe"&gt;Rubyが参照してるgemのパスやインストール済gemを確認する方法 - Qiita&lt;/a&gt;, &lt;a href="http://qiita.com/groonga/items/5c674be9daf25054c14c"&gt;Fluentdで集めたデータをGroongaに格納する方法 - Qiita&lt;/a&gt;, &lt;a href="http://chocoby.jp/blog/2013/03/05/fluentd-ltsv/"&gt;fluentd で LTSV がサポートされたのでメモ - 暇人じゃない&lt;/a&gt;&lt;/p&gt;</summary><category term="python"></category><category term="groonga"></category><category term="ansible"></category><category term="ruby"></category></entry><entry><title>djangoでcache使ってる間でも呼び出されたviewとかパラメーターをログに書き出したい</title><link href="http://blog.thoz.org/2016/01/19/log-view-parameter-before-caching-for-django/" rel="alternate"></link><updated>2016-01-19T18:50:33+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2016-01-19:2016/01/19/log-view-parameter-before-caching-for-django/</id><summary type="html">&lt;p&gt;djangoのログ機能を使って、呼び出されたview名とかパラメーターとかを書き出してたんだけど、viewでキャッシュを使うとログを書いてくれなくなるので、それをなんとかしたいという話。&lt;/p&gt;
+&lt;p&gt;コードにするとこんな感じ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#views.py&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.views.decorators.cache&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;cache_page&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;logging&lt;/span&gt;
+&lt;span class="n"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getLogger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;hoge&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="nd"&gt;@cache_page&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;60&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;60&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;24&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;30&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;param1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;param2&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;logger&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;u&amp;quot;param1:{0} param2:{1}&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;param1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;param2&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;こうするとキャッシュが効いてしまって、1回アクセスした時以外ログが出なくなってしまう。アクセスログ的
+な使い方をしたい時に困ってしまう。アクセスログはnginxとかそこらへんのログに任せてた方が良いような気もするが、
+django内で何とかしたかったのでrequest_startedシグナルを使って下のようにした&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#views.py&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; 
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;logging&lt;/span&gt;
+&lt;span class="n"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getLogger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;hoge&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="nd"&gt;@cache_page&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;60&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;60&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;24&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;30&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;param1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;param2&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;logger&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;u&amp;quot;param1:{0} param2:{1}&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;param1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;param2&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="c1"&gt;#ここから追記&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.core.signals&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;request_started&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;copy&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.core.handlers.wsgi&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;WSGIRequest&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.core.urlresolvers&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;resolve&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;log_before_view&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;handler&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sender&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+        &lt;span class="n"&gt;environ&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;copy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;copy&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;environ&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+        &lt;span class="n"&gt;request&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;WSGIRequest&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;environ&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;match&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;resolve&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path_info&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="n"&gt;logger&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;u&amp;quot;param1:{0} param2:{1}&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;param1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;param2&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="k"&gt;except&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;pass&lt;/span&gt;
+&lt;span class="n"&gt;request_started&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;connect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;log_before_view&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これでキャッシュが効いてる状態でもログを取ることが出来る&lt;/p&gt;</summary><category term="django"></category><category term="python"></category></entry><entry><title>use groonga for django cache</title><link href="http://blog.thoz.org/2016/01/15/use-groonga-for-django-cache/" rel="alternate"></link><updated>2016-01-15T01:43:58+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2016-01-15:2016/01/15/use-groonga-for-django-cache/</id><summary type="html">&lt;p&gt;djangoのキャッシュバックエンドとして、Redisを使ってみたけど、慣れてないし、しばらくしたらメモリを圧迫したせいかdjangoがタイムアウトを連発しだしたので、こりゃだめだと思い、&lt;a href="http://groonga.org/ja/"&gt;groonga&lt;/a&gt;を試してみた流れを書いておく。groongaは全文検索エンジンだけど、kvsみたいな使い方も出来る。詳しくはgroongaのページを読めば分かる、はず。&lt;/p&gt;
+&lt;h2&gt;groonga側の設定&lt;/h2&gt;
+&lt;p&gt;どうも&lt;a href="http://groonga.org/ja/docs/server/memcached.html"&gt;Memcachedバイナリプロトコルが使える&lt;/a&gt;らしい。マニュアルのページからおもむろに&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ groonga -d --protocol memcached hoge
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とやるとhogeというファイルが出来た（hogeがデータベース名かつファイル名）。んで、&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ groonga -c
+&amp;gt; table_list
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とするとテーブルが無い。出来てない。これじゃアクセス出来ないんじゃね？と思い（間違ってたんだけど）ググると固定のテーブル名、カラム名になってうんたらかんたらと書いていた。&lt;/p&gt;
+&lt;p&gt;そこで「決まった名前でテーブルを手動で作らないといけない」と思い込み、指定するべきテーブル名をググってBingして探して1時間以上、ソースからやっとテーブル名がMemcacheで・・・と分かった時点で&lt;strong&gt;テーブル、カラムはgroonga側で自動で作成する&lt;/strong&gt;ことに気づいた。どうもバイナリプロトコルでアクセスがあった瞬間にテーブル、カラムを作るみたい。なので、上のコマンドだけで良かったみたい。えーそうなのー＞＜。こんな簡単なのになんでハマったのか・・・＞＜&lt;/p&gt;
+&lt;p&gt;ちなみにこのコマンドの場合、ポートは10041となる。&lt;/p&gt;
+&lt;h2&gt;django側の設定&lt;/h2&gt;
+&lt;p&gt;groonga側の設定でハマった理由はdjangoのキャッシュフレームワークでdjango.core.cache.backends.memcached.MemcachedCacheを使うと全然キャッシュしてくれなかったことにある。&lt;/p&gt;
+&lt;p&gt;このライブラリが&lt;strong&gt;バイナリプロトコルを使っていない&lt;/strong&gt;というのに全く気付かず、絶対groonga側でテーブル作ってないからだと勘違いして1時間以上無駄にしてしまった。&lt;/p&gt;
+&lt;p&gt;で、結論としては&lt;a href="https://github.com/jaysonsantos/django-bmemcached"&gt;Django-BMemcached&lt;/a&gt;を使えば問題なくキャッシュしてくれる。他にもバイナリプロトコルを使うライブラリに&lt;a href="https://github.com/django-pylibmc/django-pylibmc"&gt;django-pylibmc&lt;/a&gt;があるけど、これは何故か接続の段階で止まってしまった。&lt;/p&gt;
+&lt;p&gt;手順としてはこんな感じ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude install libmemcached-dev
+$ pip install django-bmemcached
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;aptitudeの部分は要らないかも（django-pylibmcを入れる時に怒られて入れたので、もしかして必要無いかもしれない）&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;CACHES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:{&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;BACKEND&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;django_bmemcached.memcached.BMemcached&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;LOCATION&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;127.0.0.1:10041&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これはローカルで上のような形でgroongaのサーバを作った場合の設定。
+これで普通のキャッシュを扱うプログラム書けばちゃんとデータをgroongaに入れてくれた。&lt;/p&gt;
+&lt;p&gt;めでたしめでたし。&lt;/p&gt;</summary><category term="groonga"></category><category term="django"></category><category term="python"></category></entry><entry><title>virtualenv上のpythonでmecabを使う (ubuntu1 12.04)</title><link href="http://blog.thoz.org/2015/11/02/use-mecab-in-python-virtualenv-ubuntu1-12-dot-04/" rel="alternate"></link><updated>2015-11-02T17:28:17+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2015-11-02:2015/11/02/use-mecab-in-python-virtualenv-ubuntu1-12-dot-04/</id><summary type="html">&lt;p&gt;ubuntu 12.04でapt使ってmecabをインストールしている状態、virtualenvのpythonに切り替えているところからスタート&lt;/p&gt;
+&lt;h2&gt;先に結論&lt;/h2&gt;
+&lt;p&gt;mecabをソースからインストールして最新版にして、natto-pyをpipでインストールすれば出来た。&lt;/p&gt;
+&lt;h2&gt;1. mecab-pythonをvirtualenv上で使用してみる&lt;/h2&gt;
+&lt;p&gt;ファイルにmecab-pythonを置いてる場所を指定して、pip使えば良い&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#requirements.txt&lt;/span&gt;
+https://mecab.googlecode.com/files/mecab-python-0.996.tar.gz
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ pip install -r requirements.txt
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これでvirtualenv上にmecab-pythonをインストール出来た。
+参考：&lt;a href="http://qiita.com/hagino3000/items/4cb73fb53537c0714044"&gt;travisでpython-mecabを動かしたい時の設定 - Qiita&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;でもこれでおもむろに&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;MeCab&lt;/span&gt;
+&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;MeCab&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Tagger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;-Ochasen&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;今日は良い天気&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;エラーが出たorz&lt;/p&gt;
+&lt;h2&gt;2. natto-pyを使ってみる&lt;/h2&gt;
+&lt;p&gt;pip search mecabで調べて、その後ググると、natto-pyってのがmecab使えるライブラリであるっぽいのでインストールしてみた&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="https://github.com/buruzaemon/natto-py"&gt;buruzaemon/natto-py&lt;/a&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ pip install natto-py
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これだけでインストール出来た。使ってみたらインストールしてあるmecabのバージョンが古過ぎて使えないと怒られたorz。&lt;/p&gt;
+&lt;h2&gt;3. mecabを最新バージョンにする&lt;/h2&gt;
+&lt;p&gt;仕方ないので&lt;/p&gt;
+&lt;h3&gt;aptのmecabをアンインストール&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude remove mecab
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;mecabをソースからインストール&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ wget https://drive.google.com/uc?export&lt;span class="o"&gt;=&lt;/span&gt;download&lt;span class="p"&gt;&amp;amp;&lt;/span&gt;&lt;span class="nv"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;0B4y35FiV1wh7cENtOXlicTFaRUE
+$ tar zxvf mecab-0.996.tar.gz
+$ &lt;span class="nb"&gt;cd&lt;/span&gt; mecab-0.996
+$ ./configure
+$ make
+$ make check
+$ sudo make install
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;mecab辞書のインストール&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ wget https://drive.google.com/uc?export&lt;span class="o"&gt;=&lt;/span&gt;download&lt;span class="p"&gt;&amp;amp;&lt;/span&gt;&lt;span class="nv"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;0B4y35FiV1wh7MWVlSDBCSXZMTXM
+$ tar zvxf mecab-ipadic-2.7.0-20070801.tar.gz
+$ &lt;span class="nb"&gt;cd&lt;/span&gt; mecab-ipadic-2.7.0-20070801
+$ ./configure --with-charset&lt;span class="o"&gt;=&lt;/span&gt;utf8
+$ make
+$ sudo make install
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;urlはそれぞれ&lt;a href="http://taku910.github.io/mecab/#download"&gt;mecabのページ&lt;/a&gt;からリンクされているものを用いた。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://tatsuyaoiw.hatenablog.com/entry/20120414/1334397985"&gt;MeCabのインストール方法 - tatsuyaoiw.hatenablog.com&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;natto-pyを改めて使う&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# coding: utf-8↲&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;natto&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;MeCab&lt;/span&gt;
+&lt;span class="n"&gt;nm&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;MeCab&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;nm&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;parse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;ピンチの時には必ずヒーローが現れる。&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="c1"&gt;# MeCab result as a single string&lt;/span&gt;
+&lt;span class="err"&gt;ピンチ&lt;/span&gt;    &lt;span class="err"&gt;名詞&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;一般&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;ピンチ&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;ピンチ&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;ピンチ&lt;/span&gt;
+&lt;span class="err"&gt;の&lt;/span&gt;      &lt;span class="err"&gt;助詞&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;連体化&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;の&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;ノ&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;ノ&lt;/span&gt;
+&lt;span class="err"&gt;時&lt;/span&gt;      &lt;span class="err"&gt;名詞&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;非自立&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;副詞可能&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;時&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;トキ&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;トキ&lt;/span&gt;
+&lt;span class="err"&gt;に&lt;/span&gt;      &lt;span class="err"&gt;助詞&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;格助詞&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;一般&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;に&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;ニ&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;ニ&lt;/span&gt;
+&lt;span class="err"&gt;は&lt;/span&gt;      &lt;span class="err"&gt;助詞&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;係助詞&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;は&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;ハ&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;ワ&lt;/span&gt;
+&lt;span class="err"&gt;必ず&lt;/span&gt;    &lt;span class="err"&gt;副詞&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;助詞類接続&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;必ず&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;カナラズ&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;カナラズ&lt;/span&gt;
+&lt;span class="err"&gt;ヒーロー&lt;/span&gt;  &lt;span class="err"&gt;名詞&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;一般&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;ヒーロー&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;ヒーロー&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;ヒーロー&lt;/span&gt;
+&lt;span class="err"&gt;が&lt;/span&gt;      &lt;span class="err"&gt;助詞&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;格助詞&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;一般&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;が&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;ガ&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;ガ&lt;/span&gt;
+&lt;span class="err"&gt;現れる&lt;/span&gt;  &lt;span class="err"&gt;動詞&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;自立&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;一段&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;基本形&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;現れる&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;アラワレル&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;アラワレル&lt;/span&gt;
+&lt;span class="err"&gt;。&lt;/span&gt;      &lt;span class="err"&gt;記号&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;句点&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;。&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;。&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="err"&gt;。&lt;/span&gt;
+&lt;span class="n"&gt;EOS&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;うまくいった。&lt;/p&gt;</summary><category term="python"></category><category term="linux"></category></entry><entry><title>Django 1.7から1.8にアップデートしてみた</title><link href="http://blog.thoz.org/2015/08/25/migrate-from-django-1-dot-7-to-1-dot-8/" rel="alternate"></link><updated>2015-08-25T15:39:02+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2015-08-25:2015/08/25/migrate-from-django-1-dot-7-to-1-dot-8/</id><summary type="html">&lt;p&gt;&lt;a href="http://blog.shigepon.info/blog/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/"&gt;1.6の時&lt;/a&gt;と同様にpipでアップデートした。&lt;/p&gt;
+&lt;h2&gt;注意点&lt;/h2&gt;
+&lt;p&gt;個人的に作っているアプリでアップデートした際にコード変更が必要だった点は以下の通り。他にも色々使えなくなった命令とかあるみたいだけど引っ掛からなかったので省略。詳しくは&lt;a href="https://docs.djangoproject.com/en/1.8/releases/1.8/#features-removed-in-1-8"&gt;Django 1.8 release notes | Django documentation | Django&lt;/a&gt;で見ることが出来る。&lt;/p&gt;
+&lt;h3&gt;urls.pyで指定するnamespace&lt;/h3&gt;
+&lt;p&gt;urls.pyでapp_nameを指定した場合に必ずnamespaceを指定する必要があるようになった。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# urls.py&lt;/span&gt;
+&lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;r&amp;#39;^&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hoge.urls&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;app_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;&lt;span class="c1"&gt;#これはダメ&lt;/span&gt;
+&lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;r&amp;#39;^&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hoge.urls&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;app_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;namespace&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;&lt;span class="c1"&gt;#これはOK&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;ダメなコード実装してた場合は、reverseでurlを作ってる箇所にも修正が必要になる。&lt;/p&gt;
+&lt;h3&gt;transactionについて&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;transaction&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;commit_unless_managed&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="err"&gt;みたいなメソッドが無くなってた。&lt;/span&gt;
+
+&lt;span class="c1"&gt;## migrate関連でのハマりポイント（2015-10-20追記）&lt;/span&gt;
+
+&lt;span class="mf"&gt;1.7&lt;/span&gt;&lt;span class="err"&gt;から&lt;/span&gt;&lt;span class="mf"&gt;1.8&lt;/span&gt;&lt;span class="err"&gt;にバージョンアップすると、マイグレーションでエラーが出る。普通に&lt;/span&gt;
+
+&lt;span class="sb"&gt;``&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt;&lt;span class="n"&gt;sh&lt;/span&gt;
+&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;python&lt;/span&gt; &lt;span class="n"&gt;manage&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt; &lt;span class="n"&gt;makemigrations&lt;/span&gt;
+&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;python&lt;/span&gt; &lt;span class="n"&gt;manage&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt; &lt;span class="n"&gt;migrate&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とするとmigrateコマンドで&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Error creating new content types. Please make sure contenttypes
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;というメッセージが出てコマンドが途中で終わってしまう。調べて結果データベース上で&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ALTER TABLE django_content_type DROP COLUMN name;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;を実行することで対処できた。要はカラムが一個要らなくなったみたい。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/29917442/error-creating-new-content-types-please-make-sure-contenttypes-is-migrated-befo"&gt;django - Error creating new content types. Please make sure contenttypes is migrated before trying to migrate apps individually - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;adminでユーザー追加するとnot null制限に引っ掛かるエラー（2015-10-26追記）&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;admin画面でユーザーを追加すると「last_loginがnot null制限あるのにnullを入れようとした」と怒られた。
+
+対策をググると普通にmigrateコマンドすればおkと書いてあるのに出来なかったのでsqlで対応してみた
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;alter table auth_user alter column last_login drop not null;
+```&lt;/p&gt;
+&lt;p&gt;これでユーザー追加出来るようになった&lt;/p&gt;
+&lt;h2&gt;嬉しい点&lt;/h2&gt;
+&lt;p&gt;色々あるみたいだけど、PostgreSQLを使っているので、特にPostgreSQL使ってる場合に、独自のフィールドを使えるようになった点が嬉しい。ArrayFieldとか、わざわざリレーション作りたくない時とか便利そう。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://docs.djangoproject.com/en/1.8/ref/contrib/postgres/fields/"&gt;Djangoドキュメントによる説明&lt;/a&gt;&lt;/p&gt;</summary><category term="django"></category><category term="python"></category></entry><entry><title>Djangoで作成済みテーブルに手動でリレーションを追加する</title><link href="http://blog.thoz.org/2015/07/30/add-relation-to-existing-table-using-django/" rel="alternate"></link><updated>2015-07-30T10:46:15+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2015-07-30:2015/07/30/add-relation-to-existing-table-using-django/</id><summary type="html">&lt;p&gt;リレーションの理解が悪くて酷いコードを組んでいて、それを直した話。&lt;/p&gt;
+&lt;p&gt;article&lt;/p&gt;
+&lt;p&gt;|key|title|content|author_key|
+|:-|-:|-:|-:|
+|1|DjangoでHello World作ってみた|出来なかった！|1|&lt;/p&gt;
+&lt;p&gt;author&lt;/p&gt;
+&lt;p&gt;|key|name|
+|:-|-:|
+|1|shigepon|&lt;/p&gt;
+&lt;p&gt;こんなテーブルがあって、author.keyとarticle.author_keyが繋がっている場合に
+ArticleモデルをDjango使い始めの時はこんな風に作ってた&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Article&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IntegerField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;primary_key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;content&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;author_key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IntegerField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;author&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;Author&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;author_key&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Author&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IntegerField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;primary_key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;いやー改めて見ると酷い。Articleを100個読み込んで、そのAuthorを出力するだけで、100回以上dbにアクセスしないといけない。という訳でこの酷いコードからリレーションを貼って、さらにdbアクセスが少なくなるように修正したらこうなった&lt;/p&gt;
+&lt;p&gt;参考：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.djangoproject.com/en/1.8/ref/models/fields/"&gt;Model field reference | Django documentation | Django&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.djangoproject.com/en/1.8/ref/models/querysets/"&gt;QuerySet API reference | Django documentation | Django&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Article&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IntegerField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;primary_key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;content&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;author&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ForeignKey&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Author&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;db_column&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;author_key&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;to_field&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;key&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;related_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;articles&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Author&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IntegerField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;primary_key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じで適切にForeignKeyフィールドを設定することで、上の構成のテーブルにもリレーションを貼ることが出来た。db_columnでArticle側のリレーションキーになるカラムを指定して、to_fieldでAuthor側のリレーションキーになるカラムを指定する。related_nameは指定しないとエラーが出た。&lt;/p&gt;
+&lt;p&gt;んで、dbアクセスがなるべく少なくなるように（sqlでjoinを組んでくれるように）views.pyを書いてみると&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# views.py&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;app.models&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Article&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;articles&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Article&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;select_related&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;author&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;all&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;みたいにselect_relatedメソッドを使うとjoinしてくれた。prefetch_relatedってメソッドでも同じように出来る（ちょっと役割は違う）らしいが試していない。ざっくりドキュメントを読むと、ForeignKeyと１対１リレーションにはselect_relatedが良く、Many to ManyやMany to Oneにはprefetch_relatedが良いらしい。&lt;/p&gt;</summary><category term="django"></category><category term="python"></category></entry><entry><title>DjangoモデルをDjangoプロジェクトの外から使う</title><link href="http://blog.thoz.org/2015/07/28/use-django-model-outside-django-project/" rel="alternate"></link><updated>2015-07-28T16:43:55+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2015-07-28:2015/07/28/use-django-model-outside-django-project/</id><summary type="html">&lt;p&gt;参考：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://d.hatena.ne.jp/shobonengine/20120103/1325535420"&gt;外部から Django プロジェクトのデータベースを操作する - ShobonEngineの日記&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://stackoverflow.com/questions/25537905/django-1-7-throws-django-core-exceptions-appregistrynotready-models-arent-load"&gt;python - Django 1.7 throws django.core.exceptions.AppRegistryNotReady: Models aren't loaded yet - Stack Overflow&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;モデルインポート前に以下の手順が必要&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;プロジェクトをsys.pathに追加&lt;/li&gt;
+&lt;li&gt;DJANGO_SETTINGS_MODULE環境変数がプロジェクトのsettings.pyを指すように指定&lt;/li&gt;
+&lt;li&gt;applicationのロードが必要? (上2つだけだとModels aren't loaded yetというエラーが出た)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;sys.pathにはフルパスを入れれば確実。必要なコードは下のような感じになる。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# encoding: UTF-8&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/path/to/django/project&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;os&lt;/span&gt;
+&lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;environ&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;DJANGO_SETTINGS_MODULE&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;project.settings&amp;#39;&lt;/span&gt;
+
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.core.wsgi&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;get_wsgi_application&lt;/span&gt;
+&lt;span class="n"&gt;application&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;get_wsgi_application&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;application.models&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;AModel&lt;/span&gt;
+
+&lt;span class="nb"&gt;list&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;AModel&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;all&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="django"></category><category term="python"></category></entry><entry><title>Djangoで複数データベースを使用する</title><link href="http://blog.thoz.org/2015/07/07/use-multiple-databases-in-django/" rel="alternate"></link><updated>2015-07-07T12:33:37+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2015-07-07:2015/07/07/use-multiple-databases-in-django/</id><summary type="html">&lt;p&gt;Djangoでは複数データベースを扱える。でも色々コーディングや設定が必要なのでメモしておく。参考：&lt;a href="https://docs.djangoproject.com/en/1.7/topics/db/multi-db/"&gt;Multiple databases | Django documentation | Django&lt;/a&gt;。対応バージョンはDjango 1.7。使ったデータベースはPostgreSQL。&lt;/p&gt;
+&lt;h2&gt;settings.py&lt;/h2&gt;
+&lt;p&gt;settings.pyで複数データベースの接続設定をする&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;DATABASES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;NAME&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;app_data&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;ENGINE&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;django.db.backends.postgresql_psycopg2&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;USER&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;postgres_user&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;PASSWORD&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;s3krit&amp;#39;&lt;/span&gt;
+    &lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;users&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;NAME&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;user_data&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;ENGINE&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;django.db.backends.mysql&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;USER&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;mysql_user&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;PASSWORD&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;priv4te&amp;#39;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考ページのをそのまま使った。さらに追加も出来る。&lt;/p&gt;
+&lt;h2&gt;ここまでの設定でのマイグレーション&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python manage.py migrate
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;だとdefault設定のデータベースへのマイグレーション、&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python manage.py migrate --database&lt;span class="o"&gt;=&lt;/span&gt;users
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とするとusersで設定したデータベースへのマイグレーションとなる。
+何も設定していないと、それぞれのデータベースに全アプリケーションの全てのモデルが反映される。&lt;/p&gt;
+&lt;h2&gt;データベースに保存するアプリ、モデルを限定したい&lt;/h2&gt;
+&lt;p&gt;ルーティング設定をする。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;DATABASE_ROUTERS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;myproject.routers.Router&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;settings.pyはこんな感じ。んでmyprojectフォルダにrouters.pyを作成して例えばuserアプリのものだけusersデータベースを使うという設定の場合次のように書く&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# routers.py&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Router&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;db_for_read&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;hints&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="c1"&gt;#ここでランダムに選択すると、dbの負荷分散っぽいことが出来る&lt;/span&gt;
+        &lt;span class="c1"&gt;#例：return random.choice[&amp;#39;default&amp;#39;,&amp;#39;users&amp;#39;]&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_meta&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;app_label&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;user&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;users&amp;quot;&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;default&amp;quot;&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;db_for_write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;hints&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_meta&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;app_label&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;user&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;users&amp;quot;&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;default&amp;quot;&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;allow_relation&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;obj1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;obj2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;hints&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="c1"&gt;#Trueはリレーションを認める、Falseは認めない、Noneはこのコードでは関知しないという意味&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;allow_migrate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;db&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="c1"&gt;#userアプリの場合はusers設定のデータベースへmigrate。&lt;/span&gt;
+        &lt;span class="c1"&gt;#他のアプリはusers以外のデータベースへmigrateする設定&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_meta&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;app_label&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;user&amp;quot;&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;db&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;users&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;routers.pyをちゃんと書かないと、色々不具合が出る（例：管理用のモデルがmigrateできないとか）ので気をつけた方が良い。&lt;/p&gt;
+&lt;p&gt;上に紹介した参考ページには色々コードが書いてあるので、参考になる。&lt;/p&gt;</summary><category term="python"></category><category term="django"></category><category term="PostgreSQL"></category></entry><entry><title>Django1.7でPostgreSQLとBootstrap使ったアプリを作ってみた(1.5):管理ページを作ってみた</title><link href="http://blog.thoz.org/2015/07/03/make-admin-page-using-django/" rel="alternate"></link><updated>2015-07-03T21:59:10+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2015-07-03:2015/07/03/make-admin-page-using-django/</id><summary type="html">&lt;p&gt;Django1.6.5でアプリを作ってみたってネタをやってたけど、Django1.7にバージョンアップしたので、タイトルを変えた。ついでにDjango1.7だとINSTALLED_APPにdjango.contrib.authを入れておかないとエラーが出るケースがある（例えば&lt;a href="http://www.django-rest-framework.org/"&gt;Django REST framework&lt;/a&gt;でエラーが出た）ので、エラー出ないように最初に管理ページを用意しておくと良いと思う。&lt;/p&gt;
+&lt;p&gt;管理ページを用意する手順はこんな感じ&lt;/p&gt;
+&lt;h2&gt;settings.pyに設定を書く&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;INSTALLED_APPS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;django.contrib.admin&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;django.contrib.auth&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;MIDDLEWARE_CLASSES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;django.contrib.auth.middleware.AuthenticationMiddleware&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;TEMPLATE_CONTEXT_PROCESSORS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;django.contrib.auth.context_processors.auth&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;migrate&lt;/h2&gt;
+&lt;p&gt;マイグレーションしておく&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python manage.py makemigrations
+$ python manage.py migrate
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;マルチデータベースでやろうとして反映されずにハマったりしたけど、それはまた別の記事で書くかも&lt;/p&gt;
+&lt;h2&gt;管理アカウントを作る&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python manage.py createsuperuser
+Username: hoge
+Email address: hoge@example.com
+Password: ********
+Password &lt;span class="o"&gt;(&lt;/span&gt;again&lt;span class="o"&gt;)&lt;/span&gt;: ********
+Superuser created successfully.
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;って出来るとおk&lt;/p&gt;
+&lt;h2&gt;urls.pyを書く&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# urls.py&lt;/span&gt;
+&lt;span class="n"&gt;urlpatterns&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;patterns&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;r&amp;#39;^admin/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;admin&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;site&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;urls&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じで作って&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python manage.py runserver
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とすると、127.0.0.1/adminにアクセスすると管理画面へのログイン画面が出る。&lt;/p&gt;</summary><category term="django"></category><category term="python"></category></entry><entry><title>djangoをプロファイリングする</title><link href="http://blog.thoz.org/2015/07/01/profiling-django/" rel="alternate"></link><updated>2015-07-01T09:06:13+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2015-07-01:2015/07/01/profiling-django/</id><summary type="html">&lt;p&gt;作ってるWebサービスが条件によってえらい重くなるので、ボトルネックを探すためにプロファイラを動かしてみようと考えてやってみたらそこそこハマった。&lt;/p&gt;
+&lt;p&gt;先に結論：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Middleware使ってブラウザに表示させるのが楽だった&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;条件&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;cui環境なので、プロファイル結果は画像作るかブラウザ表示するかのどちらか&lt;/li&gt;
+&lt;li&gt;コードに埋めこまない形&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;まず参考にしたのは公式ページの&lt;a href="https://code.djangoproject.com/wiki/ProfilingDjango"&gt;ProfilingDjango – Django&lt;/a&gt;。ざっくりとした結果が知りたかったのでrunprofileserverを試してみることにした。&lt;/p&gt;
+&lt;h2&gt;開発サーバでやってみる（runprofileserver）&lt;/h2&gt;
+&lt;p&gt;django-extensionの一機能で&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ pip install django-extensions
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でインストールして、&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;INSTALLED_APP&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt;
+   &lt;span class="s1"&gt;&amp;#39;django_extensions&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;で設定して&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python manage.py runprofileserver
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とすると、よしなに/tmpフォルダ内にプロファイル結果を吐き出してくれる開発用サーバだそうで、これは便利そうと思い、やってみた。&lt;/p&gt;
+&lt;h3&gt;結果を画像にしようとしてハマる&lt;/h3&gt;
+&lt;p&gt;プロファイル結果からgraphviz通して画像にしたらブラウザから確認出来るし楽なんじゃね？とか良く考えると不毛なことを考えたのが間違いのもと。普通にKCacheGrind使ってろって話なんだけど、やってみた&lt;/p&gt;
+&lt;p&gt;ツールとして使ったもの&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/jrfonseca/gprof2dot"&gt;gprof2dot&lt;/a&gt;、プロファイル結果をdotファイルに変換する&lt;/li&gt;
+&lt;li&gt;graphviz、dotファイルを画像に変換する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;話にならなかったもの（良く考えるとこのケースで使えないの当たり前なのに使おうとして失敗したもの）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;xdebugtoolkit、単純にxdebugの結果でないとそりゃ使えないよねと納得した&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;あまり良く分かってなかったので、KCacheGrind互換で出力しておけば、色んなソフト使ってよしなに出来るんじゃね？と思ってみた。んでKCacheGrind互換出力ってcallgrind形式ってことだよね！と勝手に思い込んでた&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python manage.py runprofileserver --kcachegrind
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;おもむろにdotファイルに変換!&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ path/to/gprof2dot -o out.dot -f callgrind /tmp/xxx.prof
+....
+AssertionError
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;うまくいかない。何かの計算値がこうなるはずなのにならないよ！とか怒られてる。って良く考えたらKCacheGrind互換の出力がcallgrind形式って保証がどこにもない！&lt;/p&gt;
+&lt;p&gt;ってことで、あれこれドキュメント読んでたら、runprofileserverはhotshot使ってるとか何とか書いてあるから、何も指定しなかったらhotshotでの形式になる・・・ってことは全然説明されてないけど-fのオプションはpstatsで良いんじゃね？&lt;/p&gt;
+&lt;p&gt;と勝手に予想して&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python manage.py runprofileserver
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ path/to/gprof2dot -o out.dot -f pstats /tmp/xxx.prof
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とやるとout.dotが出来ましたとさ。あとは色んなとこに書いてある（例えば&lt;a href="http://stackoverflow.com/questions/9279144/interpreting-callgrind-data"&gt;ここ&lt;/a&gt;）ように、dotファイルを画像ファイルに変換すると、ちゃんと画像が出来上がった。&lt;/p&gt;
+&lt;p&gt;ただ・・・・、まだ設定分かってないからだと思うんだけど、出来上がった画像にはviewやmodelのメソッドが一切書かれておらず、この情報だけからボトルネック探すのかなりキツイんじゃね？ということだけが分かった。&lt;/p&gt;
+&lt;h3&gt;同一ドメインのurlを内部で呼び出してハマる&lt;/h3&gt;
+&lt;p&gt;何故かURLによってプロファイル作るのが途中で止まって、サーバもレスポンスを返してくれなくなった。問題箇所を調べると、どうも内部で同じrunprofileserverで管理しているurlにアクセスすると止まっちゃう模様。別サーバを立てて、そこにアクセスするようにすれば、問題無く動作した。&lt;/p&gt;
+&lt;h2&gt;手間なのでMiddlewareでプロファイルすることにした&lt;/h2&gt;
+&lt;p&gt;いちいち開発中の状態なのにサーバ2つ立てて面倒だったり、結局作った画像見ても良く分からなかったので、今度はMiddlewareに埋め込むタイプを試してみた。&lt;/p&gt;
+&lt;h3&gt;取りあえず動かなくてハマる&lt;/h3&gt;
+&lt;p&gt;Extendedって書いてあるしということで&lt;a href="https://djangosnippets.org/snippets/605/"&gt;djangosnippets: Extended Profiling Middleware&lt;/a&gt;を試してみた。&lt;/p&gt;
+&lt;p&gt;手順は&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;↑のページのファイルをダウンロード（コード右上にダウンロードボタンがある）&lt;/li&gt;
+&lt;li&gt;適当な名前を付けてimport出来る適当な場所に配置。（オラはmodulesってとこにprofiler.pyという名前を付けて置いてみた）&lt;/li&gt;
+&lt;li&gt;settings.pyにmiddlewareを登録する&lt;/li&gt;
+&lt;li&gt;プロファイルしたいURLにprof=というパラメータを付けてブラウザでアクセスする&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;って感じ。settings.pyは&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;MIDDLEWARE_CLASSES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;modules.profiler.ProfileMiddleware&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じ。で、上のようにブラウザでアクセスするとエラー・・・&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;AttributeError: &amp;#39;WSGIRequest&amp;#39; object has no attribute &amp;#39;has_key&amp;#39;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;なので、コード上で&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;has_key&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;となっているところを&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;GET&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;has_key&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;と変更すると上手く動いた。ProfileMiddlewareのページ内コメントを見ると&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;prof&amp;#39;&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;GET&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;と変更しても動くらしい。んで、プロファイルしたいurlにprof=をパラメータとして付けてアクセスすると、ブラウザ上に&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;47793 function calls (42681 primitive calls) in 0.907 seconds
+
+   Ordered by: internal time, call count
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        3    0.608    0.203    0.608    0.203 /path/to/python/local/lib/python/site-packages/django/db/backends/utils.py:58(execute)
+       30    0.112    0.004    0.112    0.004 /usr/lib/python/socket.py:406(readline)
+       12    0.050    0.004    0.050    0.004 /usr/lib/python/socket.py:223(meth)
+....
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;という形でプロファイルが表示出来た。もーこれでいーや。ということでやったのはここまで。まだまだだけど、取りあえずプロファイル結果を出すまでだけでハマったし、次回やっても同じようにハマりそうなのでメモしておく。&lt;/p&gt;</summary><category term="python"></category><category term="django"></category></entry><entry><title>PythonでSparql使ってLinked Open Dataをいじってみた</title><link href="http://blog.thoz.org/2015/03/19/use-sparql-with-python/" rel="alternate"></link><updated>2015-03-19T22:07:12+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2015-03-19:2015/03/19/use-sparql-with-python/</id><summary type="html">&lt;p&gt;以前&lt;a href="http://blog.shigepon.info/blog/2014/11/25/kobe-dot-r-no-13/"&gt;Kobe.R no 13に参加してきました - shigeponが関心のある技術情報など&lt;/a&gt;でLinked Open Dataが気になってたので、Pythonでいじれるライブラリを探してみて遊んでみた。&lt;/p&gt;
+&lt;p&gt;Sparqlで色々試してみると面白そうなので、pip search sparqlで出た結果とググってみた結果から、SPARQLWrapperが何となく良さげかなと思い、インストールしてみた。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ pip install SPARQLWrapper
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これだけでおk&lt;/p&gt;
+&lt;p&gt;djangoのshellから使ってみる&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;python&lt;/span&gt; &lt;span class="n"&gt;manage&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt; &lt;span class="n"&gt;shell&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;SPARQLWrapper&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;SPARQLWrapper&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;JSON&lt;/span&gt;
+&lt;span class="n"&gt;sparql&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;SPARQLWrapper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;http://dbpedia.org/sparql&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;sparql&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setQuery&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="s2"&gt;  PREFIX rdfs: &amp;lt;http://www.w3.org/2000/01/rdf-schema#&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;  SELECT ?label&lt;/span&gt;
+&lt;span class="s2"&gt;  WHERE { &amp;lt;http://dbpedia.org/resource/Asturias&amp;gt; rdfs:label ?label }&lt;/span&gt;
+&lt;span class="s2"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;sparql&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setReturnFormat&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;JSON&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;results&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sparql&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;convert&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="err"&gt;!&lt;/span&gt;&lt;span class="o"&gt;--&lt;/span&gt; &lt;span class="n"&gt;more&lt;/span&gt; &lt;span class="o"&gt;--&amp;gt;&lt;/span&gt;
+
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;results&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;results&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;bindings&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;label][&amp;quot;&lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とやるとこんな感じの結果が出た&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Asturias
+منطقة أستورياس
+Asturien
+Asturias
+Asturies
+Asturie
+アストゥリアス州
+Asturië &lt;span class="o"&gt;(&lt;/span&gt;regio&lt;span class="o"&gt;)&lt;/span&gt;
+Asturia
+Astúrias
+Астурия
+阿斯图里亚斯
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="http://rdflib.github.io/sparqlwrapper/"&gt;SPARQL Endpoint interface to Python&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Sparqlの書き方は&lt;a href="http://kobexr.blogspot.jp/2014/12/kober-13-open-data.html"&gt;Kobe.R: Kobe.R #13 + Open Data&lt;/a&gt;に載っているスライドが参考になる。&lt;/p&gt;
+&lt;p&gt;Linked Open Dataで１つ気になるのが、エンドポイントをどうやって探すかなんだけど、今の所ググってみるくらいしかやり方が分からない。ここらへん何か良い方法無いのかなー。&lt;/p&gt;</summary><category term="python"></category><category term="linkedopendata"></category></entry><entry><title>Django 1.6から1.7にアップデートしてみた</title><link href="http://blog.thoz.org/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/" rel="alternate"></link><updated>2015-03-09T22:11:02+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2015-03-09:2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/</id><summary type="html">&lt;p&gt;Djangoが去年の9月に1.7にバージョンアップしてて、今更ながらアップデートしてみた。色々教えて頂いた&lt;a href="https://twitter.com/key3"&gt;@key3&lt;/a&gt;さんに感謝！&lt;/p&gt;
+&lt;p&gt;※注　アップデートの前に必ずデータとかソースとか色々バックアップしておくこと。&lt;/p&gt;
+&lt;h2&gt;Django本体のアップデート&lt;/h2&gt;
+&lt;p&gt;Djangoはpipで管理してるので、pipコマンドでアップデート出来る&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ pip install django -U
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;これで本体はアップデート完了した。&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;h2&gt;プロジェクトをDjango1.7で動かす&lt;/h2&gt;
+&lt;p&gt;何も変更せずにおもむろに&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python manage.py runserver
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とするとエラー出て動かなかった。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;raise AppRegistryNotReady(&amp;quot;Models aren&amp;#39;t loaded yet.&amp;quot;)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Tracebackを見てみるとどうもmodels.pyの中で&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
+&lt;span class="n"&gt;admin&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;site&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;register&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とかやってたのがまずかったみたいで、管理サイトで使うモデル定義などのコードをadmin.pyに移動したら上のエラーは出なくなった。何となくで書いてたらいかんな。ちなみにアップデートには関係無いけど、Django1.7で@admin.register(Model)というデコレーターが使えるようになったので、そっちに変えた方がスマートな気がする。&lt;/p&gt;
+&lt;p&gt;次はSouthでマイグレーションやってるプロジェクトだったので、下のようなエラーが出た。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;raise RuntimeError&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;South does not support Django 1.7 or higher. Please use native Django migrations.&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;要はSouthはもうサポートしてないからDjango自身のマイグレーションでやってねということらしい。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://docs.djangoproject.com/en/1.7/topics/migrations/#upgrading-from-south"&gt;Migrations | Django documentation | Django&lt;/a&gt;を見ながらやってみる。ざっくり手順を日本語で書いておく&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;マイグレーションの状態がちゃんと最新になっているか確認する&lt;/li&gt;
+&lt;li&gt;settings.pyのINSTALLED_APPSの行から'south'を取り除く&lt;/li&gt;
+&lt;li&gt;数字の付いたマイグレーションファイルを全て削除する。ディレクトリと__init__.pyは残す。.pycファイルも削除すること。&lt;/li&gt;
+&lt;li&gt;python manage.py makemigrasionsを実行する。Djangoが空のマイグレーションディレクトリに新しい初期マイグレーションを作る。&lt;/li&gt;
+&lt;li&gt;python manage.py migrateを実行する。Djangoは初期マイグレーションをチェックして、実行しないで適用済みにする。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;以上やってみたら、エラーは出ずにプロジェクトをDjango1.7に対応できた。めでたしめでたし。&lt;/p&gt;</summary><category term="python"></category><category term="django"></category></entry><entry><title>djangoのModelFormでMultiWidgetを使って見る</title><link href="http://blog.thoz.org/2015/01/24/django-modelform-multiwidget/" rel="alternate"></link><updated>2015-01-24T17:23:07+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2015-01-24:2015/01/24/django-modelform-multiwidget/</id><summary type="html">&lt;p&gt;ModelFormでModelの１つのカラムを複数のフォーム要素（inputとか）で表現したかったので調べてみた。フォーム要素を適当に作って、clean_xxxの時にくっつけるとかそんな実装の仕方も出来るみたいだけど、MultiWidgetを使うと、Modelの１つのカラムに対して複数のinput要素を使うことが出来るみたいなので、使ってみた。名前のカラムに対して姓、名の入力要素を作るとかそんなのが出来るみたい。&lt;/p&gt;
+&lt;p&gt;まずはMultiWidgetを継承したクラスを作る&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.forms.widgets&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;MultiWidget&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;NameWidget&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;MultiWidget&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;次にクラスに対して、__init__をオーバーライドし、widgetとしてTextInputのフォームを2つ登録してみた。コードはこんな感じ。&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;NameWidget&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;MultiWidget&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;widgets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+                &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextInput&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;placeholder&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;姓&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;})),&lt;/span&gt;
+                &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextInput&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;placeholder&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;名&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;}))&lt;/span&gt;
+                &lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="nb"&gt;super&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;NameWidget&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;widgets&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;widgetsはリストでもタプルでも良さげ？ともかくやることはwidgetのリストかタプルを作って、親クラス(MultiWidget)のinitを呼び出すこと。&lt;/p&gt;
+&lt;p&gt;次に、decompress、value_from_datadictメソッドを書く。decompressはカラムの値を複数のフォームに振り分ける手順、value_from_datadictはModelFormの入力データからModelのカラムに入れる値を作る手順を記述する。姓名を半角スペースで繋げて、半角スペースで分割するように作ってみた。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;NameWidget&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;MultiWidget&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{}):&lt;/span&gt;
+        &lt;span class="n"&gt;attrsSei&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;copy&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+        &lt;span class="n"&gt;attrsMei&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;copy&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+        &lt;span class="n"&gt;widgets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+                &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextInput&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;attrsSei&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;placeholder&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;姓&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;})),&lt;/span&gt;
+                &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextInput&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;attrsMei&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;placeholder&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;名&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;}))&lt;/span&gt;
+                &lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="nb"&gt;super&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;NameWidget&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;widgets&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;decompress&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="n"&gt;names&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39; &amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;names&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="n"&gt;names&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;value_from_datadict&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;files&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;ulist&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;widget&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;value_from_datadict&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;files&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;_{0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;widget&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;enumerate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;widgets&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;u&amp;quot;{0} {1}&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ulist&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;u&amp;#39; &amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;&lt;span class="n"&gt;ulist&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;u&amp;#39; &amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;あとはこのWidgetを使いたい要素にwidgetとして指定すればおk&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;&lt;span class="err"&gt;（上のコードなど）&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;HogeForm&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ModelForm&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CharField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;max_length&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;u&amp;#39;名前&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;widget&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;NameWidget&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;このコードだと姓、名のフォームが2行に表示されている。1行にしたい場合はインライン指定とかそんなのを付けたクラスをattrsで指定して後はcssでやっちゃえばいいんじゃないかなと&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
+    &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CharField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;max_length&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;u&amp;#39;名前&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;widget&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;NameWidget&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;class&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;inline&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;}))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とかそんな感じ&lt;/p&gt;
+&lt;p&gt;他にももっと細かくhtmlを記述出来るformat_outputとかあるみたいだけど、試してないので省略。なくても取りあえず出来る。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="https://docs.djangoproject.com/en/1.7/ref/forms/widgets/#django.forms.MultiWidget"&gt;Django英語ドキュメント&lt;/a&gt;&lt;/p&gt;</summary><category term="python"></category><category term="django"></category></entry><entry><title>pythonのデコレーターをdjangoで使って見る</title><link href="http://blog.thoz.org/2015/01/06/python-decorator/" rel="alternate"></link><updated>2015-01-06T08:55:46+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2015-01-06:2015/01/06/python-decorator/</id><summary type="html">&lt;p&gt;pythonのデコレーターを使ってみたらとても便利だなと思ったのでメモ&lt;/p&gt;
+&lt;p&gt;参考にしたページを読んでいくと理解できた。要はデコレーターとして使う関数は引数に呼び出し元の関数を貰っておいて、内部で作った関数を返せば良い。内部の関数は適当に作れるみたい（今のとこそういう理解をしている）。djangoのビューで呼び出したかったので、内部の関数で可変長引数を取れるようにして下のようにしたら動いた。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;outer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;inner&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;hoge&amp;quot;&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;inner&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;この時、args[0]にHttpRequestオブジェクトが入ってるので、これをいじると適当に値を追加したり整形したりするのをビューの外部に持っていけるので、使いようによっては共通部分と個別部分の分離や、ビューに直接関係ない処理（ログとか）を分離出来るので便利な感じがする。ただ、やりすぎるとコードが分割されすぎて読みにくくなる気もする。&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;outer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;inner&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;request&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+        &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hoge&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;fuga&amp;quot;&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;inner&lt;/span&gt;
+
+&lt;span class="nd"&gt;@outer&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;hoge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hoge&lt;/span&gt;
+    &lt;span class="o"&gt;....&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とやったりすることが出来る。個人的にはWebサービスでサイドメニューに必要な情報をデコレーターでやって、メインコンテンツに必要な情報をビューでやるとかそんな感じで使ってみようと思う。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://qiita.com/_rdtr/items/d3bc1a8d4b7eb375c368"&gt;Pythonのデコレータを理解するための12Step - Qiita&lt;/a&gt;&lt;/p&gt;</summary><category term="python"></category><category term="django"></category></entry><entry><title>use bootstrap3 in django</title><link href="http://blog.thoz.org/2014/12/18/use-bootstrap3-in-django/" rel="alternate"></link><updated>2014-12-18T08:24:56+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-12-18:2014/12/18/use-bootstrap3-in-django/</id><summary type="html">&lt;p&gt;そろそろbootstrap3を使ってみたいなと思い、Djangoでbootstrap3を使う方法を調べてみた。django-bootstrap-toolkitのページを見てみるとdjango-bootstrap3を使ってねと書いてあるので、それを使ってみることにした。&lt;/p&gt;
+&lt;h2&gt;インストール&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ pip install django-bootstrap3
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;設定&lt;/h2&gt;
+&lt;!-- more --&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;INSTALLED_APPS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="o"&gt;....&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;bootstrap3&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="o"&gt;....&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;h2&gt;テンプレート&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{% raw %}
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+{% endraw %}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これで必要ファイルがロードされる。あとはbootstrap3で使うタグで構成すれば良い。bootstrap_formとかそういうタグもあるけどまだ試していない。&lt;/p&gt;
+&lt;h2&gt;Bootswatchにあるテーマを試す&lt;/h2&gt;
+&lt;p&gt;まずはBootswatchのテーマcssをダウンロード&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; /static/css
+$ wget http://bootswatch.com/cosmo/bootstrap.min.css
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;/staticはアプリのフォルダ下に作る&lt;/p&gt;
+&lt;p&gt;次に設定ファイルに項目を追加&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;STATIC_URL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;/static/&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;BOOTSTRAP3&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;css_url&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/static/css/bootstrap.min.css&amp;#39;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これだけでテンプレートいじらずに動いてくれる&lt;/p&gt;
+&lt;p&gt;bootstrap2だとnavbar表示の時に表示が重なるとか何とかあったけど、bootstrap3だと気にしなくて良いのかな？何も追加css書かなくても特に問題無さそう。これは嬉しい。&lt;/p&gt;
+&lt;p&gt;でも&lt;a href="http://qiita.com/Alex_23drum/items/bbf80aff7dbb6fd1a7d9"&gt;Navbarに画像入れると下に偏った配置になる&lt;/a&gt;とかあるみたいなので、調べてみる必要があるかも&lt;/p&gt;</summary><category term="bootstrap"></category><category term="django"></category><category term="python"></category></entry><entry><title>Southをすでにあるプロジェクトに適用する</title><link href="http://blog.thoz.org/2014/11/30/use-south-to-existing-project/" rel="alternate"></link><updated>2014-11-30T23:19:26+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-11-30:2014/11/30/use-south-to-existing-project/</id><summary type="html">&lt;p&gt;Southってのを使うとモデルを変更した時に、サクッとDB(PostgreSQL)に反映出来るらしんだけど、今すでに作成中のプロジェクトに反映させたかったので、メモ&lt;/p&gt;
+&lt;h2&gt;インストール&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ pip install south
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;設定&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;INSTALLED_APPS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="o"&gt;....&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;south&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;h2&gt;作成中のアプリをsouthに追加&lt;/h2&gt;
+&lt;p&gt;データベースが関連しているモデルが作成されているアプリにコマンドを実行すればおk&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python manage.py schemamigration アプリ名 --init
+$ python manage.py syncdb --all
+$ python manage.py migrate アプリ名 --fake
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;syncdbしないでmigrateすると、PostgreSQLだとエラーが出たので、先にsyncdbするのが必要みたい&lt;/p&gt;
+&lt;p&gt;実際にモデル変更した時の作業を追記&lt;/p&gt;
+&lt;h2&gt;モデル変更&lt;/h2&gt;
+&lt;p&gt;モデルを変更したら次のコマンドでデータベースに反映する&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python manage.py schemamigration アプリ名 --auto
+$ python manage.py migrate アプリ名
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;この時にデータベース内の値が変更した制約等に引っ掛かる場合は途中で止まったりするので、制約に合うようにデータを変更するとか修正する。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://yu-write.blogspot.jp/2014/01/django-south.html"&gt;Yura YuWrite: [django] 既存のプロジェクトにsouthを追加する方法&lt;/a&gt;、&lt;a href="http://stackoverflow.com/questions/22236029/trouble-getting-django-set-up-on-heroku-using-south-keep-getting-programminger"&gt;postgresql - Trouble getting Django set up on Heroku using South - keep getting ProgrammingError: relation does not exist - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="django"></category><category term="python"></category></entry><entry><title>djangoで国際化やってみた</title><link href="http://blog.thoz.org/2014/11/27/django-locale/" rel="alternate"></link><updated>2014-11-27T13:02:12+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-11-27:2014/11/27/django-locale/</id><summary type="html">&lt;p&gt;Djangoで他の人が作ったモジュールを使ってると、英語のメッセージが入ってることがあるので、日本語化してみた。とりあえず英語のメッセージを日本語に変換するとこまで。&lt;/p&gt;
+&lt;h2&gt;準備&lt;/h2&gt;
+&lt;p&gt;gettextが無かったらインストール。Ubuntuの場合&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude install gettext
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;プロジェクトにlocaleフォルダを作る。無いと後のコマンドでエラーが出た&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;h2&gt;poファイル作成&lt;/h2&gt;
+&lt;!-- more --&gt;
+
+&lt;p&gt;おもむろにpoファイルを作るコマンドを実行&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;django-admin.py makemessages -l ja
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;するとpath/to/locale/ja/LC_MESSAGES/django.poってファイルが出来るので、それを修正していく。ただ、このコマンドプロジェクト内だけ捜査してファイルを作るみたいで、外部モジュールの場合、上手く読み取ってくれなかった。&lt;/p&gt;
+&lt;p&gt;今回はvirtualenvでpipしたdjango-allauthのテンプレートを日本語化したかったので、path/to/virtualenv/dir/lib/python2.7/site-packages/allauth/templates/account/内のファイルを全部path/to/project/templates/account/にコピーしてからコマンド実行すると上手く読み取ってくれた。&lt;/p&gt;
+&lt;h2&gt;翻訳&lt;/h2&gt;
+&lt;p&gt;出来たpoファイルを編集すればオッケー。ファイル内でmsgid以下に書いてあるのが元の文、その次のmsgstr以下に文章書くと、翻訳文になる。元の英文に何かパラメーター付いてる場合は必ずパラメーターを翻訳文に設定しないとエラーが出る。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#: path/to/python/module.py:23&lt;/span&gt;
+&lt;span class="n"&gt;msgid&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Welcome to my site.&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;msgstr&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;いらっしゃーい&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;moファイル作成&lt;/h2&gt;
+&lt;p&gt;おもむろにコマンドを実行するとmoファイルが出来る&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;django-admin.py compilemessages
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;settings.pyの設定&lt;/h2&gt;
+&lt;p&gt;これだけで動くと思ったら動かなかったので色々調べてみたらLOCALE_PATHSを設定しないといけなかった。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;LOCALE_PATHS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="s2"&gt;&amp;quot;path/to/locale&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これ設定しておいたらちゃんと動いた。&lt;/p&gt;
+&lt;p&gt;あとは普通にrunserverとかでサーバ起動したら翻訳されてる&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://docs.djangoproject.jp/en/latest/topics/i18n/translation.html"&gt;翻訳 — Django 1.4 documentation&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;翻訳したい文字列をマークする方法とかはリンク見れば分かる。あと、使いたい言語を選択出来るようにするとかそういう場合はLocaleMiddlewareを使うとかなんとかあるみたいだけどやってない。&lt;/p&gt;</summary><category term="django"></category><category term="python"></category></entry><entry><title>django-allauthを使ってみた</title><link href="http://blog.thoz.org/2014/11/25/use-django-allauth/" rel="alternate"></link><updated>2014-11-25T14:55:16+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-11-25:2014/11/25/use-django-allauth/</id><summary type="html">&lt;p&gt;ソーシャルログインだけでなく、通常のログインもやりたかったので、django-allauthを試してみた。&lt;/p&gt;
+&lt;h2&gt;インストール&lt;/h2&gt;
+&lt;p&gt;pipで&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip install django-allauth
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;ファイルでの設定&lt;/h2&gt;
+&lt;p&gt;settings.pyとurls.pyを設定&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;INSTALLED_APPS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;allauth&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;allauth.account&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;allauth.socialaccount&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;allauth.socialaccount.providers.twitter&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="c1"&gt;#例としてTwitter&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;AUTHENTICATION_BACKENDS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;allauth.account.auth_backends.AuthenticationBackend&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;TEMPLATE_CONTEXT_PROCESSORS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+    &lt;span class="s2"&gt;&amp;quot;django.core.context_processors.request&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s2"&gt;&amp;quot;django.contrib.auth.context_processors.auth&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s2"&gt;&amp;quot;allauth.account.context_processors.account&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s2"&gt;&amp;quot;allauth.socialaccount.context_processors.socialaccount&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;SITE_ID&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# urls.py&lt;/span&gt;
+&lt;span class="n"&gt;urlpatterns&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;patterns&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;^accounts/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;allauth.urls&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;^accounts/profile/?&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;profile.urls&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;namespace&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;profile&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt; &lt;span class="c1"&gt;#ログイン後のリダイレクト先&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;adminページでの設定&lt;/h2&gt;
+&lt;p&gt;ソーシャルログインする場合のみ必要。 http://domain/admin/ にアクセスして管理者ログインしてSocial applicationを追加する。
+フォーム内では名前を適当に付けて、Twitterの場合Client idにConsumer keyを登録して、Secret keyにConsumer secretを登録すればおk
+最後に、利用可能サイトから一番上のサイト(SITE_ID=1と指定してるので)を選択するとおk&lt;/p&gt;
+&lt;p&gt;http://domain/accounts にアクセスすればログインフォームが出てくる。出来た。&lt;/p&gt;
+&lt;h2&gt;テンプレートを上書きする&lt;/h2&gt;
+&lt;p&gt;プロジェクトディレクトリ/templates/account以下にファイルを設定すればおk
+例えばログインのテンプレートなら、login.htmlを設置すればおk&lt;/p&gt;
+&lt;p&gt;元のファイルはgithubを見れば分かる&lt;/p&gt;
+&lt;h2&gt;使える機能&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/pennersr/django-allauth/blob/master/allauth/account/urls.py"&gt;githubのコード&lt;/a&gt;
+見れば大体分かる感じ&lt;/p&gt;
+&lt;h2&gt;ユーザー登録時のメール確認後の処理でハマる&lt;/h2&gt;
+&lt;p&gt;ユーザー登録すると通常は登録したメールアドレスにメールが届いて、そこに書いてあるURLにアクセスすると登録完了する手順が表示される。そこらへんの文章とかも上のテンプレート上書きでいけて問題ないんだけど、初期状態では登録が最後まで完了すると、そのままログインしてログイン時のリダイレクト先に移動してしまう。完了画面を表示したい場合はこれではまずい。&lt;/p&gt;
+&lt;p&gt;ので、&lt;a href="http://django-allauth.readthedocs.org/en/latest/advanced.html"&gt;ここらへん&lt;/a&gt;のCustom Redirectsの項目を参考にしてアダプタを作ってみた&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;ACCOUNT_ADAPTER&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;project.users.adapter.MyAccountAdapter&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# project/users/adapter.py&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.conf&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;settings&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;allauth.account.adapter&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;DefaultAccountAdapter&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MyAccountAdapter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;DefaultAccountAdapter&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_email_confirmation_redirect_url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;/account/complete&amp;quot;&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;path&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でもこれだけでは上手くいかなかった。普通にログイン時のリダイレクト先に移動してしまった。どうもACCOUNT_LOGIN_ON_EMAIL_CONFIRMATIONをFalseにしないとダメみたい&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これでやっと/account/completeにリダイレクトしてくれた。ログインした状態ではダメみたいなので、ログインは再度やってもらわないといけない。うーん今のとこ仕方ないか・・・。&lt;/p&gt;
+&lt;h2&gt;django-allauthのサインアップフォームをカスタマイズしたい&lt;/h2&gt;
+&lt;h3&gt;あるフィールドにhelp_textを付ける&lt;/h3&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/23580771/overwrite-django-allauth-form-field"&gt;Overwrite django-allauth form field - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;__init__を上書きして、フィールドに属性を追加する
+コードはこんな感じ。例としてユーザー名入力フォームにヘルプテキストとして「required」という文字を追加する&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# appname/forms.py&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;SignupForm&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Form&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="nb"&gt;super&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;SignupForm&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fields&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;username&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;help_text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;required&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;ACCOUNT_SIGNUP_FORM_CLASS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;appname.forms.SignupForm&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じ&lt;/p&gt;
+&lt;h3&gt;フィールドのバリデーションを追加&lt;/h3&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/24175228/how-to-clean-username-with-django-allauth-adapter"&gt;python - How to clean username with Django allauth adapter? - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Account Adapterを設定してあげて、そこでclean_xxxを作ると上手くいくみたい&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;```py
+# project/users/adapter.py
+class MyAccountAdapter(DefaultAccountAdapter):
+    ...
+    def clean_username(self, username):
+        &amp;quot; 適当に処理を入れる
+        &amp;quot; エラーの場合はraise Exception
+        return username
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="django"></category><category term="python"></category></entry><entry><title>DjangoでDateTimeField received a naive datetimeってWarningが出た</title><link href="http://blog.thoz.org/2014/11/22/django-datetimefield-received-a-naive-datetime/" rel="alternate"></link><updated>2014-11-22T16:19:11+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-11-22:2014/11/22/django-datetimefield-received-a-naive-datetime/</id><summary type="html">&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;RuntimeWarning: DateTimeField received a naive datetime
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;ってWarningが出るのに対する対処&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;USE_TZ&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;を書けばおk。要はタイムゾーン入れてくれってエラーなので、そんなものはない！と指定すればいいっぽい&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/18622007/runtimewarning-datetimefield-received-a-naive-datetime"&gt;django - RuntimeWarning: DateTimeField received a naive datetime - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="django"></category><category term="python"></category></entry><entry><title>Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(4):djangoで作ったプロジェクトをnginx+uwsgiで使って公開する</title><link href="http://blog.thoz.org/2014/11/04/use-django-with-uwsgi/" rel="alternate"></link><updated>2014-11-04T21:33:54+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-11-04:2014/11/04/use-django-with-uwsgi/</id><summary type="html">&lt;p&gt;nginxのインストールは省略。ubuntuならaptitudeでインストールすればいい。デフォルトはちょっと古いけど。
+djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いているという前提。&lt;/p&gt;
+&lt;h2&gt;uwsgiをインストール&lt;/h2&gt;
+&lt;p&gt;全てvirtualenv上で行うとよさげ。
+&lt;a href="http://docs.djangoproject.jp/en/latest/howto/deployment/wsgi/uwsgi.html"&gt;uWSGI で Django を使う方法 — Django 1.4 documentation&lt;/a&gt;ほぼそのまま&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;source&lt;/span&gt; path/to/virtualenv/bin/activate
+&lt;span class="k"&gt;$(&lt;/span&gt;virtualenv&lt;span class="k"&gt;)&lt;/span&gt; pip install uwsgi
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;uwsgi.iniを作る&lt;/h2&gt;
+&lt;p&gt;djangoのプロジェクトを/path/to/mysiteに置いた場合の設定。pidfile,daemonizeはプロジェクト毎に適当に設定。&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# uwsgi.ini&lt;/span&gt;
+&lt;span class="k"&gt;[uwsgi]&lt;/span&gt;
+&lt;span class="na"&gt;chdir&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/path/to/mysite&lt;/span&gt;
+&lt;span class="na"&gt;module&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;mysite.wsgi:application&amp;#39;&lt;/span&gt;
+&lt;span class="na"&gt;master&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;True&lt;/span&gt;
+&lt;span class="na"&gt;pidfile&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/tmp/project-master.pid&lt;/span&gt;
+&lt;span class="na"&gt;vacuum&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;True&lt;/span&gt;
+&lt;span class="na"&gt;max-requests&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;5000&lt;/span&gt;
+&lt;span class="na"&gt;daemonize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/var/log/uwsgi/mysite.log&lt;/span&gt;
+&lt;span class="na"&gt;socket&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;127.0.0.1:1234 #適当なポート&lt;/span&gt;
+&lt;span class="na"&gt;env&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;DJANGO_SETTINGS_MODULE=mysite.settings&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;virtualenvで使う場合、sudoを使わないでuwsgiを起動するので、/var/log/uwsgi/yourproject.logの権限に注意する。
+uwsgiの起動や終了のコマンドは以下の通り&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;起動
+$ uwsgi --ini uwsgi.ini
+再起動
+$ uwsgi --reload /tmp/project-master.pid
+終了
+$ uwsgi --stop /tmp/project-master.pid
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;nginxの設定&lt;/h2&gt;
+&lt;p&gt;&lt;a href="http://uwsgi-docs.readthedocs.org/en/latest/tutorials/Django_and_nginx.html"&gt;Setting up Django and your web server with uWSGI and nginx — uWSGI 2.0 documentation&lt;/a&gt;を参考にした。&lt;/p&gt;
+&lt;h3&gt;uwsgi_params&lt;/h3&gt;
+&lt;p&gt;uwsgi_paramsは/etc/nginx/uwsgi_paramsに入ってるけど、修正する可能性もあるので、/path/to/mysite/uwsgi_paramsにコピーして、それを修正する。&lt;/p&gt;
+&lt;h3&gt;nginx.conf&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;upstream&lt;/span&gt; &lt;span class="nt"&gt;django&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;server&lt;/span&gt; &lt;span class="m"&gt;127&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="m"&gt;1234&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="m"&gt;#uwsgi&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ini&lt;/span&gt;&lt;span class="err"&gt;で設定したポート番号&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nt"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;server_name&lt;/span&gt; &lt;span class="n"&gt;hoge&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;example&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;com&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;substitute&lt;/span&gt; &lt;span class="n"&gt;your&lt;/span&gt; &lt;span class="n"&gt;machine&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="n"&gt;IP&lt;/span&gt; &lt;span class="n"&gt;address&lt;/span&gt; &lt;span class="n"&gt;or&lt;/span&gt; &lt;span class="n"&gt;FQDN&lt;/span&gt;
+        &lt;span class="n"&gt;charset&lt;/span&gt;     &lt;span class="n"&gt;utf&lt;/span&gt;&lt;span class="m"&gt;-8&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;max&lt;/span&gt; &lt;span class="n"&gt;upload&lt;/span&gt; &lt;span class="nb"&gt;size&lt;/span&gt;
+    &lt;span class="n"&gt;client_max_body_size&lt;/span&gt; &lt;span class="m"&gt;75&lt;/span&gt;&lt;span class="n"&gt;M&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;   &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;adjust&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;taste&lt;/span&gt;
+&lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Django&lt;/span&gt; &lt;span class="n"&gt;media&lt;/span&gt;
+&lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Finally&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;send&lt;/span&gt; &lt;span class="n"&gt;all&lt;/span&gt; &lt;span class="n"&gt;non&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;media&lt;/span&gt; &lt;span class="n"&gt;requests&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;Django&lt;/span&gt; &lt;span class="n"&gt;server&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
+    &lt;span class="n"&gt;location&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="err"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;uwsgi_pass&lt;/span&gt;  &lt;span class="n"&gt;django&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;include&lt;/span&gt;     &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;to&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;mysite&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;uwsgi_params&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;uwsgi_params&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt; &lt;span class="n"&gt;you&lt;/span&gt; &lt;span class="n"&gt;installed&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="err"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これを作成して、/etc/nginx/sites-enabledへシンボリックリンクを貼っておけば良い&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ service nginx restart &lt;span class="c1"&gt;#reloadでもいい？&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でWebアクセスできるようになる。はず。&lt;/p&gt;
+&lt;h2&gt;静的ファイルの設定手順&lt;/h2&gt;
+&lt;p&gt;nginx+uwsgiでプロジェクトを公開した場合、manage.py runserverの場合と違い、静的ファイルの置場を設定しないといけないっぽい&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;location ~ ^/static/ {
+root /path/to/mysite;
+break;
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;settings.pyにSTATIC_URL, STATIC_ROOTを追加&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;STATIC_URL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;/static/&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;STATIC_ROOT&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;/path/to/mysite/static&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;テンプレでは次のように静的ファイルにアクセスする&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt; &lt;span class="na"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;text/javascript&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;src&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;{{ STATIC_URL }}js/hoge.js&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;この設定だけでは静的ファイルが/path/to/mysite/staticに入ってないので、collectstaticコマンドを使ってファイルを集める&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python manage.py collectstatic
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これで各アプリに入ってる静的ファイルとadmin関連の静的ファイル全て持って来てくれる&lt;/p&gt;
+&lt;h2&gt;設定反映&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo service nginx reload &lt;span class="c1"&gt;#ubuntuの場合&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;deploy時に良く使うメモ&lt;/h2&gt;
+&lt;p&gt;mysite/settings.pyを以外を設定ファイルとして読み込む場合はmanage.pyに以下のオプションを付ける
+uwsgi.iniのenvも変更しておく&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;--settings&lt;span class="o"&gt;=&lt;/span&gt;mysite.settings_deploy
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;設定ファイルは例えばこんな感じで書いて、元のsettings.pyを上書きする&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pystock.settings&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;
+&lt;span class="n"&gt;DATABASES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="o"&gt;.......&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="python"></category><category term="django"></category></entry><entry><title>PhantomJSとSeleniumをpythonから使ってみる</title><link href="http://blog.thoz.org/2014/10/10/phantomjs/" rel="alternate"></link><updated>2014-10-10T13:33:48+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-10-10:2014/10/10/phantomjs/</id><summary type="html">&lt;p&gt;スクレーピングするのに便利な方法を調べてる内に、PhantomJSが良さげだなと思ったので、軽く使ってみた。参考&lt;a href="http://blog.kzfmix.com/entry/1379417397"&gt;Python+Selenium+PhantomJSが快適すぎる&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;PhantomJSのインストール&lt;/h2&gt;
+&lt;p&gt;Ubuntuを使ってるので&lt;a href="http://phantomjs.org/build.html"&gt;PhantomJSのページ&lt;/a&gt;を参考に&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude update
+$ sudo aptitude install build-essential chrpath git-core libssl-dev libfontconfig1-dev libxft-dev
+$ git clone git://github.com/ariya/phantomjs.git
+$ &lt;span class="nb"&gt;cd&lt;/span&gt; phantomjs
+$ git checkout 1.9
+$ ./build.sh
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;あとは./bin/にphantomjsが入っているので、./bin/にパスを通しておしまい&lt;/p&gt;
+&lt;h2&gt;Seleniumをpythonから使えるようにする&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ pip install selenium
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これだけでおk&lt;/p&gt;
+&lt;h2&gt;SeleniumでPhantomJSのドライバを使う&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;selenium&lt;/span&gt; &lt;span class="nn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;webdriver&lt;/span&gt;
+
+&lt;span class="n"&gt;driver&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;webdriver&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;PhantomJS&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;driver&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;http://www.yahoo.co.jp&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;driver&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;current_url&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じ。何が出来るかは&lt;a href="http://selenium-python.readthedocs.org/en/latest/api.html"&gt;Selenium Python BindingsのWebDriver API&lt;/a&gt;を見ると良い。&lt;/p&gt;
+&lt;p&gt;Javascriptをちゃんと評価してくれるので、すんげーやりやすい。昔ながらのフレームや、新規ウィンドウが出るようなものも上手く再現してくれる。すげーすげー&lt;/p&gt;</summary><category term="python"></category></entry><entry><title>djangoで出てくるエラーメッセージメモ</title><link href="http://blog.thoz.org/2014/08/06/django-error/" rel="alternate"></link><updated>2014-08-06T15:42:43+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-08-06:2014/08/06/django-error/</id><summary type="html">&lt;p&gt;Djangoでエラーメッセージが出た時に、どこから当たりを付けていくか
+イチイチググってるので、まとめておく。逐次追記。&lt;/p&gt;
+&lt;h2&gt;other_dict must be a mapping (dictionary-like) object&lt;/h2&gt;
+&lt;p&gt;returnで返す時のdictionaryが&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{&amp;#39;a&amp;#39;,&amp;#39;b&amp;#39;}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;となってないかチェック。正しくは&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{&amp;#39;a&amp;#39;:&amp;#39;b&amp;#39;}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;h2&gt;Django ImportError when importing xxx&lt;/h2&gt;
+&lt;p&gt;ライブラリをインストールしていない場合、&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ pip install xxx
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;ライブラリ入れてる場合、xxxと同じファイル名のpythonファイル（とキャッシュ）が無いかチェックして、名前を変更するか、消す&lt;/p&gt;
+&lt;h2&gt;locale.Error: unsupported locale setting&lt;/h2&gt;
+&lt;p&gt;localeの設定名がおかしい。例えばこんな風だとエラー&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;locale&lt;/span&gt;
+&lt;span class="n"&gt;locale&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setlocale&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;locale&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;LC_ALL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;ja_JP&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こうするとオッケー&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;locale&lt;/span&gt;
+&lt;span class="n"&gt;locale&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setlocale&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;locale&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;LC_ALL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;ja_JP.utf8&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;IndexError: list index out of range&lt;/h2&gt;
+&lt;p&gt;リストのインデックスが範囲外なので、該当する箇所のリストの添字をチェック。そもそもリストになっているかどうかもチェック。&lt;/p&gt;</summary><category term="python"></category><category term="django"></category><category term="memo"></category></entry><entry><title>Djangoでpython-social-authを使うための最低限の設定</title><link href="http://blog.thoz.org/2014/07/23/use-python-social-auth-in-django/" rel="alternate"></link><updated>2014-07-23T09:40:36+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-07-23:2014/07/23/use-python-social-auth-in-django/</id><summary type="html">&lt;p&gt;「djangoでfacebook, twitter, mixiでの認証使うにはどうしたらいいんだろ？」&lt;a href="http://twitter.com/shigepon/status/491397829215006720"&gt;URL&lt;/a&gt;と質問したら、@key3さんから「@shigepon python-social-authおすすめ &lt;a href="https://t.co/uWqOX8Xh94"&gt;https://t.co/uWqOX8Xh94&lt;/a&gt;」&lt;a href="http://twitter.com/key3/status/491404335335477248"&gt;URL&lt;/a&gt;と教えて貰ったので試してみた。&lt;/p&gt;
+&lt;p&gt;一日試してみて、認証出来たんだけど、&lt;a href="http://psa.matiasaguirre.net/docs/index.html"&gt;ドキュメント&lt;/a&gt;見ても、どれが最低限必要な設定なのか良く分からなかったのでブログに残しておく。&lt;/p&gt;
+&lt;h2&gt;python-social-authをインストール&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ pip install python-social-auth
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;設定&lt;/h2&gt;
+&lt;!-- more --&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;INSTALLED_APPS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;social.apps.django_app.default&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;AUTHENTICATION_BACKENDS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;social.backends.twitter.TwitterOAuth&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="c1"&gt;#Twitterでの認証をする場合。他の認証がある場合は該当するバックエンドを追加&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;django.contrib.auth.backends.ModelBackend&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+        &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;SOCIAL_AUTH_TWITTER_KEY&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="c1"&gt;#これと次の行はTwitter認証用。別の認証を用いる場合は別の設定が必要&lt;/span&gt;
+&lt;span class="n"&gt;SOCIAL_AUTH_TWITTER_SECRET&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;SOCIAL_AUTH_LOGIN_REDIRECT_URL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;/&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;SOCIAL_AUTH_LOGIN_URL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;/login/&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;注意：
+AUTH_USER_MODEL
+を加えるとエラー出たので注意(Django 1.6)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# urls.py&lt;/span&gt;
+    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;social.apps.django_app.urls&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;namespace&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;social&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;設定後&lt;/h2&gt;
+&lt;p&gt;syncdbしておく&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python manage.py syncdb
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これで例えばtwitter認証の場合に&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;http://host/login/twitter
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;にアクセスすると認証を行ってくれるようになった。
+テンプレートにリンクを作りたい場合は&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="na"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;\{\% url &amp;#39;social:base&amp;#39; &amp;#39;twitter&amp;#39; \%\}&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;login&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とかやると作れる。
+「twitter」の部分は認証の種類によって変えるが、どういうルールで名前を決めるのかイマイチ分かってない。試行錯誤が要るかも。&lt;/p&gt;</summary><category term="python"></category><category term="django"></category></entry><entry><title>Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する</title><link href="http://blog.thoz.org/2014/07/02/django-show-list-with-paging/" rel="alternate"></link><updated>2014-07-02T11:51:44+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-07-02:2014/07/02/django-show-list-with-paging/</id><summary type="html">&lt;h2&gt;データの一覧表示&lt;/h2&gt;
+&lt;p&gt;あとで参考ページとか追記する予定。
+データの一覧表示には何種類かファイルが必要（モデル、ビュー、テンプレート、URLディスパッチャー）。
+それぞれこんな感じで用意する。&lt;/p&gt;
+&lt;h3&gt;モデル&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.db&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Bocho&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;court&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;date&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DateField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="o"&gt;....&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;モデルではフィールドとその属性を決める。このコードではクラスの中でMetaクラスを定義すると、モデルのテーブル名とかそういうのを色々定義出来るみたい。定義出来るフィールドの種類はDjangoのマニュアルに書いてあるのですぐ分かる。&lt;/p&gt;
+&lt;h3&gt;ビュー&lt;/h3&gt;
+&lt;p&gt;データをテンプレートに設定する部分。リクエストパラメータから、必要なデータを取得する部分。多分。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# views.py&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.shortcuts&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;render&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.core.paginator&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Paginator&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;PageNotAnInteger&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;EmptyPage&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;bocho.models&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Bocho&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt; &lt;span class="c1"&gt;#requestはHttpRequestオブジェクト&lt;/span&gt;
+    &lt;span class="n"&gt;objects&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Bocho&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;order_by&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;-date&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;paginator&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Paginator&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;#10行毎にページング&lt;/span&gt;
+    &lt;span class="n"&gt;page&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;GET&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;page&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;#GETパラメータからページ番号を取得(初期値は1)&lt;/span&gt;
+    &lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;object_list&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;paginator&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;page&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;page&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;#ここでページング&lt;/span&gt;
+    &lt;span class="k"&gt;except&lt;/span&gt; &lt;span class="n"&gt;PageNotAnInteger&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;object_list&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;paginator&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;page&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;#変なページ番号なら1ページ目&lt;/span&gt;
+    &lt;span class="k"&gt;except&lt;/span&gt; &lt;span class="n"&gt;EmptyPage&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;object_list&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;paginator&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;page&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;paginator&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;num_pages&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;#存在しないページ番号なら最後のページ&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;render&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;list.html&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;object_list&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;object_list&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考&lt;a href="http://www.djangoproject.jp/doc/ja/1.0/ref/request-response.html"&gt;リクエストオブジェクトとレスポンスオブジェクト — Django v1.0 documentation&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;テンプレート&lt;/h3&gt;
+&lt;p&gt;bocho/templates/list.htmlを作る。中身は一部だけ。{{ 変数名 }}でビューで割り当てた変数を表示する。
+あと、色々テンプレート用のタグがある。これもDjangoマニュアルを見ると分かる。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# list.html
+{% raw %}
+&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;table&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;table&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;thead&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;span2&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;日付&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;名称&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;裁判所&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;thead&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+{% for object in object_list %}
+&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;tr&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;{{ object.date|date:&amp;quot;Y-m-d&amp;quot; }}&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;{{ object.name }}&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;{{ object.court }}&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;tr&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+{% endfor %}
+&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;table&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+{% endraw %}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;URLディスパッチャー&lt;/h3&gt;
+&lt;p&gt;ドメイン名/bocho/で一覧表示出来るように正規表現使ってviewsに割り当てる。&lt;/p&gt;
+&lt;p&gt;myproject/urls.py&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# urls.py&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.conf.urls&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;patterns&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;url&lt;/span&gt;
+&lt;span class="n"&gt;urlpatterns&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;patterns&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="c1"&gt;# Examples:&lt;/span&gt;
+    &lt;span class="c1"&gt;# url(r&amp;#39;^$&amp;#39;, &amp;#39;pycourt.views.home&amp;#39;, name=&amp;#39;home&amp;#39;),&lt;/span&gt;
+    &lt;span class="c1"&gt;# url(r&amp;#39;^blog/&amp;#39;, include(&amp;#39;blog.urls&amp;#39;)),&lt;/span&gt;
+    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;r&amp;#39;bocho/^&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;bocho.urls&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;namespace&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;bocho&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt; &lt;span class="c1"&gt;#url(正規表現, 別のurlsに投げる設定。ここではbocho/urls.pyに投げる)&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;bocho/urls.pyは無いので作る。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# urls.py&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.conf.urls&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;patterns&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;url&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;bocho&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;views&lt;/span&gt;
+&lt;span class="n"&gt;urlpatterns&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;patterns&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;r&amp;#39;^$&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;views&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="c1"&gt;#url(正規表現, 割り当てるビュー, URL作ったりリダイレクトする時に付けておくと便利な名前)&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;一覧はどうせページングするので、views.pyはこの形で覚えておくと良いかも&lt;/p&gt;
+&lt;h2&gt;ページング&lt;/h2&gt;
+&lt;p&gt;どうせbootstrapを使うのでdjango-bootstrap-toolkitを使う方法を載せる。
+ページ分けする対象をobject_list、ページ送りのURLにpage=以外に設定するパラメータをreqとすると、&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# list.html
+{% raw %}
+{% load bootstrap_toolkit %}↲
+{% bootstrap_pagination object_list align=&amp;quot;center&amp;quot; extra=req %}
+{% endraw %}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;と設定しておけば良い。&lt;/p&gt;
+&lt;h2&gt;ページングにパラメータを付ける&lt;/h2&gt;
+&lt;p&gt;ついでにメモ
+例えば"date=2001-01-01"みたいなパラメータを設定したいんだけど、割り当ててる変数？は日付オブジェクトの場合&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# list.html
+{% raw %}
+{% bootstrap\_pagination object\_list align=&amp;quot;center&amp;quot; extra=date|date:&amp;quot;Y-m-d&amp;quot;|s    tringformat:&amp;quot;%date=%s&amp;quot;|slice:&amp;quot;1:&amp;quot; %}
+{% endraw %}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じで文字列をくっつけてパラメータにすることが出来る。かなり強引&lt;a href="https://www.google.com/url?q=http://d.hatena.ne.jp/feiz/20110414/1302771447&amp;amp;usd=2&amp;amp;usg=AFQjCNFN9kzyrEJj_WZEatK2wIL07eaD0w"&gt;参考&lt;/a&gt;&lt;/p&gt;</summary><category term="django"></category><category term="bootstrap"></category><category term="python"></category></entry><entry><title>Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(2):Bootstrapを使ってみる</title><link href="http://blog.thoz.org/2014/06/25/django-with-bootstrap/" rel="alternate"></link><updated>2014-06-25T21:41:23+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-06-25:2014/06/25/django-with-bootstrap/</id><summary type="html">&lt;p&gt;テンプレートにBootstrapを当てはめたいので、Bootstrap関連のパッケージを探してみた。ググってみて&lt;a href="https://github.com/dyve/django-bootstrap-toolkit"&gt;django-bootstrap-toolkit&lt;/a&gt;が良さそうかなと思ったので、使ってみた。&lt;/p&gt;
+&lt;p&gt;インストール&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ pip install django-bootstrap-toolkit
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;myproject/settings.pyのINSTALLED_APPSに以下を追加&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;#39;bootstrap-toolkit&amp;#39;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;テンプレートを書く&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{% raw %}
+{% load bootstrap_toolkit %}} #bootstrap-toolkitを使うページ全てに必要っぽい 
+...
+&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;head&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+{% bootstrap_stylesheet_tag %}  #bootstrapのcssへのタグ(CDNから読み込み)
+{% bootstrap_stylesheet_tag &amp;quot;responsive %} #bootstrapのレスポンシブページ用タグ(CDNから読み込み)
+{% bootstrap_javascript_tag %}  #bootstrapのjavascriptへのタグ(CDNから読み込み)
+{% endraw %}
+&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;head&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+あとは普通にbootstrapのタグを書く
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じで最低限使える。フォームに関してはもっと色々出来るみたいだけど、まだやってない。パッケージ使ってみたけど、これだけなら普通にbootstrapのファイルを読み込めば済むんだけど、フォーム関連などフィルタやカスタムタグがあるみたい。便利そうなので、これを使うことにしよう。&lt;/p&gt;</summary><category term="django"></category><category term="bootstrap"></category><category term="python"></category></entry><entry><title>詳細ページを作る：DjangoでPostgreSQLとBootstrapを使ったアプリを作ってみた(2)</title><link href="http://blog.thoz.org/2014/06/19/make-detail-page-using-django-2/" rel="alternate"></link><updated>2014-06-19T17:58:11+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-06-19:2014/06/19/make-detail-page-using-django-2/</id><summary type="html">&lt;p&gt;詳細ページを作って表示するには&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;models.pyでモデルを作る&lt;/li&gt;
+&lt;li&gt;urls.pyを作る&lt;/li&gt;
+&lt;li&gt;views.pyでビューを作る&lt;/li&gt;
+&lt;li&gt;テンプレを作る&lt;/li&gt;
+&lt;li&gt;Webサーバーを立ち上げる&lt;/li&gt;
+&lt;li&gt;アクセスして確認&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;くらいの手順が必要。&lt;/p&gt;
+&lt;h2&gt;models.pyでモデルを作る&lt;/h2&gt;
+&lt;p&gt;とりあえずおもむろにmodels.pyを編集。Railsの時と同様にテーブル名にeventを使う&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.db&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Create your models here.&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Event&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CharField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;max_length&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;date&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DateTimeField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+    &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Meta&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;db_table&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;event&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;コマンドとか無くて、ソースで定義するのは個人的に性に合っている。Railsではモデルを修正したい時に、db/migrate以下のファイルを修正したり、app/models以下のファイルを修正したりで、情報がまとまってなくて困ったけど、Djangoの場合、models.pyを修正すれば事足りるっぽい。Metaクラスでdb_tableってのにテーブル名を指定してやると、指定したテーブル名を使用出来る。指定しない場合、bocho_eventってテーブルにアクセスするっぽい。&lt;/p&gt;
+&lt;p&gt;フィールドの種類として何が使えるかとかまだまだ勉強中だけど、CharFieldはとりあえず最大文字数(max_length)を指定する必要があることは分かった。指定したくない場合はTextField使えばいいのかな？&lt;/p&gt;
+&lt;h2&gt;urls.pyを作る&lt;/h2&gt;
+&lt;p&gt;Railsでのconfig/routes.rbに当たるのが、urls.py。myproject以下には自動で出来るけど、作ったアプリ（今回はbocho）以下には用意されないので、自分で作って編集する。urlのルーティングは、まずmyproject側で行って、その後、必要な場合にアプリ側のルーティングが行われる。events/show/1でid=1のデータを表示する場合、&lt;/p&gt;
+&lt;p&gt;myproject/urls.pyは&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;urlpatterns&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;patterns&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;r&amp;#39;^events/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;bocho.urls&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;namespace&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;bocho&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;と書いて、bocho/urls.pyを&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;urlpatterns&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;patterns&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;r&amp;#39;^show/(\d+)/$&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;views&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;detail&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;detail&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;と書くと、良さげな感じがする。書き方は色々あると思うけど（myproject側をr''みたいにして、bocho側にパターンを全て書いておくとかなんとか）。正規表現の()内はメソッドにパラメータとして渡される。rhacoもそうなので取っ付きやすい。&lt;/p&gt;
+&lt;p&gt;nameとかnamespaceはviews.pyやテンプレートなどでurlを生成する時に用いる。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;url&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;bocho:detail&amp;#39;&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="c1"&gt;#テンプレート内&lt;/span&gt;
+&lt;span class="n"&gt;reverse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;bocho:detail&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;#views内&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Railsだと、こういうのどうしたら良いか分からなくて困った。&lt;/p&gt;
+&lt;h2&gt;views.pyでビューを作る&lt;/h2&gt;
+&lt;p&gt;ビューはbocho/views.pyを編集すればおk。詳細表示の場合こんな感じ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# coding: utf-8&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.shortcuts&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;render&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;bocho.models&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Event&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;detail&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;event_id&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;event&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Event&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;event_id&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;render&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;event/detail.html&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;object&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;event&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;※　coding: utf-8ってのはpython3では要らないらしい。
+modelは先にインポートする。表示に使うテンプレートと変数はview内で指定する。getとかallとかDBにアクセスするためのメソッドはこれから勉強が要るけど、要はDAOなので、それほど苦にはならないっしょ。&lt;/p&gt;
+&lt;h2&gt;テンプレを作る&lt;/h2&gt;
+&lt;p&gt;テンプレを作る前にテンプレのパスに関する設定をする。myproject/settings.pyに次の行を追加&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;INSTALLED_APPS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="o"&gt;....&lt;/span&gt;
+&lt;span class="s1"&gt;&amp;#39;bocho&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;TEMPLATE_DIRS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;BASE_DIR&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;templates&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こうしておくと、bochoアプリのテンプレはbocho/templates/以下を参照し、さらにファイルが無い場合はtemplates/以下も調べる。上のように'event/detail.html'と指定した場合は、bocho/templates/event/detail.htmlを参照する。&lt;/p&gt;
+&lt;p&gt;設定出来たので、bocho/templates/event/detail.htmlを以下のように書く&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;body&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;h1&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;詳細画面&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;h1&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;dl&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;dt&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;{{ object.name }}&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;dt&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;dd&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;{{ object.date|date:&amp;quot;Y-m-d&amp;quot; }}&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;dd&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;dl&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;body&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;フォーマットの方法とか良く分からないので、勉強が必要。dateはこの方法で良さそうだけど、他の場合どうなるんだろ？&lt;/p&gt;
+&lt;h2&gt;Webサーバーを立ち上げる&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python manage.py runserver xxx.xxx.xx.xx:xxxx
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;xの部分にIPとポートを入れれば指定したIP、ポートで表示出来る。設定しない場合は知らない。どっかググれば書いてあるはず。あとはxxx.xxx.xx.xx:xxxxにブラウザでアクセスするとページを確認出来るようになる&lt;/p&gt;
+&lt;p&gt;最初に作る時のコード量はRailsより多いけど、大したことはない。それより、フォルダとファイル構成が分かりやすいので、どこ修正したら良いか分からないなんてことも無いし、Railsより修正がやりやすい気がする。&lt;/p&gt;</summary><category term="python"></category><category term="django"></category><category term="bootstrap"></category></entry><entry><title>Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずDjangoプロジェクトとアプリを作ってみた</title><link href="http://blog.thoz.org/2014/06/18/start-django-project/" rel="alternate"></link><updated>2014-06-18T12:49:29+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-06-18:2014/06/18/start-django-project/</id><summary type="html">&lt;p&gt;Djangoはプロジェクトを作っておいて、アプリ毎に細かく機能を分けて、プロジェクトで統合するみたいな形式を取るみたい。なのでまずはDjangoプロジェクトを作成&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ django-admin.py startproject myproject
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とすると、カレントフォルダにmyprojectフォルダが出来る。ファイル構成を見ると、 &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;myproject/
+  manage.py
+  myproject/
+    __init__.py
+    settings.py
+    urls.py
+    wsgi.py
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;となっている。myprojectフォルダ内のファイルに共通設定を書くという感じになりそうだ。PostgreSQLに接続するので、settings.pyを修正&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;DATABASES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;ENGINE&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;django.db.backends.postgresql_psycopg2&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;NAME&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;USER&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;username&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;PASSWORD&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;******&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;HOST&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;hostname or ip&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;PORT&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;5432&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;あと、psycopg2をインストールしていないので&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo pip install psycopg2
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とやって&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; myproject
+$ python manage.py syncdb
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とやると、hogeに色々テーブルが出来る。INSTALLED_APPSに書いてあるアプリに関するテーブルみたい。初期状態では以下のアプリが入るみたい。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;django.contrib.admin - 管理用サイト
+django.contrib.auth - 認証
+django.contrib.contenttypes - ??
+django.contrib.sessions - セッション管理
+django.contrib.messages - ??
+django.contrib.staticfile - 静的ファイル用アプリ
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;テーブルは以下のものが作られた&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;auth_group
+auth_group_permissions
+auth_permission
+auth_user
+auth_user_groups
+auth_user_user_permissions
+django_admin_log
+django_content_type
+django_session
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;あと上のコマンド実行時に、管理者ユーザー作るかどうか聞かれる。とりあえず作った。&lt;/p&gt;
+&lt;p&gt;DB設定済ませたので、おもむろにアプリ作成。Railsの時と同様に傍聴情報の出力をやってみるか。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python manage.py startapp bocho
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;を実行するとbochoフォルダが出来てその中に&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;bocho/
+  __init__.py
+  admin.py
+  models.py
+  tests.py
+  views.py
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;が出来た。とりあえずここまで。&lt;/p&gt;</summary><category term="python"></category><category term="django"></category><category term="PostgreSQL"></category></entry><entry><title>Ubuntu 12.04でDjangoを始める</title><link href="http://blog.thoz.org/2014/06/18/start-django-on-ubuntu-12-dot-04/" rel="alternate"></link><updated>2014-06-18T08:06:49+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-06-18:2014/06/18/start-django-on-ubuntu-12-dot-04/</id><summary type="html">&lt;p&gt;ヘタレなことにRailsに挫折してしまったので、Railsと同様良く名前が出てくるDjangoを試してみることにする。Djangoを使うにはpythonとかpipとか入れておくといいらしい。&lt;/p&gt;
+&lt;p&gt;どれもとりあえずaptitudeでインストール出来るので、おもむろに&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude install python,python-pip
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でインストール。python2.7がインストール出来た。一応aptitude updateくらいしておいたら良いと思う。&lt;/p&gt;
+&lt;p&gt;んで、Djangoはpipでインストール&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo pip install &lt;span class="nv"&gt;Django&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;1.6.5
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;でDjango 1.6.5をインストール出来た。python、pipはもうちょっと違うインストール方法があると思うけど、今回はこうしてみた。簡単。&lt;/p&gt;
+&lt;p&gt;で、次はチュートリアル進めるんだろうけど、チュートリアルは結構内容が多そうなので、必要な部分だけ取り出しながらやってみる。「データベースにすでに登録してあるデータをDjangoとBootstrapでWebサービスっぽく表示する」という方針で必要な箇所を進めていく。なのでadminとかそこらへんはすっ飛ばす予定。&lt;/p&gt;
+&lt;p&gt;-- 7/2追記&lt;/p&gt;
+&lt;p&gt;Djangoのインストール前にvirtualenvという仮想環境を入れて、その中でDjango入れた方がいいみたい。&lt;/p&gt;
+&lt;h3&gt;virtualenvのインストール&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo pip install virtualenv
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;virtualenvで仮想環境構築&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ virtualenv hoge
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とすると、カレントディレクトリにhogeというディレクトリが出来て、その中に仮想環境が入る。オプションでpythonのバージョン指定とかも出来るみたいだけど、今回はしない。&lt;/p&gt;
+&lt;h3&gt;virtualenvで作った仮想環境を使う&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;source&lt;/span&gt; hoge/bin/activate
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;で使うことが出来る。ここでDjangoのインストールとかやっておくと良いみたい&lt;/p&gt;</summary><category term="python"></category><category term="django"></category></entry></feed>

@@ -1,5 +1,218 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.thoz.org/" rel="alternate"></link><link href="http://blog.thoz.org/feeds/linux.atom.xml" rel="self"></link><id>http://blog.thoz.org/</id><updated>2014-04-08T14:39:21+09:00</updated><entry><title>Ubuntuでopensslのsecurity patchを当てる</title><link href="http://blog.thoz.org/2014/04/08/update-openssl-security-patch/" rel="alternate"></link><updated>2014-04-08T14:39:21+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-04-08:2014/04/08/update-openssl-security-patch/</id><summary type="html">&lt;p&gt;本日、&lt;a href="http://jp.techcrunch.com/2014/04/08/20140407massive-security-bug-in-openssl-could-effect-a-huge-chunk-of-the-internet/"&gt;OpenSSLの重大バグが発覚。インターネットの大部分に影響の可能性 | TechCrunch Japan&lt;/a&gt;というニュースで&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.thoz.org/" rel="alternate"></link><link href="http://blog.thoz.org/feeds/linux.atom.xml" rel="self"></link><id>http://blog.thoz.org/</id><updated>2016-01-25T21:20:26+09:00</updated><entry><title>インストールしたfluentdをserviceから使えるようにする</title><link href="http://blog.thoz.org/2016/01/25/enable-service-fluentd-start/" rel="alternate"></link><updated>2016-01-25T21:20:26+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2016-01-25:2016/01/25/enable-service-fluentd-start/</id><summary type="html">&lt;p&gt;&lt;a href="http://blog.shigepon.info/blog/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/"&gt;前回&lt;/a&gt;の続き&lt;/p&gt;
+&lt;p&gt;rbenvのgemを使ってインストールしたfluentdはserviceからの起動スクリプトが無いので、service fluentd startみたいなことをしたければ自分で登録するしかない。&lt;/p&gt;
+&lt;p&gt;でも1からスクリプトを書くのは面倒なので、td-agentのスクリプトを利用することにした。
+まずはtd-agentのインストール、削除&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude install td-agent
+$ sudo aptitude remove td-agent
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;削除してもserviceで使うスクリプトは残るみたいなので、これを元に起動スクリプトを作る。&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;p&gt;td-agentの起動スクリプトは&lt;/p&gt;
+&lt;p&gt;/etc/init.d/td-agentにある。&lt;/p&gt;
+&lt;p&gt;td-agentをfluentdに変えて、編集した。編集内容は主に以下の通り&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;td-agentをfluentdに変更&lt;/li&gt;
+&lt;li&gt;DAEMONをfluentdまでのパスに変更&lt;/li&gt;
+&lt;li&gt;USER、GROUPをfluentdをインストールしたユーザー、グループに変更&lt;/li&gt;
+&lt;li&gt;DAEMON_ARGSに"--config /path/to/config"を追加&lt;/li&gt;
+&lt;li&gt;/var/log/fluentd/fluentd.logを作っておく。ユーザー、グループはfluentdのユーザー、グループにする&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;必要無くて消して良い部分も結構ある気がするが、とりあえず動く為に最小限の修正にしておく。
+最後にserviceに登録するために&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo update-rc.d fluentd defaults
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でserviceにfluentdが登録される。ちなみにスクリプトのデバッグは&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ bash -x /etc/init.d/fluentd start
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とすればある程度出来るので、変なエラーが出ないかはここでチェックしてしまうと良い。&lt;/p&gt;
+&lt;p&gt;以上をansibleで動かすようにしてみた。&lt;/p&gt;
+&lt;p&gt;参考：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://l-w-i.net/t/ubuntu/service_001.txt"&gt;[Ubuntu] サービスを有効化/無効化する方法 - Life with IT&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://askubuntu.com/questions/36200/how-to-debug-upstart-scripts"&gt;debugging - how to debug upstart scripts? - Ask Ubuntu&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</summary><category term="linux"></category></entry><entry><title>Vmware Esxiがfatal error 33を出したのでインストールしなおしてついでに色々試した話</title><link href="http://blog.thoz.org/2015/08/05/esxi-shows-fatal-error-33/" rel="alternate"></link><updated>2015-08-05T16:45:31+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2015-08-05:2015/08/05/esxi-shows-fatal-error-33/</id><summary type="html">&lt;p&gt;Vmware Esxiがある日&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;error loading /s.v00
+fatal error: &lt;span class="m"&gt;33&lt;/span&gt; inconsistent data
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;というメッセージを出して起動しなくなったので、修復方法をメモしておく&lt;/p&gt;
+&lt;h2&gt;結論&lt;/h2&gt;
+&lt;p&gt;まず結論から言うと、Vmware Esxiを入れ直すことになった。他にも方法があるらしいが、その方法のページが途中で会員登録しないと見れなくなったので、参考にしなかった。&lt;/p&gt;
+&lt;p&gt;参考：
+&lt;a href="https://communities.vmware.com/thread/342182"&gt;error loading s.v00 fatal error 33 inconsistent... | VMware Communities&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Vmware Esxiの入れ直し&lt;/h2&gt;
+&lt;p&gt;USBにインストールしていたので、要はそのままインストールし直すだけなんだけど、以下手順&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Esxiのisoをダウンロード&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://my.vmware.com/jp/web/vmware/login"&gt;my vmware&lt;/a&gt;からログイン(ユーザー登録はフォームに記入して・・・という良くある方法なので省略)
+-- &lt;a href="https://my.vmware.com/group/vmware/downloads#tab2"&gt;製品ダウンロード&lt;/a&gt;に移動&lt;/li&gt;
+&lt;li&gt;VMware vSphere Hypervisor (ESXi)の横の&lt;a href="https://my.vmware.com/group/vmware/info/slug/datacenter_cloud_infrastructure/vmware_vsphere_hypervisor_esxi/6_0"&gt;View Download Components&lt;/a&gt;をクリック&lt;/li&gt;
+&lt;li&gt;左にバージョン選択用のコンボボックスがあるので、バージョンを選択して、Downloadリンクをクリック&lt;/li&gt;
+&lt;li&gt;Registerのボタンが出てる場合、まずクリックして、ライセンスの登録を行う&lt;/li&gt;
+&lt;li&gt;License Informationにlicense keysが出るので保存しておく。(Vmware ESXi Clientでのライセンスキー登録に使う)&lt;/li&gt;
+&lt;li&gt;ライセンスの登録が済んだらDownload Packages以下の項目からダウンロードするためのリンクが出るのでダウンロードする&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;em&gt;AdBlockを入れてるとダウンロードが開始しなかったので注意&lt;/em&gt;&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;ダウンロードしたisoをCDに焼く&lt;/li&gt;
+&lt;li&gt;Esxiのハード要件を全て満たすハード上でCD起動する&lt;/li&gt;
+&lt;li&gt;ESXiをインストールする&lt;ul&gt;
+&lt;li&gt;Boot MenuでESXi Installerを選択する&lt;/li&gt;
+&lt;li&gt;インストールを進めるかどうか聞かれる(Enter)&lt;/li&gt;
+&lt;li&gt;ライセンス許諾を聞かれる(F11でおk)&lt;/li&gt;
+&lt;li&gt;インストール先を選ぶ(入れたい場所を選ぶ。USB差しておけばUSBも出て選択出来る)&lt;/li&gt;
+&lt;li&gt;キーボードレイアウトを選択する&lt;/li&gt;
+&lt;li&gt;rootアカウントのパスワードを設定する(タブで移動、2回設定するEnterで完了)&lt;/li&gt;
+&lt;li&gt;最後の確認(F11でおk)&lt;/li&gt;
+&lt;li&gt;インストール終了後Enterで再起動&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;バージョン5.5、6.0&lt;/h2&gt;
+&lt;p&gt;今まで入れてたのがEsxiバージョン5.0だったので、ついでに5.5、6.0を試してみた。インストール方法は入れ直し方法と同じ。&lt;/p&gt;
+&lt;p&gt;で、インストール後にクライアントをDLしてホストに接続してみた。どのバージョンでも問題なく出来たが、Windows XPの端末ではこの2つのバージョンは接続出来ないそうな。&lt;/p&gt;
+&lt;p&gt;Vmの操作（インベントリへの追加、起動、コンソール表示、終了）は全てのバージョンで同じように出来た。Vmはバージョン5で作ったものだが他のバージョンでの操作も問題ないらしい。これは便利。&lt;/p&gt;
+&lt;h2&gt;sshでEsxiホストを操作する&lt;/h2&gt;
+&lt;p&gt;linuxやmacからEsxiホストを操作して、vmの起動、終了とかやりたかったので、ついでに試してみた。手順は以下の通り&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;EsxiホストでSSHを有効にする&lt;ul&gt;
+&lt;li&gt;初期画面からCustomize Systemへ移動(F2)&lt;/li&gt;
+&lt;li&gt;カーソルを上下移動して「Troubleshooting Options」のところでEnter&lt;/li&gt;
+&lt;li&gt;Disable ESXi Shellにカーソルを合わせてEnterを押すとEnable ESXi Shellに変わる&lt;/li&gt;
+&lt;li&gt;Disable SSHにカーソルを合わせてEnterを押すとEnable SSHに変わる&lt;/li&gt;
+&lt;li&gt;Restart Management Agentsにカーソルを合わせてEnterを押す&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;ESXiクライアントでSSHを有効にする&lt;ul&gt;
+&lt;li&gt;インベントリが選択されている状態で、構成(Configuration) -&amp;gt; セキュリティプロファイル(Security Profile)の上部、サービス(Services)の「プロパティ(Properties)をクリック&lt;/li&gt;
+&lt;li&gt;SSHを選択し、オプション(Options)をクリック&lt;/li&gt;
+&lt;li&gt;ホストに連動して開始および停止(Start and stop with host)を選択し、サービスコマンドの開始(Start)ボタンを押す。その後okをクリックしてダイアログを消す。&lt;/li&gt;
+&lt;li&gt;同中部、ファイアウォール(Firewall)の「プロパティ(Properties)をクリック&lt;/li&gt;
+&lt;li&gt;SSHサーバ(SSH Server)をチェック&lt;/li&gt;
+&lt;li&gt;ファイアーウォール(Firewall)ボタンをクリック&lt;/li&gt;
+&lt;li&gt;IPアドレスの許可設定を行う。任意のIPアドレスからの接続を許可(Allow connections from any IP address)するのが一番楽。&lt;/li&gt;
+&lt;li&gt;okをクリックしていって、ダイアログを閉じる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;以上で、linuxやmacから&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ssh root@ESXiのip
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でインストール時に指定したパスワードを入力するとsshでESXiホストにアクセス出来るようになる。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://www.serenity-networks.com/networking/how-to-enable-ssh-on-vmware-esxi-5-5-5-6-all-other-versions/"&gt;How To Enable SSH on VMware ESXi 5 / 5.5 / 6 &amp;amp; All Other Versions | Serenity-Networks&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;ESXiの管理コマンド(ごく一部。追記予定)&lt;/h2&gt;
+&lt;h3&gt;インベントリへのVMの追加、削除&lt;/h3&gt;
+&lt;p&gt;追加&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ vim-cmd solo/registervm &lt;span class="o"&gt;[&lt;/span&gt;vmxのパス.vmx&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;vm名&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;削除&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ vim-cmd vmsvc/unregister &lt;span class="o"&gt;[&lt;/span&gt;vmのid&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;vm一覧&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ vim-cmd vmsvc/getallvms
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;ここで出て来たvmidをvmのidとして色んなコマンド内で使用する。&lt;/p&gt;
+&lt;h3&gt;vm起動、シャットダウン&lt;/h3&gt;
+&lt;p&gt;起動&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ vim-cmd vmsvc/power.on &lt;span class="o"&gt;[&lt;/span&gt;vmのid&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;終了&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ vim-cmd vmsvc/power.shutdown &lt;span class="o"&gt;[&lt;/span&gt;vmのid&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="http://qiita.com/binzume/items/096ce77f73b6e853c342"&gt;VMware ESXiをSSHでがんばるぞい(コマンドライン操作色々) - Qiita&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;ちなみに各コマンドについてはヘルプを出すオプションとか無いみたい。コマンド失敗した時に使用法が出ることもあるが、失敗するまで分からないとか怖いわー。&lt;/p&gt;
+&lt;h3&gt;ESXiシャットダウン&lt;/h3&gt;
+&lt;p&gt;シャットダウンと同時に電源を切る作業も必要&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ shutdown.sh &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; poweroff
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でおk。USBにインストールしているせいか分からないが、poweroffが無い場合、SSHの設定が再起動後、元に戻っていた。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://www.nojokeit.com/2013/02/shut-down-esxi-51-guest-vms-and-host.html"&gt;No Joke IT: Shut down ESXi 5.1 guest VMs and the host (free edition) via SSH - the easy way!&lt;/a&gt;&lt;/p&gt;</summary><category term="vmware"></category><category term="linux"></category></entry><entry><title>Ubuntu12.04でjenkinsのインストールと設定</title><link href="http://blog.thoz.org/2014/06/18/jenkins-setting/" rel="alternate"></link><updated>2014-06-18T15:08:25+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-06-18:2014/06/18/jenkins-setting/</id><summary type="html">&lt;p&gt;&lt;a href="http://jnst.hateblo.jp/entry/2013/10/03/123012"&gt;Ubuntu 12.04 LTS に Jenkins をインストール - MELODIC-X&lt;/a&gt;を参考にして設定した。
+Jenkins本体でアップグレード可能らしいので、aptitudeでインストール&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude install jenkins
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Nginx設定&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;location&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;jenkins&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;proxy_pass&lt;/span&gt; &lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="o"&gt;://&lt;/span&gt;&lt;span class="m"&gt;127&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="m"&gt;8080&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;で、nginxは起動してたので再読み込み&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo service nginx reload
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Jenkins設定ファイル修正&lt;/h2&gt;
+&lt;p&gt;jenkinsの設定ファイルは/etc/default/jenkinsにあるので編集
+最下行の起動パラメーターに&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;--prefix=/jenkins
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;を追加。jenkins再起動&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo service jenkins restart
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;以上&lt;/p&gt;</summary><category term="linux"></category><category term="test1st"></category></entry><entry><title>ubuntuでaptitude installした時にinitramfs-toolsのエラーが出た</title><link href="http://blog.thoz.org/2014/06/08/ubuntu-aptitude-error-in-initramfs-tools/" rel="alternate"></link><updated>2014-06-08T21:41:18+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-06-08:2014/06/08/ubuntu-aptitude-error-in-initramfs-tools/</id><summary type="html">&lt;p&gt;virtualboxをインストールしようとしたら&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;以下のパッケージの処理中にエラーが発生しました:
+ initramfs-tools
+E: Sub-process /usr/bin/dpkg returned an error code &lt;span class="o"&gt;(&lt;/span&gt;1&lt;span class="o"&gt;)&lt;/span&gt;
+パッケージをインストールできませんでした。復旧を試みています:
+initramfs-tools &lt;span class="o"&gt;(&lt;/span&gt;0.99ubuntu13.5&lt;span class="o"&gt;)&lt;/span&gt; を設定しています ...
+update-initramfs: deferring update &lt;span class="o"&gt;(&lt;/span&gt;trigger activated&lt;span class="o"&gt;)&lt;/span&gt;
+initramfs-tools のトリガを処理しています ...
+update-initramfs: Generating /boot/initrd.img-3.2.0-53-generic
+
+gzip: stdout: No space left on device
+cpio: 書き込みエラー: Broken pipe
+E: mkinitramfs failure cpio &lt;span class="m"&gt;1&lt;/span&gt; gzip 1
+update-initramfs: failed &lt;span class="k"&gt;for&lt;/span&gt; /boot/initrd.img-3.2.0-53-generic with 1.
+dpkg: initramfs-tools の処理中にエラーが発生しました &lt;span class="o"&gt;(&lt;/span&gt;--configure&lt;span class="o"&gt;)&lt;/span&gt;:
+ サブプロセス インストール済みの post-installation スクリプト はエラー終了ステータス &lt;span class="m"&gt;1&lt;/span&gt; を返しました
+以下のパッケージの処理中にエラーが発生しました:
+ initramfs-tools
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;みたいなエラーが出た。どうも/bootが一杯になってると出るらしい。
+&lt;a href="http://www.cagylogic.com/archives/2012/11/04150426.php"&gt;/bootがあふれてapt-get upgradeが失敗したでござる | cagylogic&lt;/a&gt;を参考にして削除することにした。ただ、普通にapt-get purgeとかapt-get removeしても結局エラーメッセージはなぜか出たまま。&lt;/p&gt;
+&lt;p&gt;で、さらにググって&lt;a href="http://tatuas.hatenablog.com/entry/2013/08/22/015141"&gt;Ubuntuでboot容量不足という警告の対処法 - Tatuas Blog&lt;/a&gt;のように&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo apt-get remove linux-image-xxxx
+$ sudo apt-get autoremove
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とすると、上手く消すことが出来た&lt;/p&gt;</summary><category term="linux"></category></entry><entry><title>Ubuntuでopensslのsecurity patchを当てる</title><link href="http://blog.thoz.org/2014/04/08/update-openssl-security-patch/" rel="alternate"></link><updated>2014-04-08T14:39:21+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-04-08:2014/04/08/update-openssl-security-patch/</id><summary type="html">&lt;p&gt;本日、&lt;a href="http://jp.techcrunch.com/2014/04/08/20140407massive-security-bug-in-openssl-could-effect-a-huge-chunk-of-the-internet/"&gt;OpenSSLの重大バグが発覚。インターネットの大部分に影響の可能性 | TechCrunch Japan&lt;/a&gt;というニュースで&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;過去2年以内のあらゆるバージョンのOpenSSLが走るシステムで、システムメモリー上にある大量のデータを暴露することが可能&lt;/p&gt;
 &lt;/blockquote&gt;

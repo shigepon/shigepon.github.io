@@ -1,7 +1,889 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.thoz.org/" rel="alternate"></link><link href="http://blog.thoz.org/feeds/memo.atom.xml" rel="self"></link><id>http://blog.thoz.org/</id><updated>2016-03-08T09:50:36+09:00</updated><entry><title>visual studio メモ</title><link href="http://blog.thoz.org/2016/03/08/visual-studio-memo/" rel="alternate"></link><updated>2016-03-08T09:50:36+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2016-03-08:2016/03/08/visual-studio-memo/</id><summary type="html">&lt;h2&gt;Visual Studio 2010でLNK1123エラーが出る&lt;/h2&gt;
 &lt;p&gt;Visual Studio Express 2012をインストールした後で、Visual Studio 2010でビルドしようとしたらエラーが出た。&lt;a href="http://www.microsoft.com/ja-jp/download/details.aspx?id=23691"&gt;Visual C++ Service Pack 1&lt;/a&gt;以降をインストールすれば良い。&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="http://minus9d.hatenablog.com/entry/20121212/1355312498"&gt;VS2010でLNK1123エラーが出たら、SP1にしてみよう - minus9d's diary&lt;/a&gt;&lt;/p&gt;</summary><category term="memo"></category><category term="VisualStudio"></category></entry><entry><title>nginx memo</title><link href="http://blog.thoz.org/2014/03/20/nginx-memo/" rel="alternate"></link><updated>2014-03-20T16:04:53+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-03-20:2014/03/20/nginx-memo/</id><summary type="html">&lt;h2&gt;Nginxで503コードのページをカスタマイズする&lt;/h2&gt;
+&lt;p&gt;参考：&lt;a href="http://minus9d.hatenablog.com/entry/20121212/1355312498"&gt;VS2010でLNK1123エラーが出たら、SP1にしてみよう - minus9d's diary&lt;/a&gt;&lt;/p&gt;</summary><category term="memo"></category><category term="visualstudio"></category></entry><entry><title>PCLメモ</title><link href="http://blog.thoz.org/2016/01/29/pcl-memo/" rel="alternate"></link><updated>2016-01-29T08:42:31+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2016-01-29:2016/01/29/pcl-memo/</id><summary type="html">&lt;p&gt;マルチプラットフォーム用に開発するにはPCL(ポータブル・クラス・ライブラリ)を使うと良いらしいのだが情報が少ない気がするので、調べたことをメモしていく&lt;/p&gt;
+&lt;p&gt;それにしてもどこかに.netでこう書いてるものをPCLで書くには・・・みたいな書籍とかサイトとか無いものか。現在はstack&lt;/p&gt;
+&lt;h2&gt;基本事項&lt;/h2&gt;
+&lt;p&gt;プロジェクト生成時にポータブルライブラリを選択すればPCLで開発出来るようになる。すでに.netのプロジェクトで開発している場合にPCLにする方法はシラン。&lt;/p&gt;
+&lt;p&gt;.netで使ってる機能で使えなくなるものが多い。ファイルアクセスなんかがSystem.IOに入ってなくて出来なくなるので、NugetでPCL関連のライブラリを調べるのは必須&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://www.buildinsider.net/mobile/insidexamarin/13"&gt;Xamarinと、ポータブル・クラス・ライブラリ（PCL） - Build Insider&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;ファイルアクセス&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/dsplaisted/PCLStorage"&gt;PCL Storage&lt;/a&gt;を使うとよしなにやってくれる。Nugetから入れれば使えるようになる。&lt;/p&gt;
+&lt;h2&gt;使えなくなるメソッドが結構ある&lt;/h2&gt;
+&lt;p&gt;例えばSystem.Type.GetPropertyでPropertyInfoを取得しようとしても、メソッド無いので無理。この場合はSystem.Refrectionを使う&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;System.Refrection&lt;/span&gt;
+&lt;span class="p"&gt;...&lt;/span&gt;
+&lt;span class="n"&gt;PropertyInfo&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="k"&gt;typeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Hoge&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="n"&gt;GetRuntimeProperty&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;property&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;いちいちこういうのがあるので、結構大変。&lt;/p&gt;
+&lt;h2&gt;TypeよりはなるべくTypeInfoを使うのが良さげ&lt;/h2&gt;
+&lt;p&gt;PCLだとType.IsClassとか無いけどTypeInfo.IsClassはある。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;assembly&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DefinedTypes&lt;/span&gt;
+    &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Where&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IsClass&lt;/span&gt; &lt;span class="p"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="p"&gt;!&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IsAbstract&lt;/span&gt; &lt;span class="p"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ImplementedInterfaces&lt;/span&gt;
+        &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Any&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;GetTypeInfo&lt;/span&gt;&lt;span class="p"&gt;().&lt;/span&gt;&lt;span class="n"&gt;IsGenericType&lt;/span&gt; &lt;span class="p"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;GetGenericTypeDefinition&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;==&lt;/span&gt; &lt;span class="n"&gt;commandHandlerOpenGenericType&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Select&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;AsType&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;みたいにして必要なインターフェースを持つクラスの型情報を取り出すとか出来る&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/20524263/portable-class-library-reflection"&gt;c# - Portable Class Library Reflection - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="memo"></category><category term="CSharp"></category></entry><entry><title>redis memo</title><link href="http://blog.thoz.org/2016/01/13/redis-memo/" rel="alternate"></link><updated>2016-01-13T21:35:13+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2016-01-13:2016/01/13/redis-memo/</id><summary type="html">&lt;p&gt;redisが良く分かってないので、良く使いそうなものをメモしていく。主にredis-clientを使って行く（OSはUbuntu）&lt;/p&gt;
+&lt;h2&gt;dbの選択&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ redis-client
+&amp;gt; &lt;span class="k"&gt;select&lt;/span&gt; 1
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;で1番のdbに移動。0から15まである？&lt;/p&gt;
+&lt;h2&gt;keyの一覧&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; keys *
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;で取りあえず一覧してくれる。dbにキーがあるか程度ならこれで。&lt;/p&gt;</summary><category term="redis"></category><category term="memo"></category></entry><entry><title>MT4 memo</title><link href="http://blog.thoz.org/2016/01/07/mt4-memo/" rel="alternate"></link><updated>2016-01-07T14:00:25+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2016-01-07:2016/01/07/mt4-memo/</id><summary type="html">&lt;p&gt;MT4でEAを書くためのメモ&lt;/p&gt;
+&lt;h2&gt;時間の扱い&lt;/h2&gt;
+&lt;!-- more --&gt;
+
+&lt;p&gt;時間は秒単位の数値になるので&lt;/p&gt;
+&lt;p&gt;時間差を出したい場合は&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;(t1 - t2)/3600.0
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;みたいな扱いで良い
+参考：&lt;a href="http://forum.mql4.com/5907"&gt;How to calculate time difference, and return time in hours ? - MQL4 forum&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;矢印の表示&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ObjectCreate(&amp;quot;OBJ&amp;quot;+Time[0], OBJ_ARROW, 0, Time[0], Ask)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;みたいに書くと表示出来る"OBJ"+Time[0]が矢印の名前となり、後で色を付けたりするのに使う&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://forum.mql4.com/54528"&gt;How to create arrow on a price chart by EA ? - MQL4 forum&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;gmailを使ってメールを送る&lt;/h2&gt;
+&lt;p&gt;参考：&lt;a href="http://d.hatena.ne.jp/fai_fx/20091110/1257779182"&gt;MT4のメール送信サーバにGmail を使う。 - とあるMetaTraderの備忘秘録&lt;/a&gt;にあるような設定を行う。&lt;/p&gt;
+&lt;p&gt;手順は&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;オプション→Eメールのタブを開く&lt;/li&gt;
+&lt;li&gt;SMTP設定&lt;ul&gt;
+&lt;li&gt;SMTPサーバー：smtp.gmail.com:465&lt;/li&gt;
+&lt;li&gt;SMTPログインID: メアド&lt;/li&gt;
+&lt;li&gt;SMTPパスワード: gmailのパスワード&lt;/li&gt;
+&lt;li&gt;発信元: 自分のgmailメアド&lt;/li&gt;
+&lt;li&gt;送信先: 送信先メアド&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Testボタンを押すとテストメールが送られるので、設定が正しいか確認出来る&lt;/li&gt;
+&lt;li&gt;OKボタンを押す&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;送信は&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;SendMail(題名, 内容);
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でおk。改行は\nでおk。円マークではない。&lt;/p&gt;
+&lt;h2&gt;バックテストを色々やるとハードディスク容量が足らなくなる&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;ファイル→データフォルダを開く&lt;/li&gt;
+&lt;li&gt;testerを開く&lt;/li&gt;
+&lt;li&gt;中に出来たファイルを消す&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;でおk&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://www.autotrading-fx.com/mt4-tips/1930.html"&gt;MT4のバックテストでハードディスク容量が不足した時の対処法&lt;/a&gt;&lt;/p&gt;</summary><category term="MT4"></category><category term="memo"></category></entry><entry><title>Javascript memo</title><link href="http://blog.thoz.org/2015/08/12/javascript-memo/" rel="alternate"></link><updated>2015-08-12T09:01:59+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2015-08-12:2015/08/12/javascript-memo/</id><summary type="html">&lt;p&gt;Javascript関連のメモ&lt;/p&gt;
+&lt;h2&gt;HighChartで日本時間をx軸に利用&lt;/h2&gt;
+&lt;p&gt;チャートを表示するライブラリに&lt;a href="http://www.highcharts.com/"&gt;HighChart&lt;/a&gt;ってのを使ってるけど、横軸の時間がUTCになってしまうので、ちょっとはまった。&lt;/p&gt;
+&lt;p&gt;こうすればいいらしい&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;Highcharts&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;setOptions&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
+    &lt;span class="nx"&gt;global&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="nx"&gt;useUTC&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;false&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
+&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;chart&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;HighChart&lt;/span&gt;&lt;span class="p"&gt;(...);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;グローバルな設定として使うらしい。
+参考（ほぼそのまま）&lt;a href="http://mtc.hatenablog.com/"&gt;mtcdotcom's blog&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;HighChartでチャートをクリックするとUncaught TypeError: undefined is not a functionが出る&lt;/h2&gt;
+&lt;p&gt;Chromeでのみ確認。Google翻訳の拡張機能を切ればおk&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/30498335/highcharts-always-console-error-ablout-bubble-compiled-js"&gt;javascript - highcharts always console error ablout bubble_compiled.js? - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;bootstrap3のタブ変更時に何か実行したい&lt;/h2&gt;
+&lt;p&gt;タブの中身を表示する時に何か実行させたい時は次のようにすればおk&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;ul&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;nav nav-tabs&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+ &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;active&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="na"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;#tab1&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;data-toggle&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tab&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;Tab1&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+ &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt; &lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="na"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;#tab2&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;data-toggle&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tab&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;Tab2&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;ul&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tab-content&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+ &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tab-pane active&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tab1&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+   Tab1 content
+ &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+ &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tab-pane&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tab2&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+   Tab2 content
+ &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;a[data-toggle=&amp;quot;tab&amp;quot;]&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;on&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;shown.bs.tab&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;e&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+    &lt;span class="p"&gt;...&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;shown.bs.tabってイベントがあるらしい。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/20705905/bootstrap-3-jquery-event-for-active-tab-change"&gt;Bootstrap 3 jquery event for active tab change - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="javascript"></category><category term="memo"></category></entry><entry><title>uwsgiメモ</title><link href="http://blog.thoz.org/2015/03/05/uwsgi-memo/" rel="alternate"></link><updated>2015-03-05T10:21:54+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2015-03-05:2015/03/05/uwsgi-memo/</id><summary type="html">&lt;p&gt;uwsgi関連ではまった点などをメモ&lt;/p&gt;
+&lt;h2&gt;invalid request block size&lt;/h2&gt;
+&lt;p&gt;ajaxでサーバ側からデータを読み込むライブラリを使ってると、条件によって502エラーが出てる(=大体djangoとかのプログラム側のエラーで出る)ので、uwsgiのログを調べると、invalid request block sizeというエラーが出てた。&lt;/p&gt;
+&lt;p&gt;んで、調べてみると、uwsgiがリクエストのサイズが大きすぎるとエラーを吐いているらしい。ライブラリ側で勝手にパラメーター付けて送られてリクエストのサイズが大きくなっているので、こりゃ調整しないとなということで調べてみた。起動時にオプション設定するか、iniファイルで設定したらいけるらしい&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ uwsgi --buffer-size&lt;span class="o"&gt;=&lt;/span&gt;xxxx
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;...&lt;/span&gt;
+&lt;span class="na"&gt;buffer-size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;xxxx&lt;/span&gt;
+&lt;span class="err"&gt;...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/15878176/uwsgi-invalid-request-block-size"&gt;uwsgi invalid request block size - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;ログローテーション&lt;/h2&gt;
+&lt;p&gt;uwsgi.iniに下のように書く&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[uwsgi]&lt;/span&gt;
+&lt;span class="na"&gt;daemonize&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/path/to/uwsgi/log/hoge-@(exec://date +%%Y-%%m-%%d).log&lt;/span&gt;
+&lt;span class="na"&gt;log-reopen&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;true&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;すると/path/to/uwsgi/log/hoge-xxxx-xx-xx.log （xx..は日付）というログファイルが出来る。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/28343262/how-to-create-one-uwsgi-log-file-per-day"&gt;logging - How to create one uwsgi log file per day? - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="uwsgi"></category><category term="django"></category><category term="memo"></category><category term="python"></category></entry><entry><title>Django Memo</title><link href="http://blog.thoz.org/2014/11/23/django-memo/" rel="alternate"></link><updated>2014-11-23T22:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-11-23:2014/11/23/django-memo/</id><summary type="html">&lt;p&gt;Djangoやってて忘れっぽいところとかをメモ&lt;/p&gt;
+&lt;h2&gt;リクエストパラメーターをモデルに入れる&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# views.py&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;a_view&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;hoge&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Fuga&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;GET&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;#新たにインスタンス作る場合&lt;/span&gt;
+    &lt;span class="n"&gt;fuga&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Fuga&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pk&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;hage&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Fuga&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;GET&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;instance&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;fuga&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;#既にあるインスタンスに入れる場合&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;instance=xxxとやるのを何度か忘れた＞＜&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;h2&gt;forms.DateFieldでISO-8601フォーマットの入力を受入れる&lt;/h2&gt;
+&lt;p&gt;html5でdatetime-localとか扱おうとすると、入力値がISO-8601形式になって、そのままだとDateFieldが入力をdatetimeの正しい形式として認識してくれない。&lt;/p&gt;
+&lt;p&gt;で、input_formatsを設定するといけるらしいんだけど、あまりマニュアルでちゃんと説明してない。Stack Overflowの情報とかをググると設定方法が間違ってるコードとかあって、正しいのが良く分からない。で、結局色々調べたら&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
+&lt;span class="n"&gt;date&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DateField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;input_formats&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;%Y-%m-&lt;/span&gt;&lt;span class="si"&gt;%d&lt;/span&gt;&lt;span class="s1"&gt;T%H:%M:%S&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とタプルで渡す必要があるらしい&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://labs.uechoco.com/blog/2011/08/django-dateform-inputs_format-wrong.html"&gt;うえちょこ＠ぼろぐ» [Django]forms.DateFieldのinputs_formatではまった&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;ModelForm使ってフォーム出力する時にrequeied属性をテンプレートで参照するとか&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
+&lt;span class="n"&gt;hoge&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CharField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;max_length&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;widget&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;TextInput&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;required&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;true&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;}))&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じで定義したフィールドの属性取ってきたい場合、&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;\{\% for field in form \%\}
+  \{\% if field.field.required \%\}&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;p&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;必須&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;p&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;\{\% endif \%\}
+\{\% endfor \%\}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;適当だけど、こんな感じでアクセスできる。&lt;/p&gt;
+&lt;h2&gt;DjangoでGroup By&lt;/h2&gt;
+&lt;p&gt;DjangoでGroup Byして何個かのフィールドのデータで例えば、日付とその日に登録したデータの件数だけ欲しい時&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# views.py&lt;/span&gt;
+&lt;span class="n"&gt;q&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Hoge&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;date__gte&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;date&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;date__lt&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;dto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;extra&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;date_trunc(&amp;#39;day&amp;#39;,date)&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group_by&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;order_by&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;annotate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Count&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;id&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+
+&lt;span class="err"&gt;こんな感じでいける。ちなみに&lt;/span&gt;&lt;span class="n"&gt;PostgreSQL&lt;/span&gt;&lt;span class="err"&gt;。&lt;/span&gt;&lt;span class="n"&gt;date&lt;/span&gt;&lt;span class="err"&gt;が時間の情報も持っているので&lt;/span&gt;&lt;span class="n"&gt;PostgreSQL&lt;/span&gt;&lt;span class="err"&gt;の&lt;/span&gt;&lt;span class="n"&gt;date_trunc&lt;/span&gt;&lt;span class="err"&gt;関数を使って&lt;/span&gt;&lt;span class="n"&gt;date&lt;/span&gt;&lt;span class="err"&gt;を日付の情報だけにしてから、&lt;/span&gt;&lt;span class="n"&gt;group_by&lt;/span&gt;&lt;span class="err"&gt;する。&lt;/span&gt;
+&lt;span class="n"&gt;annotate&lt;/span&gt;&lt;span class="err"&gt;は集計した値を新しいフィールド（ここだと&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="err"&gt;）に入れる。&lt;/span&gt;
+&lt;span class="err"&gt;例えば&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="err"&gt;でアクセスできる。このコードで、日付とその日に登録したデータ件数が入った辞書のリストを得ることが出来る&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;QuerySetで吐いたクエリを出力&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# views.py&lt;/span&gt;
+&lt;span class="n"&gt;h&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Hoge&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;all&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でおk。でもクエリが例外出す時には出せないような・・・&lt;/p&gt;
+&lt;p&gt;debug_toolbar使えば見れるか&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://programmer-jobs.blogspot.jp/2013/01/djangosql.html"&gt;Djangoで、デバック用のSQLクエリの表示 一言多いプログラマーの独り言&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;ModelFormでcleanを使ってデータの検証する時に、updateしようとしてるかcreateしようとしてるか判断する&lt;/h2&gt;
+&lt;p&gt;createの時だけチェックしたかったので、色々調べてみたらclean(self)内で、self.instanceでチェックすると良いみたい。例えばプライマリーキーでidがある場合こんな感じ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Hoge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ModelForm&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;clean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;cleaned_data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cleaned_data&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;instance&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="c1"&gt;#create用の処理&lt;/span&gt;
+            &lt;span class="k"&gt;raise&lt;/span&gt; &lt;span class="n"&gt;ValidationError&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;例外出すのはこんな感じ&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="c1"&gt;#update用の処理&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;cleaned_data&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;instanceの型チェックする方が正攻法かも。例外のメッセージは&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# views.py&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;form&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Hoge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;POST&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;form&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;is_valid&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+        &lt;span class="c1"&gt;#例外が無かった場合&lt;/span&gt;
+    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;form&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;errors&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+            &lt;span class="c1"&gt;#kが例外のフィールド。cleanの場合は__all__&lt;/span&gt;
+            &lt;span class="c1"&gt;#vが例外のメッセージ&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;みたいな感じで取り出せる。&lt;/p&gt;
+&lt;h2&gt;runserver実行時にコンソールにスタックとレースを出力する&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;LOGGING&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;version&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;handlers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:{&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;console&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:{&lt;/span&gt;
+            &lt;span class="s1"&gt;&amp;#39;level&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;DEBUG&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="s1"&gt;&amp;#39;class&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;logging.StreamHandler&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;loggers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:{&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;django.request&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:{&lt;/span&gt;
+            &lt;span class="s1"&gt;&amp;#39;handlers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;console&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+            &lt;span class="s1"&gt;&amp;#39;propagate&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="s1"&gt;&amp;#39;level&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;DEBUG&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;},&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これを書いておけばコンソールにスタックトレースを出力してくれる。apiのコード書いてる時とかajaxで呼び出してる場合とかに便利。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/5886275/print-a-stack-trace-to-stdout-on-errors-in-django-while-using-manage-py-runserve"&gt;python - Print a stack trace to stdout on errors in Django while using manage.py runserver - Stack Overflow&lt;/a&gt;というかここのコード丸コピー&lt;/p&gt;
+&lt;h2&gt;Gmail送信&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;EMAIL_USE_TLS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;
+&lt;span class="n"&gt;EMAIL_HOST&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;smpt.gmail.com&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;EMAIL_HOST_USER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;mymail@gmail.com&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;EMAIL_HOST_PASSWORD&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;mypassword&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;EMAIL_PORT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;587&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# views.py&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.core.mail&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;send_mail&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;mail&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;send_mail&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Subject&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;message&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;mymail.gmail.com&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;to@mail.address&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="n"&gt;fail_silently&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんだけ&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://d.hatena.ne.jp/yuheiomori0718/20120714/1342266647"&gt;DjangoでGmailを使ってメール送信 - brainstorm&lt;/a&gt;、&lt;/p&gt;
+&lt;h2&gt;MultiValueDictKeyError&lt;/h2&gt;
+&lt;p&gt;モデルをgetする時にキーに何も値が指定されてなかったりすると起こる。例えば&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;instance&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;SampleModel&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でkeyに何も設定されてないと起こるみたい。出た時に何回かイチイチぐぐったのでメモ&lt;/p&gt;
+&lt;h2&gt;PostgreSQLでDateTimeFieldの値を日付に対してグルーピングしたい&lt;/h2&gt;
+&lt;p&gt;PostgreSQLではタイムゾーン入りのタイムスタンプで登録されるので、&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;q&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Hoge&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;extra&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;date&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;date_trunc(&amp;#39;day&amp;#39;,date)&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group_by&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;みたいな構文で日付だけ取り出して、グルーピングしようとすると、PostgreSQLの設定でタイムゾーンがUTCになっていた場合に、2014/12/17 00:00:00+9のデータは2014/12/16 15:00:00+0と認識されるので12/16のデータとしてグルーピングされてしまう。日本のタイムゾーンでやってると、これはまずいので、以下のようなコードにすると良い&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;q&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Hoge&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;extra&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;date&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;date_trunc(&amp;#39;day&amp;#39;,date AT TIME ZONE &amp;#39;JST&amp;#39;)&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group_by&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;django+uwsgi+nginxで502エラーが出た原因の１つ&lt;/h2&gt;
+&lt;p&gt;djangoはあまり関係無いけどuwsgiの設定の問題だったので、こちらに。django+uwsgi+nginxで502エラーが出て、runserverでは普通に動いたので、しばらくググって解答が得られたのでメモ&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://datatables.net/"&gt;DataTables&lt;/a&gt;を使って動的にテーブルデータをロードしようとしたら、runserverでは上手く行くのにuwsgiだと502エラーが出てロード出来なかった。最初にnginxのログを見てみると、uwsgiのとこでエラーと書いてあったので、uwsgiのログをチェックした。すると&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;invalid request block size: xxxxx (max 4096)...
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;みたいなエラーが出ていた。リクエストが大きすぎるのかなと思い、リクエストの一部を削ってみたらエラーが出なかった。んで、対策をググってみたら書いてあったので、そのまま下のコードを実装してみた。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# uwsgi.ini&lt;/span&gt;
+&lt;span class="na"&gt;buffer-size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;65535&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;みたいにバッファーサイズを大きく(例では64k)した。これでエラーが消えたのでめでたしめでたし。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/22697584/nginx-uwsgi-104-connection-reset-by-peer-while-reading-response-header-from-u"&gt;django - Nginx uwsgi (104: Connection reset by peer) while reading response header from upstream - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;運用環境と開発環境で設定を切り分ける&lt;/h2&gt;
+&lt;p&gt;開発環境用にlocalアプリを作って、local/settings.pyを作成し、開発環境での設定を書いて、プロジェクトのsettings.pyの最後に以下を追加すると良い&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;local.settings&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;
+&lt;span class="k"&gt;except&lt;/span&gt; &lt;span class="ne"&gt;ImportError&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;pass&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="http://surgo.jp/2010/02/django.html"&gt;パーフェクトな Django の設定ファイル -- Kosei Kitahara's Blog&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;テンプレートの読み込まれ順&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;TEMPLATE_DIRSで指定されたディレクトリの順番で、そこを起点にした全てのテンプレート&lt;/li&gt;
+&lt;li&gt;INSTALLED_APPSに指定した順にアプリケーション直下のtemplatesディレクトリを調べる &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;hogeアプリでテンプレートを指定した場合に、hogeアプリ直下のtemplatesディレクトリを調べてくれる訳ではないので注意が必要。&lt;/p&gt;
+&lt;p&gt;例えば&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;TEMPLATE_DIRS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/home/hoge/templates&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,]&lt;/span&gt;
+&lt;span class="n"&gt;INSTALLED_APPS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;fuga&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;と書いてあり、プロジェクトが/www/a_project/に置いてある場合、&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;/home/hoge/templates&lt;/li&gt;
+&lt;li&gt;/www/a_project/hoge/templates&lt;/li&gt;
+&lt;li&gt;/www/a_project/fuga/templates&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;の順でテンプレートの存在を調べる&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://www.tsuyukimakoto.com/blog/2006/11/22/django-template-loader/"&gt;DjangoのTemplateローダ | tsuyuki.makoto&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Many to manyなモデルで中間テーブルをthroughで指定、かつ自己参照な場合の設定&lt;/h2&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/3880489/how-do-i-write-a-django-model-with-manytomany-relationsship-with-self-through-a"&gt;How do I write a Django model with ManyToMany relationsship with self through a Model - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;symmetrical設定をすると良いらしい&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Member&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CharField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;max_length&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;friends&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ManyToManyField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;self&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;through&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;MemberFriends&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;symmetrical&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MemberFriends&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ForeignKey&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Member&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;related_name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;f&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;t&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ForeignKey&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Member&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;related_name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;t&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;comment&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CharField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;max_length&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じ&lt;/p&gt;
+&lt;h2&gt;url末尾に必ずスラッシュを入れる&lt;/h2&gt;
+&lt;p&gt;url末尾にスラッシュが無い場合、スラッシュ有りにリダイレクトする設定&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;APPEND_SLASH&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Django rest apiで日時としてタイムスタンプを出力する&lt;/h2&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/26083583/serialize-a-datetime-as-an-integer-timestamp"&gt;django rest framework - serialize a datetime as an integer timestamp - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;どうもDjango rest frameworkのDateTimeFieldで指定するformatパラメータだとタイムスタンプが指定出来ないみたいなのでこんな感じにすると出来る。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# serialize.py&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;rest_framework&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;serializers&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;time&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;HogeSerializer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;serializers&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Serializer&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;date&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;serializers&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DateTimeField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;timestamp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;serializers&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;SerializerMethodField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_timestamp&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;obj&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mktime&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;obj&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;date&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;timetuple&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;javascriptのタイムスタンプに対応するためにはget_timestampの返り値を1000倍すればおk&lt;/p&gt;
+&lt;h2&gt;Paginatorでcount文を実行させずに指定件数分のページングを行う&lt;/h2&gt;
+&lt;p&gt;分量が多くて、先頭1000件を100件ずつページング表示させるので十分かなという時に、いちいちcount文を発行させたくない時&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;paginator&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Paginator&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;paginator&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_count&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1000&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;queryは適当なQuerySet&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/7707035/how-to-implement-a-paginator-that-doesnt-call-count"&gt;django - How to implement a paginator that doesn't call count(*) - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;メソッドの呼び出し元オブジェクトを取得&lt;/h2&gt;
+&lt;p&gt;inspectモジュールってのが使えるらしい&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;inspect&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+    &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;frame&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;filename&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;line_number&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;function_name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;lines&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;inspect&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getouterframes&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;inspect&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;currentframe&lt;/span&gt;&lt;span class="p"&gt;())[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;frame&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;filename&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;line_number&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;function_name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;lines&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/3711184/how-to-use-inspect-to-get-the-callers-info-from-callee-in-python"&gt;How to use inspect to get the caller's info from callee in Python? - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;プロファイラ使った時に、socket.pyが呼ばれてるのは分かったけど、その呼び出し元がイマイチわからなかった時に使った。&lt;/p&gt;
+&lt;h2&gt;urlsでviewにパラメータを送る&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# urls.py&lt;/span&gt;
+&lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;^$&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;views&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hoge&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;fuga&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hage&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# views.py&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;hoge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;fuga&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;パラメーターに指定する名前（上の場合はfuga）がviewsとurlsで同じ名前になっていることが必要（でないとエラーが出る）&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="https://docs.djangoproject.com/en/1.8/topics/http/urls/#passing-extra-options-to-include"&gt;URL dispatcher | Django documentation | Django&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;dbにインデックスを付ける&lt;/h2&gt;
+&lt;p&gt;インデックスの場合はフィールド定義にdb_index=Trueを付けるとおk&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;hoge&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;db_index&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;true&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;複合インデックスの場合はMetaクラスでindex_togetherを定義する&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Hoge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+  &lt;span class="o"&gt;....&lt;/span&gt;
+  &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Meta&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;index_together&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+      &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;fuga&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;この場合インデックス順はhoge-&amp;gt;fugaとなる。&lt;/p&gt;
+&lt;h2&gt;ForeignKeyで逆参照をしたくない場合&lt;/h2&gt;
+&lt;p&gt;related_nameを+にするか末尾に+を付けるかで対応出来る。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;user&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; models.ForeignKey&lt;span class="o"&gt;(&lt;/span&gt;User, &lt;span class="nv"&gt;related_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;user+&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じ&lt;/p&gt;
+&lt;h2&gt;生sqlを使う時にin句にパラメーターを使いたい&lt;/h2&gt;
+&lt;p&gt;タプルで指定すれば良い。リストは試してない。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;results&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; Hoge.objects.raw&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;select * from application_hoge where fuga in %s&amp;quot;&lt;/span&gt;, tuple&lt;span class="o"&gt;(&lt;/span&gt;fuga&lt;span class="o"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/6895051/passing-lists-or-tuples-as-arguments-in-django-raw-sql"&gt;passing lists or tuples as arguments in django raw sql - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Ajaxでpostしたい時&lt;/h2&gt;
+&lt;p&gt;csrfフィルタが初期状態で設定されてるし、csrfフィルタはあった方が良いので、次のようになったら良いかも（Jqueryを使う場合）&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;post&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;url&lt;/span&gt;&lt;span class="p"&gt;,{&lt;/span&gt;&lt;span class="nx"&gt;csrfmiddlewaretoken&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;{{csrf_token}}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;}...);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/5100539/django-csrf-check-failing-with-an-ajax-post-request"&gt;Django CSRF check failing with an Ajax POST request - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;AjaxのPOSTで配列を受け取りたい時&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;arr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;fuga&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;post&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;url&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;arr&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="nx"&gt;arr&lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;&lt;span class="nx"&gt;alert&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;success&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);});&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;該当するビューでこんな風に書く&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;hoge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;arr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;POST&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getlist&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;arr&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;ちなみにgetだと[]は要らないらしい。&lt;/p&gt;
+&lt;p&gt;参考：[http://stackoverflow.com/questions/12101658/how-to-get-an-array-in-django-posted-via-ajax]
+該当するビューでこんな風に書く&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;hoge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;arr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;POST&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getlist&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;arr&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;ちなみにgetだと[]は要らないらしい。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/12101658/how-to-get-an-array-in-django-posted-via-ajax"&gt;How to get an array in Django posted via Ajax - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;intcommaフィルタが効かない(django 1.8)&lt;/h2&gt;
+&lt;p&gt;django 1.4からL10Nを見るので、ロケールjaの場合はNUMBER_GROUPINGを明示しないといけないらしい。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;NUMBER_GROUPING&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これでおk&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://yamayoshi.blogspot.jp/2013/02/django14-intcomma.html"&gt;やまよし＠Google大好き: Django1.4 で intcommaが効かない&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;サブクエリの使い方&lt;/h2&gt;
+&lt;p&gt;例えばMemberモデルにname (名前)やboss(上司の名前)、stage(肩書き)フィールドがあるとして、肩書きが部長の上司を持つMemberを取り出したい場合はこんな感じ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;a_query&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Member&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stage&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;部長&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;value_list&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;b_query&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Member&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;boss__in&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;a_query&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;select&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="k"&gt;from&lt;/span&gt; &lt;span class="n"&gt;member&lt;/span&gt; &lt;span class="k"&gt;where&lt;/span&gt; &lt;span class="n"&gt;boss&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;select&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="k"&gt;from&lt;/span&gt; &lt;span class="n"&gt;member&lt;/span&gt; &lt;span class="k"&gt;where&lt;/span&gt; &lt;span class="n"&gt;stage&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;部長&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;を実行したような感じになる。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/8556297/how-to-subquery-in-queryset-in-django"&gt;python - how to subquery in queryset in django? - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;リダイレクト時にパラメータを渡す&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;response&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;redirect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Location&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;?hoge=fuga&amp;#39;&lt;/span&gt;
+&lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;response&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でいける&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/3765887/add-request-get-variable-using-django-shortcuts-redirect"&gt;add request.GET variable using django.shortcuts.redirect - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="memo"></category><category term="django"></category><category term="python"></category></entry><entry><title>Titanium Mobileメモ</title><link href="http://blog.thoz.org/2014/11/23/titanium-mobile-memo/" rel="alternate"></link><updated>2014-11-23T09:48:44+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-11-23:2014/11/23/titanium-mobile-memo/</id><summary type="html">&lt;p&gt;Titanium Mobileに関するメモ&lt;/p&gt;
+&lt;h2&gt;アプリ固有の設定を登録する&lt;/h2&gt;
+&lt;p&gt;アプリを終了して、再起動させた時も保存される設定をしたい時はTitanium.App.Propertiesを使う&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;Ti&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;App&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;Properties&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;setString&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;hoge&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;fuga&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="c1"&gt;//設定&lt;/span&gt;
+&lt;span class="nx"&gt;hoge&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;Ti&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;App&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;Properties&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;getString&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;hoge&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="c1"&gt;//取得&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;stringを例にしてるが、ListとかObjectとかBoolとか色々入れられる。&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;h2&gt;Titanium MobileのUIで本家以外に参考にしてるサイト&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://code.google.com/p/titanium-mobile-doc-ja/w/list"&gt;Wiki Pages - titanium-mobile-doc-ja - Appcelerator Titanium Mobileに関するドキュメントを日本語でまとめていくプロジェクト - Google Project Hosting&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Android実機で文字が小さくなる&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# tiapp.xml
+&lt;span class="nt"&gt;&amp;lt;android&lt;/span&gt; &lt;span class="na"&gt;xmlns:android=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://schemas.android.com/apk/res/android&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;manifest&amp;gt;&lt;/span&gt;
+         &lt;span class="nt"&gt;&amp;lt;supports-screens&lt;/span&gt; &lt;span class="na"&gt;android:anyDensity=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;false&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;/manifest&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/android&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;もしくは文字サイズをdpで指定&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://www.fujimotohajime.net/pukiwiki/index.php?TitaniumMobile%2FAndroid%E3%81%A7%E5%AE%9F%E6%A9%9F%E3%83%86%E3%82%B9%E3%83%88%E3%81%99%E3%82%8B%E3%81%A8%E6%96%87%E5%AD%97%E3%81%8C%E5%B0%8F%E3%81%95%E3%81%84"&gt;TitaniumMobile/Androidで実機テストすると文字が小さい - Wiki&lt;/a&gt;&lt;/p&gt;</summary><category term="titanium"></category><category term="memo"></category></entry><entry><title>ansible memo</title><link href="http://blog.thoz.org/2014/07/01/ansible-memo/" rel="alternate"></link><updated>2014-07-01T16:56:06+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-07-01:2014/07/01/ansible-memo/</id><summary type="html">&lt;p&gt;ansibleで自分が欲しい情報が色んなページに散らばっていたので、メモ&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;h3&gt;ansible-playbookのオプション&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;-K: sudoのパスワード入力&lt;/li&gt;
+&lt;li&gt;-C (--check): 実際に実行しないでチェックしてくれる&lt;/li&gt;
+&lt;li&gt;-l name: hostsファイルに[name]と書かれたホストにのみ実行&lt;/li&gt;
+&lt;li&gt;-i hostsfile: 初期状態では/etc/ansible/hostsを見に行くので、自分で指定したい場合に&lt;/li&gt;
+&lt;li&gt;--syntax-check: playbookの書式チェック。書いて最初にやるといい&lt;/li&gt;
+&lt;li&gt;--list-tasks: playbookで行う内容をリストアップ&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;ansibleで鍵認証のsshで処理したい&lt;/h2&gt;
+&lt;p&gt;-c paramikoでなく-c sshを使うとssh_configの値を使うことが出来る　&lt;/p&gt;
+&lt;h2&gt;ansibleで鍵認証のsshで処理したい&lt;/h2&gt;
+&lt;p&gt;-c paramikoでなく-c sshを使うとssh_configの値を使うことが出来る。　&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="https://github.com/ansible/ansible/issues/1172"&gt;ansible is not using .ssh/config · Issue #1172 · ansible/ansible&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;チェック時の注意点&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;何かをaptとかでインストールしてそのアプリを使って何かインストールしようとするとエラーが出る&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;aptにリポジトリ追加して、アップデートして何かインストールしようとするとエラーが出る&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;どちらも実際に動かすとエラーは出ない&lt;/p&gt;
+&lt;h2&gt;postgresqlのデータベースロケール設定&lt;/h2&gt;
+&lt;p&gt;ロケール設定してから一旦サービスを再起動する&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;    - name: Install language-pack-ja 
+      apt: name=language-pack-ja
+    - name: set locale
+      locale_gen: name=ja_JP.UTF-8 state=present
+    - name: first restart
+      service:
+        name: &amp;#39;postgresql&amp;#39;
+        state: &amp;#39;restarted&amp;#39;
+    - name: drop database stock if exist
+      sudo_user: postgres
+      postgresql_db: name=stock state=absent
+    - name: create database stock
+      sudo_user: postgres
+      postgresql_db: &amp;gt;
+        name=stock-
+        encoding=&amp;#39;UTF-8&amp;#39;
+        lc_collate=&amp;#39;ja_JP.UTF-8&amp;#39;
+        lc_ctype=&amp;#39;ja_JP.UTF-8&amp;#39;
+        template=&amp;#39;template0&amp;#39;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="http://serverfault.com/questions/491237/postgresql-9-2-invalid-locale-name-on-ubuntu-12-04"&gt;Postgresql 9.2 "invalid locale name" on Ubuntu 12.04 - Server Fault&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;replaceとlineinfile&lt;/h2&gt;
+&lt;p&gt;単純な置換、削除ならreplaceが直感的なので良い。
+追加とかある場合はlineinfileが色々できて良い。&lt;/p&gt;
+&lt;h2&gt;virtualenv関連&lt;/h2&gt;
+&lt;p&gt;virtualenvのインストールだけならpipでいけるが、virtualenvの環境を初期化しておきたいのでこんな感じ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;    - name: install virtualenv
+      pip: name=virtualenv state=latest
+    - name: initialize virtualenv
+      command: virtualenv /path/to/env creates=&amp;quot;/path/to/env&amp;quot;
+    - name: install request on vertualenv
+      pip:
+        name=requests
+        virtualenv=/path/to/env
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;requestsは最低でも入れておかないとssl関連のwarningが出る&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/29991041/why-am-i-getting-insecureplatformwarning-on-mac"&gt;python - Why am I getting InsecurePlatformWarning on mac? - Stack Overflow&lt;/a&gt;、&lt;a href="http://stackoverflow.com/questions/26402123/ansible-creating-a-virtualenv"&gt;python - Ansible creating a virtualenv - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;GATHERING FACTSで止まる時&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;まずsudoを外して-Cで動くかチェック&lt;/li&gt;
+&lt;li&gt;いけるなら、host側のsudoパスワードが入力出来ていないのが原因なので、--ask-sudo-passを使う。&lt;/li&gt;
+&lt;/ul&gt;</summary><category term="memo"></category><category term="ansible"></category><category term="python"></category></entry><entry><title>Python memo</title><link href="http://blog.thoz.org/2014/06/30/python-memo/" rel="alternate"></link><updated>2014-06-30T20:38:44+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-06-30:2014/06/30/python-memo/</id><summary type="html">&lt;p&gt;Djangoやり始めたので、その過程で記録しておきたいことをメモ。&lt;/p&gt;
+&lt;h2&gt;pip freezeでWarning: cannot find svn location for distribute==0.6.24dev-r0&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo pip install --upgrade distribute
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でおk&lt;/p&gt;
+&lt;h2&gt;pipで一気にインストールする&lt;/h2&gt;
+&lt;p&gt;pip freezeで出てくる出力をファイルに書き出したものを使うと、別の環境で同じ状態にもっていける。ファイルからバージョン情報を消すと最新の状態でインストール出来る。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ pip install -r freezed.txt
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;for文でループカウント取得&lt;/h2&gt;
+&lt;p&gt;参考&lt;a href="http://fujishinko.exblog.jp/7669024"&gt;Python 配列をfor文でまわしているときのループカウント取得 : fujishinko 雑記帳&lt;/a&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;enumerate&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;a&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;b&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]):&lt;/span&gt;
+  &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;h2&gt;日本語のコマンドライン引数取得&lt;/h2&gt;
+&lt;p&gt;参考&lt;a href="http://www.yukun.info/blog/2008/07/python-command-line-arguments.html"&gt;Python: コマンドライン引数の取得 – sys.argv変数&lt;/a&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#hoge.py&lt;/span&gt;
+&lt;span class="c1"&gt;# -\*- encoding: utf-8 -\*-&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;span class="n"&gt;argv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;utf-8&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python hoge.py あいうえお
+あいうえお
+$
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;コマンド実行して実行結果を取得&lt;/h2&gt;
+&lt;p&gt;参考&lt;a href="http://qiita.com/mokemokechicken/items/a84b0aa96b94d1931f08"&gt;Python の subprocess で出力を受け取るときは communicate() を使おう - Qiita&lt;/a&gt;
+subprocessを使う。何か昔は別の手法だったらしい。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;subprocess&lt;/span&gt;
+&lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;subprocess&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Popen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;echo &amp;#39;hoge&amp;#39;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;shell&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;stdout&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;subprocess&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;PIPE&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;subprocess&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;PIPE&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;wait&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;stdout_data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;stderr_data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;communicate&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;stdout_data&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;utf-8&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;strip&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;親クラスのメソッド呼び出し&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Hoge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;aaa&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;param&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Fuga&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Hoge&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;bbb&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hage&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;super&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Fuga&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;aaa&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Fuga&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bbb&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;test&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じ。お作法を忘れがち。&lt;/p&gt;
+&lt;h2&gt;正規表現オブジェクトのパターンをチェックする方法&lt;/h2&gt;
+&lt;p&gt;他のライブラリで正規表現が設定されてて、その内容をチェックしたかったので調べてみたら、patternプロパティを見れば良いらしい&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;re&lt;/span&gt;
+&lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;compile&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;^hoge&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;l&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;r&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pattern&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="http://compgroups.net/comp.lang.python/how-to-print-sre_pattern-regexp-object-text/309372"&gt;How to print SRE_Pattern (regexp object) text for debugging purposes? - comp.lang.python&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;1ヶ月前の日付を求める&lt;/h2&gt;
+&lt;p&gt;timedeltaを使うとweeksとかdaysしか指定出来ないので、1ヶ月前の日付を取得しようと思ったら、別の方法が必要になる&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;time&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;datetime&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;date&lt;/span&gt;
+
+&lt;span class="n"&gt;base_date&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;date&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2015&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;one_month_ago&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;date&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fromtimestamp&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mktime&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;base_date&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;year&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;base_date&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;month&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;base_date&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;day&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じで出来る。
+参考：&lt;a href="http://blog.kjirou.net/p/381"&gt;[Python] 月の加減算処理ができない？ | それなりブログ&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;日付表示で良く使うフォーマット&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;datetime&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;date&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;date&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2002&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;12&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;isoformat&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;としておくと、2002-12-04と表示される&lt;/p&gt;
+&lt;h2&gt;lxmlをインストールしようとしたら、fatal error: libxml/xmlversion.h: No such file or directory&lt;/h2&gt;
+&lt;p&gt;ライブラリが足らないのでインストールすればおk
+&lt;a href="http://stackoverflow.com/questions/15759150/src-lxml-etree-defs-h931-fatal-error-libxml-xmlversion-h-no-such-file-or-di"&gt;python 2.7 - src/lxml/etree_defs.h:9:31: fatal error: libxml/xmlversion.h: No such file or directory - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude install libxml2-dev libxslt1-dev
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;pythonでsudoを付けたコマンドを実行する&lt;/h2&gt;
+&lt;p&gt;パスワードをリダイレクトすればおk
+&lt;a href="http://stackoverflow.com/questions/13045593/using-sudo-with-python-script"&gt;shell - Using sudo with Python script - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;os&lt;/span&gt;
+&lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;system&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;echo pass | sudo -S ...&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;popen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sudo -S ...&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;w&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;pass&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;django rest frameworkでBasic認証のあるサイトを扱う&lt;/h2&gt;
+&lt;p&gt;basic認証のあるサイトでdjango rest frameworkを使ったjson apiみたいなのを作ろうと思った時に、認証してアクセスしても&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{&amp;quot;detail&amp;quot;: &amp;quot;Invalid username/password&amp;quot;}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;みたいなメッセージが帰ってきてうまく情報を取って来れなかった。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;REST_FRAMEWORK&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;DEFAULT_AUTHENTICATION_CLASSES&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;と認証を削除するといけた
+&lt;a href="http://stackoverflow.com/questions/19693433/django-rest-framework-behind-http-basic-authentication"&gt;nginx - Django Rest Framework behind HTTP Basic Authentication - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;リストの文字列をリストに変換する&lt;/h2&gt;
+&lt;p&gt;リクエストでリストの文字列をパラメーターにして送って、それをリストとして評価したかったので、調べてみた。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;ast&lt;/span&gt;
+&lt;span class="n"&gt;hoge&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;u&amp;#39;[&amp;quot;A&amp;quot;,&amp;quot;B&amp;quot;,&amp;quot;C&amp;quot;]&lt;/span&gt;
+&lt;span class="n"&gt;fuga&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ast&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;literal_eval&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hoge&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;a href="https://docs.python.org/2/library/ast.html#ast.literal%5Feval"&gt;32.2. ast — Abstract Syntax Trees — Python 2.7.10 documentation&lt;/a&gt;見ると&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This can be used for safely evaluating strings containing Python values from untrusted sources without the need to parse the values oneself.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;と、あるので、変換だけならチェックしなくても問題ない・・・かも？&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/1894269/convert-string-representation-of-list-to-list-in-python"&gt;convert string representation of list to list in python - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;lxmlで&amp;nbsp;が入った文章をxmlでパース出来ない&lt;/h2&gt;
+&lt;p&gt;xmlに&amp;nbsp;（空白）が入っている場合に、xmlとしてパースした場合に&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;lxml.etree.XMLSyntaxError: Entity &amp;#39;nbsp&amp;#39; not defined
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;みたいなメッセージを出されちゃうことがある。解決策としては&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;htmlとしてパースする&lt;/li&gt;
+&lt;li&gt;xml定義をしっかりやっておく&lt;/li&gt;
+&lt;li&gt;＆の部分を適当に置換&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;くらいがある。&lt;/p&gt;
+&lt;h4&gt;htmlとしてパース&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;lxml&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;etree&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;StringIO&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;StringIO&lt;/span&gt;
+&lt;span class="n"&gt;parser&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;etree&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;HTMLParser&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;parsed&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;etree&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;HTML&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;StringIO&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;parser&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;xml定義をしっかり書く&lt;/h4&gt;
+&lt;p&gt;xmlとしてしっかり書いて、パーサーのパラメータとしてresolve_entities=Falseと指定すれば良いらしい&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;lxml&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;etree&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;StringIO&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;StringIO&lt;/span&gt;
+&lt;span class="n"&gt;source&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;quot;&amp;quot;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;&amp;lt;!DOCTYPE html PUBLIC &amp;quot;-//W3C//DTD HTML 4.01 Transitional//EN&amp;quot; &amp;quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&amp;quot;&amp;gt;&lt;/span&gt;
+&lt;span class="s2"&gt;&amp;lt;hoge&amp;gt;&amp;amp;nbsp;fuga&amp;lt;/hoge&amp;gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;parser&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;etree&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;XMLParser&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;resolve_entities&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;parsed&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;etree&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;parse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;StringIO&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;parser&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;etree&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tostring&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;parsed&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;＆を適当に置換&lt;/h4&gt;
+&lt;p&gt;一個一個特殊文字をユニコードに変えるという手もあるけど、とても手間なので&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;source&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;amp;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;amp;amp;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とやってからパースすれば通る&lt;/p&gt;
+&lt;h2&gt;except時にトレースバックを表示&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;traceback&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;hoge&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="o"&gt;...&lt;/span&gt;
+    &lt;span class="k"&gt;except&lt;/span&gt; &lt;span class="ne"&gt;Exception&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;traceback&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;print_exc&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じで、tracebackを使えば良い&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="https://doughellmann.com/blog/2009/06/19/python-exception-handling-techniques/"&gt;Python Exception Handling Techniques | Doug Hellmann&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;datetimeからタイムスタンプへの変換（逆も)&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;datetime&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;time&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;datetime_to_timestamp&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dt&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;timestamp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mktime&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;timetuple&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;timestamp&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;timestamp_to_datetime&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;timestamp&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;dt&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;datetime&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;datetime&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fromtimestamp&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;timestamp&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;dt&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じ&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://uokada.hatenablog.jp/entry/20120217/1329444315"&gt;pythonでdatetimeとtimestampを相互変換するコード - uokadaの見逃し三振は嫌いです&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;パイプで渡されたデータを受け取る&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# encoding: UTF-8&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;span class="n"&gt;lines&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdin&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;readlines&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;lines&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じ。ちょっとしたコマンド作る時に使えるのでメモ&lt;/p&gt;
+&lt;p&gt;参考；&lt;a href="http://studiot.jp/blog/?p=321"&gt;[Python]シェルからパイプで渡されたデータをPythonで受け取る « StudioT::DevLog&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;変数が文字列かチェックする&lt;/h2&gt;
+&lt;p&gt;文字列が来てる場合はstrptimeやって、他の場合は普通に代入とかそんな場合に、文字列かチェックする必要があるのでメモ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;hoge&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;fuga&amp;quot;&lt;/span&gt;
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;instanceof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hoge&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;basestring&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;pass&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じ。整数ならbasestringをintにするとかやればおk&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/4843173/how-to-check-if-type-of-a-variable-is-string-in-python"&gt;How to check if type of a variable is string in python? - Stack OverflowHow to check if type of a variable is string in python? - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;formatにリストを渡す&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;l&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;fuga&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hage&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;{0},{1},{2}&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;tuple&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;l&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+&lt;span class="n"&gt;hoge&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;fuga&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;hage&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じ。&lt;/p&gt;
+&lt;h2&gt;forループ色々&lt;/h2&gt;
+&lt;h3&gt;dict&lt;/h3&gt;
+&lt;p&gt;iteritemsを使う&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;isinstance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;dict&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vakue&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;iteritems&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+        &lt;span class="k"&gt;pass&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;listとかtuple&lt;/h3&gt;
+&lt;p&gt;enumerateを使う。直接listの番号を取ってる訳じゃないけど&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;isinstance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;l&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;tuple&lt;/span&gt;&lt;span class="p"&gt;)):&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;enumerate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;l&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;pass&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;object&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;isinstance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;type&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;vars&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;iteritems&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+        &lt;span class="k"&gt;pass&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;psycopg2をインストールする&lt;/h2&gt;
+&lt;p&gt;依存ライブラリとしてlibpg-devが必要。postgresql-server-dev-x.xが必要とか言われるけど、こっちで良い。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/28253681/you-need-to-install-postgresql-server-dev-x-y-for-building-a-server-side-extensi"&gt;python - You need to install postgresql-server-dev-X.Y for building a server-side extension or libpq-dev for building a client-side application - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="python"></category><category term="memo"></category></entry><entry><title>nginx memo</title><link href="http://blog.thoz.org/2014/03/20/nginx-memo/" rel="alternate"></link><updated>2014-03-20T16:04:53+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-03-20:2014/03/20/nginx-memo/</id><summary type="html">&lt;h2&gt;Nginxで503コードのページをカスタマイズする&lt;/h2&gt;
 &lt;p&gt;なるべく手軽にメンテナンスページを出すための手順&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;path/to/root/error/503.htmlにページを用意する。&lt;/li&gt;

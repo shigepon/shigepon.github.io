@@ -1,5 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.thoz.org/" rel="alternate"></link><link href="http://blog.thoz.org/feeds/postgresql.atom.xml" rel="self"></link><id>http://blog.thoz.org/</id><updated>2014-02-28T11:48:20+09:00</updated><entry><title>dbext.vimでpostgresqlにアクセスする</title><link href="http://blog.thoz.org/2014/02/28/vim-dbext-postgresql/" rel="alternate"></link><updated>2014-02-28T11:48:20+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-02-28:2014/02/28/vim-dbext-postgresql/</id><summary type="html">&lt;p&gt;ググってみたけど無かったのでメモ。
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.thoz.org/" rel="alternate"></link><link href="http://blog.thoz.org/feeds/postgresql.atom.xml" rel="self"></link><id>http://blog.thoz.org/</id><updated>2015-09-24T08:50:36+09:00</updated><entry><title>ubuntu12.04でpg\_bulkloadを使う</title><link href="http://blog.thoz.org/2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04/" rel="alternate"></link><updated>2015-09-24T08:50:36+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2015-09-24:2015/09/24/use-pg-bulkload-in-ubuntu-12-dot-04/</id><summary type="html">&lt;p&gt;pg_bulkloadを使いたくなるケース&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;大量のデータをインポートしたい&lt;/li&gt;
+&lt;li&gt;中にはエラーがあるデータがちょこちょこある&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;に当てはまったので、インストールからやってみた。
+やったこと順に列記するので最低限の手順ではないと思う。&lt;/p&gt;
+&lt;p&gt;rpmからインストールする方法でなく、ソースからやってみることにした。
+Ubuntu12.04でインストールしたけど、他のバージョンでもほぼ同じだと思う。&lt;/p&gt;
+&lt;h2&gt;ソースの取得&lt;/h2&gt;
+&lt;p&gt;まずは最新のstableをgithubから取ってくる。ブログ執筆時はこんな感じ。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git clone -b VERSION3_1_STABLE https://github.com/ossc-db/pg_bulkload.git
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;make(失敗)&lt;/h2&gt;
+&lt;p&gt;おもむろにmakeしてみると&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; pg_bulkload
+$ make
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;するとpgxs.xmlが無い！というエラーが出て来た&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Makefile:17: /usr/lib/postgresql/9.4/lib/pgxs/src/makefiles/pgxs.mk: そのようなファイルやディレクトリはありません
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;postgresqlは9.2しか入れてないはずなのに何故か9.4のファイルが無いとか言われた。&lt;/p&gt;
+&lt;h2&gt;試行錯誤(失敗)&lt;/h2&gt;
+&lt;p&gt;どうもMakefileを調べてみると、ここで出てくるバージョンはpg_configコマンドで取得するバージョンらしい。面倒なので、手動で9.2のファイルを設定するように変更して、さらにpgxs.mkを入れるためにpostgresql-server-dev-9.2をaptitudeでインストールした。&lt;/p&gt;
+&lt;p&gt;で、おもむろにmakeすると・・・&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo make
+....
+/usr/include/postgresql/libpq-fe.h:547:1: エラー: 不明な型名 ‘pg_int64’ です
+/usr/include/postgresql/libpq-fe.h:547:50: エラー: 不明な型名 ‘pg_int64’ です
+/usr/include/postgresql/libpq-fe.h:551:1: エラー: 不明な型名 ‘pg_int64’ です
+/usr/include/postgresql/libpq-fe.h:553:48: エラー: 不明な型名 ‘pg_int64’ です
+make&lt;span class="o"&gt;[&lt;/span&gt;1&lt;span class="o"&gt;]&lt;/span&gt;: *** &lt;span class="o"&gt;[&lt;/span&gt;pg_bulkload.o&lt;span class="o"&gt;]&lt;/span&gt; エラー 1
+make&lt;span class="o"&gt;[&lt;/span&gt;1&lt;span class="o"&gt;]&lt;/span&gt;: ディレクトリ &lt;span class="sb"&gt;`&lt;/span&gt;/****/pg_bulkload/bin&lt;span class="err"&gt;&amp;#39;&lt;/span&gt; から出ます
+make: *** &lt;span class="o"&gt;[&lt;/span&gt;all&lt;span class="o"&gt;]&lt;/span&gt; エラー 2
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;と結局エラーが出てしまった。ググって調べるとどうもlibpqのバージョンが関連するらしい。調べてみると&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ aptitude show libpq-dev
+パッケージ: libpq-dev                    
+状態: インストール済み
+自動的にインストールされた: いいえ
+バージョン: 9.4.0-1.pgdg12.4+1
+....
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;バージョンが9.4になっていたorz。多分だけど、9.2でpg_bulkloadをインストールするにはlibpqをダウングレードしないといけないっぽい。それは面倒なのでpostgresqlのバージョン9.4をインストールすることでバージョンを合わせることにした&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude install postgresql-9.4
+$ sudo aptitude install postgresql-server-dev-9.4
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;インストールの途中でlibpq-devは削除することになった。&lt;/p&gt;
+&lt;h2&gt;make(成功)&lt;/h2&gt;
+&lt;p&gt;バージョンを合わせたので、makeしてみると今度はライブラリが足らないというエラーが出た&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo make
+....
+/usr/bin/ld: cannot find -lpam
+/usr/bin/ld: cannot find -ledit
+collect2: ld はステータス &lt;span class="m"&gt;1&lt;/span&gt; で終了しました
+make&lt;span class="o"&gt;[&lt;/span&gt;1&lt;span class="o"&gt;]&lt;/span&gt;: *** &lt;span class="o"&gt;[&lt;/span&gt;pg_bulkload&lt;span class="o"&gt;]&lt;/span&gt; エラー 1
+make&lt;span class="o"&gt;[&lt;/span&gt;1&lt;span class="o"&gt;]&lt;/span&gt;: ディレクトリ &lt;span class="sb"&gt;`&lt;/span&gt;/***/pg_bulkload/bin&lt;span class="err"&gt;&amp;#39;&lt;/span&gt; から出ます
+make: *** &lt;span class="o"&gt;[&lt;/span&gt;all&lt;span class="o"&gt;]&lt;/span&gt; エラー 2
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これはubuntuではlibpam-devとlibedit-devが足らないという意味らしいので、aptitudeからインストールした。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude install libpam-dev
+$ sudo aptitude install libedit-dev
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;以上の作業でpg_bulkloadのmakeに成功した&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo make
+$ sudo make install
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;使ってみる&lt;/h2&gt;
+&lt;p&gt;pg_bulkloadはbinフォルダ内にある。使い方は&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;設定ファイルを書く&lt;/li&gt;
+&lt;li&gt;csvファイルを用意する&lt;/li&gt;
+&lt;li&gt;実行する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;となる。&lt;/p&gt;
+&lt;h3&gt;設定ファイルを書く&lt;/h3&gt;
+&lt;p&gt;設定ファイルの例はこんな感じ(下のコマンドの場合、example.ctlで保存しておく)、bin/data内にも例があるので参考になる。
+この設定は&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;リダイレクトでcsvファイルを入力する。&lt;/li&gt;
+&lt;li&gt;リレーションをチェックする。リレーションにミスがある場合はエラーにする&lt;/li&gt;
+&lt;li&gt;タブ区切り&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;TYPE = CSV
+INPUT = stdin
+TABLE = table_name
+CHECK_CONSTRAINTS = YES
+DELIMITER = &amp;quot;   &amp;quot; #タブの場合
+WRITER = DIRECT
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;コマンドはこんな感じ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ ./pg_bulkload example.ctl --dbname db_name  &amp;lt; csv_name.csv
+NOTICE: BULK LOAD START
+NOTICE: BULK LOAD END
+    &lt;span class="m"&gt;0&lt;/span&gt; Rows skipped.
+    &lt;span class="m"&gt;10&lt;/span&gt; Rows successfully loaded.
+    &lt;span class="m"&gt;0&lt;/span&gt; Rows not loaded due to parse errors.
+    &lt;span class="m"&gt;0&lt;/span&gt; Rows not loaded due to duplicate errors.
+    &lt;span class="m"&gt;0&lt;/span&gt; Rows replaced with new rows.
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;csvファイルはpsqlで\d table_nameで表示される順序にしておくこと。でないとパースエラーが出る。&lt;/p&gt;
+&lt;h2&gt;順序が変わる場合&lt;/h2&gt;
+&lt;p&gt;csvファイル内のフィールド順序をdb内の順序と違うものにしたい場合や、idなど、データを省略したい場合はフィルタを指定出来る。フィルタは&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;db内に関数を作る&lt;/li&gt;
+&lt;li&gt;設定ファイルでフィルタを指定&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;で設定する。&lt;/p&gt;
+&lt;p&gt;フィルタの例&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;CREATE&lt;/span&gt; &lt;span class="k"&gt;FUNCTION&lt;/span&gt; &lt;span class="n"&gt;sample_filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;integer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;text&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;text&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;real&lt;/span&gt; &lt;span class="k"&gt;DEFAULT&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;05&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;RETURNS&lt;/span&gt; &lt;span class="n"&gt;record&lt;/span&gt;
+    &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="err"&gt;$$&lt;/span&gt; &lt;span class="k"&gt;SELECT&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;upper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="err"&gt;$$&lt;/span&gt;
+    &lt;span class="k"&gt;LANGUAGE&lt;/span&gt; &lt;span class="k"&gt;SQL&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;設定ファイル&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;TYPE = CSV
+INPUT = stdin
+TABLE = table_name
+CHECK_CONSTRAINTS = YES
+DELIMITER = &amp;quot;   &amp;quot; #タブの場合
+WRITER = DIRECT
+FILTER = sample_filter
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;出来てない点（追記予定）&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;MULTI_PROCESS = YESの時に認証失敗する件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;参考：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://pgbulkload.projects.pgfoundry.org/pg_bulkload.html#filter"&gt;pg_bulkload&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.atmarkit.co.jp/flinux/rensai/linuxtips/a115makeerror.html"&gt;makeで「/usr/bin/ld: cannot find」と表示されるときは － ＠IT&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://pgfoundry.org/forum/forum.php?thread_id=2851&amp;amp;forum_id=1004&amp;amp;group_id=1000261"&gt;pgFoundry: Forum: help&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/ossc-db/pg_bulkload"&gt;ossc-db/pg_bulkload&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</summary><category term="PostgreSQL"></category></entry><entry><title>ubuntuでodbcを用いてpostgresqlにアクセスする</title><link href="http://blog.thoz.org/2014/05/12/access-postgresql-through-odbc-ubuntu/" rel="alternate"></link><updated>2014-05-12T22:11:33+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-05-12:2014/05/12/access-postgresql-through-odbc-ubuntu/</id><summary type="html">&lt;p&gt;なでしこ2のテストのためにubuntuにodbcドライバをインストールしたりしたのでメモ&lt;/p&gt;
+&lt;h2&gt;odbcドライバのインストール&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude install unixodbc, odbc-postgresql
+$ sudo odbcinst -i -d -f /usr/share/psqlodbc/odbcinst.ini.template
+$ sudo odbcinst -i -s -l  -n adyoung-pg -f /usr/share/doc/odbc-postgresql/examples/odbc.ini.template
+$ vim /etc/odbc.ini
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;odbc.iniにはサンプルの設定が入っているので、それを参考にしながら設定&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;h2&gt;odbcアクセスしてみる&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ isql -v DSN &lt;span class="o"&gt;(&lt;/span&gt;UID &lt;span class="o"&gt;(&lt;/span&gt;PWD&lt;span class="o"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でアクセスできる。あとはSQLを入力すれば結果を見たりできる。&lt;/p&gt;
+&lt;h2&gt;monoを使ってアクセスする場合&lt;/h2&gt;
+&lt;p&gt;monoというかなでしこ2でアクセスする場合に必要だった。libodbc.soが必要というエラーが出るのでunixodbc-devの追加インストールが必要。インストールすればエラー出ずに動くようになる。&lt;/p&gt;</summary><category term="linux"></category><category term="PostgreSQL"></category><category term="nadesiko"></category></entry><entry><title>dbext.vimでpostgresqlにアクセスする</title><link href="http://blog.thoz.org/2014/02/28/vim-dbext-postgresql/" rel="alternate"></link><updated>2014-02-28T11:48:20+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-02-28:2014/02/28/vim-dbext-postgresql/</id><summary type="html">&lt;p&gt;ググってみたけど無かったのでメモ。
 単純に.vimrcに&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;let dbext_default_profile=&amp;quot;&amp;quot;
 let dbext_default_type=&amp;quot;PGSQL&amp;quot;

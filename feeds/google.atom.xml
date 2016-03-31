@@ -1,5 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.thoz.org/" rel="alternate"></link><link href="http://blog.thoz.org/feeds/google.atom.xml" rel="self"></link><id>http://blog.thoz.org/</id><updated>2014-03-09T21:53:40+09:00</updated><entry><title>Google Analyticsからbotアクセスを取り除く</title><link href="http://blog.thoz.org/2014/03/09/how-to-block-bot-access-from-google-analytics/" rel="alternate"></link><updated>2014-03-09T21:53:40+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-03-09:2014/03/09/how-to-block-bot-access-from-google-analytics/</id><summary type="html">&lt;p&gt;参考ページ&lt;a href="http://www.lunametrics.com/blog/2013/09/05/filter-bots-google-analytics/#sr=d&amp;amp;m=n&amp;amp;cp=d&amp;amp;ct=-tmc&amp;amp;ts=1394369739"&gt;How to Block Bots from Your Google Analytics&lt;/a&gt;&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.thoz.org/" rel="alternate"></link><link href="http://blog.thoz.org/feeds/google.atom.xml" rel="self"></link><id>http://blog.thoz.org/</id><updated>2016-01-06T11:43:41+09:00</updated><entry><title>Google Tag Managerを使ってボタンのクリックを検出する</title><link href="http://blog.thoz.org/2016/01/06/track-button-click-at-google-tag-manager/" rel="alternate"></link><updated>2016-01-06T11:43:41+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2016-01-06:2016/01/06/track-button-click-at-google-tag-manager/</id><summary type="html">&lt;p&gt;Google Tag Manager(多分現在はバージョン2)を使ってリンクのクリックをAnalyticsに検出させる方法はちょこちょこ書いてあるけど、ボタンのクリックを検出する方法が書いてなかったのでメモ。例としてIDがhogeのボタンクリックを検出してみる&lt;/p&gt;
+&lt;h2&gt;変数の設定&lt;/h2&gt;
+&lt;p&gt;google tag managerのコンテナ画面で、左サイドメニューの「変数」をクリックすると「クリック」という項目が色々ある。初期ではチェックが外れている。これを全てチェックしておく（実際はID指定でクリックを検出したいならClick IDをチェックすれば良いとかあるけど全部チェックしておくと無難）&lt;/p&gt;
+&lt;h2&gt;トリガー作成&lt;/h2&gt;
+&lt;p&gt;同じく左サイドメニューの「トリガー」をクリックする。「新規」ボタンを押してトリガーを新規作成する。そこからは下のようにする&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;1.イベントを選択→クリック&lt;/li&gt;
+&lt;li&gt;2.トリガーを設定、ターゲット→すべての要素→続行をクリック&lt;/li&gt;
+&lt;li&gt;3.配信するタイミング→一部のクリック→Click ID、等しいの順に選択→hogeと入力→トリガーを作成ボタンをクリック&lt;/li&gt;
+&lt;li&gt;名前を聞かれるので分かる名前にする。例としてfugaとしておく&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;タグ作成&lt;/h2&gt;
+&lt;p&gt;同じく左サイドメニューの「タグ」をクリックする。「新規」ボタンを押してタグを新規作成する。そこからは下のようにする &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;1.プロダクトを選択→GoogleAnalytics&lt;/li&gt;
+&lt;li&gt;2.タグの種類を選択→ユニバーサル　アナリティクス&lt;/li&gt;
+&lt;li&gt;3.タグを設定→下のように設定して続行ボタンをクリック&lt;ul&gt;
+&lt;li&gt;トラッキングID→AnalyticsのトラッキングID（UA-xxxx-xxxxxみたいな）&lt;/li&gt;
+&lt;li&gt;ディスプレイ広告向け機能を有効にする→どっちでも&lt;/li&gt;
+&lt;li&gt;トラッキングタイプ→イベント&lt;/li&gt;
+&lt;li&gt;カテゴリ→適当（Buttonとかで良い？）&lt;/li&gt;
+&lt;li&gt;アクション→適当（clickとか？）&lt;/li&gt;
+&lt;li&gt;ラベル→適当（hogeとか？）&lt;/li&gt;
+&lt;li&gt;その他はそのまま&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;4.配信するタイミング→クリック&lt;ul&gt;
+&lt;li&gt;「既存のクリック　トリガーから選択」が出てくるので作ったトリガーをチェック→「保存」ボタンをクリック&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;「タグを作成」ボタンをクリック&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;プレビュー&lt;/h2&gt;
+&lt;p&gt;まだ良く分かってない。作った設定を当てはめる前にチェックが出来るらしい。&lt;/p&gt;
+&lt;h2&gt;公開&lt;/h2&gt;
+&lt;p&gt;右上の「公開」ボタンをクリックして出てくるダイアログで「今すぐ公開」をクリックすると作った設定を当てはめることが出来る。&lt;/p&gt;
+&lt;h2&gt;確認&lt;/h2&gt;
+&lt;p&gt;Chromeなら&lt;a href="https://chrome.google.com/webstore/detail/tag-assistant-by-google/kejbdjndbnbjgmefkgdddjlbokphdefk"&gt;Tag Assistant&lt;/a&gt;って拡張があるのでこれをインストールして確認する。実際にクリックしてみてAnalyticsで検出を確認するのでもおk&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://konygin.net/gtm/tracking-buttons-en/"&gt;Buttons tracking at Google Tag Manager 2.0&lt;/a&gt;&lt;/p&gt;</summary><category term="google"></category></entry><entry><title>Google Analyticsからbotアクセスを取り除く</title><link href="http://blog.thoz.org/2014/03/09/how-to-block-bot-access-from-google-analytics/" rel="alternate"></link><updated>2014-03-09T21:53:40+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-03-09:2014/03/09/how-to-block-bot-access-from-google-analytics/</id><summary type="html">&lt;p&gt;参考ページ&lt;a href="http://www.lunametrics.com/blog/2013/09/05/filter-bots-google-analytics/#sr=d&amp;amp;m=n&amp;amp;cp=d&amp;amp;ct=-tmc&amp;amp;ts=1394369739"&gt;How to Block Bots from Your Google Analytics&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;ここ数日Google Analyticsにアメリカからリファラ無し直帰率100%近くのアクセスを大量に発見。
 どう考えてもbotですどうも(ry 
 本当はGoogle Analyticsに自動でフィルタして欲しいけど、どうもフィルタしてないので、自力でフィルタ設定しないといけないみたい。&lt;/p&gt;

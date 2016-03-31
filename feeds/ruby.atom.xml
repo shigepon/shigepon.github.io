@@ -1,5 +1,278 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.thoz.org/" rel="alternate"></link><link href="http://blog.thoz.org/feeds/ruby.atom.xml" rel="self"></link><id>http://blog.thoz.org/</id><updated>2014-03-14T09:10:41+09:00</updated><entry><title>Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(4):ビューにBootstrapを使う</title><link href="http://blog.thoz.org/2014/03/14/a-way-of-creating-rails-application4/" rel="alternate"></link><updated>2014-03-14T09:10:41+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-03-14:2014/03/14/a-way-of-creating-rails-application4/</id><summary type="html">&lt;p&gt;参考にした記事URL一覧&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.thoz.org/" rel="alternate"></link><link href="http://blog.thoz.org/feeds/ruby.atom.xml" rel="self"></link><id>http://blog.thoz.org/</id><updated>2014-06-06T10:38:10+09:00</updated><entry><title>Railsやりにくいから挫折しそうという話</title><link href="http://blog.thoz.org/2014/06/06/difficult-to-use-rails/" rel="alternate"></link><updated>2014-06-06T10:38:10+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-06-06:2014/06/06/difficult-to-use-rails/</id><summary type="html">&lt;p&gt;今までphpの&lt;a href="http://rhaco.org"&gt;rhaco&lt;/a&gt;というドマイナーなフレームワークを使ってきてたので、メジャーなフレームワークでも使ってみるかー。ついでにrubyの練習にもなるかーと思ってRails4をはじめたんだけど、なんかこー色々自分の開発方法に合ってないような気がするので挫折する。&lt;/p&gt;
+&lt;p&gt;使いにくいなと思った点はメリットとの二律背反の部分もあるんだけど、次のような感じ&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;モデルをコマンドで作ると、テーブル名が勝手に複数形になる&lt;/li&gt;
+&lt;li&gt;viewでurl表示させたりするのが面倒。きっとやり方知らないだけだろうけど。&lt;/li&gt;
+&lt;li&gt;コマンドありきで作っていくので、手作業でどこまで修正して良いか分からない&lt;/li&gt;
+&lt;li&gt;どんな流れで処理が進むのかさっぱり分からない（フレームワークが大きすぎるから？）。本読めって話だろうけど・・・なー(めんどい)。&lt;/li&gt;
+&lt;li&gt;分からない時に聞く相手が居ない&lt;/li&gt;
+&lt;li&gt;バージョンによってやり方が結構変わるみたいで、ググってもそれが正しい手法か分からない時がある（これはrhacoも同じだからrhacoにも何とかして欲しいとこではある）&lt;/li&gt;
+&lt;li&gt;Capistrano+nginx+unicornで結構ハマってそれだけで挫折しそうになった。未だにちゃんとunicornをリロード出来ない。&lt;/li&gt;
+&lt;li&gt;メジャーなフレームワークのはずなのに、ちょこちょこバッドノウハウない？違う？&lt;/li&gt;
+&lt;li&gt;SassやCoffeeScriptがデフォみたいなのがやだ&lt;/li&gt;
+&lt;li&gt;いちいちgemファイルでほにゃららしないと上手く動かない？Bootstrapとか。そしてgemがあるかどうかをいちいちググって探さないといけない。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- more --&gt;
+
+&lt;p&gt;なんとなくだけどRailsって先に設計とかかっちりやってから作るってやり方な感じがして、「大雑把に作って、そこから細部をつめていく」みたいなやり方には合ってないんじゃないかと思った。個人でサクサクっとWebサービス作りたい場合には大雑把にまず作りたいんだよなー。&lt;/p&gt;
+&lt;p&gt;見当違いかもしれないけどね。とりあえず他を当たってみる？メジャーどころでDjango？同じように挫折するかもしれないけどとりあえず試してみよう。&lt;/p&gt;</summary><category term="ruby"></category></entry><entry><title>Rails memo</title><link href="http://blog.thoz.org/2014/05/29/rails-memo/" rel="alternate"></link><updated>2014-05-29T08:54:12+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-05-29:2014/05/29/rails-memo/</id><summary type="html">&lt;p&gt;Rails関係でいつでも確認出来るようにメモ。&lt;/p&gt;
+&lt;h2&gt;ルーティングでのパラメータの使い方&lt;/h2&gt;
+&lt;p&gt;config/route.rbを編集する&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt; &lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;main/index/:hoge&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;main#index&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;app/controllers/main_controller.rbを編集&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MainController&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="no"&gt;ApplicationController&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;index&lt;/span&gt;
+    &lt;span class="vi"&gt;@hoge&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="ss"&gt;:hoge&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;と書いておくとrouteで設定したパラメーターにアクセス出来る。&lt;/p&gt;
+&lt;h2&gt;ルーティング中でURLの一部を省略可能にする&lt;/h2&gt;
+&lt;p&gt;config/route.rbを編集する&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt; &lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;main/index/:hoge(/fuga/:hage)&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;main#index&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とやっておくと、main/index/1/fuga/2でもアクセス出来るし、main/index/1でもアクセス出来るようになる&lt;/p&gt;
+&lt;h2&gt;ルーティング時にパラメーターの初期値を設定する&lt;/h2&gt;
+&lt;p&gt;config/route.rbを編集する&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt; &lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;main/index/:hoge(/fuga/:hage)&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;main#index&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="ss"&gt;:defaults&lt;/span&gt;&lt;span class="o"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="ss"&gt;:hage&lt;/span&gt;&lt;span class="o"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;と設定しておくと、app/controllers/main_controller.rb中のparams[:hage]の初期値として3を入れることが出来る。&lt;/p&gt;
+&lt;h2&gt;Dateクラスの使い方メモ&lt;/h2&gt;
+&lt;p&gt;個人的に文字列からDateクラスにして、1年前にするとか1ヶ月前にするとかそういう作業をすることが多いのでメモ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;  &lt;span class="n"&gt;d&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="no"&gt;Date&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;strptime&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;2014-05-24&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;%Y-%m-%d&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;prev_year&lt;/span&gt; &lt;span class="c1"&gt;#1年前に指定&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="ruby"></category><category term="memo"></category></entry><entry><title>find\_by\_sqlでプリペアードステートメントを使う</title><link href="http://blog.thoz.org/2014/05/28/use-prepared-statement-in-find-by-sql/" rel="alternate"></link><updated>2014-05-28T08:19:12+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-05-28:2014/05/28/use-prepared-statement-in-find-by-sql/</id><summary type="html">&lt;p&gt;ActiveRecordは便利なのかどうか知らないけど、allなどのメソッドで:conditionとかで?を使うことが出来る。だけど、sqlを直接打ちたいケースは必ず出てくるので、その時に?使いたいなと思ったけど、なかなか例文が無かった。&lt;/p&gt;
+&lt;p&gt;んで結局こうするといいみたい。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="vi"&gt;@results&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="no"&gt;Model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;find_by_sql&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;select * from hoge where fuga=?&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;hage&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;しかし他にも直接sqlを実行する方法があって、&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="no"&gt;ActiveRecord&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;Base&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;raw_connection&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exec&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;select * from hoge where fuga = :1&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;hage&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;こんな書き方も出来るらしい。ActiveRecord::Base.connectionでは無理らしい。うーむ。むか〜しからRailsはちょっとレールからはずれるととたんに難しくなるんだなー。やる気が減って来た＞＜。&lt;/p&gt;</summary><category term="Rails"></category><category term="ruby"></category></entry><entry><title>Railsでurl\_forを使ったらshows proxy\_passで設定したURLになってしまう件</title><link href="http://blog.thoz.org/2014/05/05/rails-url-for-shows-proxy-pass/" rel="alternate"></link><updated>2014-05-05T14:00:54+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-05-05:2014/05/05/rails-url-for-shows-proxy-pass/</id><summary type="html">&lt;p&gt;Nginx, Unicorn, Rails4でurl_forを使ったら変なURLになってしまったので対処法を書いておく&lt;/p&gt;
+&lt;p&gt;Ninxで&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;server&lt;/span&gt; &lt;span class="nt"&gt;hoge&lt;/span&gt;&lt;span class="nc"&gt;.com&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;span class="nt"&gt;proxy_pass&lt;/span&gt; &lt;span class="nt"&gt;http&lt;/span&gt;&lt;span class="o"&gt;://&lt;/span&gt;&lt;span class="nt"&gt;upstream&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;のような設定をしているとurl_forで&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;http://hoge.com
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;となってほしいところが&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;http://upstream
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;となってしまうので、ググって対処を調べた。&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://stackoverflow.com/questions/5834025/how-to-preserve-request-url-with-nginx-proxy-pass"&gt;ruby - How to preserve request url with nginx proxy_pass - Stack Overflow&lt;/a&gt;を参考にして&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;proxy_set_header Host http://hoge.com
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;を追記したら上手く動いた。&lt;/p&gt;</summary><category term="Rails"></category><category term="ruby"></category></entry><entry><title>Rails4でJSONを出力する</title><link href="http://blog.thoz.org/2014/05/05/output-json-by-rails4/" rel="alternate"></link><updated>2014-05-05T10:33:26+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-05-05:2014/05/05/output-json-by-rails4/</id><summary type="html">&lt;p&gt;Rails4にはjbuilderが標準で入っていて、viewを設定するだけでJSON出力が可能ならしい。
+ 例えば&lt;a href="http://blog.shigepon.info/blog/2014/03/10/a-way-of-creating-rails-application3/"&gt;Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データ一覧ページを作って、詳細ページへのリンクを貼る - shigeponが関心のある技術情報など&lt;/a&gt;のページをとりあえずjsonで出力するにはapp/views/events/index.json.jbuilderを用意するだけでOK。http://0.0.0.0:3000/events/index.json にアクセスするとJSONで表示してくれる。なんと楽チンな！
+ JSONの出力形式を変更する場合はindex.json.jbuilderを編集する&lt;/p&gt;
+&lt;p&gt;例えばこんな感じ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;array!&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="vi"&gt;@events&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;
+  &lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;  &lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;
+  &lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;date&lt;/span&gt;  &lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;date&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;例えばこうしておくと一覧を配列出力しつつ、出力したいフィールドを指定出来る。viewだけで操作出来るのは楽チンだわ。
+ 詳しい書式はブログ等の記事を見るよりも、英語だけど&lt;a href="https://github.com/rails/jbuilder"&gt;rails/jbuilder · GitHub&lt;/a&gt;を見るとよさげ。&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;h2&gt;jbuilderでネストした配列を出力する&lt;/h2&gt;
+&lt;p&gt;大抵の説明では一番外側が配列で、中身はハッシュというものばかりで、配列の中が配列という形での出力方法の説明が無かったのでメモ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;],[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;],[&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;みたいなjsonを出力する場合&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;array!&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="vi"&gt;@events&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;
+  &lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;array!&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;to_i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;to_i&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;という指定をする。&lt;/p&gt;</summary><category term="ruby"></category></entry><entry><title>Capistrano3でbitbucketからデプロイしようとしたらハマった話</title><link href="http://blog.thoz.org/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/" rel="alternate"></link><updated>2014-05-04T10:04:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-05-04:2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/</id><summary type="html">&lt;p&gt;まだデプロイ作業を途中までしか確認していないので、とりあえずハマったポイントを書いておく。
+ デプロイ作業をテストしてみたらこんなエラーが出た&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ bundle &lt;span class="nb"&gt;exec&lt;/span&gt; cap production deploy:check
+ INFO &lt;span class="o"&gt;[&lt;/span&gt;5f874a7e&lt;span class="o"&gt;]&lt;/span&gt; Running /usr/bin/env mkdir -p /tmp/hoge/ on fuga
+DEBUG &lt;span class="o"&gt;[&lt;/span&gt;5f874a7e&lt;span class="o"&gt;]&lt;/span&gt; Command: /usr/bin/env mkdir -p /tmp/hoge/
+ INFO &lt;span class="o"&gt;[&lt;/span&gt;5f874a7e&lt;span class="o"&gt;]&lt;/span&gt; Finished in 0.321 seconds with &lt;span class="nb"&gt;exit&lt;/span&gt; status &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;successful&lt;span class="o"&gt;)&lt;/span&gt;.
+DEBUG Uploading /tmp/hoge/git-ssh.sh 0.0%
+ INFO Uploading /tmp/hoge/git-ssh.sh 100.0%
+ INFO &lt;span class="o"&gt;[&lt;/span&gt;c2bf6ab8&lt;span class="o"&gt;]&lt;/span&gt; Running /usr/bin/env chmod +x /tmp/hoge/git-ssh.sh on fuga
+DEBUG &lt;span class="o"&gt;[&lt;/span&gt;c2bf6ab8&lt;span class="o"&gt;]&lt;/span&gt; Command: /usr/bin/env chmod +x /tmp/hoge/git-ssh.sh
+ INFO &lt;span class="o"&gt;[&lt;/span&gt;c2bf6ab8&lt;span class="o"&gt;]&lt;/span&gt; Finished in 0.031 seconds with &lt;span class="nb"&gt;exit&lt;/span&gt; status &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;successful&lt;span class="o"&gt;)&lt;/span&gt;.
+DEBUG &lt;span class="o"&gt;[&lt;/span&gt;ef8c5c38&lt;span class="o"&gt;]&lt;/span&gt; Running /usr/bin/env git ls-remote -h git@bitbucket.org:fuga/hoge.git on fuga
+DEBUG &lt;span class="o"&gt;[&lt;/span&gt;ef8c5c38&lt;span class="o"&gt;]&lt;/span&gt; Command: &lt;span class="o"&gt;(&lt;/span&gt; &lt;span class="nv"&gt;GIT_ASKPASS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/bin/echo &lt;span class="nv"&gt;GIT_SSH&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/tmp/hoge/git-ssh.sh /usr/bin/env git ls-remote -h git@bitbucket.org:fuga/hoge.git &lt;span class="o"&gt;)&lt;/span&gt;
+DEBUG &lt;span class="o"&gt;[&lt;/span&gt;cb27da31&lt;span class="o"&gt;]&lt;/span&gt;    Error reading response length from authentication socket
+DEBUG &lt;span class="o"&gt;[&lt;/span&gt;ef8c5c38&lt;span class="o"&gt;]&lt;/span&gt;    Permission denied &lt;span class="o"&gt;(&lt;/span&gt;publickey&lt;span class="o"&gt;)&lt;/span&gt;.
+DEBUG &lt;span class="o"&gt;[&lt;/span&gt;ef8c5c38&lt;span class="o"&gt;]&lt;/span&gt;    
+DEBUG &lt;span class="o"&gt;[&lt;/span&gt;ef8c5c38&lt;span class="o"&gt;]&lt;/span&gt;    fatal: The remote end hung up unexpectedly
+DEBUG &lt;span class="o"&gt;[&lt;/span&gt;ef8c5c38&lt;span class="o"&gt;]&lt;/span&gt;    
+DEBUG &lt;span class="o"&gt;[&lt;/span&gt;ef8c5c38&lt;span class="o"&gt;]&lt;/span&gt; Finished in 2.287 seconds with &lt;span class="nb"&gt;exit&lt;/span&gt; status &lt;span class="m"&gt;128&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;failed&lt;span class="o"&gt;)&lt;/span&gt;.
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;うげげ。gitで鍵認証のエラー出てるわ。とりあえずbitbucketに公開鍵を登録してみた。
+ &lt;a href="http://morizyun.github.io/blog/ssh-key-bitbucket-github/"&gt;SSH認証キーをBitbucket/GitHubに設定しよう！ [Mac簡単手順] - 酒と泪とRubyとRailsと&lt;/a&gt;の通りに登録したら出来た。~/.ssh/configに秘密鍵を追加して&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Host bitbucket.org
+  HostName bitbucket.org
+  IdentityFile ~/.ssh/id_rsa
+  User git
+  TCPKeepAlive yes
+  IdentitiesOnly yes
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;じゃあ再度デプロイをテストしてみたら・・・同じエラーが出た。
+色々試行錯誤して、「Error reading response length from authentication socket」でググった結果、ssh_agentが動いてないことが判明したので&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;eval&lt;/span&gt; &lt;span class="sb"&gt;`&lt;/span&gt;ssh-agent -s&lt;span class="sb"&gt;`&lt;/span&gt;
+$ ssh-add ~/.ssh/id_rsa
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;としてデプロイをテストしたら無事動いた。めでたしめでたし。でも一旦ログアウトしたりするとssh-agentに接続しないとまた同じエラーが出た。ssh-agentへの接続方法は&lt;a href="http://tipspc.blogspot.jp/2010/02/ssh-agent.html"&gt;PC便利帳: ssh-agentを使用したパスワードなしの接続&lt;/a&gt;を参考にして&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ ps ax &lt;span class="p"&gt;|&lt;/span&gt; grep ssh-agent
+$ ls /tmp &lt;span class="p"&gt;|&lt;/span&gt; grep ssh
+$ &lt;span class="nv"&gt;SSH_AUTH_SOCK&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/tmp/ssh-XXXXX1111/agent.1111&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="nb"&gt;export&lt;/span&gt; SSH_AUTH_SOCK&lt;span class="p"&gt;;&lt;/span&gt;
+$ &lt;span class="nv"&gt;SSH_AGENT_PID&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;2222&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="nb"&gt;export&lt;/span&gt; SSH_AGENT_PID&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="sb"&gt;````&lt;/span&gt;
+
+とやれば接続できて、デプロイできた。
+ さらに実際にデプロイすると下のようにエラーでまくった。
+
+&lt;span class="c1"&gt;##capistrano3でbundle exec cap production deloyしようとしたらエラーが出まくる&lt;/span&gt;
+Gemfileから色々省いてたらエラーが出まくる
+
++ rubyが指定されてない（rbenvが足りない）
++ uglifierが無いとかsassが足りないとか
++ いちいちGemfile.lockをアップデートしないとエラー出る
+
+rbenvはcapistrano-rbenvをGemfileに追加して、Capfileにcapistrano/rbenvを指定して、config/deploy.rbに
+
+&lt;span class="sb"&gt;```&lt;/span&gt;rb
+&lt;span class="nb"&gt;set&lt;/span&gt; :rbenv_ruby, &lt;span class="s1"&gt;&amp;#39;2.1.0&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とか何とか設定するとおk。&lt;/p&gt;
+&lt;p&gt;uglifierとかsassとかproductionを指定した場合に使うような設定になってるみたいい（config/environments/production.rb）。とりあえずuglifierとかsassとかcofee-railsとか色々Gemfileに入れておけばエラーでなかった。&lt;/p&gt;
+&lt;h2&gt;デプロイした後でcss関連でエラーが出た&lt;/h2&gt;
+&lt;p&gt;sassが足らないと言われた。sass使わないので、sassが関わるファイル（app/assets/stylesheets内のscssファイル）を消すとエラーは消えた&lt;/p&gt;
+&lt;h2&gt;productionモードでデプロイすると、cssやjsを読み込んでくれない&lt;/h2&gt;
+&lt;p&gt;config/environments/production.rbに次の行を追記&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;assets&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;compile&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kp"&gt;true&lt;/span&gt;
+ &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;assets&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;precompile&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;*.js&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;*.css&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;*.css.erb&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考&lt;a href="http://stackoverflow.com/questions/18700219/rails-4-assets-not-loading-in-production"&gt;ruby - Rails 4: assets not loading in production - Stack Overflow&lt;/a&gt;
+すると解決した。なんかバッドノウハウみたいでやだ。&lt;/p&gt;
+&lt;h2&gt;productionモードでunicornが起動してくれない&lt;/h2&gt;
+&lt;p&gt;capistranoとは関係なかったけどcapistrano関連と思い込んでたのでメモ。capistranoの設定にミスがあると思って苦しんでたけど、単にunicornのオプションを指定してなかったのが悪かった。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ bundle &lt;span class="nb"&gt;exec&lt;/span&gt; unicorn_rails -E production
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でおkだった。&lt;/p&gt;
+&lt;p&gt;Capistranoは確かに便利なんだけど、なんかハマりポイントが多いような印象。
+バージョン変わって設定方法も変わったみたいだし。最初のハードルが高い感じがする。慣れたら楽になるのかな。&lt;/p&gt;
+&lt;h2&gt;capistrano3でunicornの再起動に失敗する&lt;/h2&gt;
+&lt;p&gt;&lt;a href="http://qiita.com/satococoa/items/9b0cc416ffc042680b9b"&gt;unicorn + rails 用 Capistrano 3 の設定ファイル - Qiita&lt;/a&gt;と&lt;a href="http://blog.dealforest.net/2014/02/failed_restart_unicorn_with_capistrano3/"&gt;Capistrano3 で Unicorn の再起動に失敗したのを対応したメモ | Supernova&lt;/a&gt;が参考になった。&lt;/p&gt;
+&lt;p&gt;でもrestartでちゃんと再起動して修正箇所が反映しない。stopしてstartしないと。うーん。&lt;/p&gt;</summary><category term="Rails"></category><category term="ruby"></category></entry><entry><title>nginx,unicornをさくらvpsにインストールしてrailsアプリを手動でデプロイしてみる</title><link href="http://blog.thoz.org/2014/05/02/use-nginxand-unicorn-on-sakura-vps/" rel="alternate"></link><updated>2014-05-02T15:10:23+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-05-02:2014/05/02/use-nginxand-unicorn-on-sakura-vps/</id><summary type="html">&lt;p&gt;さくらvpsのUbuntu12.04にnginxとunicornをインストールしてローカル環境に作ったRailsアプリを手動でアップロードして表示させてみた。何となくユニコーンって名前が好きなので、unicornを使うことにした。&lt;/p&gt;
+&lt;h2&gt;nginxインストール&lt;/h2&gt;
+&lt;p&gt;nginxは本当は手動でインストールするのがいいんだろうけど、面倒なので&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude install nginx
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でインストール&lt;/p&gt;
+&lt;h2&gt;unicornインストール&lt;/h2&gt;
+&lt;!-- more --&gt;
+
+&lt;p&gt;rubyとかbundlerとかが必要なので、無い場合は&lt;a href="http://blog.shigepon.info/blog/2014/02/26/rails-startup/"&gt;Ruby on Railsを入れてみた&lt;/a&gt;に書いた通りにインストール。unicornはGemfileに&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;gem &amp;quot;unicorn&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;と追記して&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ bundle install -path vendor/bundle
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でインストール出来る。要らないかもしれないけどお約束のようにインストール後はrbenv rehashしておく。&lt;/p&gt;
+&lt;h2&gt;nginxの設定&lt;/h2&gt;
+&lt;p&gt;設定ファイルは最低限これくらい書いておけばよさげ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;upstream&lt;/span&gt; &lt;span class="nt"&gt;unicorn-unix-domain-socket&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;server&lt;/span&gt; &lt;span class="n"&gt;unix&lt;/span&gt;&lt;span class="o"&gt;:/&lt;/span&gt;&lt;span class="n"&gt;var&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;unicorn&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;unicorn_&lt;/span&gt;&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;app_name&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sock&lt;/span&gt; &lt;span class="n"&gt;fail_timeout&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nt"&gt;upstream&lt;/span&gt; &lt;span class="nt"&gt;unicorn-tcp&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;server&lt;/span&gt; &lt;span class="m"&gt;127&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="m"&gt;8080&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nt"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;listen&lt;/span&gt; &lt;span class="m"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;server_name&lt;/span&gt; &lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="o"&gt;://&lt;/span&gt;&lt;span class="n"&gt;hoge&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+        &lt;span class="n"&gt;root&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;to&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;app_root&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;public&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+        &lt;span class="n"&gt;access_log&lt;/span&gt;  &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;var&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;log&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;nginx&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;access&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;log&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;error_log&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;var&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;log&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;nginx&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;error&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;log&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+        &lt;span class="n"&gt;location&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="err"&gt;{&lt;/span&gt;
+                &lt;span class="n"&gt;proxy_pass&lt;/span&gt; &lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="o"&gt;://&lt;/span&gt;&lt;span class="n"&gt;unicorn&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;tcp&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="err"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;/var/run/unicornディレクトリは前もって作っておく。/tmpとかでも良さげなんだけど、どうなんだろう？&lt;/p&gt;
+&lt;h2&gt;railsアプリのアップロード&lt;/h2&gt;
+&lt;p&gt;適当にアップロード。rsyncで適当にやった。&lt;/p&gt;
+&lt;h2&gt;unicorn起動&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ bundle &lt;span class="nb"&gt;exec&lt;/span&gt; unicorn_rails -D
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;-Dはデーモンとして起動。configファイルを指定する場合は、-c path/to/config.rbを指定する。&lt;/p&gt;
+&lt;h2&gt;nginx起動&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ service nginx start
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;以上でrailsアプリが見れるようになる。&lt;/p&gt;</summary><category term="Rails"></category><category term="ruby"></category></entry><entry><title>Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(4):ビューにBootstrapを使う</title><link href="http://blog.thoz.org/2014/03/14/a-way-of-creating-rails-application4/" rel="alternate"></link><updated>2014-03-14T09:10:41+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-03-14:2014/03/14/a-way-of-creating-rails-application4/</id><summary type="html">&lt;p&gt;参考にした記事URL一覧&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://ubiqlog.com/archives/8749"&gt;Ruby on Rails 4.0正式リリースとBootstrapの正しい設定法 | ユービックログ研究所&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://railscasts.com/episodes/328-twitter-bootstrap-basics?language=ja&amp;amp;view=asciicast"&gt;#328 Twitter Bootstrap Basics - RailsCasts&lt;/a&gt;&lt;/li&gt;
