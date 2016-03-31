@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ja"
+>
+<head>
+    <title>django-allauthを使ってみた - shigeponが関心のある技術情報など</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="http://blog.thoz.org/2014/11/25/use-django-allauth/">
+
+        <meta name="author" content="shigepon" />
+        <meta name="keywords" content="Django,Python" />
+
+        <meta property="og:site_name" content="shigeponが関心のある技術情報など" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="django-allauthを使ってみた"/>
+        <meta property="og:url" content="http://blog.thoz.org/2014/11/25/use-django-allauth/"/>
+        <meta property="og:description" content=""/>
+        <meta property="article:published_time" content="2014-11-25" />
+            <meta property="article:section" content="misc" />
+            <meta property="article:tag" content="Django" />
+            <meta property="article:tag" content="Python" />
+            <meta property="article:author" content="shigepon" />
+
+    <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="@shigepon">
+        <meta name="twitter:creator" content="@shigepon">
+    <meta name="twitter:domain" content="http://blog.thoz.org">
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="http://blog.thoz.org/theme/css/bootstrap.united.min.css" type="text/css"/>
+    <link href="http://blog.thoz.org/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="http://blog.thoz.org/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://blog.thoz.org/theme/css/style.css" type="text/css"/>
+
+        <link href="http://blog.thoz.org/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="shigeponが関心のある技術情報など ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="http://blog.thoz.org/" class="navbar-brand">
+shigeponが関心のある技術情報など            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                    <li><a href="http://www.shigepon.info/">shigeponのホームページ</a></li>
+                    <li><a href="http://thoz.org/">とある法律判例の全文検索トップ</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="http://blog.thoz.org/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="http://blog.thoz.org/2014/11/25/use-django-allauth/"
+                       rel="bookmark"
+                       title="Permalink to django-allauthを使ってみた">
+                        django-allauthを使ってみた
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2014-11-25T14:55:16+09:00"> 火 25 11月 2014</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="http://blog.thoz.org/tag/django.html">Django</a>
+        /
+	<a href="http://blog.thoz.org/tag/python.html">Python</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>ソーシャルログインだけでなく、通常のログインもやりたかったので、django-allauthを試してみた。</p>
+<h2>インストール</h2>
+<p>pipで</p>
+<div class="highlight"><pre><span></span>pip install django-allauth
+</pre></div>
+
+
+<h2>ファイルでの設定</h2>
+<p>settings.pyとurls.pyを設定</p>
+<!-- more -->
+
+<p>```py settings.py
+INSTALLED_APPS = (
+...
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.twitter', #例としてTwitter
+)
+AUTHENTICATION_BACKENDS = (
+...
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+TEMPLATE_CONTEXT_PROCESSORS = (
+...
+    "django.core.context_processors.request",
+    "django.contrib.auth.context_processors.auth",
+    "allauth.account.context_processors.account",
+    "allauth.socialaccount.context_processors.socialaccount",
+)
+SITE_ID = 1</p>
+<div class="highlight"><pre><span></span>```py urls.py
+urlpatterns = patterns(&#39;&#39;,
+    ...
+    url(&#39;^accounts/&#39;, include(&#39;allauth.urls&#39;)),
+    url(&#39;^accounts/profile/?&#39;, include(&#39;profile.urls&#39;,namespace=&#39;profile&#39;)), #ログイン後のリダイレクト先
+)
+</pre></div>
+
+
+<h2>adminページでの設定</h2>
+<p>ソーシャルログインする場合のみ必要。 http://domain/admin/ にアクセスして管理者ログインしてSocial applicationを追加する。
+フォーム内では名前を適当に付けて、Twitterの場合Client idにConsumer keyを登録して、Secret keyにConsumer secretを登録すればおk
+最後に、利用可能サイトから一番上のサイト(SITE_ID=1と指定してるので)を選択するとおk</p>
+<p>http://domain/accounts にアクセスすればログインフォームが出てくる。出来た。</p>
+<h2>テンプレートを上書きする</h2>
+<p>プロジェクトディレクトリ/templates/account以下にファイルを設定すればおk
+例えばログインのテンプレートなら、login.htmlを設置すればおk</p>
+<p>元のファイルはgithubを見れば分かる</p>
+<h2>使える機能</h2>
+<p><a href="https://github.com/pennersr/django-allauth/blob/master/allauth/account/urls.py">githubのコード</a>
+見れば大体分かる感じ</p>
+<h2>ユーザー登録時のメール確認後の処理でハマる</h2>
+<p>ユーザー登録すると通常は登録したメールアドレスにメールが届いて、そこに書いてあるURLにアクセスすると登録完了する手順が表示される。そこらへんの文章とかも上のテンプレート上書きでいけて問題ないんだけど、初期状態では登録が最後まで完了すると、そのままログインしてログイン時のリダイレクト先に移動してしまう。完了画面を表示したい場合はこれではまずい。</p>
+<p>ので、<a href="http://django-allauth.readthedocs.org/en/latest/advanced.html">ここらへん</a>のCustom Redirectsの項目を参考にしてアダプタを作ってみた</p>
+<p>```py settings.py
+ACCOUNT_ADAPTER = 'project.users.adapter.MyAccountAdapter'</p>
+<div class="highlight"><pre><span></span><span class="sb">``</span><span class="err">`</span><span class="n">py</span> <span class="n">project</span><span class="o">/</span><span class="n">users</span><span class="o">/</span><span class="n">adapter</span><span class="o">.</span><span class="n">py</span>
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">allauth.account.adapter</span> <span class="kn">import</span> <span class="n">DefaultAccountAdapter</span>
+
+<span class="k">class</span> <span class="nc">MyAccountAdapter</span><span class="p">(</span><span class="n">DefaultAccountAdapter</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_email_confirmation_redirect_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">request</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;/account/complete&quot;</span>
+        <span class="k">return</span> <span class="n">path</span>
+</pre></div>
+
+
+<p>でもこれだけでは上手くいかなかった。普通にログイン時のリダイレクト先に移動してしまった。どうもACCOUNT_LOGIN_ON_EMAIL_CONFIRMATIONをFalseにしないとダメみたい</p>
+<p>```py settings.py
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False</p>
+<div class="highlight"><pre><span></span><span class="err">これでやっと</span><span class="o">/</span><span class="n">account</span><span class="o">/</span><span class="n">complete</span><span class="err">にリダイレクトしてくれた。ログインした状態ではダメみたいなので、ログインは再度やってもらわないといけない。うーん今のとこ仕方ないか・・・。</span>
+
+
+<span class="c1">## django-allauthのサインアップフォームをカスタマイズしたい</span>
+
+<span class="c1">### あるフィールドにhelp\_textを付ける</span>
+
+<span class="err">参考：</span><span class="p">[</span><span class="n">Overwrite</span> <span class="n">django</span><span class="o">-</span><span class="n">allauth</span> <span class="n">form</span> <span class="n">field</span> <span class="o">-</span> <span class="n">Stack</span> <span class="n">Overflow</span><span class="p">](</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">stackoverflow</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">questions</span><span class="o">/</span><span class="mi">23580771</span><span class="o">/</span><span class="n">overwrite</span><span class="o">-</span><span class="n">django</span><span class="o">-</span><span class="n">allauth</span><span class="o">-</span><span class="n">form</span><span class="o">-</span><span class="n">field</span><span class="p">)</span>
+
+\<span class="n">_</span>\<span class="n">_init</span>\<span class="n">_</span>\<span class="n">_</span><span class="err">を上書きして、フィールドに属性を追加する</span>
+<span class="err">コードはこんな感じ。例としてユーザー名入力フォームにヘルプテキストとして「</span><span class="n">required</span><span class="err">」という文字を追加する</span>
+
+<span class="sb">``</span><span class="err">`</span><span class="n">py</span> <span class="n">appname</span><span class="o">/</span><span class="n">forms</span><span class="o">.</span><span class="n">py</span>
+<span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">forms</span>
+
+<span class="k">class</span> <span class="nc">SignupForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">SignupForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="s2">&quot;required&quot;</span>
+</pre></div>
+
+
+<p>```py settings.py
+ACCOUNT_SIGNUP_FORM_CLASS = "appname.forms.SignupForm"</p>
+<div class="highlight"><pre><span></span>こんな感じ
+
+### フィールドのバリデーションを追加
+
+参考：[python - How to clean username with Django allauth adapter? - Stack Overflow](http://stackoverflow.com/questions/24175228/how-to-clean-username-with-django-allauth-adapter)
+
+Account Adapterを設定してあげて、そこでclean\_xxxを作ると上手くいくみたい
+</pre></div>
+
+
+<p>```py project/users/adapter.py
+class MyAccountAdapter(DefaultAccountAdapter):
+    ...
+    def clean_username(self, username):
+        " 適当に処理を入れる
+        " エラーの場合はraise Exception
+        return username</p>
+<p>```</p>
+            </div>
+            <!-- /.entry-content -->
+    <hr />
+    <!-- AddThis Button BEGIN -->
+    <div class="addthis_toolbox addthis_default_style">
+            <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+            <a class="addthis_button_tweet"></a>
+            <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+    </div>
+    <!-- AddThis Button END -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="https://twitter.com/shigepon"><i class="fa fa-twitter-square fa-lg"></i> twitter</a></li>
+                <li class="list-group-item"><a href="https://www.facebook.com/takeshi.shigeta.56"><i class="fa fa-facebook-square fa-lg"></i> facebook</a></li>
+              </ul>
+            </li>
+
+
+            <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
+                <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/category/misc.html">
+                            <i class="fa fa-folder-open fa-lg"></i> misc
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                <ul class="list-group " id="tags">
+                </ul>
+            </li>
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://www.shigepon.info/" target="_blank">
+                shigeponのHP
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://thoz.org/" target="_blank">
+                とある法律判例の全文検索
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2016 shigepon
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="http://blog.thoz.org/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://blog.thoz.org/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="http://blog.thoz.org/theme/js/respond.min.js"></script>
+
+
+        <script type="text/javascript">var addthis_config = {"data_track_addressbar": true};</script>
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-56fb8dd95cb9034a"></script>
+</body>
+</html>

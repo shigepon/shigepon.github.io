@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ja"
+>
+<head>
+    <title>突然サーバエラーが頻発したので、調べてみたらエラーログが原因だった - shigeponが関心のある技術情報など</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="http://blog.thoz.org/2015/03/03/error-log-make-php-error/">
+
+        <meta name="author" content="shigepon" />
+        <meta name="keywords" content="rhaco,PHP,linux" />
+
+        <meta property="og:site_name" content="shigeponが関心のある技術情報など" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="突然サーバエラーが頻発したので、調べてみたらエラーログが原因だった"/>
+        <meta property="og:url" content="http://blog.thoz.org/2015/03/03/error-log-make-php-error/"/>
+        <meta property="og:description" content=""/>
+        <meta property="article:published_time" content="2015-03-03" />
+            <meta property="article:section" content="misc" />
+            <meta property="article:tag" content="rhaco" />
+            <meta property="article:tag" content="PHP" />
+            <meta property="article:tag" content="linux" />
+            <meta property="article:author" content="shigepon" />
+
+    <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="@shigepon">
+        <meta name="twitter:creator" content="@shigepon">
+    <meta name="twitter:domain" content="http://blog.thoz.org">
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="http://blog.thoz.org/theme/css/bootstrap.united.min.css" type="text/css"/>
+    <link href="http://blog.thoz.org/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="http://blog.thoz.org/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://blog.thoz.org/theme/css/style.css" type="text/css"/>
+
+        <link href="http://blog.thoz.org/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="shigeponが関心のある技術情報など ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="http://blog.thoz.org/" class="navbar-brand">
+shigeponが関心のある技術情報など            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                    <li><a href="http://www.shigepon.info/">shigeponのホームページ</a></li>
+                    <li><a href="http://thoz.org/">とある法律判例の全文検索トップ</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="http://blog.thoz.org/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="http://blog.thoz.org/2015/03/03/error-log-make-php-error/"
+                       rel="bookmark"
+                       title="Permalink to 突然サーバエラーが頻発したので、調べてみたらエラーログが原因だった">
+                        突然サーバエラーが頻発したので、調べてみたらエラーログが原因だった
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-03-03T09:56:56+09:00"> 火 03 3月 2015</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="http://blog.thoz.org/tag/rhaco.html">rhaco</a>
+        /
+	<a href="http://blog.thoz.org/tag/php.html">PHP</a>
+        /
+	<a href="http://blog.thoz.org/tag/linux.html">linux</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>参考：<a href="http://zapanet.info/blog/item/2489">PHPのエラーログが肥大してPHPが動かなくなった話</a></p>
+<p>ある日、運用しているサービスがサーバエラーを頻出しだしたので、調べてみた。環境はUbuntu、nginx、php-fpm、postgresql。</p>
+<ul>
+<li>他のサーバへのdbアクセスがおかしくなったのかと思い、他の方法でdbアクセス→問題無し</li>
+<li>サービスを色々再起動してみた。→変化なし</li>
+<li>サーバを再起動。しばらくエラーでないが、しばらくするとエラーががが</li>
+<li>php-fpmを再起動。しばらくエラーでないが、しばらくするとエラーががが</li>
+<li>php周りかなと思ったので、phpのログを開く→開かない！</li>
+<li>良く見たらphp-fpmのログが2GB超えてた。ナンテコッタイ。</li>
+<li>ログを退避して、ローテーション設定して改めてphp-fpmを再起動したら直った。めでたしめでたし。</li>
+</ul>
+<p>メモがてらローテーション設定を書いておく</p>
+<!-- more -->
+
+<p>/etc/logrotate.d/php.conf</p>
+<div class="highlight"><pre><span></span>/path/to/php5-fpm.log {
+  daily
+  missingok
+  rotate 52
+  compress
+  delaycompress
+  notifyempty
+  create 0644 group username
+  dateext
+}
+</pre></div>
+
+
+<p>エラーチェックテストはこんな感じ</p>
+<div class="highlight"><pre><span></span>logrotate -dv /etc/logrotate.d/php.conf
+</pre></div>
+            </div>
+            <!-- /.entry-content -->
+    <hr />
+    <!-- AddThis Button BEGIN -->
+    <div class="addthis_toolbox addthis_default_style">
+            <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+            <a class="addthis_button_tweet"></a>
+            <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+    </div>
+    <!-- AddThis Button END -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="https://twitter.com/shigepon"><i class="fa fa-twitter-square fa-lg"></i> twitter</a></li>
+                <li class="list-group-item"><a href="https://www.facebook.com/takeshi.shigeta.56"><i class="fa fa-facebook-square fa-lg"></i> facebook</a></li>
+              </ul>
+            </li>
+
+
+            <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
+                <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/category/misc.html">
+                            <i class="fa fa-folder-open fa-lg"></i> misc
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                <ul class="list-group " id="tags">
+                </ul>
+            </li>
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://www.shigepon.info/" target="_blank">
+                shigeponのHP
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://thoz.org/" target="_blank">
+                とある法律判例の全文検索
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2016 shigepon
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="http://blog.thoz.org/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://blog.thoz.org/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="http://blog.thoz.org/theme/js/respond.min.js"></script>
+
+
+        <script type="text/javascript">var addthis_config = {"data_track_addressbar": true};</script>
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-56fb8dd95cb9034a"></script>
+</body>
+</html>

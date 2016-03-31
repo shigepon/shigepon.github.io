@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ja"
+>
+<head>
+    <title>Django Memo - shigeponが関心のある技術情報など</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="http://blog.thoz.org/2014/11/23/django-memo/">
+
+        <meta name="author" content="shigepon" />
+        <meta name="keywords" content="memo,Django,Python" />
+
+        <meta property="og:site_name" content="shigeponが関心のある技術情報など" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Django Memo"/>
+        <meta property="og:url" content="http://blog.thoz.org/2014/11/23/django-memo/"/>
+        <meta property="og:description" content=""/>
+        <meta property="article:published_time" content="2014-11-23" />
+            <meta property="article:section" content="misc" />
+            <meta property="article:tag" content="memo" />
+            <meta property="article:tag" content="Django" />
+            <meta property="article:tag" content="Python" />
+            <meta property="article:author" content="shigepon" />
+
+    <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="@shigepon">
+        <meta name="twitter:creator" content="@shigepon">
+    <meta name="twitter:domain" content="http://blog.thoz.org">
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="http://blog.thoz.org/theme/css/bootstrap.united.min.css" type="text/css"/>
+    <link href="http://blog.thoz.org/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="http://blog.thoz.org/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://blog.thoz.org/theme/css/style.css" type="text/css"/>
+
+        <link href="http://blog.thoz.org/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="shigeponが関心のある技術情報など ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="http://blog.thoz.org/" class="navbar-brand">
+shigeponが関心のある技術情報など            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                    <li><a href="http://www.shigepon.info/">shigeponのホームページ</a></li>
+                    <li><a href="http://thoz.org/">とある法律判例の全文検索トップ</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="http://blog.thoz.org/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="http://blog.thoz.org/2014/11/23/django-memo/"
+                       rel="bookmark"
+                       title="Permalink to Django Memo">
+                        Django Memo
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2014-11-23T22:35:38+09:00"> 日 23 11月 2014</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="http://blog.thoz.org/tag/memo.html">memo</a>
+        /
+	<a href="http://blog.thoz.org/tag/django.html">Django</a>
+        /
+	<a href="http://blog.thoz.org/tag/python.html">Python</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>Djangoやってて忘れっぽいところとかをメモ</p>
+<h2>リクエストパラメーターをモデルに入れる</h2>
+<p>```py views.py
+def a_view(request):
+    hoge = Fuga(request.GET) #新たにインスタンス作る場合
+    fuga = Fuga.objects.get(pk=1)
+    hage = Fuga(request.GET,instance=fuga) #既にあるインスタンスに入れる場合</p>
+<div class="highlight"><pre><span></span>instance=xxxとやるのを何度か忘れた＞＜
+
+&lt;!-- more --&gt;
+
+
+## forms.DateFieldでISO-8601フォーマットの入力を受入れる
+
+html5でdatetime-localとか扱おうとすると、入力値がISO-8601形式になって、そのままだとDateFieldが入力をdatetimeの正しい形式として認識してくれない。
+
+で、input_formatsを設定するといけるらしいんだけど、あまりマニュアルでちゃんと説明してない。Stack Overflowの情報とかをググると設定方法が間違ってるコードとかあって、正しいのが良く分からない。で、結局色々調べたら
+
+```py models.py
+date = forms.DateField(input_formats=(&#39;%Y-%m-%dT%H:%M:%S&#39;,))
+</pre></div>
+
+
+<p>とタプルで渡す必要があるらしい</p>
+<p>参考：<a href="http://labs.uechoco.com/blog/2011/08/django-dateform-inputs_format-wrong.html">うえちょこ＠ぼろぐ» [Django]forms.DateFieldのinputs_formatではまった</a></p>
+<h2>ModelForm使ってフォーム出力する時にrequeied属性をテンプレートで参照するとか</h2>
+<p>```py models.py
+hoge = forms.CharField(max_length=100,widget=TextInput(attrs={"required":"true"}))↲</p>
+<div class="highlight"><pre><span></span>こんな感じで定義したフィールドの属性取ってきたい場合、
+
+```html
+\{\% for field in form \%\}
+  \{\% if field.field.required \%\}<span class="nt">&lt;p&gt;</span>必須<span class="nt">&lt;/p&gt;</span>\{\% endif \%\}
+\{\% endfor \%\}
+</pre></div>
+
+
+<p>適当だけど、こんな感じでアクセスできる。</p>
+<h2>DjangoでGroup By</h2>
+<p>DjangoでGroup Byして何個かのフィールドのデータで例えば、日付とその日に登録したデータの件数だけ欲しい時</p>
+<p>```py views.py
+q = Hoge.objects.filter(date<strong>gte = date).filter(date</strong>lt = dto).extra({'date':"date_trunc('day',date)"})
+q.query.group_by = ['date']
+values = q.values('date').order_by().annotate(c = Count('id'))</p>
+<p>こんな感じでいける。ちなみにPostgreSQL。dateが時間の情報も持っているのでPostgreSQLのdate_trunc関数を使ってdateを日付の情報だけにしてから、group_byする。
+annotateは集計した値を新しいフィールド（ここだとc）に入れる。
+例えばvalues[0].cでアクセスできる。このコードで、日付とその日に登録したデータ件数が入った辞書のリストを得ることが出来る</p>
+<div class="highlight"><pre><span></span>## QuerySetで吐いたクエリを出力
+
+```py views.py
+h = Hoge.objects.all()
+print h.query
+</pre></div>
+
+
+<p>でおk。でもクエリが例外出す時には出せないような・・・</p>
+<p>debug_toolbar使えば見れるか</p>
+<p>参考：<a href="http://programmer-jobs.blogspot.jp/2013/01/djangosql.html">Djangoで、デバック用のSQLクエリの表示 一言多いプログラマーの独り言</a></p>
+<h2>ModelFormでcleanを使ってデータの検証する時に、updateしようとしてるかcreateしようとしてるか判断する</h2>
+<p>createの時だけチェックしたかったので、色々調べてみたらclean(self)内で、self.instanceでチェックすると良いみたい。例えばプライマリーキーでidがある場合こんな感じ</p>
+<p>```py models.py
+class Hoge(forms.ModelForm):
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        if self.instance.id is None:
+            #create用の処理
+            raise ValidationError('例外出すのはこんな感じ')
+        else:
+            #update用の処理
+        return cleaned_data</p>
+<div class="highlight"><pre><span></span>instanceの型チェックする方が正攻法かも。例外のメッセージは
+
+```py views.py
+def test(request):
+    form = Hoge(request.POST)
+    if form.is_valid():
+        #例外が無かった場合
+    else:
+        for k,v in form.errors.item():
+            #kが例外のフィールド。cleanの場合は__all__
+            #vが例外のメッセージ
+</pre></div>
+
+
+<p>みたいな感じで取り出せる。</p>
+<h2>runserver実行時にコンソールにスタックとレースを出力する</h2>
+<p>```py settings.py
+LOGGING={
+    'version':1,
+    'handlers':{
+        'console':{
+            'level':'DEBUG',
+            'class':'logging.StreamHandler',
+        },
+    },
+    'loggers':{
+        'django.request':{
+            'handlers':['console'],
+            'propagate':True,
+            'level':'DEBUG',
+        }
+    },
+}</p>
+<div class="highlight"><pre><span></span>これを書いておけばコンソールにスタックトレースを出力してくれる。apiのコード書いてる時とかajaxで呼び出してる場合とかに便利。
+
+参考：[python - Print a stack trace to stdout on errors in Django while using manage.py runserver - Stack Overflow](http://stackoverflow.com/questions/5886275/print-a-stack-trace-to-stdout-on-errors-in-django-while-using-manage-py-runserve)というかここのコード丸コピー
+
+
+## Gmail送信
+
+```py settings.py
+EMAIL_USE_TLS=True
+EMAIL_HOST=&#39;smpt.gmail.com&#39;
+EMAIL_HOST_USER=&#39;mymail@gmail.com&#39;
+EMAIL_HOST_PASSWORD=&#39;mypassword&#39;
+EMAIL_PORT=587
+</pre></div>
+
+
+<p>```py views.py
+from django.core.mail import send_mail</p>
+<p>def mail(request):
+    send_mail('Subject','message','mymail.gmail.com',['to@mail.address'],fail_silently=False)</p>
+<div class="highlight"><pre><span></span>こんだけ
+
+参考：[DjangoでGmailを使ってメール送信 - brainstorm](http://d.hatena.ne.jp/yuheiomori0718/20120714/1342266647)、
+
+
+## MultiValueDictKeyError
+
+モデルをgetする時にキーに何も値が指定されてなかったりすると起こる。例えば
+
+```py
+instance = SampleModel.objects.get(id=key)
+</pre></div>
+
+
+<p>でkeyに何も設定されてないと起こるみたい。出た時に何回かイチイチぐぐったのでメモ</p>
+<h2>PostgreSQLでDateTimeFieldの値を日付に対してグルーピングしたい</h2>
+<p>PostgreSQLではタイムゾーン入りのタイムスタンプで登録されるので、</p>
+<div class="highlight"><pre><span></span><span class="n">q</span> <span class="o">=</span> <span class="n">Hoge</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">extra</span><span class="p">({</span><span class="s2">&quot;date&quot;</span><span class="p">:</span><span class="s2">&quot;date_trunc(&#39;day&#39;,date)&quot;</span><span class="p">})</span>
+<span class="n">q</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">group_by</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span>
+</pre></div>
+
+
+<p>みたいな構文で日付だけ取り出して、グルーピングしようとすると、PostgreSQLの設定でタイムゾーンがUTCになっていた場合に、2014/12/17 00:00:00+9のデータは2014/12/16 15:00:00+0と認識されるので12/16のデータとしてグルーピングされてしまう。日本のタイムゾーンでやってると、これはまずいので、以下のようなコードにすると良い</p>
+<div class="highlight"><pre><span></span><span class="n">q</span> <span class="o">=</span> <span class="n">Hoge</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">extra</span><span class="p">({</span><span class="s2">&quot;date&quot;</span><span class="p">:</span><span class="s2">&quot;date_trunc(&#39;day&#39;,date AT TIME ZONE &#39;JST&#39;)&quot;</span><span class="p">})</span>
+<span class="n">q</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">group_by</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span>
+</pre></div>
+
+
+<h2>django+uwsgi+nginxで502エラーが出た原因の１つ</h2>
+<p>djangoはあまり関係無いけどuwsgiの設定の問題だったので、こちらに。django+uwsgi+nginxで502エラーが出て、runserverでは普通に動いたので、しばらくググって解答が得られたのでメモ</p>
+<p><a href="http://datatables.net/">DataTables</a>を使って動的にテーブルデータをロードしようとしたら、runserverでは上手く行くのにuwsgiだと502エラーが出てロード出来なかった。最初にnginxのログを見てみると、uwsgiのとこでエラーと書いてあったので、uwsgiのログをチェックした。すると</p>
+<div class="highlight"><pre><span></span>invalid request block size: xxxxx (max 4096)...
+</pre></div>
+
+
+<p>みたいなエラーが出ていた。リクエストが大きすぎるのかなと思い、リクエストの一部を削ってみたらエラーが出なかった。んで、対策をググってみたら書いてあったので、そのまま下のコードを実装してみた。</p>
+<p>```ini uwsgi.ini
+buffer-size=65535</p>
+<div class="highlight"><pre><span></span><span class="err">みたいにバッファーサイズを大きく</span><span class="p">(</span><span class="err">例では</span><span class="mi">64</span><span class="n">k</span><span class="p">)</span><span class="err">した。これでエラーが消えたのでめでたしめでたし。</span>
+
+<span class="err">参考：</span><span class="p">[</span><span class="n">django</span> <span class="o">-</span> <span class="n">Nginx</span> <span class="n">uwsgi</span> <span class="p">(</span><span class="mi">104</span><span class="p">:</span> <span class="n">Connection</span> <span class="n">reset</span> <span class="n">by</span> <span class="n">peer</span><span class="p">)</span> <span class="k">while</span> <span class="n">reading</span> <span class="n">response</span> <span class="n">header</span> <span class="kn">from</span> <span class="nn">upstream</span> <span class="o">-</span> <span class="n">Stack</span> <span class="n">Overflow</span><span class="p">](</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">stackoverflow</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">questions</span><span class="o">/</span><span class="mi">22697584</span><span class="o">/</span><span class="n">nginx</span><span class="o">-</span><span class="n">uwsgi</span><span class="o">-</span><span class="mi">104</span><span class="o">-</span><span class="n">connection</span><span class="o">-</span><span class="n">reset</span><span class="o">-</span><span class="n">by</span><span class="o">-</span><span class="n">peer</span><span class="o">-</span><span class="k">while</span><span class="o">-</span><span class="n">reading</span><span class="o">-</span><span class="n">response</span><span class="o">-</span><span class="n">header</span><span class="o">-</span><span class="n">from</span><span class="o">-</span><span class="n">u</span><span class="p">)</span>
+
+<span class="c1">## 運用環境と開発環境で設定を切り分ける</span>
+
+<span class="err">開発環境用に</span><span class="n">local</span><span class="err">アプリを作って、</span><span class="n">local</span><span class="o">/</span><span class="n">settings</span><span class="o">.</span><span class="n">py</span><span class="err">を作成し、開発環境での設定を書いて、プロジェクトの</span><span class="n">settings</span><span class="o">.</span><span class="n">py</span><span class="err">の最後に以下を追加すると良い</span>
+
+<span class="sb">``</span><span class="err">`</span><span class="n">py</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">local.settings</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+</pre></div>
+
+
+<p>参考：<a href="http://surgo.jp/2010/02/django.html">パーフェクトな Django の設定ファイル -- Kosei Kitahara's Blog</a></p>
+<h2>テンプレートの読み込まれ順</h2>
+<ul>
+<li>TEMPLATE_DIRSで指定されたディレクトリの順番で、そこを起点にした全てのテンプレート</li>
+<li>INSTALLED_APPSに指定した順にアプリケーション直下のtemplatesディレクトリを調べる </li>
+</ul>
+<p>hogeアプリでテンプレートを指定した場合に、hogeアプリ直下のtemplatesディレクトリを調べてくれる訳ではないので注意が必要。</p>
+<p>例えば</p>
+<div class="highlight"><pre><span></span><span class="n">TEMPLATE_DIRS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;/home/hoge/templates&#39;</span><span class="p">,]</span>
+<span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">&#39;hoge&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;fuga&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+
+
+<p>と書いてあり、プロジェクトが/www/a_project/に置いてある場合、</p>
+<ul>
+<li>/home/hoge/templates</li>
+<li>/www/a_project/hoge/templates</li>
+<li>/www/a_project/fuga/templates</li>
+</ul>
+<p>の順でテンプレートの存在を調べる</p>
+<p>参考：<a href="http://www.tsuyukimakoto.com/blog/2006/11/22/django-template-loader/">DjangoのTemplateローダ | tsuyuki.makoto</a></p>
+<h2>Many to manyなモデルで中間テーブルをthroughで指定、かつ自己参照な場合の設定</h2>
+<p>参考：<a href="http://stackoverflow.com/questions/3880489/how-do-i-write-a-django-model-with-manytomany-relationsship-with-self-through-a">How do I write a Django model with ManyToMany relationsship with self through a Model - Stack Overflow</a></p>
+<p>symmetrical設定をすると良いらしい</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Member</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">friends</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="s1">&#39;self&#39;</span><span class="p">,</span> <span class="n">through</span> <span class="o">=</span> <span class="s1">&#39;MemberFriends&#39;</span><span class="p">,</span> <span class="n">symmetrical</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">MemberFriends</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Member</span><span class="p">,</span> <span class="n">related_name</span> <span class="o">=</span> <span class="s1">&#39;f&#39;</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Member</span><span class="p">,</span> <span class="n">related_name</span> <span class="o">=</span> <span class="s1">&#39;t&#39;</span><span class="p">)</span>
+    <span class="n">comment</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
+</pre></div>
+
+
+<p>こんな感じ</p>
+<h2>url末尾に必ずスラッシュを入れる</h2>
+<p>url末尾にスラッシュが無い場合、スラッシュ有りにリダイレクトする設定</p>
+<p>```py settings.py
+APPEND_SLASH = True</p>
+<div class="highlight"><pre><span></span><span class="c1">## Django rest apiで日時としてタイムスタンプを出力する</span>
+
+<span class="err">参考：</span><span class="p">[</span><span class="n">django</span> <span class="n">rest</span> <span class="n">framework</span> <span class="o">-</span> <span class="n">serialize</span> <span class="n">a</span> <span class="n">datetime</span> <span class="k">as</span> <span class="n">an</span> <span class="n">integer</span> <span class="n">timestamp</span> <span class="o">-</span> <span class="n">Stack</span> <span class="n">Overflow</span><span class="p">](</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">stackoverflow</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">questions</span><span class="o">/</span><span class="mi">26083583</span><span class="o">/</span><span class="n">serialize</span><span class="o">-</span><span class="n">a</span><span class="o">-</span><span class="n">datetime</span><span class="o">-</span><span class="k">as</span><span class="o">-</span><span class="n">an</span><span class="o">-</span><span class="n">integer</span><span class="o">-</span><span class="n">timestamp</span><span class="p">)</span>
+
+<span class="err">どうも</span><span class="n">Django</span> <span class="n">rest</span> <span class="n">framework</span><span class="err">の</span><span class="n">DateTimeField</span><span class="err">で指定する</span><span class="n">format</span><span class="err">パラメータだとタイムスタンプが指定出来ないみたいなのでこんな感じにすると出来る。</span>
+
+<span class="sb">``</span><span class="err">`</span><span class="n">py</span> <span class="n">serialize</span><span class="o">.</span><span class="n">py</span>
+<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">serializers</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="k">class</span> <span class="nc">HogeSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">Serializer</span><span class="p">):</span>
+    <span class="n">date</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">()</span>
+    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">SerializerMethodField</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">get_timestamp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">mktime</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">timetuple</span><span class="p">())</span>
+</pre></div>
+
+
+<p>javascriptのタイムスタンプに対応するためにはget_timestampの返り値を1000倍すればおk</p>
+<h2>Paginatorでcount文を実行させずに指定件数分のページングを行う</h2>
+<p>分量が多くて、先頭1000件を100件ずつページング表示させるので十分かなという時に、いちいちcount文を発行させたくない時</p>
+<div class="highlight"><pre><span></span><span class="n">paginator</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">paginator</span><span class="o">.</span><span class="n">_count</span> <span class="o">=</span> <span class="mi">1000</span>
+</pre></div>
+
+
+<p>queryは適当なQuerySet</p>
+<p>参考：<a href="http://stackoverflow.com/questions/7707035/how-to-implement-a-paginator-that-doesnt-call-count">django - How to implement a paginator that doesn't call count(*) - Stack Overflow</a></p>
+<h2>メソッドの呼び出し元オブジェクトを取得</h2>
+<p>inspectモジュールってのが使えるらしい</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">inspect</span>
+<span class="o">...</span>
+    <span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">line_number</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">lines</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getouterframes</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">())[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">line_number</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">lines</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+</pre></div>
+
+
+<p>参考：<a href="http://stackoverflow.com/questions/3711184/how-to-use-inspect-to-get-the-callers-info-from-callee-in-python">How to use inspect to get the caller's info from callee in Python? - Stack Overflow</a></p>
+<p>プロファイラ使った時に、socket.pyが呼ばれてるのは分かったけど、その呼び出し元がイマイチわからなかった時に使った。</p>
+<h2>urlsでviewにパラメータを送る</h2>
+<p>```py urls.py
+url('^$',views.hoge, {'fuga':'hage'}, name='hoge'),
+...</p>
+<div class="highlight"><pre><span></span>```py views.py
+def hoge(request,fuga):
+    ...
+</pre></div>
+
+
+<p>パラメーターに指定する名前（上の場合はfuga）がviewsとurlsで同じ名前になっていることが必要（でないとエラーが出る）</p>
+<p>参考：<a href="https://docs.djangoproject.com/en/1.8/topics/http/urls/#passing-extra-options-to-include">URL dispatcher | Django documentation | Django</a></p>
+<h2>dbにインデックスを付ける</h2>
+<p>インデックスの場合はフィールド定義にdb_index=Trueを付けるとおk</p>
+<div class="highlight"><pre><span></span><span class="n">hoge</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">db_index</span><span class="o">=</span><span class="n">true</span><span class="p">)</span>
+</pre></div>
+
+
+<p>複合インデックスの場合はMetaクラスでindex_togetherを定義する</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Hoge</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+  <span class="o">....</span>
+  <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+    <span class="n">index_together</span> <span class="o">=</span> <span class="p">[</span>
+      <span class="p">[</span><span class="s1">&#39;hoge&#39;</span><span class="p">,</span><span class="s1">&#39;fuga&#39;</span><span class="p">]</span>
+    <span class="p">]</span>
+</pre></div>
+
+
+<p>この場合インデックス順はhoge-&gt;fugaとなる。</p>
+<h2>ForeignKeyで逆参照をしたくない場合</h2>
+<p>related_nameを+にするか末尾に+を付けるかで対応出来る。</p>
+<div class="highlight"><pre><span></span><span class="nv">user</span> <span class="o">=</span> models.ForeignKey<span class="o">(</span>User, <span class="nv">related_name</span><span class="o">=</span><span class="s1">&#39;user+&#39;</span><span class="o">)</span>
+</pre></div>
+
+
+<p>こんな感じ</p>
+<h2>生sqlを使う時にin句にパラメーターを使いたい</h2>
+<p>タプルで指定すれば良い。リストは試してない。</p>
+<div class="highlight"><pre><span></span><span class="nv">results</span> <span class="o">=</span> Hoge.objects.raw<span class="o">(</span><span class="s2">&quot;select * from application_hoge where fuga in %s&quot;</span>, tuple<span class="o">(</span>fuga<span class="o">))</span>
+</pre></div>
+
+
+<p>参考：<a href="http://stackoverflow.com/questions/6895051/passing-lists-or-tuples-as-arguments-in-django-raw-sql">passing lists or tuples as arguments in django raw sql - Stack Overflow</a></p>
+<h2>Ajaxでpostしたい時</h2>
+<p>csrfフィルタが初期状態で設定されてるし、csrfフィルタはあった方が良いので、次のようになったら良いかも（Jqueryを使う場合）</p>
+<div class="highlight"><pre><span></span><span class="nx">$</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">url</span><span class="p">,{</span><span class="nx">csrfmiddlewaretoken</span><span class="o">:</span> <span class="s1">&#39;{{csrf_token}}&#39;</span><span class="p">}...);</span>
+</pre></div>
+
+
+<p>参考：<a href="http://stackoverflow.com/questions/5100539/django-csrf-check-failing-with-an-ajax-post-request">Django CSRF check failing with an Ajax POST request - Stack Overflow</a></p>
+<h2>AjaxのPOSTで配列を受け取りたい時</h2>
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">arr</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;hoge&#39;</span><span class="p">,</span><span class="s1">&#39;fuga&#39;</span><span class="p">];</span>
+<span class="nx">$</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="p">{</span><span class="nx">arr</span><span class="o">:</span><span class="nx">arr</span><span class="p">},</span> <span class="kd">function</span><span class="p">(){</span><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;success&#39;</span><span class="p">);});</span>
+</pre></div>
+
+
+<p>該当するビューでこんな風に書く</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hoge</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s1">&#39;arr&#39;</span><span class="p">[]</span><span class="s1">&#39;)</span>
+</pre></div>
+
+
+<p>ちなみにgetだと[]は要らないらしい。</p>
+<p>参考：[http://stackoverflow.com/questions/12101658/how-to-get-an-array-in-django-posted-via-ajax]
+該当するビューでこんな風に書く</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hoge</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s1">&#39;arr&#39;</span><span class="p">[]</span><span class="s1">&#39;)</span>
+</pre></div>
+
+
+<p>ちなみにgetだと[]は要らないらしい。</p>
+<p>参考：<a href="http://stackoverflow.com/questions/12101658/how-to-get-an-array-in-django-posted-via-ajax">How to get an array in Django posted via Ajax - Stack Overflow</a></p>
+<h2>intcommaフィルタが効かない(django 1.8)</h2>
+<p>django 1.4からL10Nを見るので、ロケールjaの場合はNUMBER_GROUPINGを明示しないといけないらしい。</p>
+<p>```py settings.py
+NUMBER_GROUPING = 3</p>
+<div class="highlight"><pre><span></span>これでおk
+
+参考：[やまよし＠Google大好き: Django1.4 で intcommaが効かない](http://yamayoshi.blogspot.jp/2013/02/django14-intcomma.html)
+
+## サブクエリの使い方
+
+例えばMemberモデルにname (名前)やboss(上司の名前)、stage(肩書き)フィールドがあるとして、肩書きが部長の上司を持つMemberを取り出したい場合はこんな感じ
+
+```py
+a_query = Member.objects.filter(stage=&#39;部長&#39;).value_list(&#39;name&#39;)
+b_query = Member.objects.filter(boss__in = a_query)
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">member</span> <span class="k">where</span> <span class="n">boss</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">name</span> <span class="k">from</span> <span class="n">member</span> <span class="k">where</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;部長&#39;</span><span class="p">);</span>
+</pre></div>
+
+
+<p>を実行したような感じになる。</p>
+<p>参考：<a href="http://stackoverflow.com/questions/8556297/how-to-subquery-in-queryset-in-django">python - how to subquery in queryset in django? - Stack Overflow</a></p>
+<h2>リダイレクト時にパラメータを渡す</h2>
+<div class="highlight"><pre><span></span><span class="n">response</span> <span class="o">=</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span>
+<span class="n">response</span><span class="p">[</span><span class="s1">&#39;Location&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39;?hoge=fuga&#39;</span>
+<span class="k">return</span> <span class="n">response</span>
+</pre></div>
+
+
+<p>でいける</p>
+<p>参考：<a href="http://stackoverflow.com/questions/3765887/add-request-get-variable-using-django-shortcuts-redirect">add request.GET variable using django.shortcuts.redirect - Stack Overflow</a></p>
+            </div>
+            <!-- /.entry-content -->
+    <hr />
+    <!-- AddThis Button BEGIN -->
+    <div class="addthis_toolbox addthis_default_style">
+            <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+            <a class="addthis_button_tweet"></a>
+            <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+    </div>
+    <!-- AddThis Button END -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="https://twitter.com/shigepon"><i class="fa fa-twitter-square fa-lg"></i> twitter</a></li>
+                <li class="list-group-item"><a href="https://www.facebook.com/takeshi.shigeta.56"><i class="fa fa-facebook-square fa-lg"></i> facebook</a></li>
+              </ul>
+            </li>
+
+
+            <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
+                <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/category/misc.html">
+                            <i class="fa fa-folder-open fa-lg"></i> misc
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                <ul class="list-group " id="tags">
+                </ul>
+            </li>
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://www.shigepon.info/" target="_blank">
+                shigeponのHP
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://thoz.org/" target="_blank">
+                とある法律判例の全文検索
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2016 shigepon
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="http://blog.thoz.org/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://blog.thoz.org/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="http://blog.thoz.org/theme/js/respond.min.js"></script>
+
+
+        <script type="text/javascript">var addthis_config = {"data_track_addressbar": true};</script>
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-56fb8dd95cb9034a"></script>
+</body>
+</html>

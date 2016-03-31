@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ja"
+>
+<head>
+    <title>PostgreSQLメモ - shigeponが関心のある技術情報など</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="http://blog.thoz.org/2014/01/28/postgresql-memo/">
+
+        <meta name="author" content="shigepon" />
+        <meta name="keywords" content="PostgreSQL,memo" />
+
+        <meta property="og:site_name" content="shigeponが関心のある技術情報など" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="PostgreSQLメモ"/>
+        <meta property="og:url" content="http://blog.thoz.org/2014/01/28/postgresql-memo/"/>
+        <meta property="og:description" content=""/>
+        <meta property="article:published_time" content="2014-01-28" />
+            <meta property="article:section" content="misc" />
+            <meta property="article:tag" content="PostgreSQL" />
+            <meta property="article:tag" content="memo" />
+            <meta property="article:author" content="shigepon" />
+
+    <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="@shigepon">
+        <meta name="twitter:creator" content="@shigepon">
+    <meta name="twitter:domain" content="http://blog.thoz.org">
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="http://blog.thoz.org/theme/css/bootstrap.united.min.css" type="text/css"/>
+    <link href="http://blog.thoz.org/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="http://blog.thoz.org/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://blog.thoz.org/theme/css/style.css" type="text/css"/>
+
+        <link href="http://blog.thoz.org/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="shigeponが関心のある技術情報など ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="http://blog.thoz.org/" class="navbar-brand">
+shigeponが関心のある技術情報など            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                    <li><a href="http://www.shigepon.info/">shigeponのホームページ</a></li>
+                    <li><a href="http://thoz.org/">とある法律判例の全文検索トップ</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="http://blog.thoz.org/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="http://blog.thoz.org/2014/01/28/postgresql-memo/"
+                       rel="bookmark"
+                       title="Permalink to PostgreSQLメモ">
+                        PostgreSQLメモ
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2014-01-28T21:24:42+09:00"> 火 28 1月 2014</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="http://blog.thoz.org/tag/postgresql.html">PostgreSQL</a>
+        /
+	<a href="http://blog.thoz.org/tag/memo.html">memo</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>rhaco2をPostgreSQL8.3で使えるように色々調べていくうちに学んだメモ。</p>
+<h2>insert時に「デフォルト値を入れる」だけの処理をしたい場合</h2>
+<div class="highlight"><pre><span></span><span class="k">insert</span> <span class="k">into</span> <span class="err">テーブル名</span> <span class="k">default</span> <span class="n">value</span><span class="p">;</span>
+</pre></div>
+
+
+<p>でOK</p>
+<h2>integerのカラムとかにlikeを適用したい場合</h2>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="err">テーブル名</span> <span class="k">where</span> <span class="n">id</span><span class="p">::</span><span class="nb">text</span> <span class="k">like</span> <span class="o">&amp;#</span><span class="mi">039</span><span class="p">;</span><span class="o">%</span><span class="n">abc</span><span class="o">%&amp;#</span><span class="mi">039</span><span class="p">;;</span>
+</pre></div>
+
+
+<!-- more -->
+
+<p>のようにカラムをテキストにキャストする。MySQLのvarcharをselectする時はデフォルトignore case。ついでにtrimも勝手にかける？らしい</p>
+<h2>show column</h2>
+<p>Mysqlで使えるshow columnは無いが、information_schemaの情報をselectすることで同じようなことが出来る。
+ただし、create table時にserialで指定してもinformation_schema.columnsから取得できるカラム情報はinteger(int4)のみ。
+なのでserialと判定するにはカラムがintegerであり、かつデフォルト値としてnextvalが指定されていることなど、複合的にチェックする必要がある。</p>
+<h2>cronでsqlを実行</h2>
+<p>毎日0時0分に実行する場合</p>
+<div class="highlight"><pre><span></span>0 0 * * * /path/to/psql -U username -c &quot;sql&quot; database &gt; /dev/null
+</pre></div>
+
+
+<h2>select結果でinsert, update</h2>
+<p>insertの場合はinsert文の後でselect文を書く。以下は一例</p>
+<div class="highlight"><pre><span></span><span class="k">insert</span> <span class="k">into</span> <span class="k">table</span> <span class="k">select</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="k">from</span> <span class="n">table2</span> <span class="k">where</span> <span class="n">a</span> <span class="k">like</span> <span class="s1">&#39;hoge%&#39;</span><span class="p">;</span>
+</pre></div>
+
+
+<p>別テーブルへの一部データのバックアップ代わりにも使える</p>
+<div class="highlight"><pre><span></span><span class="k">insert</span> <span class="k">into</span> <span class="n">backup_table</span> <span class="p">(</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="k">table</span> <span class="k">where</span> <span class="n">id</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+
+
+<p>updateは次のように行う</p>
+<div class="highlight"><pre><span></span><span class="k">update</span> <span class="k">table</span> <span class="k">set</span> <span class="n">a</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">a</span> <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">table2</span><span class="p">)</span> <span class="n">t</span> <span class="k">where</span> <span class="k">table</span><span class="p">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">b</span><span class="p">;</span>
+</pre></div>
+
+
+<p>どの範囲のデータが更新されるかに注意してwhere句を使う。上の場合、tの中でwhere句を使う場合とで異なる結果になる場合がある。</p>
+<h2>インデックス一覧を表示</h2>
+<p>インデックス一覧を表示。インデックスを2重に登録しようとするとエラーが出るので、チェックに使う</p>
+<div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">tablename</span><span class="p">,</span> <span class="n">indexname</span> <span class="k">FROM</span> <span class="n">pg_indexes</span><span class="p">;</span>
+</pre></div>
+
+
+<h2>ビューの一覧を表示</h2>
+<div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">viewname</span> <span class="k">FROM</span> <span class="n">pg_views</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">viewname</span><span class="p">;</span>
+</pre></div>
+
+
+<h2>ビューの定義を調べる</h2>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">definition</span> <span class="k">from</span> <span class="n">pg_views</span> <span class="k">WHERE</span> <span class="n">viewname</span> <span class="o">=</span> <span class="s1">&#39;ビュー名&#39;</span><span class="p">;</span>
+</pre></div>
+
+
+<h2>psqlで実行結果を見やすくする</h2>
+<div class="highlight"><pre><span></span><span class="n">psql</span> <span class="o">=&gt;</span> <span class="err">\</span><span class="n">x</span>
+<span class="n">psql</span> <span class="o">=&gt;</span> <span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="k">table</span><span class="p">;</span>
+</pre></div>
+
+
+<p>カラムの数が多いと表示が崩れやすいので、これで見やすくなる</p>
+<h2>カラム追加時にNOT NULLを指定する手順</h2>
+<div class="highlight"><pre><span></span><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="k">table_name</span> <span class="k">ADD</span> <span class="k">COLUMN</span> <span class="k">column_name</span> <span class="nb">text</span><span class="p">;</span>
+<span class="k">ALTER</span> <span class="k">TABLE</span> <span class="k">table_name</span> <span class="k">ALTER</span> <span class="k">COLUMN</span> <span class="k">column_name</span> <span class="k">SET</span> <span class="k">DEFAULT</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+<span class="k">UPDATE</span> <span class="k">table_name</span> <span class="k">SET</span> <span class="k">column_name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+<span class="k">ALTER</span> <span class="k">TABLE</span> <span class="k">table_name</span> <span class="k">ALTER</span> <span class="k">COLUMN</span> <span class="k">column_name</span> <span class="k">SET</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">;</span>
+</pre></div>
+
+
+<p>こんな感じで複数業使ってNOT NULL制約を入れる</p>
+<h2>テーブル（ビュー）のスキーマをファイルに書き込む</h2>
+<div class="highlight"><pre><span></span>$ pg_dump -s -t table_name db_name &gt; file_name
+</pre></div>
+
+
+<p>これだけ。反映したい時は</p>
+<div class="highlight"><pre><span></span>$ cat file_name <span class="p">|</span> psql db_name
+</pre></div>
+
+
+<p>でおk</p>
+<h2>csvの取り込み</h2>
+<div class="highlight"><pre><span></span>1,&quot;hoge&quot;
+</pre></div>
+
+
+<p>みたいなデータを/path/to/csvに保存して</p>
+<div class="highlight"><pre><span></span><span class="k">copy</span> <span class="n">tablename</span> <span class="k">from</span> <span class="s1">&#39;/path/to/csv&#39;</span> <span class="k">with</span> <span class="n">csv</span><span class="p">;</span>
+</pre></div>
+
+
+<p>とpsql で実行すると取り込みできる。</p>
+<div class="highlight"><pre><span></span><span class="k">copy</span> <span class="n">tablename</span> <span class="p">(</span><span class="n">column1</span><span class="p">,</span><span class="n">column2</span><span class="p">)</span> <span class="k">from</span> <span class="s1">&#39;/path/to/csv&#39;</span> <span class="k">with</span> <span class="n">csv</span><span class="p">;</span>
+</pre></div>
+
+
+<p>とやれば、カラム名と順序の指定が可能</p>
+<h2>SQL結果をcsvに出力</h2>
+<div class="highlight"><pre><span></span>$ psql db_name -c <span class="s2">&quot;SQL&quot;</span> -A -F, -t &gt; filename
+</pre></div>
+
+
+<h2>IN句に複数条件を指定</h2>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">hoge</span> <span class="k">where</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="k">from</span> <span class="n">fuga</span> <span class="k">where</span> <span class="n">hage</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">);</span>
+<span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">hoge</span> <span class="k">where</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="k">in</span> <span class="p">((</span><span class="s1">&#39;fuga&#39;</span><span class="p">,</span><span class="s1">&#39;hage&#39;</span><span class="p">),(</span><span class="s1">&#39;abc&#39;</span><span class="p">,</span><span class="s1">&#39;def&#39;</span><span class="p">));</span>
+</pre></div>
+
+
+<p>みたいに指定すればおk</p>
+<h2>ユーザー定義関数の定義内容を表示</h2>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">procsrc</span> <span class="k">from</span> <span class="n">pg_proc</span> <span class="k">where</span> <span class="n">proname</span><span class="o">=</span><span class="s1">&#39;関数名&#39;</span><span class="p">;</span>
+</pre></div>
+
+
+<p>結構こんな感じでシステム用テーブルとかカラムとか色々あるので大変。</p>
+<h2>実行中のsql確認</h2>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">pg_stat_activity</span><span class="p">;</span>
+</pre></div>
+
+
+<h2>実行中sqlをストップ</h2>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">pg_cancel_backend</span><span class="p">(</span><span class="err">プロセス</span><span class="n">ID</span><span class="p">);</span>
+</pre></div>
+
+
+<h2>データベースやテーブルのサイズ取得</h2>
+<p>データベース</p>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">pg_database_size</span><span class="p">(</span><span class="s1">&#39;dbname&#39;</span><span class="p">);</span>
+</pre></div>
+
+
+<p>テーブル</p>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">pg_relation_size</span><span class="p">(</span><span class="s1">&#39;tablename&#39;</span><span class="p">);</span>
+</pre></div>
+
+
+<h2>select結果を配列にして、比較する</h2>
+<p>テーブル(event)に、日付(date)とイベントコード(code)カラムがあって、あるイベントコードのイベントと、全く同じ日程のイベントがあるかどうか調べる必要があったんだけど、配列使ったら上手く出来たのでメモ</p>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="n">array_agg</span><span class="p">(</span><span class="n">date_trunc</span><span class="p">(</span><span class="s1">&#39;day&#39;</span><span class="p">,</span><span class="nb">date</span><span class="p">))</span> <span class="k">as</span> <span class="n">d</span><span class="p">,</span> <span class="n">code</span> <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">event</span> <span class="k">where</span> <span class="k">order</span> <span class="k">by</span> <span class="nb">date</span><span class="p">)</span> <span class="n">b</span> <span class="k">group</span> <span class="k">by</span> <span class="n">code</span><span class="p">)</span> <span class="n">a</span> <span class="k">where</span> <span class="n">code</span> <span class="o">!=</span> <span class="s1">&#39;...&#39;</span> <span class="k">and</span> <span class="n">a</span><span class="p">.</span><span class="n">d</span> <span class="o">=</span> <span class="nb">ARRAY</span><span class="p">(</span><span class="k">select</span> <span class="n">date_trunc</span><span class="p">(</span><span class="s1">&#39;day&#39;</span><span class="p">,</span><span class="nb">date</span><span class="p">)</span> <span class="k">from</span> <span class="n">event</span> <span class="k">where</span> <span class="n">code</span> <span class="o">=</span><span class="s1">&#39;...&#39;</span> <span class="k">order</span> <span class="k">by</span> <span class="nb">date</span><span class="p">);</span>
+</pre></div>
+
+
+<p>こんな感じで出来た。ポイントはgroup_byとarray_aggを使うとgroup化した時にそれぞれの行にあった数字をまとめて配列化できることと、配列は順序を同じにしておかないと比較出来ないので、予めorderをかけておくこと。select結果をそのまま配列にするにはARRAYでいけること。もうちょっとsqlをスッキリ出来そうだけど、とりあえずこんな感じ。</p>
+<h2>正規表現関連</h2>
+<h3>置換</h3>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">regex_replace</span><span class="p">(</span><span class="n">columnname</span><span class="p">,</span><span class="s1">&#39;pattern&#39;</span><span class="p">,</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span> <span class="k">from</span> <span class="n">tablename</span><span class="p">;</span>
+</pre></div>
+
+
+<h3>検索</h3>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">tablename</span> <span class="k">where</span> <span class="n">columnname</span> <span class="o">~</span> <span class="s1">&#39;pattern&#39;</span><span class="p">;</span>
+</pre></div>
+
+
+<h2>psqlでパスワードを入力しない方法</h2>
+<p>~HOME/.pgpassを作成する(Linuxの場合)</p>
+<div class="highlight"><pre><span></span><span class="n">hostname</span><span class="o">:</span><span class="n">port</span><span class="o">:</span><span class="n">database</span><span class="o">:</span><span class="n">username</span><span class="o">:</span><span class="n">password</span>
+</pre></div>
+
+
+<p>参考：<a href="http://saikyoline.jp/weblog/2005/10/14/234742.html">パスワード入力なしでpsql » サイキョウライン</a></p>
+<h2>全データベースの物理ファイルサイズ</h2>
+<p><a href="http://readit.l8r.in/post-289/">[Postgres]全データベースの物理ファイルサイズを取得 | Read it later.</a>をそのまま使えば良い</p>
+<div class="highlight"><pre><span></span>select datname, pg_size_pretty(pg_database_size(datname)) from pg_database;
+</pre></div>
+
+
+<h2>psqlでsqlにパラメータを渡す</h2>
+<p>vオプションを用いる</p>
+<p><a href="http://stackoverflow.com/questions/7389416/postgresql-how-to-pass-parameters-from-command-line">PostgreSQL: How to pass parameters from command line? - Stack Overflow</a></p>
+<p>```sql a.sql
+select :vint, :vstr;</p>
+<div class="highlight"><pre><span></span>```sh
+$ psql -v vint=10 -v vstr=&quot;&#39;hoge&#39;&quot; -f a.sql dbname
+10  hoge
+</pre></div>
+
+
+<p>-cオプションで実行するsqlを指定する場合は無理っぽい</p>
+<h2>サブクエリで2列以上を返す</h2>
+<p>調べるのに結構時間かかった。配列を使うと上手く出来る</p>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">a</span><span class="p">.</span><span class="n">id</span><span class="p">,</span> <span class="n">sub_array</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">as</span> <span class="n">hoge</span><span class="p">,</span> <span class="n">sub_array</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">as</span> <span class="n">fuga</span> <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="n">a</span><span class="p">.</span><span class="n">id</span><span class="p">,</span> <span class="p">(</span><span class="k">select</span> <span class="nb">array</span><span class="p">[</span><span class="k">avg</span><span class="p">(</span><span class="n">hoge</span><span class="p">),</span><span class="n">stddev</span><span class="p">(</span><span class="n">hoge</span><span class="p">)]</span> <span class="k">from</span> <span class="n">table1</span> <span class="k">where</span> <span class="p">...)</span> <span class="k">as</span> <span class="n">sub_array</span> <span class="k">from</span> <span class="n">table1</span><span class="p">)</span> <span class="n">a</span> <span class="k">where</span> <span class="p">...;</span>
+</pre></div>
+
+
+<p>こんな感じで一旦複数列の値を配列に格納して、1列扱いとして、その配列を展開することでいける。ちなみに配列の添字は0スタートではなく、1スタートみたい。ある期間での集計値を各行に追加したいとかそんな場合にとても使える。</p>
+<p>参考：<a href="http://yanor.net/wiki/?PostgreSQL%2FSQL%2F%E3%82%B5%E3%83%96%E3%82%AF%E3%82%A8%E3%83%AA%E3%81%A7%E8%A4%87%E6%95%B0%E3%82%AB%E3%83%A9%E3%83%A0%E3%82%92%E8%BF%94%E3%81%99">PostgreSQL/SQL/サブクエリで複数カラムを返す - yanor.net/wiki</a></p>
+<h2>クエリを止める</h2>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">pg_stat_activity</span><span class="p">;</span>
+</pre></div>
+
+
+<p>でpidを確認して</p>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">pg_cancel_backend</span><span class="p">(</span><span class="n">pid</span><span class="p">);</span>
+</pre></div>
+
+
+<p>でおk</p>
+<h2>集計に対するnullの扱い</h2>
+<p>sum, min, maxでは特に気にする必要は無いがcount, avg, stddevなどの集計の場合、nullは無視される。これを応用して、色んな条件での平均を計算したりできる。例えば毎日のデータに1週間分、1ヶ月分の集計を追加するとか出来る。</p>
+<p>参考：<a href="http://fdays.blogspot.jp/2010/05/sql-null.html">floatingdays: SQLの集計関数で NULLを含む列を集計する場合の注意点</a></p>
+<h2>マテリアライズド・ビューの定義を表示</h2>
+<p>マテリアライズド・ビューの情報は通常のビューと違い、pg_matviewsに入っている。定義を確認する場合は</p>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">definition</span> <span class="k">from</span> <span class="n">pg_matviews</span> <span class="k">where</span> <span class="n">matviewname</span><span class="o">=</span><span class="s1">&#39;ビュー名&#39;</span><span class="p">;</span>
+</pre></div>
+
+
+<p>でおk</p>
+<h2>コマンドラインでpsqlした結果をファイルに保存</h2>
+<p>カラム名などの情報無しでpsqlした結果を保存する</p>
+<div class="highlight"><pre><span></span>$ psql dbname -A -t -c <span class="s2">&quot;select ...&quot;</span> &gt; result.txt
+</pre></div>
+
+
+<p>オプションで</p>
+<div class="highlight"><pre><span></span>-F ,
+</pre></div>
+
+
+<p>とか加えるとカンマ区切りになる</p>
+<h2>配列フィールドがhogeを含む条件をsqlで</h2>
+<div class="highlight"><pre><span></span>select * from hoge where arr &amp;&amp; &#39;fuga&#39;;
+</pre></div>
+
+
+<p>でarrという配列フィールドにfugaを含むものを取り出せる。良く使いそうなのでメモ</p>
+<p>参考：<a href="https://www.postgresql.jp/document/9.4/html/functions-array.html">配列関数と演算子</a></p>
+            </div>
+            <!-- /.entry-content -->
+    <hr />
+    <!-- AddThis Button BEGIN -->
+    <div class="addthis_toolbox addthis_default_style">
+            <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+            <a class="addthis_button_tweet"></a>
+            <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+    </div>
+    <!-- AddThis Button END -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="https://twitter.com/shigepon"><i class="fa fa-twitter-square fa-lg"></i> twitter</a></li>
+                <li class="list-group-item"><a href="https://www.facebook.com/takeshi.shigeta.56"><i class="fa fa-facebook-square fa-lg"></i> facebook</a></li>
+              </ul>
+            </li>
+
+
+            <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
+                <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/category/misc.html">
+                            <i class="fa fa-folder-open fa-lg"></i> misc
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                <ul class="list-group " id="tags">
+                </ul>
+            </li>
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://www.shigepon.info/" target="_blank">
+                shigeponのHP
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://thoz.org/" target="_blank">
+                とある法律判例の全文検索
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2016 shigepon
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="http://blog.thoz.org/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://blog.thoz.org/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="http://blog.thoz.org/theme/js/respond.min.js"></script>
+
+
+        <script type="text/javascript">var addthis_config = {"data_track_addressbar": true};</script>
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-56fb8dd95cb9034a"></script>
+</body>
+</html>
