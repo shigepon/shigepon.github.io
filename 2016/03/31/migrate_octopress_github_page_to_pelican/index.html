@@ -224,6 +224,13 @@ $ sed -e <span class="s1">&#39;/^---:/ d&#39;</span> -i content/*.markdown
 </pre></div>
 
 
+<h2>コードハイライトの設定</h2>
+<p>コードハイライトの為の設定として「```」を使えるように修正した</p>
+<div class="highlight"><pre><span></span><span class="c1">#pelicanconf.py</span>
+<span class="n">MD_EXTENSIONS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;fenced_code&#39;</span><span class="p">,</span> <span class="s1">&#39;codehilite(css_class=highlight)&#39;</span><span class="p">]</span>
+</pre></div>
+
+
 <h2>github pageへのアップ</h2>
 <p>記事が出来たので、とりあえずgithub pageへアップ出来れば完成。</p>
 <div class="highlight"><pre><span></span>$ make github

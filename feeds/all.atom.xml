@@ -117,6 +117,13 @@ $ sed -e &lt;span class="s1"&gt;&amp;#39;/^---:/ d&amp;#39;&lt;/span&gt; -i cont
 &lt;/pre&gt;&lt;/div&gt;
 
 
+&lt;h2&gt;コードハイライトの設定&lt;/h2&gt;
+&lt;p&gt;コードハイライトの為の設定として「```」を使えるように修正した&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#pelicanconf.py&lt;/span&gt;
+&lt;span class="n"&gt;MD_EXTENSIONS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;fenced_code&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;codehilite(css_class=highlight)&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;h2&gt;github pageへのアップ&lt;/h2&gt;
 &lt;p&gt;記事が出来たので、とりあえずgithub pageへアップ出来れば完成。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ make github
