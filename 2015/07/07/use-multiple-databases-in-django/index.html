@@ -109,28 +109,27 @@ shigeponが関心のある技術情報など            </a>
                 <p>Djangoでは複数データベースを扱える。でも色々コーディングや設定が必要なのでメモしておく。参考：<a href="https://docs.djangoproject.com/en/1.7/topics/db/multi-db/">Multiple databases | Django documentation | Django</a>。対応バージョンはDjango 1.7。使ったデータベースはPostgreSQL。</p>
 <h2>settings.py</h2>
 <p>settings.pyで複数データベースの接続設定をする</p>
-<p>```py settings.py
-DATABASES = {
-    'default': {
-        'NAME': 'app_data',
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'USER': 'postgres_user',
-        'PASSWORD': 's3krit'
-    },
-    'users': {
-        'NAME': 'user_data',
-        'ENGINE': 'django.db.backends.mysql',
-        'USER': 'mysql_user',
-        'PASSWORD': 'priv4te'
-    }
-}</p>
-<div class="highlight"><pre><span></span>参考ページのをそのまま使った。さらに追加も出来る。
-
-## ここまでの設定でのマイグレーション
+<div class="highlight"><pre><span></span><span class="c1"># settings.py</span>
+<span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;NAME&#39;</span><span class="p">:</span> <span class="s1">&#39;app_data&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ENGINE&#39;</span><span class="p">:</span> <span class="s1">&#39;django.db.backends.postgresql_psycopg2&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;USER&#39;</span><span class="p">:</span> <span class="s1">&#39;postgres_user&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;PASSWORD&#39;</span><span class="p">:</span> <span class="s1">&#39;s3krit&#39;</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;users&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;NAME&#39;</span><span class="p">:</span> <span class="s1">&#39;user_data&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ENGINE&#39;</span><span class="p">:</span> <span class="s1">&#39;django.db.backends.mysql&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;USER&#39;</span><span class="p">:</span> <span class="s1">&#39;mysql_user&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;PASSWORD&#39;</span><span class="p">:</span> <span class="s1">&#39;priv4te&#39;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
 
-```sh
-$ python manage.py migrate
+<p>参考ページのをそのまま使った。さらに追加も出来る。</p>
+<h2>ここまでの設定でのマイグレーション</h2>
+<div class="highlight"><pre><span></span>$ python manage.py migrate
 </pre></div>
 
 
@@ -143,33 +142,35 @@ $ python manage.py migrate
 何も設定していないと、それぞれのデータベースに全アプリケーションの全てのモデルが反映される。</p>
 <h2>データベースに保存するアプリ、モデルを限定したい</h2>
 <p>ルーティング設定をする。</p>
-<p>```py settings.py
-DATABASE_ROUTERS = ['myproject.routers.Router']</p>
-<div class="highlight"><pre><span></span>settings.pyはこんな感じ。んでmyprojectフォルダにrouters.pyを作成して例えばuserアプリのものだけusersデータベースを使うという設定の場合次のように書く
+<div class="highlight"><pre><span></span><span class="c1"># settings.py</span>
+<span class="n">DATABASE_ROUTERS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;myproject.routers.Router&#39;</span><span class="p">]</span>
+</pre></div>
 
-```py routers.py
-class Router(object):
-    def db_for_read(self, model, **hints):
-        #ここでランダムに選択すると、dbの負荷分散っぽいことが出来る
-        #例：return random.choice[&#39;default&#39;,&#39;users&#39;]
-        if model._meta.app_label == &quot;user&quot;:
-            return &quot;users&quot;
-        return &quot;default&quot;
-    def db_for_write(self, model, **hints):
-        if model._meta.app_label == &quot;user&quot;:
-            return &quot;users&quot;
-        return &quot;default&quot;
-    def allow_relation(self, obj1, obj2, **hints):
-        #Trueはリレーションを認める、Falseは認めない、Noneはこのコードでは関知しないという意味
-        return None
-    def allow_migrate(self, db, model):
-        #userアプリの場合はusers設定のデータベースへmigrate。
-        #他のアプリはusers以外のデータベースへmigrateする設定
-        if model._meta.app_label == &quot;user&quot;
-            return db == &quot;users&quot;:
-        else:
-            return True
-        return False
+
+<p>settings.pyはこんな感じ。んでmyprojectフォルダにrouters.pyを作成して例えばuserアプリのものだけusersデータベースを使うという設定の場合次のように書く</p>
+<div class="highlight"><pre><span></span><span class="c1"># routers.py</span>
+<span class="k">class</span> <span class="nc">Router</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">db_for_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="o">**</span><span class="n">hints</span><span class="p">):</span>
+        <span class="c1">#ここでランダムに選択すると、dbの負荷分散っぽいことが出来る</span>
+        <span class="c1">#例：return random.choice[&#39;default&#39;,&#39;users&#39;]</span>
+        <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span> <span class="o">==</span> <span class="s2">&quot;user&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;users&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;default&quot;</span>
+    <span class="k">def</span> <span class="nf">db_for_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="o">**</span><span class="n">hints</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span> <span class="o">==</span> <span class="s2">&quot;user&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;users&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;default&quot;</span>
+    <span class="k">def</span> <span class="nf">allow_relation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj1</span><span class="p">,</span> <span class="n">obj2</span><span class="p">,</span> <span class="o">**</span><span class="n">hints</span><span class="p">):</span>
+        <span class="c1">#Trueはリレーションを認める、Falseは認めない、Noneはこのコードでは関知しないという意味</span>
+        <span class="k">return</span> <span class="bp">None</span>
+    <span class="k">def</span> <span class="nf">allow_migrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+        <span class="c1">#userアプリの場合はusers設定のデータベースへmigrate。</span>
+        <span class="c1">#他のアプリはusers以外のデータベースへmigrateする設定</span>
+        <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span> <span class="o">==</span> <span class="s2">&quot;user&quot;</span>
+            <span class="k">return</span> <span class="n">db</span> <span class="o">==</span> <span class="s2">&quot;users&quot;</span><span class="p">:</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="bp">False</span>
 </pre></div>
 
 
@@ -204,6 +205,11 @@ class Router(object):
 
             <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
                 <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/category/memo.html">
+                            <i class="fa fa-folder-open fa-lg"></i> memo
+                        </a>
+                    </li>
                     <li class="list-group-item">
                         <a href="http://blog.thoz.org/category/misc.html">
                             <i class="fa fa-folder-open fa-lg"></i> misc

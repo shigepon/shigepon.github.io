@@ -106,26 +106,26 @@ shigeponが関心のある技術情報など            </a>
                 <p>Django1.6.5でアプリを作ってみたってネタをやってたけど、Django1.7にバージョンアップしたので、タイトルを変えた。ついでにDjango1.7だとINSTALLED_APPにdjango.contrib.authを入れておかないとエラーが出るケースがある（例えば<a href="http://www.django-rest-framework.org/">Django REST framework</a>でエラーが出た）ので、エラー出ないように最初に管理ページを用意しておくと良いと思う。</p>
 <p>管理ページを用意する手順はこんな感じ</p>
 <h2>settings.pyに設定を書く</h2>
-<p>```py settings.py
-INSTALLED_APPS = (
-    'django.contrib.admin',
-    'django.contrib.auth',
-    ...
-)
-MIDDLEWARE_CLASSES = (
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    ...
-)
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
-    ...
-)</p>
-<div class="highlight"><pre><span></span>## migrate
+<div class="highlight"><pre><span></span><span class="c1"># settings.py</span>
+<span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">&#39;django.contrib.admin&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.auth&#39;</span><span class="p">,</span>
+    <span class="o">...</span>
+<span class="p">)</span>
+<span class="n">MIDDLEWARE_CLASSES</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">&#39;django.contrib.auth.middleware.AuthenticationMiddleware&#39;</span><span class="p">,</span>
+    <span class="o">...</span>
+<span class="p">)</span>
+<span class="n">TEMPLATE_CONTEXT_PROCESSORS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">&#39;django.contrib.auth.context_processors.auth&#39;</span><span class="p">,</span>
+    <span class="o">...</span>
+<span class="p">)</span>
+</pre></div>
 
-マイグレーションしておく
 
-```sh
-$ python manage.py makemigrations
+<h2>migrate</h2>
+<p>マイグレーションしておく</p>
+<div class="highlight"><pre><span></span>$ python manage.py makemigrations
 $ python manage.py migrate
 </pre></div>
 
@@ -143,15 +143,16 @@ Superuser created successfully.
 
 <p>って出来るとおk</p>
 <h2>urls.pyを書く</h2>
-<p>```py urls.py
-urlpatterns = patterns('',
-    url(r'^admin/', include(admin.site.urls)),
-    ...
-)</p>
-<div class="highlight"><pre><span></span>こんな感じで作って
+<div class="highlight"><pre><span></span><span class="c1"># urls.py</span>
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="n">url</span><span class="p">(</span><span class="s1">r&#39;^admin/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">urls</span><span class="p">)),</span>
+    <span class="o">...</span>
+<span class="p">)</span>
+</pre></div>
 
-```sh
-$ python manage.py runserver
+
+<p>こんな感じで作って</p>
+<div class="highlight"><pre><span></span>$ python manage.py runserver
 </pre></div>
 
 
@@ -185,6 +186,11 @@ $ python manage.py runserver
 
             <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
                 <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/category/memo.html">
+                            <i class="fa fa-folder-open fa-lg"></i> memo
+                        </a>
+                    </li>
                     <li class="list-group-item">
                         <a href="http://blog.thoz.org/category/misc.html">
                             <i class="fa fa-folder-open fa-lg"></i> misc

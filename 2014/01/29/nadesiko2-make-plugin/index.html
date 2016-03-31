@@ -197,52 +197,55 @@ shigeponが関心のある技術情報など            </a>
 <li>参照にNakoPluginを追加する（NakoPluginAppealの参照で歯車アイコンクリック（又は右クリック）→参照アセンブリの編集→ダイアログで.NETアセンブリタブを選択→NakoPlugin.dllをチェック、又は閲覧ボタンからNakoPlugin.dllを選ぶ→OK）</li>
 <li>NakoPluginAppeal.csを編集する</li>
 </ul>
-<p>```csharp NakoPluginAppeal.cs
-using System;
-using System.Text;
-using Libnako.JPNCompiler;
-using NakoPlugin;
-namespace NakoPluginAppeal{
-    public class NakoPluginAppeal : INakoPlugin    {
-    string _description = &quot;サンプルプラグイン&quot;;
-        double _version = 1.0;
-        //<del> プラグイン共通の部分 </del>
-        public double TargetNakoVersion { get { return 2.0; } }
-        public bool Used { get; set; }
-        public string Name { get { return this.GetType().FullName; } }
-        public double PluginVersion { get { return _version; } }
-        public string Description { get { return _description; } }
-        //<del> 関数の定義 </del>
-        public void DefineFunction(INakoPluginBank bank)        {
-            bank.AddFunc("アピール", "Aを", NakoVarType.String, _appeal, "なでしこ2をアピールする", "あぴーる");
-        }
-    // プラグインの初期化処理
-        public void PluginInit(INakoInterpreter runner)        {
-        }
-        // プラグインの終了処理
-        public void PluginFin(INakoInterpreter runner)        {
-        }
-        public string _appeal(INakoFuncCallInfo info){
-            string fr = info.StackPopAsString();
-            return fr.Replace("なでしこ", "なでしこ2最高！");
-        }
-    }
-}</p>
-<div class="highlight"><pre><span></span>+ ビルドする
-+ NakoPluginAppeal/bin/Debug/NakoPluginAppeal.dllをcnako2/bin/Debug/にコピー
-
-実行するなでしこ2のコードは次のようになります。
+<div class="highlight"><pre><span></span><span class="err">#</span> <span class="n">NakoPluginAppeal</span><span class="p">.</span><span class="n">cs</span>
+<span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Text</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Libnako.JPNCompiler</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">NakoPlugin</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="nn">NakoPluginAppeal</span><span class="p">{</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">NakoPluginAppeal</span> <span class="p">:</span> <span class="n">INakoPlugin</span>    <span class="p">{</span>
+    <span class="kt">string</span> <span class="n">_description</span> <span class="p">=</span> <span class="p">&amp;</span><span class="n">quot</span><span class="p">;</span><span class="err">サンプルプラグイン</span><span class="p">&amp;</span><span class="n">quot</span><span class="p">;;</span>
+        <span class="kt">double</span> <span class="n">_version</span> <span class="p">=</span> <span class="m">1.0</span><span class="p">;</span>
+        <span class="c1">//&lt;del&gt; プラグイン共通の部分 &lt;/del&gt;</span>
+        <span class="k">public</span> <span class="kt">double</span> <span class="n">TargetNakoVersion</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="m">2.0</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">Used</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="n">GetType</span><span class="p">().</span><span class="n">FullName</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">double</span> <span class="n">PluginVersion</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_version</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">Description</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_description</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="c1">//&lt;del&gt; 関数の定義 &lt;/del&gt;</span>
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">DefineFunction</span><span class="p">(</span><span class="n">INakoPluginBank</span> <span class="n">bank</span><span class="p">)</span>        <span class="p">{</span>
+            <span class="n">bank</span><span class="p">.</span><span class="n">AddFunc</span><span class="p">(</span><span class="s">&quot;アピール&quot;</span><span class="p">,</span> <span class="s">&quot;Aを&quot;</span><span class="p">,</span> <span class="n">NakoVarType</span><span class="p">.</span><span class="n">String</span><span class="p">,</span> <span class="n">_appeal</span><span class="p">,</span> <span class="s">&quot;なでしこ2をアピールする&quot;</span><span class="p">,</span> <span class="s">&quot;あぴーる&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="c1">// プラグインの初期化処理</span>
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">PluginInit</span><span class="p">(</span><span class="n">INakoInterpreter</span> <span class="n">runner</span><span class="p">)</span>        <span class="p">{</span>
+        <span class="p">}</span>
+        <span class="c1">// プラグインの終了処理</span>
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">PluginFin</span><span class="p">(</span><span class="n">INakoInterpreter</span> <span class="n">runner</span><span class="p">)</span>        <span class="p">{</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="nf">_appeal</span><span class="p">(</span><span class="n">INakoFuncCallInfo</span> <span class="n">info</span><span class="p">){</span>
+            <span class="kt">string</span> <span class="n">fr</span> <span class="p">=</span> <span class="n">info</span><span class="p">.</span><span class="n">StackPopAsString</span><span class="p">();</span>
+            <span class="k">return</span> <span class="n">fr</span><span class="p">.</span><span class="n">Replace</span><span class="p">(</span><span class="s">&quot;なでしこ&quot;</span><span class="p">,</span> <span class="s">&quot;なでしこ2最高！&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 
 
-<p>A = 「なでしこ」をアピール
-Aを表示</p>
-<div class="highlight"><pre><span></span>+ これをcnako2/bin/Debug/test.nakoに保存
+<ul>
+<li>ビルドする</li>
+<li>NakoPluginAppeal/bin/Debug/NakoPluginAppeal.dllをcnako2/bin/Debug/にコピー</li>
+</ul>
+<p>実行するなでしこ2のコードは次のようになります。</p>
+<div class="highlight"><pre><span></span>A = 「なでしこ」をアピール
+Aを表示
+</pre></div>
 
-あとは下のコマンドを実行すれば結果が表示されます
 
-```sh
-$ cd cnako2/bin/Debug/
+<ul>
+<li>これをcnako2/bin/Debug/test.nakoに保存</li>
+</ul>
+<p>あとは下のコマンドを実行すれば結果が表示されます</p>
+<div class="highlight"><pre><span></span>$ <span class="nb">cd</span> cnako2/bin/Debug/
 $ mono cnako2.exe test.nako
 なでしこ最高！
 </pre></div>
@@ -275,6 +278,11 @@ $ mono cnako2.exe test.nako
 
             <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
                 <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/category/memo.html">
+                            <i class="fa fa-folder-open fa-lg"></i> memo
+                        </a>
+                    </li>
                     <li class="list-group-item">
                         <a href="http://blog.thoz.org/category/misc.html">
                             <i class="fa fa-folder-open fa-lg"></i> misc

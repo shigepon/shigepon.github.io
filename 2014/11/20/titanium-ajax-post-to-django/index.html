@@ -134,72 +134,79 @@ shigeponが関心のある技術情報など            </a>
 <h2>Djangoでのユーザー認証</h2>
 <p>Djangoでユーザー認証しようとすると例えばこんな感じ(viewだけ)
 REST API作るために、<a href="http://www.django-rest-framework.org/">Django REST framework</a>を使ってるので、そのままコピペしても使えないけど、@部分を消して、Responseとなっている箇所を自力でJSON出力すれば良いと思う。Django REST frameworkについてはどっかで書く。</p>
-<p>```py views.py
-from rest_framework import viewsets↲
-from rest_framework.response import Response↲
-from rest_framework.decorators import api_view
-from django.contrib.auth import login,authenticate</p>
-<p>@api_view(['GET','POST'])
-def do_login(request):↲                                               <br />
- status = 0↲                                  <br />
- if request.user.is_authenticated():↲<br />
-     status = 1↲                                                <br />
- else:↲                                                              <br />
-     if request.method == 'POST':↲                               <br />
-         username = request.POST['username']↲                        <br />
-         password = request.POST['password']↲                    <br />
-         user = authenticate(username=username,password=password)↲   <br />
-         if user is not None:↲                                   <br />
-             status = 1↲                                    <br />
-             login(request,user)↲                     <br />
-     else:↲                                                    <br />
-         return Response({"status":status})↲               <br />
- return Response({"status":status})↲                               <br />
-↲                                                                      </p>
-<p>で、実際やってみるとレスポンスはこんな感じになる</p>
-<div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;detail&quot;</span><span class="o">:</span> <span class="s2">&quot;CSRF Failed: CSRF token missing or incorrect.&quot;</span>
+<div class="highlight"><pre><span></span><span class="c1"># views.py</span>
+<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">viewsets</span><span class="err">↲</span>
+<span class="kn">from</span> <span class="nn">rest_framework.response</span> <span class="kn">import</span> <span class="n">Response</span><span class="err">↲</span>
+<span class="kn">from</span> <span class="nn">rest_framework.decorators</span> <span class="kn">import</span> <span class="n">api_view</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">login</span><span class="p">,</span><span class="n">authenticate</span>
+
+<span class="nd">@api_view</span><span class="p">([</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">do_login</span><span class="p">(</span><span class="n">request</span><span class="p">):</span><span class="err">↲</span>                                                 
+ <span class="n">status</span> <span class="o">=</span> <span class="mi">0</span><span class="err">↲</span>                                    
+ <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">():</span><span class="err">↲</span>  
+     <span class="n">status</span> <span class="o">=</span> <span class="mi">1</span><span class="err">↲</span>                                                  
+ <span class="k">else</span><span class="p">:</span><span class="err">↲</span>                                                                
+     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span><span class="err">↲</span>                                 
+         <span class="n">username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">]</span><span class="err">↲</span>                          
+         <span class="n">password</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">]</span><span class="err">↲</span>                      
+         <span class="n">user</span> <span class="o">=</span> <span class="n">authenticate</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span><span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span><span class="err">↲</span>     
+         <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span><span class="err">↲</span>                                     
+             <span class="n">status</span> <span class="o">=</span> <span class="mi">1</span><span class="err">↲</span>                                      
+             <span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="n">user</span><span class="p">)</span><span class="err">↲</span>                       
+     <span class="k">else</span><span class="p">:</span><span class="err">↲</span>                                                      
+         <span class="k">return</span> <span class="n">Response</span><span class="p">({</span><span class="s2">&quot;status&quot;</span><span class="p">:</span><span class="n">status</span><span class="p">})</span><span class="err">↲</span>                 
+ <span class="k">return</span> <span class="n">Response</span><span class="p">({</span><span class="s2">&quot;status&quot;</span><span class="p">:</span><span class="n">status</span><span class="p">})</span><span class="err">↲</span>                                 
+<span class="err">↲</span>                                                                      
+
+
+<span class="err">で、実際やってみるとレスポンスはこんな感じになる</span>
+
+<span class="sb">``</span><span class="err">`</span><span class="n">js</span>
+<span class="p">{</span>
+    <span class="s2">&quot;detail&quot;</span><span class="p">:</span> <span class="s2">&quot;CSRF Failed: CSRF token missing or incorrect.&quot;</span>
 <span class="p">}</span>
 </pre></div>
 
 
 <p>そういえばDjangoでCSRF対策してるんだった。</p>
-<p>```py settings.py</p>
-<div class="highlight"><pre><span></span>MIDDLEWARE_CLASSES = (
-....
-    &#39;django.middleware.csrf.CsrfViewMiddleware&#39;,
-....
-)
+<div class="highlight"><pre><span></span><span class="c1"># settings.py</span>
 </pre></div>
 
 
-<p>ajaxでやり取りする部分だけ、MIDDLEWARE_CLASSESから削除するって手もあるけど、<a href="http://docs.djangoproject.jp/en/latest/ref/contrib/csrf.html">Django APIリファレンス</a>に書いてあるようにX-CSRFToken という独自ヘッダーに CSRF トークンの 値を設定するという対処をやってみた。</p>
-<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">getCRSF</span><span class="p">(){</span>
-    <span class="kd">var</span> <span class="nx">xhr</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">Network</span><span class="p">.</span><span class="nx">createHTTPClient</span><span class="p">({</span>
-        <span class="nx">onload</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
-            <span class="kd">var</span> <span class="nx">item</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">responseText</span><span class="p">);</span>
-            <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">Properties</span><span class="p">.</span><span class="nx">setString</span><span class="p">(</span><span class="s2">&quot;csrf&quot;</span><span class="p">,</span> <span class="nx">item</span><span class="p">.</span><span class="nx">csrf</span><span class="p">);</span>
+<p>MIDDLEWARE_CLASSES = (
+....
+    'django.middleware.csrf.CsrfViewMiddleware',
+....
+)</p>
+<div class="highlight"><pre><span></span><span class="nt">ajax</span><span class="err">でやり取りする部分だけ、</span><span class="nt">MIDDLEWARE_CLASSES</span><span class="err">から削除するって手もあるけど、</span><span class="cp">[</span><span class="nx">Django</span> <span class="nx">API</span><span class="err">リファレンス</span><span class="cp">]</span><span class="o">(</span><span class="nt">http</span><span class="o">://</span><span class="nt">docs</span><span class="nc">.djangoproject.jp</span><span class="o">/</span><span class="nt">en</span><span class="o">/</span><span class="nt">latest</span><span class="o">/</span><span class="nt">ref</span><span class="o">/</span><span class="nt">contrib</span><span class="o">/</span><span class="nt">csrf</span><span class="nc">.html</span><span class="o">)</span><span class="err">に書いてあるように</span><span class="nt">X-CSRFToken</span> <span class="err">という独自ヘッダーに</span> <span class="nt">CSRF</span> <span class="err">トークンの</span> <span class="err">値を設定するという対処をやってみた。</span>
+
+<span class="err">```</span><span class="nt">js</span>
+<span class="nt">function</span> <span class="nt">getCRSF</span><span class="o">()</span><span class="p">{</span>
+    <span class="n">var</span> <span class="n">xhr</span> <span class="o">=</span> <span class="n">Ti</span><span class="o">.</span><span class="n">Network</span><span class="o">.</span><span class="n">createHTTPClient</span><span class="p">(</span><span class="err">{</span>
+        <span class="n">onload</span><span class="o">:</span> <span class="n">function</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="err">{</span>
+            <span class="n">var</span> <span class="n">item</span> <span class="o">=</span> <span class="n">JSON</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">responseText</span><span class="p">);</span>
+            <span class="n">Ti</span><span class="o">.</span><span class="n">App</span><span class="o">.</span><span class="n">Properties</span><span class="o">.</span><span class="n">setString</span><span class="p">(</span><span class="s2">&quot;csrf&quot;</span><span class="o">,</span> <span class="n">item</span><span class="o">.</span><span class="n">csrf</span><span class="p">);</span>
         <span class="p">}</span>
-    <span class="p">});</span>
-    <span class="nx">xhr</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span><span class="s1">&#39;http://url/to/login&#39;</span><span class="p">);</span>
-    <span class="nx">xhr</span><span class="p">.</span><span class="nx">send</span><span class="p">();</span>
-<span class="p">}</span>
+    <span class="err">}</span><span class="o">);</span>
+    <span class="nt">xhr</span><span class="nc">.open</span><span class="o">(</span><span class="s1">&#39;GET&#39;</span><span class="o">,</span><span class="s1">&#39;http://url/to/login&#39;</span><span class="o">);</span>
+    <span class="nt">xhr</span><span class="nc">.send</span><span class="o">();</span>
+<span class="err">}</span>
 </pre></div>
 
 
 <p>これを書いて、getCRSFを先にどこかで実行しておいて
 実際のリクエストはさっきのコードをこんな感じで修正する</p>
-<p>```js
-    client.open('POST','http://url/to/login');
-    client.setRequestHeader('X-CSRFToken', Ti.App.Properties.getString("csrf"));//これを追加</p>
-<div class="highlight"><pre><span></span><span class="nt">client</span><span class="nc">.send</span><span class="o">(</span><span class="p">{</span><span class="n">username</span><span class="o">:</span><span class="s1">&#39;hoge&#39;</span><span class="o">,</span><span class="n">password</span><span class="o">:</span><span class="s1">&#39;fuga&#39;</span><span class="p">}</span><span class="o">);</span>
+<div class="highlight"><pre><span></span>    <span class="nx">client</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span><span class="s1">&#39;http://url/to/login&#39;</span><span class="p">);</span>
+    <span class="nx">client</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="s1">&#39;X-CSRFToken&#39;</span><span class="p">,</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">Properties</span><span class="p">.</span><span class="nx">getString</span><span class="p">(</span><span class="s2">&quot;csrf&quot;</span><span class="p">));</span><span class="c1">//これを追加</span>
+
+    <span class="nx">client</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span><span class="nx">username</span><span class="o">:</span><span class="s1">&#39;hoge&#39;</span><span class="p">,</span><span class="nx">password</span><span class="o">:</span><span class="s1">&#39;fuga&#39;</span><span class="p">});</span>
 </pre></div>
 
 
-<p>```</p>
 <p>Django側のコードはGETの時にcsrfのトークンを戻すように書き換える</p>
-<p>```py views.py
-from django.core.context_processors import csrf #を追加</p>
+<p>```py</p>
+<h1>views.py</h1>
+<p>from django.core.context_processors import csrf #を追加</p>
 <h1>上のviews.pyの14行目をこんな感じで修正</h1>
 <p>return Response({"status":status,"csrf":csrf(request)['csrf_token']})↲                 </p>
 <p>これでいけたみたい。</p>
@@ -232,6 +239,11 @@ from django.core.context_processors import csrf #を追加</p>
 
             <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
                 <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/category/memo.html">
+                            <i class="fa fa-folder-open fa-lg"></i> memo
+                        </a>
+                    </li>
                     <li class="list-group-item">
                         <a href="http://blog.thoz.org/category/misc.html">
                             <i class="fa fa-folder-open fa-lg"></i> misc

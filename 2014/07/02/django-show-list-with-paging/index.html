@@ -111,22 +111,22 @@ shigeponが関心のある技術情報など            </a>
 データの一覧表示には何種類かファイルが必要（モデル、ビュー、テンプレート、URLディスパッチャー）。
 それぞれこんな感じで用意する。</p>
 <h3>モデル</h3>
-<p>```python models.py
-from django.db import models
-class Bocho(models.Model):
-    name = models.TextField()
-    court = models.TextField()
-    date = models.DateField()
-    ....</p>
-<div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="err">!</span><span class="o">--</span> <span class="n">more</span> <span class="o">--&gt;</span>
+<div class="highlight"><pre><span></span><span class="c1"># models.py</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="k">class</span> <span class="nc">Bocho</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+    <span class="n">court</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+    <span class="n">date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
+    <span class="o">....</span>
+</pre></div>
 
-<span class="err">モデルではフィールドとその属性を決める。このコードではクラスの中で</span><span class="n">Meta</span><span class="err">クラスを定義すると、モデルのテーブル名とかそういうのを色々定義出来るみたい。定義出来るフィールドの種類は</span><span class="n">Django</span><span class="err">のマニュアルに書いてあるのですぐ分かる。</span>
 
-<span class="c1">###ビュー</span>
+<!-- more -->
 
-<span class="err">データをテンプレートに設定する部分。リクエストパラメータから、必要なデータを取得する部分。多分。</span>
-
-<span class="sb">``</span><span class="err">`</span><span class="n">python</span> <span class="n">views</span><span class="o">.</span><span class="n">py</span>
+<p>モデルではフィールドとその属性を決める。このコードではクラスの中でMetaクラスを定義すると、モデルのテーブル名とかそういうのを色々定義出来るみたい。定義出来るフィールドの種類はDjangoのマニュアルに書いてあるのですぐ分かる。</p>
+<h3>ビュー</h3>
+<p>データをテンプレートに設定する部分。リクエストパラメータから、必要なデータを取得する部分。多分。</p>
+<div class="highlight"><pre><span></span><span class="c1"># views.py</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
 <span class="kn">from</span> <span class="nn">django.core.paginator</span> <span class="kn">import</span> <span class="n">Paginator</span><span class="p">,</span> <span class="n">PageNotAnInteger</span><span class="p">,</span> <span class="n">EmptyPage</span>
 <span class="kn">from</span> <span class="nn">bocho.models</span> <span class="kn">import</span> <span class="n">Bocho</span>
@@ -148,26 +148,26 @@ class Bocho(models.Model):
 <h3>テンプレート</h3>
 <p>bocho/templates/list.htmlを作る。中身は一部だけ。{{ 変数名 }}でビューで割り当てた変数を表示する。
 あと、色々テンプレート用のタグがある。これもDjangoマニュアルを見ると分かる。</p>
-<p>```html list.html
+<div class="highlight"><pre><span></span># list.html
 {% raw %}
-<table class="table">
-    <thead><th class="span2">日付</th><th>名称</th><th>裁判所</th></thead>
+<span class="p">&lt;</span><span class="nt">table</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;table&quot;</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">thead</span><span class="p">&gt;&lt;</span><span class="nt">th</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;span2&quot;</span><span class="p">&gt;</span>日付<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;&lt;</span><span class="nt">th</span><span class="p">&gt;</span>名称<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;&lt;</span><span class="nt">th</span><span class="p">&gt;</span>裁判所<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;&lt;/</span><span class="nt">thead</span><span class="p">&gt;</span>
 {% for object in object_list %}
-<tr>
-    <td>{{ object.date|date:"Y-m-d" }}</td>
-    <td>{{ object.name }}</td>
-    <td>{{ object.court }}</td>
-</tr>
+<span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ object.date|date:&quot;Y-m-d&quot; }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ object.name }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">td</span><span class="p">&gt;</span>{{ object.court }}<span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
 {% endfor %}
-</table>
-{% endraw %}</p>
-<div class="highlight"><pre><span></span><span class="c1">###URLディスパッチャー</span>
+<span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
+{% endraw %}
+</pre></div>
 
-<span class="err">ドメイン名</span><span class="o">/</span><span class="n">bocho</span><span class="o">/</span><span class="err">で一覧表示出来るように正規表現使って</span><span class="n">views</span><span class="err">に割り当てる。</span>
 
-<span class="n">myproject</span><span class="o">/</span><span class="n">urls</span><span class="o">.</span><span class="n">py</span>
-
-<span class="sb">``</span><span class="err">`</span><span class="n">python</span> <span class="n">urls</span><span class="o">.</span><span class="n">py</span>
+<h3>URLディスパッチャー</h3>
+<p>ドメイン名/bocho/で一覧表示出来るように正規表現使ってviewsに割り当てる。</p>
+<p>myproject/urls.py</p>
+<div class="highlight"><pre><span></span><span class="c1"># urls.py</span>
 <span class="kn">from</span> <span class="nn">django.conf.urls</span> <span class="kn">import</span> <span class="n">patterns</span><span class="p">,</span> <span class="n">include</span><span class="p">,</span> <span class="n">url</span>
 <span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
     <span class="c1"># Examples:</span>
@@ -179,19 +179,20 @@ class Bocho(models.Model):
 
 
 <p>bocho/urls.pyは無いので作る。</p>
-<p>```python urls.py
-from django.conf.urls import patterns, include, url
-from bocho import views
-urlpatterns = patterns('',
-    url(r'^$', views.index, name="index"), #url(正規表現, 割り当てるビュー, URL作ったりリダイレクトする時に付けておくと便利な名前)
-)</p>
-<div class="highlight"><pre><span></span>一覧はどうせページングするので、views.pyはこの形で覚えておくと良いかも
+<div class="highlight"><pre><span></span><span class="c1"># urls.py</span>
+<span class="kn">from</span> <span class="nn">django.conf.urls</span> <span class="kn">import</span> <span class="n">patterns</span><span class="p">,</span> <span class="n">include</span><span class="p">,</span> <span class="n">url</span>
+<span class="kn">from</span> <span class="nn">bocho</span> <span class="kn">import</span> <span class="n">views</span>
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="n">url</span><span class="p">(</span><span class="s1">r&#39;^$&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">),</span> <span class="c1">#url(正規表現, 割り当てるビュー, URL作ったりリダイレクトする時に付けておくと便利な名前)</span>
+<span class="p">)</span>
+</pre></div>
 
-## ページング
-どうせbootstrapを使うのでdjango-bootstrap-toolkitを使う方法を載せる。
-ページ分けする対象をobject\_list、ページ送りのURLにpage=以外に設定するパラメータをreqとすると、
 
-```html list.html
+<p>一覧はどうせページングするので、views.pyはこの形で覚えておくと良いかも</p>
+<h2>ページング</h2>
+<p>どうせbootstrapを使うのでdjango-bootstrap-toolkitを使う方法を載せる。
+ページ分けする対象をobject_list、ページ送りのURLにpage=以外に設定するパラメータをreqとすると、</p>
+<div class="highlight"><pre><span></span># list.html
 {% raw %}
 {% load bootstrap_toolkit %}↲
 {% bootstrap_pagination object_list align=&quot;center&quot; extra=req %}
@@ -203,10 +204,13 @@ urlpatterns = patterns('',
 <h2>ページングにパラメータを付ける</h2>
 <p>ついでにメモ
 例えば"date=2001-01-01"みたいなパラメータを設定したいんだけど、割り当ててる変数？は日付オブジェクトの場合</p>
-<p><code>html list.html
+<div class="highlight"><pre><span></span># list.html
 {% raw %}
-{% bootstrap\_pagination object\_list align="center" extra=date|date:"Y-m-d"|s    tringformat:"%date=%s"|slice:"1:" %}
-{% endraw %}</code></p>
+{% bootstrap\_pagination object\_list align=&quot;center&quot; extra=date|date:&quot;Y-m-d&quot;|s    tringformat:&quot;%date=%s&quot;|slice:&quot;1:&quot; %}
+{% endraw %}
+</pre></div>
+
+
 <p>こんな感じで文字列をくっつけてパラメータにすることが出来る。かなり強引<a href="https://www.google.com/url?q=http://d.hatena.ne.jp/feiz/20110414/1302771447&amp;usd=2&amp;usg=AFQjCNFN9kzyrEJj_WZEatK2wIL07eaD0w">参考</a></p>
             </div>
             <!-- /.entry-content -->
@@ -237,6 +241,11 @@ urlpatterns = patterns('',
 
             <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
                 <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/category/memo.html">
+                            <i class="fa fa-folder-open fa-lg"></i> memo
+                        </a>
+                    </li>
                     <li class="list-group-item">
                         <a href="http://blog.thoz.org/category/misc.html">
                             <i class="fa fa-folder-open fa-lg"></i> misc

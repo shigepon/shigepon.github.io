@@ -277,11 +277,13 @@ shigeponが関心のある技術情報など            </a>
 <h2>psqlでsqlにパラメータを渡す</h2>
 <p>vオプションを用いる</p>
 <p><a href="http://stackoverflow.com/questions/7389416/postgresql-how-to-pass-parameters-from-command-line">PostgreSQL: How to pass parameters from command line? - Stack Overflow</a></p>
-<p>```sql a.sql
-select :vint, :vstr;</p>
-<div class="highlight"><pre><span></span>```sh
-$ psql -v vint=10 -v vstr=&quot;&#39;hoge&#39;&quot; -f a.sql dbname
-10  hoge
+<div class="highlight"><pre><span></span><span class="o">#</span> <span class="n">a</span><span class="p">.</span><span class="k">sql</span>
+<span class="k">select</span> <span class="p">:</span><span class="n">vint</span><span class="p">,</span> <span class="p">:</span><span class="n">vstr</span><span class="p">;</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>$ psql -v <span class="nv">vint</span><span class="o">=</span><span class="m">10</span> -v <span class="nv">vstr</span><span class="o">=</span><span class="s2">&quot;&#39;hoge&#39;&quot;</span> -f a.sql dbname
+<span class="m">10</span>  hoge
 </pre></div>
 
 
@@ -363,6 +365,11 @@ $ psql -v vint=10 -v vstr=&quot;&#39;hoge&#39;&quot; -f a.sql dbname
 
             <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
                 <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/category/memo.html">
+                            <i class="fa fa-folder-open fa-lg"></i> memo
+                        </a>
+                    </li>
                     <li class="list-group-item">
                         <a href="http://blog.thoz.org/category/misc.html">
                             <i class="fa fa-folder-open fa-lg"></i> misc

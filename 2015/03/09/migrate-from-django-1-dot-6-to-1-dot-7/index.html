@@ -128,14 +128,14 @@ shigeponが関心のある技術情報など            </a>
 
 
 <p>Tracebackを見てみるとどうもmodels.pyの中で</p>
-<p>```py models.py
-admin.site.register(Model)</p>
-<div class="highlight"><pre><span></span>とかやってたのがまずかったみたいで、管理サイトで使うモデル定義などのコードをadmin.pyに移動したら上のエラーは出なくなった。何となくで書いてたらいかんな。ちなみにアップデートには関係無いけど、Django1.7で@admin.register(Model)というデコレーターが使えるようになったので、そっちに変えた方がスマートな気がする。
+<div class="highlight"><pre><span></span><span class="c1"># models.py</span>
+<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Model</span><span class="p">)</span>
+</pre></div>
 
-次はSouthでマイグレーションやってるプロジェクトだったので、下のようなエラーが出た。
 
-``` sh
-raise RuntimeError(&quot;South does not support Django 1.7 or higher. Please use native Django migrations.&quot;)
+<p>とかやってたのがまずかったみたいで、管理サイトで使うモデル定義などのコードをadmin.pyに移動したら上のエラーは出なくなった。何となくで書いてたらいかんな。ちなみにアップデートには関係無いけど、Django1.7で@admin.register(Model)というデコレーターが使えるようになったので、そっちに変えた方がスマートな気がする。</p>
+<p>次はSouthでマイグレーションやってるプロジェクトだったので、下のようなエラーが出た。</p>
+<div class="highlight"><pre><span></span>raise RuntimeError<span class="o">(</span><span class="s2">&quot;South does not support Django 1.7 or higher. Please use native Django migrations.&quot;</span><span class="o">)</span>
 </pre></div>
 
 
@@ -178,6 +178,11 @@ raise RuntimeError(&quot;South does not support Django 1.7 or higher. Please use
 
             <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
                 <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/category/memo.html">
+                            <i class="fa fa-folder-open fa-lg"></i> memo
+                        </a>
+                    </li>
                     <li class="list-group-item">
                         <a href="http://blog.thoz.org/category/misc.html">
                             <i class="fa fa-folder-open fa-lg"></i> misc

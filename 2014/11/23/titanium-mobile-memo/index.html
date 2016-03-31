@@ -117,12 +117,15 @@ shigeponが関心のある技術情報など            </a>
 <h2>Titanium MobileのUIで本家以外に参考にしてるサイト</h2>
 <p><a href="https://code.google.com/p/titanium-mobile-doc-ja/w/list">Wiki Pages - titanium-mobile-doc-ja - Appcelerator Titanium Mobileに関するドキュメントを日本語でまとめていくプロジェクト - Google Project Hosting</a></p>
 <h2>Android実機で文字が小さくなる</h2>
-<p><code>xml tiapp.xml
-&lt;android xmlns:android="http://schemas.android.com/apk/res/android"&gt;
-    &lt;manifest&gt;
-         &lt;supports-screens android:anyDensity="false"/&gt;
-    &lt;/manifest&gt;
-&lt;/android&gt;</code></p>
+<div class="highlight"><pre><span></span># tiapp.xml
+<span class="nt">&lt;android</span> <span class="na">xmlns:android=</span><span class="s">&quot;http://schemas.android.com/apk/res/android&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;manifest&gt;</span>
+         <span class="nt">&lt;supports-screens</span> <span class="na">android:anyDensity=</span><span class="s">&quot;false&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/manifest&gt;</span>
+<span class="nt">&lt;/android&gt;</span>
+</pre></div>
+
+
 <p>もしくは文字サイズをdpで指定</p>
 <p>参考：<a href="http://www.fujimotohajime.net/pukiwiki/index.php?TitaniumMobile%2FAndroid%E3%81%A7%E5%AE%9F%E6%A9%9F%E3%83%86%E3%82%B9%E3%83%88%E3%81%99%E3%82%8B%E3%81%A8%E6%96%87%E5%AD%97%E3%81%8C%E5%B0%8F%E3%81%95%E3%81%84">TitaniumMobile/Androidで実機テストすると文字が小さい - Wiki</a></p>
             </div>
@@ -154,6 +157,11 @@ shigeponが関心のある技術情報など            </a>
 
             <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
                 <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/category/memo.html">
+                            <i class="fa fa-folder-open fa-lg"></i> memo
+                        </a>
+                    </li>
                     <li class="list-group-item">
                         <a href="http://blog.thoz.org/category/misc.html">
                             <i class="fa fa-folder-open fa-lg"></i> misc

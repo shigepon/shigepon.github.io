@@ -127,13 +127,15 @@ shigeponが関心のある技術情報など            </a>
 
 <h2>日本語のコマンドライン引数取得</h2>
 <p>参考<a href="http://www.yukun.info/blog/2008/07/python-command-line-arguments.html">Python: コマンドライン引数の取得 – sys.argv変数</a></p>
-<p>```py :hoge.py</p>
-<h1>-*- encoding: utf-8 -*-</h1>
-<p>import sys
-argv = sys.argv
-print argv[1].decode("utf-8")</p>
-<div class="highlight"><pre><span></span>```sh
-$ python hoge.py あいうえお
+<div class="highlight"><pre><span></span><span class="c1">#hoge.py</span>
+<span class="c1"># -\*- encoding: utf-8 -\*-</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">argv</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span>
+<span class="k">print</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>$ python hoge.py あいうえお
 あいうえお
 $
 </pre></div>
@@ -216,19 +218,18 @@ subprocessを使う。何か昔は別の手法だったらしい。</p>
 
 
 <p>みたいなメッセージが帰ってきてうまく情報を取って来れなかった。</p>
-<p>```py settings.py
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': ()
-}</p>
-<div class="highlight"><pre><span></span><span class="err">と認証を削除するといけた</span>
-<span class="p">[</span><span class="n">nginx</span> <span class="o">-</span> <span class="n">Django</span> <span class="n">Rest</span> <span class="n">Framework</span> <span class="n">behind</span> <span class="n">HTTP</span> <span class="n">Basic</span> <span class="n">Authentication</span> <span class="o">-</span> <span class="n">Stack</span> <span class="n">Overflow</span><span class="p">](</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">stackoverflow</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">questions</span><span class="o">/</span><span class="mi">19693433</span><span class="o">/</span><span class="n">django</span><span class="o">-</span><span class="n">rest</span><span class="o">-</span><span class="n">framework</span><span class="o">-</span><span class="n">behind</span><span class="o">-</span><span class="n">http</span><span class="o">-</span><span class="n">basic</span><span class="o">-</span><span class="n">authentication</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="c1"># settings.py</span>
+<span class="n">REST_FRAMEWORK</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;DEFAULT_AUTHENTICATION_CLASSES&#39;</span><span class="p">:</span> <span class="p">()</span>
+<span class="p">}</span>
+</pre></div>
 
-<span class="c1">## リストの文字列をリストに変換する</span>
 
-<span class="err">リクエストでリストの文字列をパラメーターにして送って、それをリストとして評価したかったので、調べてみた。</span>
-
-<span class="sb">``</span><span class="err">`</span><span class="n">py</span>
-<span class="kn">import</span> <span class="nn">ast</span>
+<p>と認証を削除するといけた
+<a href="http://stackoverflow.com/questions/19693433/django-rest-framework-behind-http-basic-authentication">nginx - Django Rest Framework behind HTTP Basic Authentication - Stack Overflow</a></p>
+<h2>リストの文字列をリストに変換する</h2>
+<p>リクエストでリストの文字列をパラメーターにして送って、それをリストとして評価したかったので、調べてみた。</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ast</span>
 <span class="n">hoge</span> <span class="o">=</span> <span class="s1">u&#39;[&quot;A&quot;,&quot;B&quot;,&quot;C&quot;]</span>
 <span class="n">fuga</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">hoge</span><span class="p">)</span>
 </pre></div>
@@ -396,6 +397,11 @@ REST_FRAMEWORK = {
 
             <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
                 <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/category/memo.html">
+                            <i class="fa fa-folder-open fa-lg"></i> memo
+                        </a>
+                    </li>
                     <li class="list-group-item">
                         <a href="http://blog.thoz.org/category/misc.html">
                             <i class="fa fa-folder-open fa-lg"></i> misc

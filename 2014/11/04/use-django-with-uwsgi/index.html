@@ -117,22 +117,23 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
 <p>djangoのプロジェクトを/path/to/mysiteに置いた場合の設定。pidfile,daemonizeはプロジェクト毎に適当に設定。</p>
 <!-- more -->
 
-<p>```ini uwsgi.ini
-[uwsgi]
-chdir=/path/to/mysite
-module='mysite.wsgi:application'
-master=True
-pidfile=/tmp/project-master.pid
-vacuum=True
-max-requests=5000
-daemonize=/var/log/uwsgi/mysite.log
-socket=127.0.0.1:1234 #適当なポート
-env= DJANGO_SETTINGS_MODULE=mysite.settings</p>
-<div class="highlight"><pre><span></span>virtualenvで使う場合、sudoを使わないでuwsgiを起動するので、/var/log/uwsgi/yourproject.logの権限に注意する。
-uwsgiの起動や終了のコマンドは以下の通り
+<div class="highlight"><pre><span></span><span class="c1"># uwsgi.ini</span>
+<span class="k">[uwsgi]</span>
+<span class="na">chdir</span><span class="o">=</span><span class="s">/path/to/mysite</span>
+<span class="na">module</span><span class="o">=</span><span class="s">&#39;mysite.wsgi:application&#39;</span>
+<span class="na">master</span><span class="o">=</span><span class="s">True</span>
+<span class="na">pidfile</span><span class="o">=</span><span class="s">/tmp/project-master.pid</span>
+<span class="na">vacuum</span><span class="o">=</span><span class="s">True</span>
+<span class="na">max-requests</span><span class="o">=</span><span class="s">5000</span>
+<span class="na">daemonize</span><span class="o">=</span><span class="s">/var/log/uwsgi/mysite.log</span>
+<span class="na">socket</span><span class="o">=</span><span class="s">127.0.0.1:1234 #適当なポート</span>
+<span class="na">env</span><span class="o">=</span> <span class="s">DJANGO_SETTINGS_MODULE=mysite.settings</span>
+</pre></div>
 
-```sh
-起動
+
+<p>virtualenvで使う場合、sudoを使わないでuwsgiを起動するので、/var/log/uwsgi/yourproject.logの権限に注意する。
+uwsgiの起動や終了のコマンドは以下の通り</p>
+<div class="highlight"><pre><span></span>起動
 $ uwsgi --ini uwsgi.ini
 再起動
 $ uwsgi --reload /tmp/project-master.pid
@@ -181,13 +182,14 @@ break;
 
 
 <p>settings.pyにSTATIC_URL, STATIC_ROOTを追加</p>
-<p>```py settings.py
-STATIC_URL = '/static/'
-STATIC_ROOT = "/path/to/mysite/static"</p>
-<div class="highlight"><pre><span></span>テンプレでは次のように静的ファイルにアクセスする
+<div class="highlight"><pre><span></span><span class="c1"># settings.py</span>
+<span class="n">STATIC_URL</span> <span class="o">=</span> <span class="s1">&#39;/static/&#39;</span>
+<span class="n">STATIC_ROOT</span> <span class="o">=</span> <span class="s2">&quot;/path/to/mysite/static&quot;</span>
+</pre></div>
 
-```html
-<span class="nt">&lt;script</span> <span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">STATIC_URL</span> <span class="cp">}}</span><span class="s">js/hoge.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+
+<p>テンプレでは次のように静的ファイルにアクセスする</p>
+<div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;{{ STATIC_URL }}js/hoge.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
 </pre></div>
 
 
@@ -244,6 +246,11 @@ uwsgi.iniのenvも変更しておく</p>
 
             <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
                 <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/category/memo.html">
+                            <i class="fa fa-folder-open fa-lg"></i> memo
+                        </a>
+                    </li>
                     <li class="list-group-item">
                         <a href="http://blog.thoz.org/category/misc.html">
                             <i class="fa fa-folder-open fa-lg"></i> misc

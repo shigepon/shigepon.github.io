@@ -108,25 +108,25 @@ shigeponが関心のある技術情報など            </a>
 <p>個人的に作っているアプリでアップデートした際にコード変更が必要だった点は以下の通り。他にも色々使えなくなった命令とかあるみたいだけど引っ掛からなかったので省略。詳しくは<a href="https://docs.djangoproject.com/en/1.8/releases/1.8/#features-removed-in-1-8">Django 1.8 release notes | Django documentation | Django</a>で見ることが出来る。</p>
 <h3>urls.pyで指定するnamespace</h3>
 <p>urls.pyでapp_nameを指定した場合に必ずnamespaceを指定する必要があるようになった。</p>
-<p>```py urls.py
-url(r'^', include('hoge.urls',app_name='hoge')),#これはダメ
-url(r'^', include('hoge.urls',app_name='hoge',namespace='hoge')),#これはOK</p>
-<div class="highlight"><pre><span></span>ダメなコード実装してた場合は、reverseでurlを作ってる箇所にも修正が必要になる。
+<div class="highlight"><pre><span></span><span class="c1"># urls.py</span>
+<span class="n">url</span><span class="p">(</span><span class="s1">r&#39;^&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;hoge.urls&#39;</span><span class="p">,</span><span class="n">app_name</span><span class="o">=</span><span class="s1">&#39;hoge&#39;</span><span class="p">)),</span><span class="c1">#これはダメ</span>
+<span class="n">url</span><span class="p">(</span><span class="s1">r&#39;^&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;hoge.urls&#39;</span><span class="p">,</span><span class="n">app_name</span><span class="o">=</span><span class="s1">&#39;hoge&#39;</span><span class="p">,</span><span class="n">namespace</span><span class="o">=</span><span class="s1">&#39;hoge&#39;</span><span class="p">)),</span><span class="c1">#これはOK</span>
+</pre></div>
 
-### transactionについて
 
-```py
-transaction.commit_unless_managed()
+<p>ダメなコード実装してた場合は、reverseでurlを作ってる箇所にも修正が必要になる。</p>
+<h3>transactionについて</h3>
+<div class="highlight"><pre><span></span><span class="n">transaction</span><span class="o">.</span><span class="n">commit_unless_managed</span><span class="p">()</span>
 
-みたいなメソッドが無くなってた。
+<span class="err">みたいなメソッドが無くなってた。</span>
 
-## migrate関連でのハマりポイント（2015-10-20追記）
+<span class="c1">## migrate関連でのハマりポイント（2015-10-20追記）</span>
 
-1.7から1.8にバージョンアップすると、マイグレーションでエラーが出る。普通に
+<span class="mf">1.7</span><span class="err">から</span><span class="mf">1.8</span><span class="err">にバージョンアップすると、マイグレーションでエラーが出る。普通に</span>
 
-```sh
-$ python manage.py makemigrations
-$ python manage.py migrate
+<span class="sb">``</span><span class="err">`</span><span class="n">sh</span>
+<span class="err">$</span> <span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">makemigrations</span>
+<span class="err">$</span> <span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">migrate</span>
 </pre></div>
 
 
@@ -184,6 +184,11 @@ $ python manage.py migrate
 
             <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
                 <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/category/memo.html">
+                            <i class="fa fa-folder-open fa-lg"></i> memo
+                        </a>
+                    </li>
                     <li class="list-group-item">
                         <a href="http://blog.thoz.org/category/misc.html">
                             <i class="fa fa-folder-open fa-lg"></i> misc

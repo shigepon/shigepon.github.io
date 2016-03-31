@@ -133,13 +133,16 @@ $ pip install django-bmemcached
 
 
 <p>aptitudeの部分は要らないかも（django-pylibmcを入れる時に怒られて入れたので、もしかして必要無いかもしれない）</p>
-<p><code>py settings.py
-CACHES = {
-    'default':{
-        'BACKEND':'django_bmemcached.memcached.BMemcached',
-        'LOCATION': ['127.0.0.1:10041'],
-    }
-}</code></p>
+<div class="highlight"><pre><span></span><span class="c1"># settings.py</span>
+<span class="n">CACHES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;default&#39;</span><span class="p">:{</span>
+        <span class="s1">&#39;BACKEND&#39;</span><span class="p">:</span><span class="s1">&#39;django_bmemcached.memcached.BMemcached&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;LOCATION&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;127.0.0.1:10041&#39;</span><span class="p">],</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
 <p>これはローカルで上のような形でgroongaのサーバを作った場合の設定。
 これで普通のキャッシュを扱うプログラム書けばちゃんとデータをgroongaに入れてくれた。</p>
 <p>めでたしめでたし。</p>
@@ -172,6 +175,11 @@ CACHES = {
 
             <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
                 <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/category/memo.html">
+                            <i class="fa fa-folder-open fa-lg"></i> memo
+                        </a>
+                    </li>
                     <li class="list-group-item">
                         <a href="http://blog.thoz.org/category/misc.html">
                             <i class="fa fa-folder-open fa-lg"></i> misc

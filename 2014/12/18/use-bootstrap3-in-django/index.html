@@ -112,18 +112,19 @@ shigeponが関心のある技術情報など            </a>
 <h2>設定</h2>
 <!-- more -->
 
-<p>```py settings.py
-INSTALLED_APPS = (
-....
-    'bootstrap3',
-....
-)</p>
-<div class="highlight"><pre><span></span>&lt;!-- more --&gt;
+<div class="highlight"><pre><span></span><span class="c1"># settings.py</span>
+<span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
+<span class="o">....</span>
+    <span class="s1">&#39;bootstrap3&#39;</span><span class="p">,</span>
+<span class="o">....</span>
+<span class="p">)</span>
+</pre></div>
 
-## テンプレート
 
-```html
-{% raw %}
+<!-- more -->
+
+<h2>テンプレート</h2>
+<div class="highlight"><pre><span></span>{% raw %}
 {% load bootstrap3 %}
 {% bootstrap_css %}
 {% bootstrap_javascript %}
@@ -142,11 +143,14 @@ $ wget http://bootswatch.com/cosmo/bootstrap.min.css
 
 <p>/staticはアプリのフォルダ下に作る</p>
 <p>次に設定ファイルに項目を追加</p>
-<p><code>py settings.py
-STATIC_URL = '/static/'
-BOOTSTRAP3 = {
-    'css_url':'/static/css/bootstrap.min.css'
-}</code></p>
+<div class="highlight"><pre><span></span><span class="c1"># settings.py</span>
+<span class="n">STATIC_URL</span> <span class="o">=</span> <span class="s1">&#39;/static/&#39;</span>
+<span class="n">BOOTSTRAP3</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;css_url&#39;</span><span class="p">:</span><span class="s1">&#39;/static/css/bootstrap.min.css&#39;</span>
+<span class="p">}</span>
+</pre></div>
+
+
 <p>これだけでテンプレートいじらずに動いてくれる</p>
 <p>bootstrap2だとnavbar表示の時に表示が重なるとか何とかあったけど、bootstrap3だと気にしなくて良いのかな？何も追加css書かなくても特に問題無さそう。これは嬉しい。</p>
 <p>でも<a href="http://qiita.com/Alex_23drum/items/bbf80aff7dbb6fd1a7d9">Navbarに画像入れると下に偏った配置になる</a>とかあるみたいなので、調べてみる必要があるかも</p>
@@ -179,6 +183,11 @@ BOOTSTRAP3 = {
 
             <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
                 <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/category/memo.html">
+                            <i class="fa fa-folder-open fa-lg"></i> memo
+                        </a>
+                    </li>
                     <li class="list-group-item">
                         <a href="http://blog.thoz.org/category/misc.html">
                             <i class="fa fa-folder-open fa-lg"></i> misc

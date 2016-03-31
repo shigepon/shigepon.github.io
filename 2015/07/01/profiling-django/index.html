@@ -119,14 +119,15 @@ shigeponが関心のある技術情報など            </a>
 
 
 <p>でインストールして、</p>
-<p>```py settings.py
-INSTALLED_APP = (...
-   'django_extensions',
-)</p>
-<div class="highlight"><pre><span></span>で設定して
+<div class="highlight"><pre><span></span><span class="c1"># settings.py</span>
+<span class="n">INSTALLED_APP</span> <span class="o">=</span> <span class="p">(</span><span class="o">...</span>
+   <span class="s1">&#39;django_extensions&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
 
-```sh
-$ python manage.py runprofileserver
+
+<p>で設定して</p>
+<div class="highlight"><pre><span></span>$ python manage.py runprofileserver
 </pre></div>
 
 
@@ -181,20 +182,21 @@ AssertionError
 <li>プロファイルしたいURLにprof=というパラメータを付けてブラウザでアクセスする</li>
 </ul>
 <p>って感じ。settings.pyは</p>
-<p>```py settings.py
-MIDDLEWARE_CLASSES = (
-...
-    'modules.profiler.ProfileMiddleware',
-)</p>
-<div class="highlight"><pre><span></span>こんな感じ。で、上のようにブラウザでアクセスするとエラー・・・
+<div class="highlight"><pre><span></span><span class="c1"># settings.py</span>
+<span class="n">MIDDLEWARE_CLASSES</span> <span class="o">=</span> <span class="p">(</span>
+<span class="o">...</span>
+    <span class="s1">&#39;modules.profiler.ProfileMiddleware&#39;</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 
 
-<p>AttributeError: 'WSGIRequest' object has no attribute 'has_key'</p>
-<div class="highlight"><pre><span></span>なので、コード上で
+<p>こんな感じ。で、上のようにブラウザでアクセスするとエラー・・・</p>
+<div class="highlight"><pre><span></span>AttributeError: &#39;WSGIRequest&#39; object has no attribute &#39;has_key&#39;
+</pre></div>
 
-```py
-request.has_key
+
+<p>なので、コード上で</p>
+<div class="highlight"><pre><span></span><span class="n">request</span><span class="o">.</span><span class="n">has_key</span>
 </pre></div>
 
 
@@ -251,6 +253,11 @@ request.has_key
 
             <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
                 <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/category/memo.html">
+                            <i class="fa fa-folder-open fa-lg"></i> memo
+                        </a>
+                    </li>
                     <li class="list-group-item">
                         <a href="http://blog.thoz.org/category/misc.html">
                             <i class="fa fa-folder-open fa-lg"></i> misc

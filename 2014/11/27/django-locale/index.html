@@ -125,25 +125,27 @@ shigeponが関心のある技術情報など            </a>
 <p>今回はvirtualenvでpipしたdjango-allauthのテンプレートを日本語化したかったので、path/to/virtualenv/dir/lib/python2.7/site-packages/allauth/templates/account/内のファイルを全部path/to/project/templates/account/にコピーしてからコマンド実行すると上手く読み取ってくれた。</p>
 <h2>翻訳</h2>
 <p>出来たpoファイルを編集すればオッケー。ファイル内でmsgid以下に書いてあるのが元の文、その次のmsgstr以下に文章書くと、翻訳文になる。元の英文に何かパラメーター付いてる場合は必ずパラメーターを翻訳文に設定しないとエラーが出る。</p>
-<p>```py 例</p>
-<h1>: path/to/python/module.py:23</h1>
-<p>msgid "Welcome to my site."
-msgstr "いらっしゃーい"</p>
-<div class="highlight"><pre><span></span>## moファイル作成
+<div class="highlight"><pre><span></span><span class="c1">#: path/to/python/module.py:23</span>
+<span class="n">msgid</span> <span class="s2">&quot;Welcome to my site.&quot;</span>
+<span class="n">msgstr</span> <span class="s2">&quot;いらっしゃーい&quot;</span>
+</pre></div>
 
-おもむろにコマンドを実行するとmoファイルが出来る
 
-```sh
-django-admin.py compilemessages
+<h2>moファイル作成</h2>
+<p>おもむろにコマンドを実行するとmoファイルが出来る</p>
+<div class="highlight"><pre><span></span>django-admin.py compilemessages
 </pre></div>
 
 
 <h2>settings.pyの設定</h2>
 <p>これだけで動くと思ったら動かなかったので色々調べてみたらLOCALE_PATHSを設定しないといけなかった。</p>
-<p><code>py settings.py
-LOCALE_PATHS = (
-    "path/to/locale",
-)</code></p>
+<div class="highlight"><pre><span></span><span class="c1"># settings.py</span>
+<span class="n">LOCALE_PATHS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;path/to/locale&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+
+
 <p>これ設定しておいたらちゃんと動いた。</p>
 <p>あとは普通にrunserverとかでサーバ起動したら翻訳されてる</p>
 <p>参考：<a href="http://docs.djangoproject.jp/en/latest/topics/i18n/translation.html">翻訳 — Django 1.4 documentation</a></p>
@@ -177,6 +179,11 @@ LOCALE_PATHS = (
 
             <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
                 <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/category/memo.html">
+                            <i class="fa fa-folder-open fa-lg"></i> memo
+                        </a>
+                    </li>
                     <li class="list-group-item">
                         <a href="http://blog.thoz.org/category/misc.html">
                             <i class="fa fa-folder-open fa-lg"></i> misc

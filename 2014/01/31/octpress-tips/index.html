@@ -106,23 +106,23 @@ shigeponが関心のある技術情報など            </a>
                 <p>Octopressのインストール後に行ったカスタマイズをまとめておきます。</p>
 <h2>外部リンクを別ウィンドウで開く</h2>
 <p>下のコードを追加します</p>
-<p>```javascript :source/_inclides/custom/head.html
-<script language="JavaScript">
-$(document).ready( function () {
-   $("a[href^='http']:not([href*='" + location.hostname + "'])").attr('target', '_blank');
-})
-</script></p>
-<div class="highlight"><pre><span></span>&lt;!-- more --&gt;
-
-のようにJavascriptで対応します
-
-## 一覧表示での表示範囲を決めるマークダウン
+<div class="highlight"><pre><span></span><span class="err">#</span> <span class="o">:</span><span class="nx">source</span><span class="o">/</span><span class="nx">_inclides</span><span class="o">/</span><span class="nx">custom</span><span class="o">/</span><span class="nx">head</span><span class="p">.</span><span class="nx">html</span>
+<span class="o">&lt;</span><span class="nx">script</span> <span class="nx">language</span><span class="o">=</span><span class="s2">&quot;JavaScript&quot;</span><span class="o">&gt;</span>
+<span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+   <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;a[href^=&#39;http&#39;]:not([href*=&#39;&quot;</span> <span class="o">+</span> <span class="nx">location</span><span class="p">.</span><span class="nx">hostname</span> <span class="o">+</span> <span class="s2">&quot;&#39;])&quot;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;target&#39;</span><span class="p">,</span> <span class="s1">&#39;_blank&#39;</span><span class="p">);</span>
+<span class="p">})</span>
+<span class="o">&lt;</span><span class="err">/script&gt;</span>
 </pre></div>
 
 
 <!-- more -->
 
-<p>```</p>
+<p>のようにJavascriptで対応します</p>
+<h2>一覧表示での表示範囲を決めるマークダウン</h2>
+<div class="highlight"><pre><span></span>&lt;!-- more --&gt;
+</pre></div>
+
+
 <p>これを書けばおk</p>
             </div>
             <!-- /.entry-content -->
@@ -153,6 +153,11 @@ $(document).ready( function () {
 
             <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
                 <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/category/memo.html">
+                            <i class="fa fa-folder-open fa-lg"></i> memo
+                        </a>
+                    </li>
                     <li class="list-group-item">
                         <a href="http://blog.thoz.org/category/misc.html">
                             <i class="fa fa-folder-open fa-lg"></i> misc

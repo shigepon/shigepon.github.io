@@ -105,7 +105,8 @@ shigeponが関心のある技術情報など            </a>
                 </div>
                 <p>djangoのログ機能を使って、呼び出されたview名とかパラメーターとかを書き出してたんだけど、viewでキャッシュを使うとログを書いてくれなくなるので、それをなんとかしたいという話。</p>
 <p>コードにするとこんな感じ</p>
-<div class="highlight"><pre><span></span><span class="o">...</span>
+<div class="highlight"><pre><span></span><span class="c1">#views.py</span>
+<span class="o">...</span>
 <span class="kn">from</span> <span class="nn">django.views.decorators.cache</span> <span class="kn">import</span> <span class="n">cache_page</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;hoge&quot;</span><span class="p">)</span>
@@ -122,7 +123,8 @@ shigeponが関心のある技術情報など            </a>
 <p>こうするとキャッシュが効いてしまって、1回アクセスした時以外ログが出なくなってしまう。アクセスログ的
 な使い方をしたい時に困ってしまう。アクセスログはnginxとかそこらへんのログに任せてた方が良いような気もするが、
 django内で何とかしたかったのでrequest_startedシグナルを使って下のようにした</p>
-<div class="highlight"><pre><span></span><span class="kn">from</span> 
+<div class="highlight"><pre><span></span><span class="c1">#views.py</span>
+<span class="kn">from</span> 
 <span class="kn">import</span> <span class="n">logging</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;hoge&quot;</span><span class="p">)</span>
 
@@ -179,6 +181,11 @@ django内で何とかしたかったのでrequest_startedシグナルを使っ�
 
             <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
                 <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/category/memo.html">
+                            <i class="fa fa-folder-open fa-lg"></i> memo
+                        </a>
+                    </li>
                     <li class="list-group-item">
                         <a href="http://blog.thoz.org/category/misc.html">
                             <i class="fa fa-folder-open fa-lg"></i> misc

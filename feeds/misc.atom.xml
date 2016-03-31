@@ -256,7 +256,8 @@ $ sudo aptitude remove td-agent
 &lt;p&gt;使用OSがubuntuなので、td-agentを使ってみたんだが、rbenv上のgemでインストールしたfluent-plugin-groongaを読み込む方法が最後まで分かんなかったので使わないことにした。td-agentだとserveceコマンドでリスタートとかやってくれるので楽なんだけどなー。&lt;/p&gt;
 &lt;p&gt;参考：&lt;a href="http://mhag.hatenablog.com/entry/2014/07/04/151415"&gt;Ubuntu 14.04 LTS に Fluentd をインストールする - ´・ω・)＜ときどき書くよ&lt;/a&gt;, &lt;a href="http://qiita.com/h5y1m141@github/items/74029cab9706971c8dbe"&gt;Rubyが参照してるgemのパスやインストール済gemを確認する方法 - Qiita&lt;/a&gt;, &lt;a href="http://qiita.com/groonga/items/5c674be9daf25054c14c"&gt;Fluentdで集めたデータをGroongaに格納する方法 - Qiita&lt;/a&gt;, &lt;a href="http://chocoby.jp/blog/2013/03/05/fluentd-ltsv/"&gt;fluentd で LTSV がサポートされたのでメモ - 暇人じゃない&lt;/a&gt;&lt;/p&gt;</summary><category term="groonga"></category><category term="ansible"></category><category term="ruby"></category></entry><entry><title>djangoでcache使ってる間でも呼び出されたviewとかパラメーターをログに書き出したい</title><link href="http://blog.thoz.org/2016/01/19/log-view-parameter-before-caching-for-django/" rel="alternate"></link><updated>2016-01-19T18:50:33+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2016-01-19:2016/01/19/log-view-parameter-before-caching-for-django/</id><summary type="html">&lt;p&gt;djangoのログ機能を使って、呼び出されたview名とかパラメーターとかを書き出してたんだけど、viewでキャッシュを使うとログを書いてくれなくなるので、それをなんとかしたいという話。&lt;/p&gt;
 &lt;p&gt;コードにするとこんな感じ&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#views.py&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.views.decorators.cache&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;cache_page&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;logging&lt;/span&gt;
 &lt;span class="n"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getLogger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;hoge&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -273,7 +274,8 @@ $ sudo aptitude remove td-agent
 &lt;p&gt;こうするとキャッシュが効いてしまって、1回アクセスした時以外ログが出なくなってしまう。アクセスログ的
 な使い方をしたい時に困ってしまう。アクセスログはnginxとかそこらへんのログに任せてた方が良いような気もするが、
 django内で何とかしたかったのでrequest_startedシグナルを使って下のようにした&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; 
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#views.py&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; 
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;logging&lt;/span&gt;
 &lt;span class="n"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getLogger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;hoge&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
@@ -327,13 +329,16 @@ $ pip install django-bmemcached
 
 
 &lt;p&gt;aptitudeの部分は要らないかも（django-pylibmcを入れる時に怒られて入れたので、もしかして必要無いかもしれない）&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;py settings.py
-CACHES = {
-    'default':{
-        'BACKEND':'django_bmemcached.memcached.BMemcached',
-        'LOCATION': ['127.0.0.1:10041'],
-    }
-}&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;CACHES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:{&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;BACKEND&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;django_bmemcached.memcached.BMemcached&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;LOCATION&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;127.0.0.1:10041&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;これはローカルで上のような形でgroongaのサーバを作った場合の設定。
 これで普通のキャッシュを扱うプログラム書けばちゃんとデータをgroongaに入れてくれた。&lt;/p&gt;
 &lt;p&gt;めでたしめでたし。&lt;/p&gt;</summary><category term="Groonga"></category><category term="Django"></category><category term="Python"></category></entry><entry><title>redis memo</title><link href="http://blog.thoz.org/2016/01/13/redis-memo/" rel="alternate"></link><updated>2016-01-13T21:35:13+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2016-01-13:2016/01/13/redis-memo/</id><summary type="html">&lt;p&gt;redisが良く分かってないので、良く使いそうなものをメモしていく。主にredis-clientを使って行く（OSはUbuntu）&lt;/p&gt;
@@ -588,10 +593,12 @@ CACHES = {
 &lt;p&gt;mecabをソースからインストールして最新版にして、natto-pyをpipでインストールすれば出来た。&lt;/p&gt;
 &lt;h2&gt;1. mecab-pythonをvirtualenv上で使用してみる&lt;/h2&gt;
 &lt;p&gt;ファイルにmecab-pythonを置いてる場所を指定して、pip使えば良い&lt;/p&gt;
-&lt;p&gt;```sh requirements.txt
-https://mecab.googlecode.com/files/mecab-python-0.996.tar.gz&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;```sh
-$ pip install -r requirements.txt
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#requirements.txt&lt;/span&gt;
+https://mecab.googlecode.com/files/mecab-python-0.996.tar.gz
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ pip install -r requirements.txt
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -826,25 +833,25 @@ FILTER = sample_filter
 &lt;p&gt;個人的に作っているアプリでアップデートした際にコード変更が必要だった点は以下の通り。他にも色々使えなくなった命令とかあるみたいだけど引っ掛からなかったので省略。詳しくは&lt;a href="https://docs.djangoproject.com/en/1.8/releases/1.8/#features-removed-in-1-8"&gt;Django 1.8 release notes | Django documentation | Django&lt;/a&gt;で見ることが出来る。&lt;/p&gt;
 &lt;h3&gt;urls.pyで指定するnamespace&lt;/h3&gt;
 &lt;p&gt;urls.pyでapp_nameを指定した場合に必ずnamespaceを指定する必要があるようになった。&lt;/p&gt;
-&lt;p&gt;```py urls.py
-url(r'^', include('hoge.urls',app_name='hoge')),#これはダメ
-url(r'^', include('hoge.urls',app_name='hoge',namespace='hoge')),#これはOK&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ダメなコード実装してた場合は、reverseでurlを作ってる箇所にも修正が必要になる。
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# urls.py&lt;/span&gt;
+&lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;r&amp;#39;^&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hoge.urls&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;app_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;&lt;span class="c1"&gt;#これはダメ&lt;/span&gt;
+&lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;r&amp;#39;^&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hoge.urls&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;app_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;namespace&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;&lt;span class="c1"&gt;#これはOK&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
-### transactionについて
 
-```py
-transaction.commit_unless_managed()
+&lt;p&gt;ダメなコード実装してた場合は、reverseでurlを作ってる箇所にも修正が必要になる。&lt;/p&gt;
+&lt;h3&gt;transactionについて&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;transaction&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;commit_unless_managed&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 
-みたいなメソッドが無くなってた。
+&lt;span class="err"&gt;みたいなメソッドが無くなってた。&lt;/span&gt;
 
-## migrate関連でのハマりポイント（2015-10-20追記）
+&lt;span class="c1"&gt;## migrate関連でのハマりポイント（2015-10-20追記）&lt;/span&gt;
 
-1.7から1.8にバージョンアップすると、マイグレーションでエラーが出る。普通に
+&lt;span class="mf"&gt;1.7&lt;/span&gt;&lt;span class="err"&gt;から&lt;/span&gt;&lt;span class="mf"&gt;1.8&lt;/span&gt;&lt;span class="err"&gt;にバージョンアップすると、マイグレーションでエラーが出る。普通に&lt;/span&gt;
 
-```sh
-$ python manage.py makemigrations
-$ python manage.py migrate
+&lt;span class="sb"&gt;``&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt;&lt;span class="n"&gt;sh&lt;/span&gt;
+&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;python&lt;/span&gt; &lt;span class="n"&gt;manage&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt; &lt;span class="n"&gt;makemigrations&lt;/span&gt;
+&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;python&lt;/span&gt; &lt;span class="n"&gt;manage&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt; &lt;span class="n"&gt;migrate&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1035,45 +1042,50 @@ fatal error: &lt;span class="m"&gt;33&lt;/span&gt; inconsistent data
 |1|shigepon|&lt;/p&gt;
 &lt;p&gt;こんなテーブルがあって、author.keyとarticle.author_keyが繋がっている場合に
 ArticleモデルをDjango使い始めの時はこんな風に作ってた&lt;/p&gt;
-&lt;p&gt;```py models.py
-class Article(models.Model):
-    key=models.IntegerField(primary_key=True)
-    title=models.TextField()
-    content=models.TextField()
-    author_key=models.IntegerField()
-    def author(self):
-        return Author.objects.get(key=self.author_key)&lt;/p&gt;
-&lt;p&gt;class Author(models.Model):
-    key=models.IntegerField(primary_key=True)
-    name=models.TextField()&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;いやー改めて見ると酷い。Articleを100個読み込んで、そのAuthorを出力するだけで、100回以上dbにアクセスしないといけない。という訳でこの酷いコードからリレーションを貼って、さらにdbアクセスが少なくなるように修正したらこうなった
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Article&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IntegerField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;primary_key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;content&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;author_key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IntegerField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;author&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;Author&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;author_key&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
-参考：
-
-+ [Model field reference | Django documentation | Django](https://docs.djangoproject.com/en/1.8/ref/models/fields/)
-+ [QuerySet API reference | Django documentation | Django](https://docs.djangoproject.com/en/1.8/ref/models/querysets/)
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Author&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IntegerField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;primary_key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
 
-```py models.py
-class Article(models.Model):
-    key=models.IntegerField(primary_key=True)
-    title=models.TextField()
-    content=models.TextField()
-    author=models.ForeignKey(&amp;#39;Author&amp;#39;, db_column=&amp;#39;author_key&amp;#39;, to_field=&amp;#39;key&amp;#39;, related_name=&amp;#39;articles&amp;#39;)
+&lt;p&gt;いやー改めて見ると酷い。Articleを100個読み込んで、そのAuthorを出力するだけで、100回以上dbにアクセスしないといけない。という訳でこの酷いコードからリレーションを貼って、さらにdbアクセスが少なくなるように修正したらこうなった&lt;/p&gt;
+&lt;p&gt;参考：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.djangoproject.com/en/1.8/ref/models/fields/"&gt;Model field reference | Django documentation | Django&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.djangoproject.com/en/1.8/ref/models/querysets/"&gt;QuerySet API reference | Django documentation | Django&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Article&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IntegerField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;primary_key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;content&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;author&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ForeignKey&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Author&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;db_column&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;author_key&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;to_field&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;key&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;related_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;articles&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
-class Author(models.Model):
-    key=models.IntegerField(primary_key=True)
-    name=models.TextField()
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Author&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IntegerField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;primary_key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;こんな感じで適切にForeignKeyフィールドを設定することで、上の構成のテーブルにもリレーションを貼ることが出来た。db_columnでArticle側のリレーションキーになるカラムを指定して、to_fieldでAuthor側のリレーションキーになるカラムを指定する。related_nameは指定しないとエラーが出た。&lt;/p&gt;
 &lt;p&gt;んで、dbアクセスがなるべく少なくなるように（sqlでjoinを組んでくれるように）views.pyを書いてみると&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;py views.py
-from app.models import Article
-def index(request):
-    articles = Article.objects.select_related('author').all()
-    ...&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# views.py&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;app.models&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Article&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;articles&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Article&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;select_related&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;author&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;all&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;みたいにselect_relatedメソッドを使うとjoinしてくれた。prefetch_relatedってメソッドでも同じように出来る（ちょっと役割は違う）らしいが試していない。ざっくりドキュメントを読むと、ForeignKeyと１対１リレーションにはselect_relatedが良く、Many to ManyやMany to Oneにはprefetch_relatedが良いらしい。&lt;/p&gt;</summary><category term="Django"></category><category term="Python"></category></entry><entry><title>DjangoモデルをDjangoプロジェクトの外から使う</title><link href="http://blog.thoz.org/2015/07/28/use-django-model-outside-django-project/" rel="alternate"></link><updated>2015-07-28T16:43:55+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2015-07-28:2015/07/28/use-django-model-outside-django-project/</id><summary type="html">&lt;p&gt;参考：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://d.hatena.ne.jp/shobonengine/20120103/1325535420"&gt;外部から Django プロジェクトのデータベースを操作する - ShobonEngineの日記&lt;/a&gt;&lt;/li&gt;
@@ -1162,28 +1174,27 @@ $ sudo aptitude install swftools
 &lt;p&gt;なでしこ2の一例ということで。ちなみにこれ作るのに3時間かかった。うち1時間半がググってインストールして手作業で動作確認に使って、1時間は休憩に使った。エラー処理とかtmpファイルの処理とか全然やってない適当コードですんません＞＜。&lt;/p&gt;</summary><category term="nadesiko2"></category><category term="linux"></category></entry><entry><title>Djangoで複数データベースを使用する</title><link href="http://blog.thoz.org/2015/07/07/use-multiple-databases-in-django/" rel="alternate"></link><updated>2015-07-07T12:33:37+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2015-07-07:2015/07/07/use-multiple-databases-in-django/</id><summary type="html">&lt;p&gt;Djangoでは複数データベースを扱える。でも色々コーディングや設定が必要なのでメモしておく。参考：&lt;a href="https://docs.djangoproject.com/en/1.7/topics/db/multi-db/"&gt;Multiple databases | Django documentation | Django&lt;/a&gt;。対応バージョンはDjango 1.7。使ったデータベースはPostgreSQL。&lt;/p&gt;
 &lt;h2&gt;settings.py&lt;/h2&gt;
 &lt;p&gt;settings.pyで複数データベースの接続設定をする&lt;/p&gt;
-&lt;p&gt;```py settings.py
-DATABASES = {
-    'default': {
-        'NAME': 'app_data',
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'USER': 'postgres_user',
-        'PASSWORD': 's3krit'
-    },
-    'users': {
-        'NAME': 'user_data',
-        'ENGINE': 'django.db.backends.mysql',
-        'USER': 'mysql_user',
-        'PASSWORD': 'priv4te'
-    }
-}&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;参考ページのをそのまま使った。さらに追加も出来る。
-
-## ここまでの設定でのマイグレーション
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;DATABASES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;NAME&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;app_data&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;ENGINE&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;django.db.backends.postgresql_psycopg2&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;USER&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;postgres_user&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;PASSWORD&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;s3krit&amp;#39;&lt;/span&gt;
+    &lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;users&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;NAME&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;user_data&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;ENGINE&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;django.db.backends.mysql&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;USER&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;mysql_user&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;PASSWORD&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;priv4te&amp;#39;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
 
-```sh
-$ python manage.py migrate
+&lt;p&gt;参考ページのをそのまま使った。さらに追加も出来る。&lt;/p&gt;
+&lt;h2&gt;ここまでの設定でのマイグレーション&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python manage.py migrate
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1196,33 +1207,35 @@ $ python manage.py migrate
 何も設定していないと、それぞれのデータベースに全アプリケーションの全てのモデルが反映される。&lt;/p&gt;
 &lt;h2&gt;データベースに保存するアプリ、モデルを限定したい&lt;/h2&gt;
 &lt;p&gt;ルーティング設定をする。&lt;/p&gt;
-&lt;p&gt;```py settings.py
-DATABASE_ROUTERS = ['myproject.routers.Router']&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;settings.pyはこんな感じ。んでmyprojectフォルダにrouters.pyを作成して例えばuserアプリのものだけusersデータベースを使うという設定の場合次のように書く
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;DATABASE_ROUTERS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;myproject.routers.Router&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
-```py routers.py
-class Router(object):
-    def db_for_read(self, model, **hints):
-        #ここでランダムに選択すると、dbの負荷分散っぽいことが出来る
-        #例：return random.choice[&amp;#39;default&amp;#39;,&amp;#39;users&amp;#39;]
-        if model._meta.app_label == &amp;quot;user&amp;quot;:
-            return &amp;quot;users&amp;quot;
-        return &amp;quot;default&amp;quot;
-    def db_for_write(self, model, **hints):
-        if model._meta.app_label == &amp;quot;user&amp;quot;:
-            return &amp;quot;users&amp;quot;
-        return &amp;quot;default&amp;quot;
-    def allow_relation(self, obj1, obj2, **hints):
-        #Trueはリレーションを認める、Falseは認めない、Noneはこのコードでは関知しないという意味
-        return None
-    def allow_migrate(self, db, model):
-        #userアプリの場合はusers設定のデータベースへmigrate。
-        #他のアプリはusers以外のデータベースへmigrateする設定
-        if model._meta.app_label == &amp;quot;user&amp;quot;
-            return db == &amp;quot;users&amp;quot;:
-        else:
-            return True
-        return False
+
+&lt;p&gt;settings.pyはこんな感じ。んでmyprojectフォルダにrouters.pyを作成して例えばuserアプリのものだけusersデータベースを使うという設定の場合次のように書く&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# routers.py&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Router&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;db_for_read&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;hints&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="c1"&gt;#ここでランダムに選択すると、dbの負荷分散っぽいことが出来る&lt;/span&gt;
+        &lt;span class="c1"&gt;#例：return random.choice[&amp;#39;default&amp;#39;,&amp;#39;users&amp;#39;]&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_meta&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;app_label&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;user&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;users&amp;quot;&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;default&amp;quot;&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;db_for_write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;hints&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_meta&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;app_label&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;user&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;users&amp;quot;&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;default&amp;quot;&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;allow_relation&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;obj1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;obj2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;hints&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="c1"&gt;#Trueはリレーションを認める、Falseは認めない、Noneはこのコードでは関知しないという意味&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;allow_migrate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;db&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="c1"&gt;#userアプリの場合はusers設定のデータベースへmigrate。&lt;/span&gt;
+        &lt;span class="c1"&gt;#他のアプリはusers以外のデータベースへmigrateする設定&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_meta&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;app_label&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;user&amp;quot;&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;db&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;users&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1230,26 +1243,26 @@ class Router(object):
 &lt;p&gt;上に紹介した参考ページには色々コードが書いてあるので、参考になる。&lt;/p&gt;</summary><category term="Python"></category><category term="Django"></category><category term="PostgreSQL"></category></entry><entry><title>Django1.7でPostgreSQLとBootstrap使ったアプリを作ってみた(1.5):管理ページを作ってみた</title><link href="http://blog.thoz.org/2015/07/03/make-admin-page-using-django/" rel="alternate"></link><updated>2015-07-03T21:59:10+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2015-07-03:2015/07/03/make-admin-page-using-django/</id><summary type="html">&lt;p&gt;Django1.6.5でアプリを作ってみたってネタをやってたけど、Django1.7にバージョンアップしたので、タイトルを変えた。ついでにDjango1.7だとINSTALLED_APPにdjango.contrib.authを入れておかないとエラーが出るケースがある（例えば&lt;a href="http://www.django-rest-framework.org/"&gt;Django REST framework&lt;/a&gt;でエラーが出た）ので、エラー出ないように最初に管理ページを用意しておくと良いと思う。&lt;/p&gt;
 &lt;p&gt;管理ページを用意する手順はこんな感じ&lt;/p&gt;
 &lt;h2&gt;settings.pyに設定を書く&lt;/h2&gt;
-&lt;p&gt;```py settings.py
-INSTALLED_APPS = (
-    'django.contrib.admin',
-    'django.contrib.auth',
-    ...
-)
-MIDDLEWARE_CLASSES = (
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    ...
-)
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
-    ...
-)&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;## migrate
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;INSTALLED_APPS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;django.contrib.admin&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;django.contrib.auth&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;MIDDLEWARE_CLASSES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;django.contrib.auth.middleware.AuthenticationMiddleware&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;TEMPLATE_CONTEXT_PROCESSORS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;django.contrib.auth.context_processors.auth&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
-マイグレーションしておく
 
-```sh
-$ python manage.py makemigrations
+&lt;h2&gt;migrate&lt;/h2&gt;
+&lt;p&gt;マイグレーションしておく&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python manage.py makemigrations
 $ python manage.py migrate
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -1267,15 +1280,16 @@ Superuser created successfully.
 
 &lt;p&gt;って出来るとおk&lt;/p&gt;
 &lt;h2&gt;urls.pyを書く&lt;/h2&gt;
-&lt;p&gt;```py urls.py
-urlpatterns = patterns('',
-    url(r'^admin/', include(admin.site.urls)),
-    ...
-)&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;こんな感じで作って
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# urls.py&lt;/span&gt;
+&lt;span class="n"&gt;urlpatterns&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;patterns&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;r&amp;#39;^admin/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;admin&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;site&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;urls&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
-```sh
-$ python manage.py runserver
+
+&lt;p&gt;こんな感じで作って&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python manage.py runserver
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1295,14 +1309,15 @@ $ python manage.py runserver
 
 
 &lt;p&gt;でインストールして、&lt;/p&gt;
-&lt;p&gt;```py settings.py
-INSTALLED_APP = (...
-   'django_extensions',
-)&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;で設定して
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;INSTALLED_APP&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt;
+   &lt;span class="s1"&gt;&amp;#39;django_extensions&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
-```sh
-$ python manage.py runprofileserver
+
+&lt;p&gt;で設定して&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python manage.py runprofileserver
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1357,20 +1372,21 @@ AssertionError
 &lt;li&gt;プロファイルしたいURLにprof=というパラメータを付けてブラウザでアクセスする&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;って感じ。settings.pyは&lt;/p&gt;
-&lt;p&gt;```py settings.py
-MIDDLEWARE_CLASSES = (
-...
-    'modules.profiler.ProfileMiddleware',
-)&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;こんな感じ。で、上のようにブラウザでアクセスするとエラー・・・
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;MIDDLEWARE_CLASSES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;modules.profiler.ProfileMiddleware&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;AttributeError: 'WSGIRequest' object has no attribute 'has_key'&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;なので、コード上で
+&lt;p&gt;こんな感じ。で、上のようにブラウザでアクセスするとエラー・・・&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;AttributeError: &amp;#39;WSGIRequest&amp;#39; object has no attribute &amp;#39;has_key&amp;#39;
+&lt;/pre&gt;&lt;/div&gt;
 
-```py
-request.has_key
+
+&lt;p&gt;なので、コード上で&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;has_key&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1632,14 +1648,14 @@ Astúrias
 
 
 &lt;p&gt;Tracebackを見てみるとどうもmodels.pyの中で&lt;/p&gt;
-&lt;p&gt;```py models.py
-admin.site.register(Model)&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;とかやってたのがまずかったみたいで、管理サイトで使うモデル定義などのコードをadmin.pyに移動したら上のエラーは出なくなった。何となくで書いてたらいかんな。ちなみにアップデートには関係無いけど、Django1.7で@admin.register(Model)というデコレーターが使えるようになったので、そっちに変えた方がスマートな気がする。
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
+&lt;span class="n"&gt;admin&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;site&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;register&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
-次はSouthでマイグレーションやってるプロジェクトだったので、下のようなエラーが出た。
 
-``` sh
-raise RuntimeError(&amp;quot;South does not support Django 1.7 or higher. Please use native Django migrations.&amp;quot;)
+&lt;p&gt;とかやってたのがまずかったみたいで、管理サイトで使うモデル定義などのコードをadmin.pyに移動したら上のエラーは出なくなった。何となくで書いてたらいかんな。ちなみにアップデートには関係無いけど、Django1.7で@admin.register(Model)というデコレーターが使えるようになったので、そっちに変えた方がスマートな気がする。&lt;/p&gt;
+&lt;p&gt;次はSouthでマイグレーションやってるプロジェクトだったので、下のようなエラーが出た。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;raise RuntimeError&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;South does not support Django 1.7 or higher. Please use native Django migrations.&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1749,47 +1765,52 @@ Twitterでインなんとかとか言っちゃいましたが、インキャン�
 &lt;h2&gt;分析実践&lt;/h2&gt;
 &lt;p&gt;残った時間で実際にやってみましょうということで、弁当屋のデータを元にして売り上げ予測をやるという目的でRを触ってみるということをやっていました。R勉強会とは言え、実際にRをバリバリ使ってる人とかほとんど居ないと思うので、とても良い試みだと思いました。が、私はパソコン持ってなかったので読書しながら他の人がハマっているのを見たりしてました（悪趣味）。どうも文字コード周りでハマるケースが結構あるっぽいです。うむむむむ。ハマりポイントはハッキリさせたいところです。&lt;/p&gt;</summary><category term="R"></category><category term="event"></category></entry><entry><title>djangoのModelFormでMultiWidgetを使って見る</title><link href="http://blog.thoz.org/2015/01/24/django-modelform-multiwidget/" rel="alternate"></link><updated>2015-01-24T17:23:07+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2015-01-24:2015/01/24/django-modelform-multiwidget/</id><summary type="html">&lt;p&gt;ModelFormでModelの１つのカラムを複数のフォーム要素（inputとか）で表現したかったので調べてみた。フォーム要素を適当に作って、clean_xxxの時にくっつけるとかそんな実装の仕方も出来るみたいだけど、MultiWidgetを使うと、Modelの１つのカラムに対して複数のinput要素を使うことが出来るみたいなので、使ってみた。名前のカラムに対して姓、名の入力要素を作るとかそんなのが出来るみたい。&lt;/p&gt;
 &lt;p&gt;まずはMultiWidgetを継承したクラスを作る&lt;/p&gt;
-&lt;p&gt;```py models.py
-from django.forms.widgets import MultiWidget&lt;/p&gt;
-&lt;p&gt;class NameWidget(MultiWidget):&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;次にクラスに対して、\_\_init\_\_をオーバーライドし、widgetとしてTextInputのフォームを2つ登録してみた。コードはこんな感じ。
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.forms.widgets&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;MultiWidget&lt;/span&gt;
 
-&amp;lt;!-- more --&amp;gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;NameWidget&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;MultiWidget&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
-```py models.py
-class NameWidget(MultiWidget):
-    def __init__(self,attrs=None):
-        widgets = (
-                forms.TextInput(attrs=attrs.update({&amp;quot;placeholder&amp;quot;:&amp;quot;姓&amp;quot;})),
-                forms.TextInput(attrs=attrs.update({&amp;quot;placeholder&amp;quot;:&amp;quot;名&amp;quot;}))
-                )
-        super(NameWidget,self).__init__(widgets,attrs)
+
+&lt;p&gt;次にクラスに対して、__init__をオーバーライドし、widgetとしてTextInputのフォームを2つ登録してみた。コードはこんな感じ。&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;NameWidget&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;MultiWidget&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;widgets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+                &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextInput&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;placeholder&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;姓&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;})),&lt;/span&gt;
+                &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextInput&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;placeholder&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;名&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;}))&lt;/span&gt;
+                &lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="nb"&gt;super&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;NameWidget&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;widgets&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;widgetsはリストでもタプルでも良さげ？ともかくやることはwidgetのリストかタプルを作って、親クラス(MultiWidget)のinitを呼び出すこと。&lt;/p&gt;
 &lt;p&gt;次に、decompress、value_from_datadictメソッドを書く。decompressはカラムの値を複数のフォームに振り分ける手順、value_from_datadictはModelFormの入力データからModelのカラムに入れる値を作る手順を記述する。姓名を半角スペースで繋げて、半角スペースで分割するように作ってみた。&lt;/p&gt;
-&lt;p&gt;```py models.py
-class NameWidget(MultiWidget):
-    def &lt;strong&gt;init&lt;/strong&gt;(self,attrs={}):
-        attrsSei = attrs.copy()
-        attrsMei = attrs.copy()
-        widgets = (
-                forms.TextInput(attrs=attrsSei.update({"placeholder":"姓"})),
-                forms.TextInput(attrs=attrsMei.update({"placeholder":"名"}))
-                )
-        super(NameWidget,self).&lt;strong&gt;init&lt;/strong&gt;(widgets,attrs)
-    def decompress(self,value):
-        if value:
-            names = value.split(' ')
-            return (names[0],names[1])
-        return (None,None)
-    def value_from_datadict(self,data,files,name):
-        ulist = [widget.value_from_datadict(data,files,name+'_{0}'.format(i)) for i, widget in enumerate(self.widgets)]
-        return u"{0} {1}".format(ulist[0].replace(u' ',''),ulist[1].replace(u' ',''))&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;あとはこの&lt;/span&gt;&lt;span class="n"&gt;Widget&lt;/span&gt;&lt;span class="err"&gt;を使いたい要素に&lt;/span&gt;&lt;span class="n"&gt;widget&lt;/span&gt;&lt;span class="err"&gt;として指定すればお&lt;/span&gt;&lt;span class="n"&gt;k&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;NameWidget&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;MultiWidget&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{}):&lt;/span&gt;
+        &lt;span class="n"&gt;attrsSei&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;copy&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+        &lt;span class="n"&gt;attrsMei&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;copy&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+        &lt;span class="n"&gt;widgets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+                &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextInput&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;attrsSei&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;placeholder&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;姓&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;})),&lt;/span&gt;
+                &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextInput&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;attrsMei&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;placeholder&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;名&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;}))&lt;/span&gt;
+                &lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="nb"&gt;super&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;NameWidget&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;widgets&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;decompress&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="n"&gt;names&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39; &amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;names&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="n"&gt;names&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;value_from_datadict&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;files&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;ulist&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;widget&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;value_from_datadict&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;files&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;_{0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;widget&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;enumerate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;widgets&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;u&amp;quot;{0} {1}&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ulist&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;u&amp;#39; &amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;&lt;span class="n"&gt;ulist&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;u&amp;#39; &amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
-&lt;span class="sb"&gt;``&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;
+
+&lt;p&gt;あとはこのWidgetを使いたい要素にwidgetとして指定すればおk&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;
 &lt;span class="o"&gt;...&lt;/span&gt;&lt;span class="err"&gt;（上のコードなど）&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt;
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;HogeForm&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ModelForm&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
@@ -1798,8 +1819,11 @@ class NameWidget(MultiWidget):
 
 
 &lt;p&gt;このコードだと姓、名のフォームが2行に表示されている。1行にしたい場合はインライン指定とかそんなのを付けたクラスをattrsで指定して後はcssでやっちゃえばいいんじゃないかなと&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;py models.py
-    name = forms.CharField(max_length=100,label=u'名前',widget=NameWidget(attrs={"class":"inline"}))&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
+    &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CharField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;max_length&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;u&amp;#39;名前&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;widget&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;NameWidget&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;class&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;inline&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;}))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;とかそんな感じ&lt;/p&gt;
 &lt;p&gt;他にももっと細かくhtmlを記述出来るformat_outputとかあるみたいだけど、試してないので省略。なくても取りあえず出来る。&lt;/p&gt;
 &lt;p&gt;参考：&lt;a href="https://docs.djangoproject.com/en/1.7/ref/forms/widgets/#django.forms.MultiWidget"&gt;Django英語ドキュメント&lt;/a&gt;&lt;/p&gt;</summary><category term="Python"></category><category term="Django"></category></entry><entry><title>pythonのデコレーターをdjangoで使って見る</title><link href="http://blog.thoz.org/2015/01/06/python-decorator/" rel="alternate"></link><updated>2015-01-06T08:55:46+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2015-01-06:2015/01/06/python-decorator/</id><summary type="html">&lt;p&gt;pythonのデコレーターを使ってみたらとても便利だなと思ったのでメモ&lt;/p&gt;
@@ -1841,18 +1865,19 @@ class NameWidget(MultiWidget):
 &lt;h2&gt;設定&lt;/h2&gt;
 &lt;!-- more --&gt;
 
-&lt;p&gt;```py settings.py
-INSTALLED_APPS = (
-....
-    'bootstrap3',
-....
-)&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;!-- more --&amp;gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;INSTALLED_APPS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="o"&gt;....&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;bootstrap3&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="o"&gt;....&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
-## テンプレート
 
-```html
-{% raw %}
+&lt;!-- more --&gt;
+
+&lt;h2&gt;テンプレート&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{% raw %}
 {% load bootstrap3 %}
 {% bootstrap_css %}
 {% bootstrap_javascript %}
@@ -1871,11 +1896,14 @@ $ wget http://bootswatch.com/cosmo/bootstrap.min.css
 
 &lt;p&gt;/staticはアプリのフォルダ下に作る&lt;/p&gt;
 &lt;p&gt;次に設定ファイルに項目を追加&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;py settings.py
-STATIC_URL = '/static/'
-BOOTSTRAP3 = {
-    'css_url':'/static/css/bootstrap.min.css'
-}&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;STATIC_URL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;/static/&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;BOOTSTRAP3&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;css_url&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/static/css/bootstrap.min.css&amp;#39;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;これだけでテンプレートいじらずに動いてくれる&lt;/p&gt;
 &lt;p&gt;bootstrap2だとnavbar表示の時に表示が重なるとか何とかあったけど、bootstrap3だと気にしなくて良いのかな？何も追加css書かなくても特に問題無さそう。これは嬉しい。&lt;/p&gt;
 &lt;p&gt;でも&lt;a href="http://qiita.com/Alex_23drum/items/bbf80aff7dbb6fd1a7d9"&gt;Navbarに画像入れると下に偏った配置になる&lt;/a&gt;とかあるみたいなので、調べてみる必要があるかも&lt;/p&gt;</summary><category term="Bootstrap"></category><category term="Django"></category></entry><entry><title>javascriptでカレンダーを書くライブラリを調べてみた</title><link href="http://blog.thoz.org/2014/12/17/check-table-library/" rel="alternate"></link><updated>2014-12-17T13:37:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-12-17:2014/12/17/check-table-library/</id><summary type="html">&lt;p&gt;Django使ったサイトでカレンダーを表示しようとしたんだけど、HTMLCalendarとかだとレスポンシブにならないし、カスタマイズ面倒だしということで、javascriptで生成して、イベントデータはajaxリクエストから取り出すようにしたいと思ってライブラリを調べてみたのと感想を書いておく。結論からすると、FullCalendarが汎用的で使えそう。&lt;/p&gt;
@@ -1927,19 +1955,19 @@ jqueryプラグイン。イベントは数字が表示される。カレンダ�
 
 
 &lt;h2&gt;設定&lt;/h2&gt;
-&lt;p&gt;```py settings.py
-INSTALLED_APPS = (
-....
-    'south',
-)&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;!-- more --&amp;gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;INSTALLED_APPS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="o"&gt;....&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;south&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
-## 作成中のアプリをsouthに追加
 
-データベースが関連しているモデルが作成されているアプリにコマンドを実行すればおk
+&lt;!-- more --&gt;
 
-```sh
-$ python manage.py schemamigration アプリ名 --init
+&lt;h2&gt;作成中のアプリをsouthに追加&lt;/h2&gt;
+&lt;p&gt;データベースが関連しているモデルが作成されているアプリにコマンドを実行すればおk&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python manage.py schemamigration アプリ名 --init
 $ python manage.py syncdb --all
 $ python manage.py migrate アプリ名 --fake
 &lt;/pre&gt;&lt;/div&gt;
@@ -1977,25 +2005,27 @@ $ python manage.py migrate アプリ名
 &lt;p&gt;今回はvirtualenvでpipしたdjango-allauthのテンプレートを日本語化したかったので、path/to/virtualenv/dir/lib/python2.7/site-packages/allauth/templates/account/内のファイルを全部path/to/project/templates/account/にコピーしてからコマンド実行すると上手く読み取ってくれた。&lt;/p&gt;
 &lt;h2&gt;翻訳&lt;/h2&gt;
 &lt;p&gt;出来たpoファイルを編集すればオッケー。ファイル内でmsgid以下に書いてあるのが元の文、その次のmsgstr以下に文章書くと、翻訳文になる。元の英文に何かパラメーター付いてる場合は必ずパラメーターを翻訳文に設定しないとエラーが出る。&lt;/p&gt;
-&lt;p&gt;```py 例&lt;/p&gt;
-&lt;h1&gt;: path/to/python/module.py:23&lt;/h1&gt;
-&lt;p&gt;msgid "Welcome to my site."
-msgstr "いらっしゃーい"&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;## moファイル作成
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#: path/to/python/module.py:23&lt;/span&gt;
+&lt;span class="n"&gt;msgid&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Welcome to my site.&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;msgstr&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;いらっしゃーい&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
-おもむろにコマンドを実行するとmoファイルが出来る
 
-```sh
-django-admin.py compilemessages
+&lt;h2&gt;moファイル作成&lt;/h2&gt;
+&lt;p&gt;おもむろにコマンドを実行するとmoファイルが出来る&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;django-admin.py compilemessages
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h2&gt;settings.pyの設定&lt;/h2&gt;
 &lt;p&gt;これだけで動くと思ったら動かなかったので色々調べてみたらLOCALE_PATHSを設定しないといけなかった。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;py settings.py
-LOCALE_PATHS = (
-    "path/to/locale",
-)&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;LOCALE_PATHS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="s2"&gt;&amp;quot;path/to/locale&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;これ設定しておいたらちゃんと動いた。&lt;/p&gt;
 &lt;p&gt;あとは普通にrunserverとかでサーバ起動したら翻訳されてる&lt;/p&gt;
 &lt;p&gt;参考：&lt;a href="http://docs.djangoproject.jp/en/latest/topics/i18n/translation.html"&gt;翻訳 — Django 1.4 documentation&lt;/a&gt;&lt;/p&gt;
@@ -2052,32 +2082,35 @@ LOCALE_PATHS = (
 &lt;p&gt;settings.pyとurls.pyを設定&lt;/p&gt;
 &lt;!-- more --&gt;
 
-&lt;p&gt;```py settings.py
-INSTALLED_APPS = (
-...
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.twitter', #例としてTwitter
-)
-AUTHENTICATION_BACKENDS = (
-...
-    'allauth.account.auth_backends.AuthenticationBackend',
-)
-TEMPLATE_CONTEXT_PROCESSORS = (
-...
-    "django.core.context_processors.request",
-    "django.contrib.auth.context_processors.auth",
-    "allauth.account.context_processors.account",
-    "allauth.socialaccount.context_processors.socialaccount",
-)
-SITE_ID = 1&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;```py urls.py
-urlpatterns = patterns(&amp;#39;&amp;#39;,
-    ...
-    url(&amp;#39;^accounts/&amp;#39;, include(&amp;#39;allauth.urls&amp;#39;)),
-    url(&amp;#39;^accounts/profile/?&amp;#39;, include(&amp;#39;profile.urls&amp;#39;,namespace=&amp;#39;profile&amp;#39;)), #ログイン後のリダイレクト先
-)
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;INSTALLED_APPS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;allauth&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;allauth.account&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;allauth.socialaccount&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;allauth.socialaccount.providers.twitter&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="c1"&gt;#例としてTwitter&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;AUTHENTICATION_BACKENDS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;allauth.account.auth_backends.AuthenticationBackend&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;TEMPLATE_CONTEXT_PROCESSORS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+    &lt;span class="s2"&gt;&amp;quot;django.core.context_processors.request&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s2"&gt;&amp;quot;django.contrib.auth.context_processors.auth&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s2"&gt;&amp;quot;allauth.account.context_processors.account&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s2"&gt;&amp;quot;allauth.socialaccount.context_processors.socialaccount&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;SITE_ID&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# urls.py&lt;/span&gt;
+&lt;span class="n"&gt;urlpatterns&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;patterns&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;^accounts/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;allauth.urls&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;^accounts/profile/?&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;profile.urls&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;namespace&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;profile&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt; &lt;span class="c1"&gt;#ログイン後のリダイレクト先&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -2096,9 +2129,12 @@ urlpatterns = patterns(&amp;#39;&amp;#39;,
 &lt;h2&gt;ユーザー登録時のメール確認後の処理でハマる&lt;/h2&gt;
 &lt;p&gt;ユーザー登録すると通常は登録したメールアドレスにメールが届いて、そこに書いてあるURLにアクセスすると登録完了する手順が表示される。そこらへんの文章とかも上のテンプレート上書きでいけて問題ないんだけど、初期状態では登録が最後まで完了すると、そのままログインしてログイン時のリダイレクト先に移動してしまう。完了画面を表示したい場合はこれではまずい。&lt;/p&gt;
 &lt;p&gt;ので、&lt;a href="http://django-allauth.readthedocs.org/en/latest/advanced.html"&gt;ここらへん&lt;/a&gt;のCustom Redirectsの項目を参考にしてアダプタを作ってみた&lt;/p&gt;
-&lt;p&gt;```py settings.py
-ACCOUNT_ADAPTER = 'project.users.adapter.MyAccountAdapter'&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="sb"&gt;``&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt; &lt;span class="n"&gt;project&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;adapter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;ACCOUNT_ADAPTER&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;project.users.adapter.MyAccountAdapter&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# project/users/adapter.py&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.conf&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;settings&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;allauth.account.adapter&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;DefaultAccountAdapter&lt;/span&gt;
 
@@ -2110,21 +2146,18 @@ ACCOUNT_ADAPTER = 'project.users.adapter.MyAccountAdapter'&lt;/p&gt;
 
 
 &lt;p&gt;でもこれだけでは上手くいかなかった。普通にログイン時のリダイレクト先に移動してしまった。どうもACCOUNT_LOGIN_ON_EMAIL_CONFIRMATIONをFalseにしないとダメみたい&lt;/p&gt;
-&lt;p&gt;```py settings.py
-ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;これでやっと&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;account&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;complete&lt;/span&gt;&lt;span class="err"&gt;にリダイレクトしてくれた。ログインした状態ではダメみたいなので、ログインは再度やってもらわないといけない。うーん今のとこ仕方ないか・・・。&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;span class="c1"&gt;## django-allauthのサインアップフォームをカスタマイズしたい&lt;/span&gt;
-
-&lt;span class="c1"&gt;### あるフィールドにhelp\_textを付ける&lt;/span&gt;
-
-&lt;span class="err"&gt;参考：&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;Overwrite&lt;/span&gt; &lt;span class="n"&gt;django&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;allauth&lt;/span&gt; &lt;span class="n"&gt;form&lt;/span&gt; &lt;span class="n"&gt;field&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;Stack&lt;/span&gt; &lt;span class="n"&gt;Overflow&lt;/span&gt;&lt;span class="p"&gt;](&lt;/span&gt;&lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;stackoverflow&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;com&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;questions&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;23580771&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;overwrite&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;django&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;allauth&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;form&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;field&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-\&lt;span class="n"&gt;_&lt;/span&gt;\&lt;span class="n"&gt;_init&lt;/span&gt;\&lt;span class="n"&gt;_&lt;/span&gt;\&lt;span class="n"&gt;_&lt;/span&gt;&lt;span class="err"&gt;を上書きして、フィールドに属性を追加する&lt;/span&gt;
-&lt;span class="err"&gt;コードはこんな感じ。例としてユーザー名入力フォームにヘルプテキストとして「&lt;/span&gt;&lt;span class="n"&gt;required&lt;/span&gt;&lt;span class="err"&gt;」という文字を追加する&lt;/span&gt;
-
-&lt;span class="sb"&gt;``&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt; &lt;span class="n"&gt;appname&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;
+&lt;p&gt;これでやっと/account/completeにリダイレクトしてくれた。ログインした状態ではダメみたいなので、ログインは再度やってもらわないといけない。うーん今のとこ仕方ないか・・・。&lt;/p&gt;
+&lt;h2&gt;django-allauthのサインアップフォームをカスタマイズしたい&lt;/h2&gt;
+&lt;h3&gt;あるフィールドにhelp_textを付ける&lt;/h3&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/23580771/overwrite-django-allauth-form-field"&gt;Overwrite django-allauth form field - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;__init__を上書きして、フィールドに属性を追加する
+コードはこんな感じ。例としてユーザー名入力フォームにヘルプテキストとして「required」という文字を追加する&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# appname/forms.py&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;
 
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;SignupForm&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Form&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
@@ -2134,58 +2167,55 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False&lt;/p&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;```py settings.py
-ACCOUNT_SIGNUP_FORM_CLASS = "appname.forms.SignupForm"&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;こんな感じ
-
-### フィールドのバリデーションを追加
-
-参考：[python - How to clean username with Django allauth adapter? - Stack Overflow](http://stackoverflow.com/questions/24175228/how-to-clean-username-with-django-allauth-adapter)
-
-Account Adapterを設定してあげて、そこでclean\_xxxを作ると上手くいくみたい
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;ACCOUNT_SIGNUP_FORM_CLASS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;appname.forms.SignupForm&amp;quot;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;```py project/users/adapter.py
+&lt;p&gt;こんな感じ&lt;/p&gt;
+&lt;h3&gt;フィールドのバリデーションを追加&lt;/h3&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/24175228/how-to-clean-username-with-django-allauth-adapter"&gt;python - How to clean username with Django allauth adapter? - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Account Adapterを設定してあげて、そこでclean_xxxを作ると上手くいくみたい&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;```py
+# project/users/adapter.py
 class MyAccountAdapter(DefaultAccountAdapter):
     ...
     def clean_username(self, username):
-        " 適当に処理を入れる
-        " エラーの場合はraise Exception
-        return username&lt;/p&gt;
-&lt;p&gt;```&lt;/p&gt;</summary><category term="Django"></category><category term="Python"></category></entry><entry><title>Django Memo</title><link href="http://blog.thoz.org/2014/11/23/django-memo/" rel="alternate"></link><updated>2014-11-23T22:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-11-23:2014/11/23/django-memo/</id><summary type="html">&lt;p&gt;Djangoやってて忘れっぽいところとかをメモ&lt;/p&gt;
+        &amp;quot; 適当に処理を入れる
+        &amp;quot; エラーの場合はraise Exception
+        return username
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="Django"></category><category term="Python"></category></entry><entry><title>Django Memo</title><link href="http://blog.thoz.org/2014/11/23/django-memo/" rel="alternate"></link><updated>2014-11-23T22:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-11-23:2014/11/23/django-memo/</id><summary type="html">&lt;p&gt;Djangoやってて忘れっぽいところとかをメモ&lt;/p&gt;
 &lt;h2&gt;リクエストパラメーターをモデルに入れる&lt;/h2&gt;
-&lt;p&gt;```py views.py
-def a_view(request):
-    hoge = Fuga(request.GET) #新たにインスタンス作る場合
-    fuga = Fuga.objects.get(pk=1)
-    hage = Fuga(request.GET,instance=fuga) #既にあるインスタンスに入れる場合&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;instance=xxxとやるのを何度か忘れた＞＜
-
-&amp;lt;!-- more --&amp;gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# views.py&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;a_view&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;hoge&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Fuga&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;GET&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;#新たにインスタンス作る場合&lt;/span&gt;
+    &lt;span class="n"&gt;fuga&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Fuga&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pk&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;hage&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Fuga&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;GET&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;instance&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;fuga&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;#既にあるインスタンスに入れる場合&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
 
-## forms.DateFieldでISO-8601フォーマットの入力を受入れる
+&lt;p&gt;instance=xxxとやるのを何度か忘れた＞＜&lt;/p&gt;
+&lt;!-- more --&gt;
 
-html5でdatetime-localとか扱おうとすると、入力値がISO-8601形式になって、そのままだとDateFieldが入力をdatetimeの正しい形式として認識してくれない。
-
-で、input_formatsを設定するといけるらしいんだけど、あまりマニュアルでちゃんと説明してない。Stack Overflowの情報とかをググると設定方法が間違ってるコードとかあって、正しいのが良く分からない。で、結局色々調べたら
-
-```py models.py
-date = forms.DateField(input_formats=(&amp;#39;%Y-%m-%dT%H:%M:%S&amp;#39;,))
+&lt;h2&gt;forms.DateFieldでISO-8601フォーマットの入力を受入れる&lt;/h2&gt;
+&lt;p&gt;html5でdatetime-localとか扱おうとすると、入力値がISO-8601形式になって、そのままだとDateFieldが入力をdatetimeの正しい形式として認識してくれない。&lt;/p&gt;
+&lt;p&gt;で、input_formatsを設定するといけるらしいんだけど、あまりマニュアルでちゃんと説明してない。Stack Overflowの情報とかをググると設定方法が間違ってるコードとかあって、正しいのが良く分からない。で、結局色々調べたら&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
+&lt;span class="n"&gt;date&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DateField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;input_formats&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;%Y-%m-&lt;/span&gt;&lt;span class="si"&gt;%d&lt;/span&gt;&lt;span class="s1"&gt;T%H:%M:%S&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,))&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;とタプルで渡す必要があるらしい&lt;/p&gt;
 &lt;p&gt;参考：&lt;a href="http://labs.uechoco.com/blog/2011/08/django-dateform-inputs_format-wrong.html"&gt;うえちょこ＠ぼろぐ» [Django]forms.DateFieldのinputs_formatではまった&lt;/a&gt;&lt;/p&gt;
 &lt;h2&gt;ModelForm使ってフォーム出力する時にrequeied属性をテンプレートで参照するとか&lt;/h2&gt;
-&lt;p&gt;```py models.py
-hoge = forms.CharField(max_length=100,widget=TextInput(attrs={"required":"true"}))↲&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;こんな感じで定義したフィールドの属性取ってきたい場合、
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
+&lt;span class="n"&gt;hoge&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CharField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;max_length&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;widget&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;TextInput&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;required&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;true&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;}))&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
-```html
-\{\% for field in form \%\}
-  \{\% if field.field.required \%\}&lt;span class="nt"&gt;&amp;lt;p&amp;gt;&lt;/span&gt;必須&lt;span class="nt"&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;\{\% endif \%\}
+
+&lt;p&gt;こんな感じで定義したフィールドの属性取ってきたい場合、&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;\{\% for field in form \%\}
+  \{\% if field.field.required \%\}&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;p&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;必須&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;p&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;\{\% endif \%\}
 \{\% endfor \%\}
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -2193,18 +2223,22 @@ hoge = forms.CharField(max_length=100,widget=TextInput(attrs={"required":"true"}
 &lt;p&gt;適当だけど、こんな感じでアクセスできる。&lt;/p&gt;
 &lt;h2&gt;DjangoでGroup By&lt;/h2&gt;
 &lt;p&gt;DjangoでGroup Byして何個かのフィールドのデータで例えば、日付とその日に登録したデータの件数だけ欲しい時&lt;/p&gt;
-&lt;p&gt;```py views.py
-q = Hoge.objects.filter(date&lt;strong&gt;gte = date).filter(date&lt;/strong&gt;lt = dto).extra({'date':"date_trunc('day',date)"})
-q.query.group_by = ['date']
-values = q.values('date').order_by().annotate(c = Count('id'))&lt;/p&gt;
-&lt;p&gt;こんな感じでいける。ちなみにPostgreSQL。dateが時間の情報も持っているのでPostgreSQLのdate_trunc関数を使ってdateを日付の情報だけにしてから、group_byする。
-annotateは集計した値を新しいフィールド（ここだとc）に入れる。
-例えばvalues[0].cでアクセスできる。このコードで、日付とその日に登録したデータ件数が入った辞書のリストを得ることが出来る&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;## QuerySetで吐いたクエリを出力
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# views.py&lt;/span&gt;
+&lt;span class="n"&gt;q&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Hoge&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;date__gte&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;date&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;date__lt&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;dto&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;extra&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;date_trunc(&amp;#39;day&amp;#39;,date)&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;group_by&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;order_by&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;annotate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Count&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;id&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 
-```py views.py
-h = Hoge.objects.all()
-print h.query
+
+&lt;span class="err"&gt;こんな感じでいける。ちなみに&lt;/span&gt;&lt;span class="n"&gt;PostgreSQL&lt;/span&gt;&lt;span class="err"&gt;。&lt;/span&gt;&lt;span class="n"&gt;date&lt;/span&gt;&lt;span class="err"&gt;が時間の情報も持っているので&lt;/span&gt;&lt;span class="n"&gt;PostgreSQL&lt;/span&gt;&lt;span class="err"&gt;の&lt;/span&gt;&lt;span class="n"&gt;date_trunc&lt;/span&gt;&lt;span class="err"&gt;関数を使って&lt;/span&gt;&lt;span class="n"&gt;date&lt;/span&gt;&lt;span class="err"&gt;を日付の情報だけにしてから、&lt;/span&gt;&lt;span class="n"&gt;group_by&lt;/span&gt;&lt;span class="err"&gt;する。&lt;/span&gt;
+&lt;span class="n"&gt;annotate&lt;/span&gt;&lt;span class="err"&gt;は集計した値を新しいフィールド（ここだと&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="err"&gt;）に入れる。&lt;/span&gt;
+&lt;span class="err"&gt;例えば&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="err"&gt;でアクセスできる。このコードで、日付とその日に登録したデータ件数が入った辞書のリストを得ることが出来る&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;QuerySetで吐いたクエリを出力&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# views.py&lt;/span&gt;
+&lt;span class="n"&gt;h&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Hoge&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;all&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -2213,80 +2247,79 @@ print h.query
 &lt;p&gt;参考：&lt;a href="http://programmer-jobs.blogspot.jp/2013/01/djangosql.html"&gt;Djangoで、デバック用のSQLクエリの表示 一言多いプログラマーの独り言&lt;/a&gt;&lt;/p&gt;
 &lt;h2&gt;ModelFormでcleanを使ってデータの検証する時に、updateしようとしてるかcreateしようとしてるか判断する&lt;/h2&gt;
 &lt;p&gt;createの時だけチェックしたかったので、色々調べてみたらclean(self)内で、self.instanceでチェックすると良いみたい。例えばプライマリーキーでidがある場合こんな感じ&lt;/p&gt;
-&lt;p&gt;```py models.py
-class Hoge(forms.ModelForm):
-    def clean(self):
-        cleaned_data = self.cleaned_data
-        if self.instance.id is None:
-            #create用の処理
-            raise ValidationError('例外出すのはこんな感じ')
-        else:
-            #update用の処理
-        return cleaned_data&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;instanceの型チェックする方が正攻法かも。例外のメッセージは
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Hoge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ModelForm&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;clean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;cleaned_data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cleaned_data&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;instance&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="c1"&gt;#create用の処理&lt;/span&gt;
+            &lt;span class="k"&gt;raise&lt;/span&gt; &lt;span class="n"&gt;ValidationError&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;例外出すのはこんな感じ&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="c1"&gt;#update用の処理&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;cleaned_data&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
-```py views.py
-def test(request):
-    form = Hoge(request.POST)
-    if form.is_valid():
-        #例外が無かった場合
-    else:
-        for k,v in form.errors.item():
-            #kが例外のフィールド。cleanの場合は__all__
-            #vが例外のメッセージ
+
+&lt;p&gt;instanceの型チェックする方が正攻法かも。例外のメッセージは&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# views.py&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;form&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Hoge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;POST&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;form&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;is_valid&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+        &lt;span class="c1"&gt;#例外が無かった場合&lt;/span&gt;
+    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;form&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;errors&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+            &lt;span class="c1"&gt;#kが例外のフィールド。cleanの場合は__all__&lt;/span&gt;
+            &lt;span class="c1"&gt;#vが例外のメッセージ&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;みたいな感じで取り出せる。&lt;/p&gt;
 &lt;h2&gt;runserver実行時にコンソールにスタックとレースを出力する&lt;/h2&gt;
-&lt;p&gt;```py settings.py
-LOGGING={
-    'version':1,
-    'handlers':{
-        'console':{
-            'level':'DEBUG',
-            'class':'logging.StreamHandler',
-        },
-    },
-    'loggers':{
-        'django.request':{
-            'handlers':['console'],
-            'propagate':True,
-            'level':'DEBUG',
-        }
-    },
-}&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;これを書いておけばコンソールにスタックトレースを出力してくれる。apiのコード書いてる時とかajaxで呼び出してる場合とかに便利。
-
-参考：[python - Print a stack trace to stdout on errors in Django while using manage.py runserver - Stack Overflow](http://stackoverflow.com/questions/5886275/print-a-stack-trace-to-stdout-on-errors-in-django-while-using-manage-py-runserve)というかここのコード丸コピー
-
-
-## Gmail送信
-
-```py settings.py
-EMAIL_USE_TLS=True
-EMAIL_HOST=&amp;#39;smpt.gmail.com&amp;#39;
-EMAIL_HOST_USER=&amp;#39;mymail@gmail.com&amp;#39;
-EMAIL_HOST_PASSWORD=&amp;#39;mypassword&amp;#39;
-EMAIL_PORT=587
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;LOGGING&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;version&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;handlers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:{&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;console&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:{&lt;/span&gt;
+            &lt;span class="s1"&gt;&amp;#39;level&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;DEBUG&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="s1"&gt;&amp;#39;class&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;logging.StreamHandler&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;loggers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:{&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;django.request&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:{&lt;/span&gt;
+            &lt;span class="s1"&gt;&amp;#39;handlers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;console&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+            &lt;span class="s1"&gt;&amp;#39;propagate&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="s1"&gt;&amp;#39;level&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;DEBUG&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;},&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;```py views.py
-from django.core.mail import send_mail&lt;/p&gt;
-&lt;p&gt;def mail(request):
-    send_mail('Subject','message','mymail.gmail.com',['to@mail.address'],fail_silently=False)&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;こんだけ
+&lt;p&gt;これを書いておけばコンソールにスタックトレースを出力してくれる。apiのコード書いてる時とかajaxで呼び出してる場合とかに便利。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/5886275/print-a-stack-trace-to-stdout-on-errors-in-django-while-using-manage-py-runserve"&gt;python - Print a stack trace to stdout on errors in Django while using manage.py runserver - Stack Overflow&lt;/a&gt;というかここのコード丸コピー&lt;/p&gt;
+&lt;h2&gt;Gmail送信&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;EMAIL_USE_TLS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;
+&lt;span class="n"&gt;EMAIL_HOST&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;smpt.gmail.com&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;EMAIL_HOST_USER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;mymail@gmail.com&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;EMAIL_HOST_PASSWORD&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;mypassword&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;EMAIL_PORT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;587&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
-参考：[DjangoでGmailを使ってメール送信 - brainstorm](http://d.hatena.ne.jp/yuheiomori0718/20120714/1342266647)、
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# views.py&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.core.mail&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;send_mail&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;mail&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;send_mail&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Subject&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;message&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;mymail.gmail.com&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;to@mail.address&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="n"&gt;fail_silently&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
 
-## MultiValueDictKeyError
-
-モデルをgetする時にキーに何も値が指定されてなかったりすると起こる。例えば
-
-```py
-instance = SampleModel.objects.get(id=key)
+&lt;p&gt;こんだけ&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://d.hatena.ne.jp/yuheiomori0718/20120714/1342266647"&gt;DjangoでGmailを使ってメール送信 - brainstorm&lt;/a&gt;、&lt;/p&gt;
+&lt;h2&gt;MultiValueDictKeyError&lt;/h2&gt;
+&lt;p&gt;モデルをgetする時にキーに何も値が指定されてなかったりすると起こる。例えば&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;instance&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;SampleModel&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -2312,18 +2345,16 @@ instance = SampleModel.objects.get(id=key)
 
 
 &lt;p&gt;みたいなエラーが出ていた。リクエストが大きすぎるのかなと思い、リクエストの一部を削ってみたらエラーが出なかった。んで、対策をググってみたら書いてあったので、そのまま下のコードを実装してみた。&lt;/p&gt;
-&lt;p&gt;```ini uwsgi.ini
-buffer-size=65535&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;みたいにバッファーサイズを大きく&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="err"&gt;例では&lt;/span&gt;&lt;span class="mi"&gt;64&lt;/span&gt;&lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="err"&gt;した。これでエラーが消えたのでめでたしめでたし。&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# uwsgi.ini&lt;/span&gt;
+&lt;span class="na"&gt;buffer-size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;65535&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
-&lt;span class="err"&gt;参考：&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;django&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;Nginx&lt;/span&gt; &lt;span class="n"&gt;uwsgi&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;104&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Connection&lt;/span&gt; &lt;span class="n"&gt;reset&lt;/span&gt; &lt;span class="n"&gt;by&lt;/span&gt; &lt;span class="n"&gt;peer&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="n"&gt;reading&lt;/span&gt; &lt;span class="n"&gt;response&lt;/span&gt; &lt;span class="n"&gt;header&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;upstream&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;Stack&lt;/span&gt; &lt;span class="n"&gt;Overflow&lt;/span&gt;&lt;span class="p"&gt;](&lt;/span&gt;&lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;stackoverflow&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;com&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;questions&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;22697584&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;nginx&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;uwsgi&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;104&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;reset&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;by&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;peer&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="k"&gt;while&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;reading&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;header&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;from&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;u&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
-&lt;span class="c1"&gt;## 運用環境と開発環境で設定を切り分ける&lt;/span&gt;
-
-&lt;span class="err"&gt;開発環境用に&lt;/span&gt;&lt;span class="n"&gt;local&lt;/span&gt;&lt;span class="err"&gt;アプリを作って、&lt;/span&gt;&lt;span class="n"&gt;local&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;settings&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;&lt;span class="err"&gt;を作成し、開発環境での設定を書いて、プロジェクトの&lt;/span&gt;&lt;span class="n"&gt;settings&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;&lt;span class="err"&gt;の最後に以下を追加すると良い&lt;/span&gt;
-
-&lt;span class="sb"&gt;``&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;
-&lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;p&gt;みたいにバッファーサイズを大きく(例では64k)した。これでエラーが消えたのでめでたしめでたし。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/22697584/nginx-uwsgi-104-connection-reset-by-peer-while-reading-response-header-from-u"&gt;django - Nginx uwsgi (104: Connection reset by peer) while reading response header from upstream - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;運用環境と開発環境で設定を切り分ける&lt;/h2&gt;
+&lt;p&gt;開発環境用にlocalアプリを作って、local/settings.pyを作成し、開発環境での設定を書いて、プロジェクトのsettings.pyの最後に以下を追加すると良い&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
     &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;local.settings&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;
 &lt;span class="k"&gt;except&lt;/span&gt; &lt;span class="ne"&gt;ImportError&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
     &lt;span class="k"&gt;pass&lt;/span&gt;
@@ -2371,15 +2402,15 @@ buffer-size=65535&lt;/p&gt;
 &lt;p&gt;こんな感じ&lt;/p&gt;
 &lt;h2&gt;url末尾に必ずスラッシュを入れる&lt;/h2&gt;
 &lt;p&gt;url末尾にスラッシュが無い場合、スラッシュ有りにリダイレクトする設定&lt;/p&gt;
-&lt;p&gt;```py settings.py
-APPEND_SLASH = True&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;## Django rest apiで日時としてタイムスタンプを出力する&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;APPEND_SLASH&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
-&lt;span class="err"&gt;参考：&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;django&lt;/span&gt; &lt;span class="n"&gt;rest&lt;/span&gt; &lt;span class="n"&gt;framework&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;serialize&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="n"&gt;datetime&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;an&lt;/span&gt; &lt;span class="n"&gt;integer&lt;/span&gt; &lt;span class="n"&gt;timestamp&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;Stack&lt;/span&gt; &lt;span class="n"&gt;Overflow&lt;/span&gt;&lt;span class="p"&gt;](&lt;/span&gt;&lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;stackoverflow&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;com&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;questions&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;26083583&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;serialize&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;datetime&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="k"&gt;as&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;an&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;integer&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;timestamp&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
-&lt;span class="err"&gt;どうも&lt;/span&gt;&lt;span class="n"&gt;Django&lt;/span&gt; &lt;span class="n"&gt;rest&lt;/span&gt; &lt;span class="n"&gt;framework&lt;/span&gt;&lt;span class="err"&gt;の&lt;/span&gt;&lt;span class="n"&gt;DateTimeField&lt;/span&gt;&lt;span class="err"&gt;で指定する&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="err"&gt;パラメータだとタイムスタンプが指定出来ないみたいなのでこんな感じにすると出来る。&lt;/span&gt;
-
-&lt;span class="sb"&gt;``&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt; &lt;span class="n"&gt;serialize&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;
+&lt;h2&gt;Django rest apiで日時としてタイムスタンプを出力する&lt;/h2&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/26083583/serialize-a-datetime-as-an-integer-timestamp"&gt;django rest framework - serialize a datetime as an integer timestamp - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;どうもDjango rest frameworkのDateTimeFieldで指定するformatパラメータだとタイムスタンプが指定出来ないみたいなのでこんな感じにすると出来る。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# serialize.py&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;rest_framework&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;serializers&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;time&lt;/span&gt;
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;HogeSerializer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;serializers&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Serializer&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
@@ -2412,12 +2443,15 @@ APPEND_SLASH = True&lt;/p&gt;
 &lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/3711184/how-to-use-inspect-to-get-the-callers-info-from-callee-in-python"&gt;How to use inspect to get the caller's info from callee in Python? - Stack Overflow&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;プロファイラ使った時に、socket.pyが呼ばれてるのは分かったけど、その呼び出し元がイマイチわからなかった時に使った。&lt;/p&gt;
 &lt;h2&gt;urlsでviewにパラメータを送る&lt;/h2&gt;
-&lt;p&gt;```py urls.py
-url('^$',views.hoge, {'fuga':'hage'}, name='hoge'),
-...&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;```py views.py
-def hoge(request,fuga):
-    ...
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# urls.py&lt;/span&gt;
+&lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;^$&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;views&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hoge&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;fuga&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hage&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# views.py&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;hoge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;fuga&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -2485,19 +2519,17 @@ def hoge(request,fuga):
 &lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/12101658/how-to-get-an-array-in-django-posted-via-ajax"&gt;How to get an array in Django posted via Ajax - Stack Overflow&lt;/a&gt;&lt;/p&gt;
 &lt;h2&gt;intcommaフィルタが効かない(django 1.8)&lt;/h2&gt;
 &lt;p&gt;django 1.4からL10Nを見るので、ロケールjaの場合はNUMBER_GROUPINGを明示しないといけないらしい。&lt;/p&gt;
-&lt;p&gt;```py settings.py
-NUMBER_GROUPING = 3&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;これでおk
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;NUMBER_GROUPING&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
-参考：[やまよし＠Google大好き: Django1.4 で intcommaが効かない](http://yamayoshi.blogspot.jp/2013/02/django14-intcomma.html)
 
-## サブクエリの使い方
-
-例えばMemberモデルにname (名前)やboss(上司の名前)、stage(肩書き)フィールドがあるとして、肩書きが部長の上司を持つMemberを取り出したい場合はこんな感じ
-
-```py
-a_query = Member.objects.filter(stage=&amp;#39;部長&amp;#39;).value_list(&amp;#39;name&amp;#39;)
-b_query = Member.objects.filter(boss__in = a_query)
+&lt;p&gt;これでおk&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://yamayoshi.blogspot.jp/2013/02/django14-intcomma.html"&gt;やまよし＠Google大好き: Django1.4 で intcommaが効かない&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;サブクエリの使い方&lt;/h2&gt;
+&lt;p&gt;例えばMemberモデルにname (名前)やboss(上司の名前)、stage(肩書き)フィールドがあるとして、肩書きが部長の上司を持つMemberを取り出したい場合はこんな感じ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;a_query&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Member&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stage&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;部長&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;value_list&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;b_query&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Member&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;boss__in&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;a_query&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -2529,20 +2561,26 @@ b_query = Member.objects.filter(boss__in = a_query)
 &lt;h2&gt;Titanium MobileのUIで本家以外に参考にしてるサイト&lt;/h2&gt;
 &lt;p&gt;&lt;a href="https://code.google.com/p/titanium-mobile-doc-ja/w/list"&gt;Wiki Pages - titanium-mobile-doc-ja - Appcelerator Titanium Mobileに関するドキュメントを日本語でまとめていくプロジェクト - Google Project Hosting&lt;/a&gt;&lt;/p&gt;
 &lt;h2&gt;Android実機で文字が小さくなる&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;xml tiapp.xml
-&amp;lt;android xmlns:android="http://schemas.android.com/apk/res/android"&amp;gt;
-    &amp;lt;manifest&amp;gt;
-         &amp;lt;supports-screens android:anyDensity="false"/&amp;gt;
-    &amp;lt;/manifest&amp;gt;
-&amp;lt;/android&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# tiapp.xml
+&lt;span class="nt"&gt;&amp;lt;android&lt;/span&gt; &lt;span class="na"&gt;xmlns:android=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://schemas.android.com/apk/res/android&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;manifest&amp;gt;&lt;/span&gt;
+         &lt;span class="nt"&gt;&amp;lt;supports-screens&lt;/span&gt; &lt;span class="na"&gt;android:anyDensity=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;false&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;/manifest&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/android&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;もしくは文字サイズをdpで指定&lt;/p&gt;
 &lt;p&gt;参考：&lt;a href="http://www.fujimotohajime.net/pukiwiki/index.php?TitaniumMobile%2FAndroid%E3%81%A7%E5%AE%9F%E6%A9%9F%E3%83%86%E3%82%B9%E3%83%88%E3%81%99%E3%82%8B%E3%81%A8%E6%96%87%E5%AD%97%E3%81%8C%E5%B0%8F%E3%81%95%E3%81%84"&gt;TitaniumMobile/Androidで実機テストすると文字が小さい - Wiki&lt;/a&gt;&lt;/p&gt;</summary><category term="Titanium"></category><category term="memo"></category></entry><entry><title>DjangoでDateTimeField received a naive datetimeってWarningが出た</title><link href="http://blog.thoz.org/2014/11/22/django-datetimefield-received-a-naive-datetime/" rel="alternate"></link><updated>2014-11-22T16:19:11+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-11-22:2014/11/22/django-datetimefield-received-a-naive-datetime/</id><summary type="html">&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;RuntimeWarning: DateTimeField received a naive datetime
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;ってWarningが出るのに対する対処&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;py settings.py
-USE_TZ = False&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;USE_TZ&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;を書けばおk。要はタイムゾーン入れてくれってエラーなので、そんなものはない！と指定すればいいっぽい&lt;/p&gt;
 &lt;!-- more --&gt;
 
@@ -2574,72 +2612,79 @@ USE_TZ = False&lt;/code&gt;&lt;/p&gt;
 &lt;h2&gt;Djangoでのユーザー認証&lt;/h2&gt;
 &lt;p&gt;Djangoでユーザー認証しようとすると例えばこんな感じ(viewだけ)
 REST API作るために、&lt;a href="http://www.django-rest-framework.org/"&gt;Django REST framework&lt;/a&gt;を使ってるので、そのままコピペしても使えないけど、@部分を消して、Responseとなっている箇所を自力でJSON出力すれば良いと思う。Django REST frameworkについてはどっかで書く。&lt;/p&gt;
-&lt;p&gt;```py views.py
-from rest_framework import viewsets↲
-from rest_framework.response import Response↲
-from rest_framework.decorators import api_view
-from django.contrib.auth import login,authenticate&lt;/p&gt;
-&lt;p&gt;@api_view(['GET','POST'])
-def do_login(request):↲                                               &lt;br /&gt;
- status = 0↲                                  &lt;br /&gt;
- if request.user.is_authenticated():↲&lt;br /&gt;
-     status = 1↲                                                &lt;br /&gt;
- else:↲                                                              &lt;br /&gt;
-     if request.method == 'POST':↲                               &lt;br /&gt;
-         username = request.POST['username']↲                        &lt;br /&gt;
-         password = request.POST['password']↲                    &lt;br /&gt;
-         user = authenticate(username=username,password=password)↲   &lt;br /&gt;
-         if user is not None:↲                                   &lt;br /&gt;
-             status = 1↲                                    &lt;br /&gt;
-             login(request,user)↲                     &lt;br /&gt;
-     else:↲                                                    &lt;br /&gt;
-         return Response({"status":status})↲               &lt;br /&gt;
- return Response({"status":status})↲                               &lt;br /&gt;
-↲                                                                      &lt;/p&gt;
-&lt;p&gt;で、実際やってみるとレスポンスはこんな感じになる&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="s2"&gt;&amp;quot;detail&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;CSRF Failed: CSRF token missing or incorrect.&amp;quot;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# views.py&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;rest_framework&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;viewsets&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;rest_framework.response&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Response&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;rest_framework.decorators&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;api_view&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.contrib.auth&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;login&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;authenticate&lt;/span&gt;
+
+&lt;span class="nd"&gt;@api_view&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;GET&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;POST&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;do_login&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;                                                 
+ &lt;span class="n"&gt;status&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;                                    
+ &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;is_authenticated&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;  
+     &lt;span class="n"&gt;status&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;                                                  
+ &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;                                                                
+     &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;method&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;POST&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;                                 
+         &lt;span class="n"&gt;username&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;POST&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;username&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;                          
+         &lt;span class="n"&gt;password&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;POST&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;password&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;                      
+         &lt;span class="n"&gt;user&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;authenticate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;username&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;username&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;     
+         &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;user&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;                                     
+             &lt;span class="n"&gt;status&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;                                      
+             &lt;span class="n"&gt;login&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;                       
+     &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;                                                      
+         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;Response&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;status&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;status&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;                 
+ &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;Response&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;status&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;status&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;                                 
+&lt;span class="err"&gt;↲&lt;/span&gt;                                                                      
+
+
+&lt;span class="err"&gt;で、実際やってみるとレスポンスはこんな感じになる&lt;/span&gt;
+
+&lt;span class="sb"&gt;``&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s2"&gt;&amp;quot;detail&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;CSRF Failed: CSRF token missing or incorrect.&amp;quot;&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;そういえばDjangoでCSRF対策してるんだった。&lt;/p&gt;
-&lt;p&gt;```py settings.py&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;MIDDLEWARE_CLASSES = (
-....
-    &amp;#39;django.middleware.csrf.CsrfViewMiddleware&amp;#39;,
-....
-)
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;ajaxでやり取りする部分だけ、MIDDLEWARE_CLASSESから削除するって手もあるけど、&lt;a href="http://docs.djangoproject.jp/en/latest/ref/contrib/csrf.html"&gt;Django APIリファレンス&lt;/a&gt;に書いてあるようにX-CSRFToken という独自ヘッダーに CSRF トークンの 値を設定するという対処をやってみた。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;getCRSF&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;
-    &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;xhr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;Ti&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;Network&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;createHTTPClient&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
-        &lt;span class="nx"&gt;onload&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;e&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
-            &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;item&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;JSON&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;parse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;responseText&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-            &lt;span class="nx"&gt;Ti&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;App&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;Properties&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;setString&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;csrf&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;item&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;csrf&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;p&gt;MIDDLEWARE_CLASSES = (
+....
+    'django.middleware.csrf.CsrfViewMiddleware',
+....
+)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;ajax&lt;/span&gt;&lt;span class="err"&gt;でやり取りする部分だけ、&lt;/span&gt;&lt;span class="nt"&gt;MIDDLEWARE_CLASSES&lt;/span&gt;&lt;span class="err"&gt;から削除するって手もあるけど、&lt;/span&gt;&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;Django&lt;/span&gt; &lt;span class="nx"&gt;API&lt;/span&gt;&lt;span class="err"&gt;リファレンス&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nt"&gt;http&lt;/span&gt;&lt;span class="o"&gt;://&lt;/span&gt;&lt;span class="nt"&gt;docs&lt;/span&gt;&lt;span class="nc"&gt;.djangoproject.jp&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;en&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;latest&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;ref&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;contrib&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;csrf&lt;/span&gt;&lt;span class="nc"&gt;.html&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="err"&gt;に書いてあるように&lt;/span&gt;&lt;span class="nt"&gt;X-CSRFToken&lt;/span&gt; &lt;span class="err"&gt;という独自ヘッダーに&lt;/span&gt; &lt;span class="nt"&gt;CSRF&lt;/span&gt; &lt;span class="err"&gt;トークンの&lt;/span&gt; &lt;span class="err"&gt;値を設定するという対処をやってみた。&lt;/span&gt;
+
+&lt;span class="err"&gt;```&lt;/span&gt;&lt;span class="nt"&gt;js&lt;/span&gt;
+&lt;span class="nt"&gt;function&lt;/span&gt; &lt;span class="nt"&gt;getCRSF&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;var&lt;/span&gt; &lt;span class="n"&gt;xhr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Ti&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Network&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;createHTTPClient&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;onload&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;
+            &lt;span class="n"&gt;var&lt;/span&gt; &lt;span class="n"&gt;item&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;JSON&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;parse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;this&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;responseText&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+            &lt;span class="n"&gt;Ti&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;App&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Properties&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setString&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;csrf&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;csrf&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
         &lt;span class="p"&gt;}&lt;/span&gt;
-    &lt;span class="p"&gt;});&lt;/span&gt;
-    &lt;span class="nx"&gt;xhr&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;GET&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;http://url/to/login&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="nx"&gt;xhr&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;send&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="err"&gt;}&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+    &lt;span class="nt"&gt;xhr&lt;/span&gt;&lt;span class="nc"&gt;.open&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;GET&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;http://url/to/login&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+    &lt;span class="nt"&gt;xhr&lt;/span&gt;&lt;span class="nc"&gt;.send&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+&lt;span class="err"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;これを書いて、getCRSFを先にどこかで実行しておいて
 実際のリクエストはさっきのコードをこんな感じで修正する&lt;/p&gt;
-&lt;p&gt;```js
-    client.open('POST','http://url/to/login');
-    client.setRequestHeader('X-CSRFToken', Ti.App.Properties.getString("csrf"));//これを追加&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;client&lt;/span&gt;&lt;span class="nc"&gt;.send&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;username&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;fuga&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;    &lt;span class="nx"&gt;client&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;POST&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;http://url/to/login&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="nx"&gt;client&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;setRequestHeader&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;X-CSRFToken&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;Ti&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;App&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;Properties&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;getString&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;csrf&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;&lt;span class="c1"&gt;//これを追加&lt;/span&gt;
+
+    &lt;span class="nx"&gt;client&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;send&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="nx"&gt;username&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="nx"&gt;password&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;fuga&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;});&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;```&lt;/p&gt;
 &lt;p&gt;Django側のコードはGETの時にcsrfのトークンを戻すように書き換える&lt;/p&gt;
-&lt;p&gt;```py views.py
-from django.core.context_processors import csrf #を追加&lt;/p&gt;
+&lt;p&gt;```py&lt;/p&gt;
+&lt;h1&gt;views.py&lt;/h1&gt;
+&lt;p&gt;from django.core.context_processors import csrf #を追加&lt;/p&gt;
 &lt;h1&gt;上のviews.pyの14行目をこんな感じで修正&lt;/h1&gt;
 &lt;p&gt;return Response({"status":status,"csrf":csrf(request)['csrf_token']})↲                 &lt;/p&gt;
 &lt;p&gt;これでいけたみたい。&lt;/p&gt;</summary><category term="Python"></category><category term="Django"></category><category term="Titanium"></category></entry><entry><title>Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(4):djangoで作ったプロジェクトをnginx+uwsgiで使って公開する</title><link href="http://blog.thoz.org/2014/11/04/use-django-with-uwsgi/" rel="alternate"></link><updated>2014-11-04T21:33:54+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-11-04:2014/11/04/use-django-with-uwsgi/</id><summary type="html">&lt;p&gt;nginxのインストールは省略。ubuntuならaptitudeでインストールすればいい。デフォルトはちょっと古いけど。
@@ -2656,22 +2701,23 @@ djangoで作ったmysiteプロジェクトを/path/to/mysiteに置いている�
 &lt;p&gt;djangoのプロジェクトを/path/to/mysiteに置いた場合の設定。pidfile,daemonizeはプロジェクト毎に適当に設定。&lt;/p&gt;
 &lt;!-- more --&gt;
 
-&lt;p&gt;```ini uwsgi.ini
-[uwsgi]
-chdir=/path/to/mysite
-module='mysite.wsgi:application'
-master=True
-pidfile=/tmp/project-master.pid
-vacuum=True
-max-requests=5000
-daemonize=/var/log/uwsgi/mysite.log
-socket=127.0.0.1:1234 #適当なポート
-env= DJANGO_SETTINGS_MODULE=mysite.settings&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;virtualenvで使う場合、sudoを使わないでuwsgiを起動するので、/var/log/uwsgi/yourproject.logの権限に注意する。
-uwsgiの起動や終了のコマンドは以下の通り
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# uwsgi.ini&lt;/span&gt;
+&lt;span class="k"&gt;[uwsgi]&lt;/span&gt;
+&lt;span class="na"&gt;chdir&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/path/to/mysite&lt;/span&gt;
+&lt;span class="na"&gt;module&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;mysite.wsgi:application&amp;#39;&lt;/span&gt;
+&lt;span class="na"&gt;master&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;True&lt;/span&gt;
+&lt;span class="na"&gt;pidfile&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/tmp/project-master.pid&lt;/span&gt;
+&lt;span class="na"&gt;vacuum&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;True&lt;/span&gt;
+&lt;span class="na"&gt;max-requests&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;5000&lt;/span&gt;
+&lt;span class="na"&gt;daemonize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/var/log/uwsgi/mysite.log&lt;/span&gt;
+&lt;span class="na"&gt;socket&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;127.0.0.1:1234 #適当なポート&lt;/span&gt;
+&lt;span class="na"&gt;env&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;DJANGO_SETTINGS_MODULE=mysite.settings&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
-```sh
-起動
+
+&lt;p&gt;virtualenvで使う場合、sudoを使わないでuwsgiを起動するので、/var/log/uwsgi/yourproject.logの権限に注意する。
+uwsgiの起動や終了のコマンドは以下の通り&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;起動
 $ uwsgi --ini uwsgi.ini
 再起動
 $ uwsgi --reload /tmp/project-master.pid
@@ -2720,13 +2766,14 @@ break;
 
 
 &lt;p&gt;settings.pyにSTATIC_URL, STATIC_ROOTを追加&lt;/p&gt;
-&lt;p&gt;```py settings.py
-STATIC_URL = '/static/'
-STATIC_ROOT = "/path/to/mysite/static"&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;テンプレでは次のように静的ファイルにアクセスする
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;STATIC_URL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;/static/&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;STATIC_ROOT&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;/path/to/mysite/static&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
-```html
-&lt;span class="nt"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;text/javascript&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;src=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;STATIC_URL&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="s"&gt;js/hoge.js&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+
+&lt;p&gt;テンプレでは次のように静的ファイルにアクセスする&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt; &lt;span class="na"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;text/javascript&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;src&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;{{ STATIC_URL }}js/hoge.js&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -2906,30 +2953,32 @@ $ ./build.sh
 &lt;h2&gt;設定&lt;/h2&gt;
 &lt;!-- more --&gt;
 
-&lt;p&gt;```py settings.py
-INSTALLED_APPS = (
-...
-        'social.apps.django_app.default',
-...
-)
-AUTHENTICATION_BACKENDS = (
-...
-        'social.backends.twitter.TwitterOAuth',#Twitterでの認証をする場合。他の認証がある場合は該当するバックエンドを追加
-        'django.contrib.auth.backends.ModelBackend',
-...
-        )
-SOCIAL_AUTH_TWITTER_KEY=''#これと次の行はTwitter認証用。別の認証を用いる場合は別の設定が必要
-SOCIAL_AUTH_TWITTER_SECRET=''
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
-SOCIAL_AUTH_LOGIN_URL = '/login/'&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;!-- more --&amp;gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;INSTALLED_APPS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;social.apps.django_app.default&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;AUTHENTICATION_BACKENDS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;social.backends.twitter.TwitterOAuth&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="c1"&gt;#Twitterでの認証をする場合。他の認証がある場合は該当するバックエンドを追加&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;django.contrib.auth.backends.ModelBackend&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+        &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;SOCIAL_AUTH_TWITTER_KEY&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="c1"&gt;#これと次の行はTwitter認証用。別の認証を用いる場合は別の設定が必要&lt;/span&gt;
+&lt;span class="n"&gt;SOCIAL_AUTH_TWITTER_SECRET&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;SOCIAL_AUTH_LOGIN_REDIRECT_URL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;/&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;SOCIAL_AUTH_LOGIN_URL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;/login/&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
-注意：
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;注意：
 AUTH_USER_MODEL
-を加えるとエラー出たので注意(Django 1.6)
-
-```py urls.py
-    url(&amp;#39;&amp;#39;, include(&amp;#39;social.apps.django_app.urls&amp;#39;,namespace=&amp;#39;social&amp;#39;)),
+を加えるとエラー出たので注意(Django 1.6)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# urls.py&lt;/span&gt;
+    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;social.apps.django_app.urls&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;namespace&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;social&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -2994,22 +3043,22 @@ AUTH_USER_MODEL
 データの一覧表示には何種類かファイルが必要（モデル、ビュー、テンプレート、URLディスパッチャー）。
 それぞれこんな感じで用意する。&lt;/p&gt;
 &lt;h3&gt;モデル&lt;/h3&gt;
-&lt;p&gt;```python models.py
-from django.db import models
-class Bocho(models.Model):
-    name = models.TextField()
-    court = models.TextField()
-    date = models.DateField()
-    ....&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="err"&gt;!&lt;/span&gt;&lt;span class="o"&gt;--&lt;/span&gt; &lt;span class="n"&gt;more&lt;/span&gt; &lt;span class="o"&gt;--&amp;gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.db&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Bocho&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;court&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;date&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DateField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="o"&gt;....&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
-&lt;span class="err"&gt;モデルではフィールドとその属性を決める。このコードではクラスの中で&lt;/span&gt;&lt;span class="n"&gt;Meta&lt;/span&gt;&lt;span class="err"&gt;クラスを定義すると、モデルのテーブル名とかそういうのを色々定義出来るみたい。定義出来るフィールドの種類は&lt;/span&gt;&lt;span class="n"&gt;Django&lt;/span&gt;&lt;span class="err"&gt;のマニュアルに書いてあるのですぐ分かる。&lt;/span&gt;
 
-&lt;span class="c1"&gt;###ビュー&lt;/span&gt;
+&lt;!-- more --&gt;
 
-&lt;span class="err"&gt;データをテンプレートに設定する部分。リクエストパラメータから、必要なデータを取得する部分。多分。&lt;/span&gt;
-
-&lt;span class="sb"&gt;``&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt;&lt;span class="n"&gt;python&lt;/span&gt; &lt;span class="n"&gt;views&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;
+&lt;p&gt;モデルではフィールドとその属性を決める。このコードではクラスの中でMetaクラスを定義すると、モデルのテーブル名とかそういうのを色々定義出来るみたい。定義出来るフィールドの種類はDjangoのマニュアルに書いてあるのですぐ分かる。&lt;/p&gt;
+&lt;h3&gt;ビュー&lt;/h3&gt;
+&lt;p&gt;データをテンプレートに設定する部分。リクエストパラメータから、必要なデータを取得する部分。多分。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# views.py&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.shortcuts&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;render&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.core.paginator&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Paginator&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;PageNotAnInteger&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;EmptyPage&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;bocho.models&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Bocho&lt;/span&gt;
@@ -3031,26 +3080,26 @@ class Bocho(models.Model):
 &lt;h3&gt;テンプレート&lt;/h3&gt;
 &lt;p&gt;bocho/templates/list.htmlを作る。中身は一部だけ。{{ 変数名 }}でビューで割り当てた変数を表示する。
 あと、色々テンプレート用のタグがある。これもDjangoマニュアルを見ると分かる。&lt;/p&gt;
-&lt;p&gt;```html list.html
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# list.html
 {% raw %}
-&lt;table class="table"&gt;
-    &lt;thead&gt;&lt;th class="span2"&gt;日付&lt;/th&gt;&lt;th&gt;名称&lt;/th&gt;&lt;th&gt;裁判所&lt;/th&gt;&lt;/thead&gt;
+&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;table&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;table&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;thead&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;span2&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;日付&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;名称&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;裁判所&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;thead&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 {% for object in object_list %}
-&lt;tr&gt;
-    &lt;td&gt;{{ object.date|date:"Y-m-d" }}&lt;/td&gt;
-    &lt;td&gt;{{ object.name }}&lt;/td&gt;
-    &lt;td&gt;{{ object.court }}&lt;/td&gt;
-&lt;/tr&gt;
+&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;tr&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;{{ object.date|date:&amp;quot;Y-m-d&amp;quot; }}&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;{{ object.name }}&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;{{ object.court }}&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;tr&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 {% endfor %}
-&lt;/table&gt;
-{% endraw %}&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;###URLディスパッチャー&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;table&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+{% endraw %}
+&lt;/pre&gt;&lt;/div&gt;
 
-&lt;span class="err"&gt;ドメイン名&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bocho&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="err"&gt;で一覧表示出来るように正規表現使って&lt;/span&gt;&lt;span class="n"&gt;views&lt;/span&gt;&lt;span class="err"&gt;に割り当てる。&lt;/span&gt;
 
-&lt;span class="n"&gt;myproject&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;urls&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;
-
-&lt;span class="sb"&gt;``&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt;&lt;span class="n"&gt;python&lt;/span&gt; &lt;span class="n"&gt;urls&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;
+&lt;h3&gt;URLディスパッチャー&lt;/h3&gt;
+&lt;p&gt;ドメイン名/bocho/で一覧表示出来るように正規表現使ってviewsに割り当てる。&lt;/p&gt;
+&lt;p&gt;myproject/urls.py&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# urls.py&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.conf.urls&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;patterns&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;url&lt;/span&gt;
 &lt;span class="n"&gt;urlpatterns&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;patterns&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
     &lt;span class="c1"&gt;# Examples:&lt;/span&gt;
@@ -3062,19 +3111,20 @@ class Bocho(models.Model):
 
 
 &lt;p&gt;bocho/urls.pyは無いので作る。&lt;/p&gt;
-&lt;p&gt;```python urls.py
-from django.conf.urls import patterns, include, url
-from bocho import views
-urlpatterns = patterns('',
-    url(r'^$', views.index, name="index"), #url(正規表現, 割り当てるビュー, URL作ったりリダイレクトする時に付けておくと便利な名前)
-)&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;一覧はどうせページングするので、views.pyはこの形で覚えておくと良いかも
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# urls.py&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.conf.urls&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;patterns&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;url&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;bocho&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;views&lt;/span&gt;
+&lt;span class="n"&gt;urlpatterns&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;patterns&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;r&amp;#39;^$&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;views&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="c1"&gt;#url(正規表現, 割り当てるビュー, URL作ったりリダイレクトする時に付けておくと便利な名前)&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
-## ページング
-どうせbootstrapを使うのでdjango-bootstrap-toolkitを使う方法を載せる。
-ページ分けする対象をobject\_list、ページ送りのURLにpage=以外に設定するパラメータをreqとすると、
 
-```html list.html
+&lt;p&gt;一覧はどうせページングするので、views.pyはこの形で覚えておくと良いかも&lt;/p&gt;
+&lt;h2&gt;ページング&lt;/h2&gt;
+&lt;p&gt;どうせbootstrapを使うのでdjango-bootstrap-toolkitを使う方法を載せる。
+ページ分けする対象をobject_list、ページ送りのURLにpage=以外に設定するパラメータをreqとすると、&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# list.html
 {% raw %}
 {% load bootstrap_toolkit %}↲
 {% bootstrap_pagination object_list align=&amp;quot;center&amp;quot; extra=req %}
@@ -3086,10 +3136,13 @@ urlpatterns = patterns('',
 &lt;h2&gt;ページングにパラメータを付ける&lt;/h2&gt;
 &lt;p&gt;ついでにメモ
 例えば"date=2001-01-01"みたいなパラメータを設定したいんだけど、割り当ててる変数？は日付オブジェクトの場合&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;html list.html
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# list.html
 {% raw %}
-{% bootstrap\_pagination object\_list align="center" extra=date|date:"Y-m-d"|s    tringformat:"%date=%s"|slice:"1:" %}
-{% endraw %}&lt;/code&gt;&lt;/p&gt;
+{% bootstrap\_pagination object\_list align=&amp;quot;center&amp;quot; extra=date|date:&amp;quot;Y-m-d&amp;quot;|s    tringformat:&amp;quot;%date=%s&amp;quot;|slice:&amp;quot;1:&amp;quot; %}
+{% endraw %}
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;こんな感じで文字列をくっつけてパラメータにすることが出来る。かなり強引&lt;a href="https://www.google.com/url?q=http://d.hatena.ne.jp/feiz/20110414/1302771447&amp;amp;usd=2&amp;amp;usg=AFQjCNFN9kzyrEJj_WZEatK2wIL07eaD0w"&gt;参考&lt;/a&gt;&lt;/p&gt;</summary><category term="Django"></category><category term="Bootstrap"></category><category term="Python"></category></entry><entry><title>ansible memo</title><link href="http://blog.thoz.org/2014/07/01/ansible-memo/" rel="alternate"></link><updated>2014-07-01T16:56:06+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-07-01:2014/07/01/ansible-memo/</id><summary type="html">&lt;p&gt;ansibleで自分が欲しい情報が色んなページに散らばっていたので、メモ&lt;/p&gt;
 &lt;!-- more --&gt;
 
@@ -3188,13 +3241,15 @@ urlpatterns = patterns('',
 
 &lt;h2&gt;日本語のコマンドライン引数取得&lt;/h2&gt;
 &lt;p&gt;参考&lt;a href="http://www.yukun.info/blog/2008/07/python-command-line-arguments.html"&gt;Python: コマンドライン引数の取得 – sys.argv変数&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;```py :hoge.py&lt;/p&gt;
-&lt;h1&gt;-*- encoding: utf-8 -*-&lt;/h1&gt;
-&lt;p&gt;import sys
-argv = sys.argv
-print argv[1].decode("utf-8")&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;```sh
-$ python hoge.py あいうえお
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#hoge.py&lt;/span&gt;
+&lt;span class="c1"&gt;# -\*- encoding: utf-8 -\*-&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;span class="n"&gt;argv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;utf-8&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python hoge.py あいうえお
 あいうえお
 $
 &lt;/pre&gt;&lt;/div&gt;
@@ -3277,19 +3332,18 @@ subprocessを使う。何か昔は別の手法だったらしい。&lt;/p&gt;
 
 
 &lt;p&gt;みたいなメッセージが帰ってきてうまく情報を取って来れなかった。&lt;/p&gt;
-&lt;p&gt;```py settings.py
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': ()
-}&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;と認証を削除するといけた&lt;/span&gt;
-&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;nginx&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;Django&lt;/span&gt; &lt;span class="n"&gt;Rest&lt;/span&gt; &lt;span class="n"&gt;Framework&lt;/span&gt; &lt;span class="n"&gt;behind&lt;/span&gt; &lt;span class="n"&gt;HTTP&lt;/span&gt; &lt;span class="n"&gt;Basic&lt;/span&gt; &lt;span class="n"&gt;Authentication&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;Stack&lt;/span&gt; &lt;span class="n"&gt;Overflow&lt;/span&gt;&lt;span class="p"&gt;](&lt;/span&gt;&lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;stackoverflow&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;com&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;questions&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;19693433&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;django&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;rest&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;framework&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;behind&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;basic&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;authentication&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;REST_FRAMEWORK&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;DEFAULT_AUTHENTICATION_CLASSES&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
-&lt;span class="c1"&gt;## リストの文字列をリストに変換する&lt;/span&gt;
 
-&lt;span class="err"&gt;リクエストでリストの文字列をパラメーターにして送って、それをリストとして評価したかったので、調べてみた。&lt;/span&gt;
-
-&lt;span class="sb"&gt;``&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;ast&lt;/span&gt;
+&lt;p&gt;と認証を削除するといけた
+&lt;a href="http://stackoverflow.com/questions/19693433/django-rest-framework-behind-http-basic-authentication"&gt;nginx - Django Rest Framework behind HTTP Basic Authentication - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;リストの文字列をリストに変換する&lt;/h2&gt;
+&lt;p&gt;リクエストでリストの文字列をパラメーターにして送って、それをリストとして評価したかったので、調べてみた。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;ast&lt;/span&gt;
 &lt;span class="n"&gt;hoge&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;u&amp;#39;[&amp;quot;A&amp;quot;,&amp;quot;B&amp;quot;,&amp;quot;C&amp;quot;]&lt;/span&gt;
 &lt;span class="n"&gt;fuga&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ast&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;literal_eval&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hoge&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -4267,7 +4321,7 @@ $ sudo aptitude upgrade
 
 
 &lt;p&gt;でおk&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/645853/add-slash-to-the-end-of-every-url-need-rewrite-rule-for-nginx"&gt;regex - Add slash to the end of every url (need rewrite rule for nginx) - Stack Overflow&lt;/a&gt;```&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/645853/add-slash-to-the-end-of-every-url-need-rewrite-rule-for-nginx"&gt;regex - Add slash to the end of every url (need rewrite rule for nginx) - Stack Overflow&lt;/a&gt;&lt;/p&gt;
 &lt;h2&gt;書式チェック&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo nginx -t -c /path/to/nginx.conf
 &lt;/pre&gt;&lt;/div&gt;
@@ -5322,23 +5376,23 @@ base64した値が格納さています。
 &lt;p&gt;rhaco3で見られた症状でしたが、他のフレームワークでも特に何も考えてなかったら引っかかる可能性があります。というかBasic認証とフレームワークの認証両方掛けるとか普通無いですよねそうですよね。&lt;/p&gt;</summary><category term="rhaco"></category><category term="nginx"></category></entry><entry><title>octpress tips</title><link href="http://blog.thoz.org/2014/01/31/octpress-tips/" rel="alternate"></link><updated>2014-01-31T08:33:56+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-01-31:2014/01/31/octpress-tips/</id><summary type="html">&lt;p&gt;Octopressのインストール後に行ったカスタマイズをまとめておきます。&lt;/p&gt;
 &lt;h2&gt;外部リンクを別ウィンドウで開く&lt;/h2&gt;
 &lt;p&gt;下のコードを追加します&lt;/p&gt;
-&lt;p&gt;```javascript :source/_inclides/custom/head.html
-&lt;script language="JavaScript"&gt;
-$(document).ready( function () {
-   $("a[href^='http']:not([href*='" + location.hostname + "'])").attr('target', '_blank');
-})
-&lt;/script&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;!-- more --&amp;gt;
-
-のようにJavascriptで対応します
-
-## 一覧表示での表示範囲を決めるマークダウン
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="nx"&gt;source&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;_inclides&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;custom&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;head&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;html&lt;/span&gt;
+&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;script&lt;/span&gt; &lt;span class="nx"&gt;language&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;JavaScript&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;ready&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+   &lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;a[href^=&amp;#39;http&amp;#39;]:not([href*=&amp;#39;&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nx"&gt;location&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;hostname&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;#39;])&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;attr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;target&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;_blank&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="err"&gt;/script&amp;gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;!-- more --&gt;
 
-&lt;p&gt;```&lt;/p&gt;
+&lt;p&gt;のようにJavascriptで対応します&lt;/p&gt;
+&lt;h2&gt;一覧表示での表示範囲を決めるマークダウン&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;!-- more --&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;これを書けばおk&lt;/p&gt;</summary><category term="memo"></category><category term="Octopress"></category></entry><entry><title>なでしこで実行ファイルを作る時のメモ</title><link href="http://blog.thoz.org/2014/01/30/nadesiko-make-exe/" rel="alternate"></link><updated>2014-01-30T09:22:46+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-01-30:2014/01/30/nadesiko-make-exe/</id><summary type="html">&lt;ul&gt;
 &lt;li&gt;パックファイル作る時はメインになるファイルだけnadesiko.nakoというパック名にして、その他はファイル名自身をパック名とする&lt;/li&gt;
 &lt;li&gt;データを埋め込む場合は、そのデータを呼び出す時にフルパスにしない。データが無いと言われる。&lt;/li&gt;
@@ -5436,52 +5490,55 @@ $(document).ready( function () {
 &lt;li&gt;参照にNakoPluginを追加する（NakoPluginAppealの参照で歯車アイコンクリック（又は右クリック）→参照アセンブリの編集→ダイアログで.NETアセンブリタブを選択→NakoPlugin.dllをチェック、又は閲覧ボタンからNakoPlugin.dllを選ぶ→OK）&lt;/li&gt;
 &lt;li&gt;NakoPluginAppeal.csを編集する&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;```csharp NakoPluginAppeal.cs
-using System;
-using System.Text;
-using Libnako.JPNCompiler;
-using NakoPlugin;
-namespace NakoPluginAppeal{
-    public class NakoPluginAppeal : INakoPlugin    {
-    string _description = &amp;quot;サンプルプラグイン&amp;quot;;
-        double _version = 1.0;
-        //&lt;del&gt; プラグイン共通の部分 &lt;/del&gt;
-        public double TargetNakoVersion { get { return 2.0; } }
-        public bool Used { get; set; }
-        public string Name { get { return this.GetType().FullName; } }
-        public double PluginVersion { get { return _version; } }
-        public string Description { get { return _description; } }
-        //&lt;del&gt; 関数の定義 &lt;/del&gt;
-        public void DefineFunction(INakoPluginBank bank)        {
-            bank.AddFunc("アピール", "Aを", NakoVarType.String, _appeal, "なでしこ2をアピールする", "あぴーる");
-        }
-    // プラグインの初期化処理
-        public void PluginInit(INakoInterpreter runner)        {
-        }
-        // プラグインの終了処理
-        public void PluginFin(INakoInterpreter runner)        {
-        }
-        public string _appeal(INakoFuncCallInfo info){
-            string fr = info.StackPopAsString();
-            return fr.Replace("なでしこ", "なでしこ2最高！");
-        }
-    }
-}&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;+ ビルドする
-+ NakoPluginAppeal/bin/Debug/NakoPluginAppeal.dllをcnako2/bin/Debug/にコピー
-
-実行するなでしこ2のコードは次のようになります。
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;NakoPluginAppeal&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cs&lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;System&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;System.Text&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;Libnako.JPNCompiler&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;NakoPlugin&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;namespace&lt;/span&gt; &lt;span class="nn"&gt;NakoPluginAppeal&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;NakoPluginAppeal&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;INakoPlugin&lt;/span&gt;    &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;_description&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="p"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;quot&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="err"&gt;サンプルプラグイン&lt;/span&gt;&lt;span class="p"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;quot&lt;/span&gt;&lt;span class="p"&gt;;;&lt;/span&gt;
+        &lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="n"&gt;_version&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="m"&gt;1.0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="c1"&gt;//&amp;lt;del&amp;gt; プラグイン共通の部分 &amp;lt;/del&amp;gt;&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="n"&gt;TargetNakoVersion&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="m"&gt;2.0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="n"&gt;Used&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;Name&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;GetType&lt;/span&gt;&lt;span class="p"&gt;().&lt;/span&gt;&lt;span class="n"&gt;FullName&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="n"&gt;PluginVersion&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;_version&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;Description&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;_description&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="c1"&gt;//&amp;lt;del&amp;gt; 関数の定義 &amp;lt;/del&amp;gt;&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;DefineFunction&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;INakoPluginBank&lt;/span&gt; &lt;span class="n"&gt;bank&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;        &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="n"&gt;bank&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;AddFunc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;アピール&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Aを&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;NakoVarType&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;_appeal&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;なでしこ2をアピールする&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;あぴーる&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="c1"&gt;// プラグインの初期化処理&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;PluginInit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;INakoInterpreter&lt;/span&gt; &lt;span class="n"&gt;runner&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;        &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="c1"&gt;// プラグインの終了処理&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;PluginFin&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;INakoInterpreter&lt;/span&gt; &lt;span class="n"&gt;runner&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;        &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="nf"&gt;_appeal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;INakoFuncCallInfo&lt;/span&gt; &lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+            &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;fr&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;StackPopAsString&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;fr&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;なでしこ&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;なでしこ2最高！&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;A = 「なでしこ」をアピール
-Aを表示&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;+ これをcnako2/bin/Debug/test.nakoに保存
+&lt;ul&gt;
+&lt;li&gt;ビルドする&lt;/li&gt;
+&lt;li&gt;NakoPluginAppeal/bin/Debug/NakoPluginAppeal.dllをcnako2/bin/Debug/にコピー&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;実行するなでしこ2のコードは次のようになります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;A = 「なでしこ」をアピール
+Aを表示
+&lt;/pre&gt;&lt;/div&gt;
 
-あとは下のコマンドを実行すれば結果が表示されます
 
-```sh
-$ cd cnako2/bin/Debug/
+&lt;ul&gt;
+&lt;li&gt;これをcnako2/bin/Debug/test.nakoに保存&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;あとは下のコマンドを実行すれば結果が表示されます&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; cnako2/bin/Debug/
 $ mono cnako2.exe test.nako
 なでしこ最高！
 &lt;/pre&gt;&lt;/div&gt;</summary><category term="nadesiko"></category><category term="nadesiko2"></category><category term="CSharp"></category></entry><entry><title>C#で作ったdllをなでしこで使う</title><link href="http://blog.thoz.org/2014/01/28/nadesiko-plugin-cs2/" rel="alternate"></link><updated>2014-01-28T22:42:43+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-01-28:2014/01/28/nadesiko-plugin-cs2/</id><summary type="html">&lt;p&gt;C#のdllを呼び出せるように、C#のdllを参照した後、Plugin.cppの一部を以下のように書き換えました&lt;/p&gt;
@@ -5804,11 +5861,13 @@ Luaボタンとはボタン##生成
 &lt;h2&gt;psqlでsqlにパラメータを渡す&lt;/h2&gt;
 &lt;p&gt;vオプションを用いる&lt;/p&gt;
 &lt;p&gt;&lt;a href="http://stackoverflow.com/questions/7389416/postgresql-how-to-pass-parameters-from-command-line"&gt;PostgreSQL: How to pass parameters from command line? - Stack Overflow&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;```sql a.sql
-select :vint, :vstr;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;```sh
-$ psql -v vint=10 -v vstr=&amp;quot;&amp;#39;hoge&amp;#39;&amp;quot; -f a.sql dbname
-10  hoge
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="k"&gt;sql&lt;/span&gt;
+&lt;span class="k"&gt;select&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;vint&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;vstr&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ psql -v &lt;span class="nv"&gt;vint&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;10&lt;/span&gt; -v &lt;span class="nv"&gt;vstr&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;#39;hoge&amp;#39;&amp;quot;&lt;/span&gt; -f a.sql dbname
+&lt;span class="m"&gt;10&lt;/span&gt;  hoge
 &lt;/pre&gt;&lt;/div&gt;
 
 

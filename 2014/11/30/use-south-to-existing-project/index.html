@@ -110,19 +110,19 @@ shigeponが関心のある技術情報など            </a>
 
 
 <h2>設定</h2>
-<p>```py settings.py
-INSTALLED_APPS = (
-....
-    'south',
-)</p>
-<div class="highlight"><pre><span></span>&lt;!-- more --&gt;
+<div class="highlight"><pre><span></span><span class="c1"># settings.py</span>
+<span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
+<span class="o">....</span>
+    <span class="s1">&#39;south&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
 
-## 作成中のアプリをsouthに追加
 
-データベースが関連しているモデルが作成されているアプリにコマンドを実行すればおk
+<!-- more -->
 
-```sh
-$ python manage.py schemamigration アプリ名 --init
+<h2>作成中のアプリをsouthに追加</h2>
+<p>データベースが関連しているモデルが作成されているアプリにコマンドを実行すればおk</p>
+<div class="highlight"><pre><span></span>$ python manage.py schemamigration アプリ名 --init
 $ python manage.py syncdb --all
 $ python manage.py migrate アプリ名 --fake
 </pre></div>
@@ -168,6 +168,11 @@ $ python manage.py migrate アプリ名
 
             <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
                 <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/category/memo.html">
+                            <i class="fa fa-folder-open fa-lg"></i> memo
+                        </a>
+                    </li>
                     <li class="list-group-item">
                         <a href="http://blog.thoz.org/category/misc.html">
                             <i class="fa fa-folder-open fa-lg"></i> misc
