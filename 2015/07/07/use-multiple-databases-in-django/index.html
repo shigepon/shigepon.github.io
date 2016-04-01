@@ -190,9 +190,9 @@ shigeponが関心のある技術情報など            </a>
     <ul>
         <li><a href="http://blog.thoz.org/2014/06/18/start-django-project/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずDjangoプロジェクトとアプリを作ってみた</a></li>
         <li><a href="http://blog.thoz.org/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/">Django 1.6から1.7にアップデートしてみた</a></li>
+        <li><a href="http://blog.thoz.org/2014/11/25/use-django-allauth/">django-allauthを使ってみた</a></li>
         <li><a href="http://blog.thoz.org/2015/07/30/add-relation-to-existing-table-using-django/">Djangoで作成済みテーブルに手動でリレーションを追加する</a></li>
-        <li><a href="http://blog.thoz.org/2015/03/05/uwsgi-memo/">uwsgiメモ</a></li>
-        <li><a href="http://blog.thoz.org/2016/01/15/use-groonga-for-django-cache/">use groonga for django cache</a></li>
+        <li><a href="http://blog.thoz.org/2014/12/18/use-bootstrap3-in-django/">use bootstrap3 in django</a></li>
     </ul>
 </section>
     <hr />
@@ -219,6 +219,35 @@ shigeponが関心のある技術情報など            </a>
               </ul>
             </li>
 
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
+                <ul class="list-group" id="recentposts">
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/2016/03/31/migrate_octopress_github_page_to_pelican/">
+                            github pageのブログツールをoctopressからpelicanに移行しました
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/2016/03/08/visual-studio-memo/">
+                            visual studio メモ
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/2016/03/07/use-supervisord-to-control-uwsgi/">
+                            uwsgiの管理にsupervisordを使う
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/2016/02/09/migrate-from-django-1-dot-8-to-1-dot-9/">
+                            django 1.8から1.9へアップした時に気にする点
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/2016/01/29/pcl-memo/">
+                            PCLメモ
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
             <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
                 <ul class="list-group" id="categories">
@@ -296,9 +325,17 @@ shigeponが関心のある技術情報など            </a>
             </li>
 
             <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
-                <ul class="list-group " id="tags">
+                <ul class="list-group list-inline tagcloud" id="tags">
                 </ul>
             </li>
+
+    <li class="list-group-item"><h4><i class="fa fa-twitter fa-lg"></i><span class="icon-label">Latest Tweets</span></h4></li>
+    <div id="twitter_timeline">
+        <a class="twitter-timeline" data-chrome="noheader" href="https://twitter.com/shigepon" data-widget-id="715722386713149440">Tweets by shigepon</a>
+    </div>
+
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
     <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
       <ul class="list-group" id="links">
         <li class="list-group-item">
