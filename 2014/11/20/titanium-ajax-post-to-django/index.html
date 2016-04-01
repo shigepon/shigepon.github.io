@@ -222,11 +222,11 @@ REST API作るために、<a href="http://www.django-rest-framework.org/">Django
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
-        <li><a href="http://blog.thoz.org/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/">Django 1.6から1.7にアップデートしてみた</a></li>
-        <li><a href="http://blog.thoz.org/2014/11/25/use-django-allauth/">django-allauthを使ってみた</a></li>
-        <li><a href="http://blog.thoz.org/2015/07/30/add-relation-to-existing-table-using-django/">Djangoで作成済みテーブルに手動でリレーションを追加する</a></li>
-        <li><a href="http://blog.thoz.org/2014/12/18/use-bootstrap3-in-django/">use bootstrap3 in django</a></li>
-        <li><a href="http://blog.thoz.org/2014/06/18/start-django-project/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずDjangoプロジェクトとアプリを作ってみた</a></li>
+        <li><a href="http://blog.thoz.org/2016/01/15/use-groonga-for-django-cache/">use groonga for django cache</a></li>
+        <li><a href="http://blog.thoz.org/2016/01/19/log-view-parameter-before-caching-for-django/">djangoでcache使ってる間でも呼び出されたviewとかパラメーターをログに書き出したい</a></li>
+        <li><a href="http://blog.thoz.org/2015/08/25/migrate-from-django-1-dot-7-to-1-dot-8/">Django 1.7から1.8にアップデートしてみた</a></li>
+        <li><a href="http://blog.thoz.org/2014/06/25/django-with-bootstrap/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(2):Bootstrapを使ってみる</a></li>
+        <li><a href="http://blog.thoz.org/2015/07/28/use-django-model-outside-django-project/">DjangoモデルをDjangoプロジェクトの外から使う</a></li>
     </ul>
 </section>
     <hr />
@@ -359,7 +359,197 @@ REST API作るために、<a href="http://www.django-rest-framework.org/">Django
             </li>
 
             <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
-                <ul class="list-group list-inline tagcloud" id="tags">
+                <ul class="list-group " id="tags">
+                    <li class="list-group-item tag-0">
+                        <a href="http://blog.thoz.org/tag/python.html">
+                            python
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="http://blog.thoz.org/tag/memo.html">
+                            memo
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="http://blog.thoz.org/tag/linux.html">
+                            linux
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="http://blog.thoz.org/tag/django.html">
+                            django
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="http://blog.thoz.org/tag/ruby.html">
+                            ruby
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.thoz.org/tag/bootstrap.html">
+                            bootstrap
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.thoz.org/tag/groonga.html">
+                            groonga
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.thoz.org/tag/rails.html">
+                            Rails
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.thoz.org/tag/event.html">
+                            event
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.thoz.org/tag/postgresql.html">
+                            PostgreSQL
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.thoz.org/tag/r.html">
+                            R
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.thoz.org/tag/csharp.html">
+                            CSharp
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.thoz.org/tag/nadesiko.html">
+                            nadesiko
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.thoz.org/tag/nadesiko2.html">
+                            nadesiko2
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.thoz.org/tag/php.html">
+                            PHP
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.thoz.org/tag/rhaco.html">
+                            rhaco
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.thoz.org/tag/uwsgi.html">
+                            uwsgi
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.thoz.org/tag/ansible.html">
+                            ansible
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.thoz.org/tag/google.html">
+                            google
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.thoz.org/tag/cplusplus.html">
+                            CPlusPlus
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.thoz.org/tag/octopress.html">
+                            octopress
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.thoz.org/tag/test1st.html">
+                            test1st
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.thoz.org/tag/vim.html">
+                            vim
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.thoz.org/tag/nginx.html">
+                            nginx
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.thoz.org/tag/javascript.html">
+                            javascript
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.thoz.org/tag/titanium.html">
+                            titanium
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.thoz.org/tag/redis.html">
+                            redis
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.thoz.org/tag/sqlite.html">
+                            sqlite
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.thoz.org/tag/git.html">
+                            git
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.thoz.org/tag/svn.html">
+                            svn
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.thoz.org/tag/mt4.html">
+                            MT4
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.thoz.org/tag/rhaco3.html">
+                            rhaco3
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.thoz.org/tag/lua.html">
+                            Lua
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.thoz.org/tag/vmware.html">
+                            vmware
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.thoz.org/tag/unity.html">
+                            unity
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.thoz.org/tag/linkedopendata.html">
+                            linkedopendata
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.thoz.org/tag/pelican.html">
+                            pelican
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.thoz.org/tag/visualstudio.html">
+                            visualstudio
+                        </a>
+                    </li>
                 </ul>
             </li>
 
