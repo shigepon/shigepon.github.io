@@ -464,7 +464,7 @@
 &lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/6895051/passing-lists-or-tuples-as-arguments-in-django-raw-sql"&gt;passing lists or tuples as arguments in django raw sql - Stack Overflow&lt;/a&gt;&lt;/p&gt;
 &lt;h2&gt;Ajaxでpostしたい時&lt;/h2&gt;
 &lt;p&gt;csrfフィルタが初期状態で設定されてるし、csrfフィルタはあった方が良いので、次のようになったら良いかも（Jqueryを使う場合）&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;post&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;url&lt;/span&gt;&lt;span class="p"&gt;,{&lt;/span&gt;&lt;span class="nx"&gt;csrfmiddlewaretoken&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;{{csrf_token}}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;}...);&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;post&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;url&lt;/span&gt;&lt;span class="p"&gt;,{&lt;/span&gt;&lt;span class="nx"&gt;csrfmiddlewaretoken&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;}...);&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 

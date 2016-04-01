@@ -45,6 +45,14 @@ $ git clone https://github.com/username/username.github.io
 &lt;/pre&gt;&lt;/div&gt;
 
 
+&lt;p&gt;&lt;script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"&gt;&lt;/script&gt;
+&lt;!-- Google Adsense below content --&gt;
+&lt;ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-3165642025902490" data-ad-slot="1749996500"&gt;&lt;/ins&gt;
+&lt;script&gt;
+    (adsbygoogle = window.adsbygoogle || []).push({});
+&lt;/script&gt;
+&lt;!-- end Google Adsense --&gt;
+&lt;/p&gt;
 &lt;h2&gt;markdownファイルを編集&lt;/h2&gt;
 &lt;p&gt;octopressのmarkdownファイルの中でそのままではpelicanで使用出来ない部分があるので編集した。編集内容はこんな感じ。１個１個修正するのは面倒なのでなるべくsedで変更した。&lt;/p&gt;
 &lt;p&gt;元々のファイルはこんな感じ&lt;/p&gt;
@@ -282,15 +290,13 @@ $ sudo aptitude remove td-agent
 &lt;/ul&gt;</summary><category term="linux"></category></entry><entry><title>fluent-plugin-groongaをインストールして動かすまでをAnsibleでやってみた</title><link href="http://blog.thoz.org/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/" rel="alternate"></link><updated>2016-01-23T14:32:43+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2016-01-23:2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/</id><summary type="html">&lt;p&gt;ログ集計に何使うか迷ったんだけど、fluentdに&lt;a href="https://github.com/groonga/fluent-plugin-groonga"&gt;fluent-plugin-groonga&lt;/a&gt;ってのがあったのでfluentdを使ってgroongaにログを集計していくとこまでをやった。rbenvから色々やろうとしたら面倒だった。&lt;/p&gt;
 &lt;h2&gt;rbenvを使う&lt;/h2&gt;
 &lt;p&gt;バージョン管理が面倒なので、やっぱrbenv使わないといかんっしょと思ってやった。&lt;a href="http://qiita.com/katsuhiko/items/56935225754a90d58314"&gt;Ansible と Vagrant を使って Rails 開発環境（Ubuntu + rbenv + MySQL5.6 + node.js）を構築する - Qiita&lt;/a&gt;を参考にして変数を適当にしたりsudoのとこを変更したりして出来た&lt;/p&gt;
-&lt;!-- more --&gt;
-
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="x"&gt;---&lt;/span&gt;
 &lt;span class="x"&gt;- hosts: all&lt;/span&gt;
 &lt;span class="x"&gt;  user: hoge&lt;/span&gt;
 &lt;span class="x"&gt;  tasks:&lt;/span&gt;
 &lt;span class="x"&gt;    - name: Install dependencies for rbenv&lt;/span&gt;
 &lt;span class="x"&gt;      sudo: yes&lt;/span&gt;
-&lt;span class="x"&gt;      apt: name=&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;item&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt; state=latest&lt;/span&gt;
+&lt;span class="x"&gt;      apt: name=\&lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="x"&gt;\&lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="x"&gt; item \}\} state=latest&lt;/span&gt;
 &lt;span class="x"&gt;      with_items:&lt;/span&gt;
 &lt;span class="x"&gt;        - git&lt;/span&gt;
 &lt;span class="x"&gt;    - name: Install rbenv&lt;/span&gt;
@@ -298,13 +304,13 @@ $ sudo aptitude remove td-agent
 &lt;span class="x"&gt;    - name: Add ~.rbenv/bin to PATH&lt;/span&gt;
 &lt;span class="x"&gt;      lineinfile: &amp;gt;&lt;/span&gt;
 &lt;span class="x"&gt;        dest=&amp;quot;~/.bashrc&amp;quot;&lt;/span&gt;
-&lt;span class="x"&gt;        line=&amp;quot;export PATH=$HOME/.rbenv/bin:$PATH&amp;quot;&lt;/span&gt;
+&lt;span class="x"&gt;        line=&amp;quot;export PATH=&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;HOME&lt;/span&gt;&lt;span class="x"&gt;/.rbenv/bin:&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;PATH&lt;/span&gt;&lt;span class="x"&gt;&amp;quot;&lt;/span&gt;
 &lt;span class="x"&gt;    - name: Eval rbenv init in ~/.bashrc&lt;/span&gt;
 &lt;span class="x"&gt;      lineinfile: &amp;gt;&lt;/span&gt;
 &lt;span class="x"&gt;        dest=&amp;quot;~/.bashrc&amp;quot;&lt;/span&gt;
-&lt;span class="x"&gt;        line=&amp;#39;eval &amp;quot;$(rbenv init -)&amp;quot;&amp;#39;&lt;/span&gt;
+&lt;span class="x"&gt;        line=&amp;#39;eval &amp;quot;&lt;/span&gt;&lt;span class="p"&gt;$(&lt;/span&gt;&lt;span class="err"&gt;rbenv&lt;/span&gt; &lt;span class="err"&gt;init&lt;/span&gt; &lt;span class="err"&gt;-&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="x"&gt;&amp;quot;&amp;#39;&lt;/span&gt;
 &lt;span class="x"&gt;    - name: Install dependencies for ruby-build (see. https://github.com/sstephenson/ruby-build/wiki)&lt;/span&gt;
-&lt;span class="x"&gt;      apt: name=&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;item&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt; state=latest&lt;/span&gt;
+&lt;span class="x"&gt;      apt: name=\&lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="x"&gt;\&lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="x"&gt; item \}\} state=latest&lt;/span&gt;
 &lt;span class="x"&gt;      with_items:&lt;/span&gt;
 &lt;span class="x"&gt;        - autoconf&lt;/span&gt;
 &lt;span class="x"&gt;        - bison&lt;/span&gt;
@@ -319,25 +325,21 @@ $ sudo aptitude remove td-agent
 &lt;span class="x"&gt;        - libgdbm-dev&lt;/span&gt;
 &lt;span class="x"&gt;    - name: Install ruby-build as rbenv plugin&lt;/span&gt;
 &lt;span class="x"&gt;      git: repo=https://github.com/sstephenson/ruby-build.git dest=~/.rbenv/plugins/ruby-build&lt;/span&gt;
-
 &lt;span class="x"&gt;    - name: Check if version is installed ruby&lt;/span&gt;
-&lt;span class="x"&gt;      shell: &amp;quot;~/.rbenv/bin/rbenv versions | grep &lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;rbenv_ruby_version&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt;&amp;quot;&lt;/span&gt;
+&lt;span class="x"&gt;      shell: &amp;quot;~/.rbenv/bin/rbenv versions | grep \&lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="x"&gt;\&lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="x"&gt; rbenv_ruby_version \}\}&amp;quot;&lt;/span&gt;
 &lt;span class="x"&gt;      register: rbenv_check_install&lt;/span&gt;
 &lt;span class="x"&gt;      changed_when: False&lt;/span&gt;
 &lt;span class="x"&gt;      ignore_errors: yes&lt;/span&gt;
-
 &lt;span class="x"&gt;    - name: Install ruby&lt;/span&gt;
-&lt;span class="x"&gt;      command: &amp;quot;~/.rbenv/bin/rbenv install &lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;rbenv_ruby_version&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt;&amp;quot;&lt;/span&gt;
+&lt;span class="x"&gt;      command: &amp;quot;~/.rbenv/bin/rbenv install \&lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="x"&gt;\&lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="x"&gt; rbenv_ruby_version \}\}&amp;quot;&lt;/span&gt;
 &lt;span class="x"&gt;      when: rbenv_check_install|failed&lt;/span&gt;
-
 &lt;span class="x"&gt;    - name: Check if version is the default ruby version&lt;/span&gt;
-&lt;span class="x"&gt;      shell: &amp;quot;~/.rbenv/bin/rbenv version | grep &lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;rbenv_ruby_version&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt;&amp;quot;&lt;/span&gt;
+&lt;span class="x"&gt;      shell: &amp;quot;~/.rbenv/bin/rbenv version | grep \&lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="x"&gt;\&lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="x"&gt; rbenv_ruby_version \}\}&amp;quot;&lt;/span&gt;
 &lt;span class="x"&gt;      register: rbenv_check_default&lt;/span&gt;
 &lt;span class="x"&gt;      changed_when: False&lt;/span&gt;
 &lt;span class="x"&gt;      ignore_errors: yes&lt;/span&gt;
-
 &lt;span class="x"&gt;    - name: Set default ruby version&lt;/span&gt;
-&lt;span class="x"&gt;      command: &amp;quot;~/.rbenv/bin/rbenv global &lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;rbenv_ruby_version&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt;&amp;quot;&lt;/span&gt;
+&lt;span class="x"&gt;      command: &amp;quot;~/.rbenv/bin/rbenv global \&lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="x"&gt;\&lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="x"&gt; rbenv_ruby_version \}\}&amp;quot;&lt;/span&gt;
 &lt;span class="x"&gt;      when: rbenv_check_default|failed&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -346,26 +348,26 @@ $ sudo aptitude remove td-agent
 &lt;p&gt;shellのところrbenvだけにしたら何回やってもエラーで止まってしまった。なので結局rbenvはフルパス指定にした。bashrcに書いた分その後色々やった時に書いたので.profileでも良いかも知れない。&lt;/p&gt;
 &lt;h2&gt;fluentdのインストール&lt;/h2&gt;
 &lt;p&gt;こっから面倒だった。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="x"&gt;    - name: Gem install fluentd&lt;/span&gt;
-&lt;span class="x"&gt;      gem: name=&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;item&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
-&lt;span class="x"&gt;       executable=~/.rbenv/versions/&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;rbenv_ruby_version&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt;/bin/gem user_install=no&lt;/span&gt;
-&lt;span class="x"&gt;      with_items:&lt;/span&gt;
-&lt;span class="x"&gt;        - fluentd&lt;/span&gt;
-&lt;span class="x"&gt;        - fluent-plugin-groonga&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;    - name: Gem install fluentd
+      gem: name=\{\{ item \}\}
+       executable=~/.rbenv/versions/\{\{ rbenv_ruby_version \}\}/bin/gem user_install=no
+      with_items:
+        - fluentd
+        - fluent-plugin-groonga
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;たったこれだけ書くのに2時間くらい掛かったorz。fluentdをインストールする前にtd-agentから何とかならないか試したり、gemがなかなかrbenvでインストールしたバージョンになってくれなかったり、fluentdが変な場所にインストールされたり・・・でも結論としてはこれでおk。フルパス指定とuserinstall=noがポイントかな。&lt;/p&gt;
 &lt;h2&gt;fluentdの設定&lt;/h2&gt;
 &lt;p&gt;設定やったこと無かったので、ここが手探りになるのは仕方ない。includeのパスを間違えてて設定を読み込めないとか色々しょーもないハマりをした。ログが正しく送られてるかどうかはsourceのタグをdebug.accessに変えて、デバッグ表示させてtailがちゃんとされているか確認→実際にlog.accessでやってみるという手順で行った&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="x"&gt;- name: setup fluentd dir&lt;/span&gt;
-&lt;span class="x"&gt;      command: ~/.rbenv/versions/&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;rbenv_ruby_version&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt;/bin/fluentd --setup /path/to/fluent/config/file&lt;/span&gt;
-&lt;span class="x"&gt;    - name: set fluent.conf&lt;/span&gt;
-&lt;span class="x"&gt;      lineinfile: dest=/path/to/fluent/config/file/fluent.conf insertafter=EOF line=&amp;quot;@include conf.d/*&amp;quot; state=present&lt;/span&gt;
-&lt;span class="x"&gt;    - name: create conf.d folder&lt;/span&gt;
-&lt;span class="x"&gt;      file: path=/path/to/fluent/config/file/conf.d state=directory&lt;/span&gt;
-&lt;span class="x"&gt;    - name: copy groonga.fluentd.conf&lt;/span&gt;
-&lt;span class="x"&gt;      copy: src=groonga.fluentd.conf dest=~/path/to/fluent/config/file/conf.d&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;- name: setup fluentd dir
+      command: ~/.rbenv/versions/\{\{ rbenv_ruby_version \}\}/bin/fluentd --setup /path/to/fluent/config/file
+    - name: set fluent.conf
+      lineinfile: dest=/path/to/fluent/config/file/fluent.conf insertafter=EOF line=&amp;quot;@include conf.d/*&amp;quot; state=present
+    - name: create conf.d folder
+      file: path=/path/to/fluent/config/file/conf.d state=directory
+    - name: copy groonga.fluentd.conf
+      copy: src=groonga.fluentd.conf dest=~/path/to/fluent/config/file/conf.d
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -394,7 +396,13 @@ $ sudo aptitude remove td-agent
 &lt;p&gt;とりあえずここまでで十分ハマった。&lt;/p&gt;
 &lt;h2&gt;td-agentは使わない&lt;/h2&gt;
 &lt;p&gt;使用OSがubuntuなので、td-agentを使ってみたんだが、rbenv上のgemでインストールしたfluent-plugin-groongaを読み込む方法が最後まで分かんなかったので使わないことにした。td-agentだとserveceコマンドでリスタートとかやってくれるので楽なんだけどなー。&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="http://mhag.hatenablog.com/entry/2014/07/04/151415"&gt;Ubuntu 14.04 LTS に Fluentd をインストールする - ´・ω・)＜ときどき書くよ&lt;/a&gt;, &lt;a href="http://qiita.com/h5y1m141@github/items/74029cab9706971c8dbe"&gt;Rubyが参照してるgemのパスやインストール済gemを確認する方法 - Qiita&lt;/a&gt;, &lt;a href="http://qiita.com/groonga/items/5c674be9daf25054c14c"&gt;Fluentdで集めたデータをGroongaに格納する方法 - Qiita&lt;/a&gt;, &lt;a href="http://chocoby.jp/blog/2013/03/05/fluentd-ltsv/"&gt;fluentd で LTSV がサポートされたのでメモ - 暇人じゃない&lt;/a&gt;&lt;/p&gt;</summary><category term="python"></category><category term="groonga"></category><category term="ansible"></category><category term="ruby"></category></entry><entry><title>djangoでcache使ってる間でも呼び出されたviewとかパラメーターをログに書き出したい</title><link href="http://blog.thoz.org/2016/01/19/log-view-parameter-before-caching-for-django/" rel="alternate"></link><updated>2016-01-19T18:50:33+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2016-01-19:2016/01/19/log-view-parameter-before-caching-for-django/</id><summary type="html">&lt;p&gt;djangoのログ機能を使って、呼び出されたview名とかパラメーターとかを書き出してたんだけど、viewでキャッシュを使うとログを書いてくれなくなるので、それをなんとかしたいという話。&lt;/p&gt;
+&lt;p&gt;参考：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://mhag.hatenablog.com/entry/2014/07/04/151415"&gt;Ubuntu 14.04 LTS に Fluentd をインストールする - ´・ω・)＜ときどき書くよ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://qiita.com/h5y1m141@github/items/74029cab9706971c8dbe"&gt;Rubyが参照してるgemのパスやインストール済gemを確認する方法 - Qiita&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://qiita.com/groonga/items/5c674be9daf25054c14c"&gt;Fluentdで集めたデータをGroongaに格納する方法 - Qiita&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://chocoby.jp/blog/2013/03/05/fluentd-ltsv/"&gt;fluentd で LTSV がサポートされたのでメモ - 暇人じゃない&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</summary><category term="python"></category><category term="groonga"></category><category term="ansible"></category><category term="ruby"></category></entry><entry><title>djangoでcache使ってる間でも呼び出されたviewとかパラメーターをログに書き出したい</title><link href="http://blog.thoz.org/2016/01/19/log-view-parameter-before-caching-for-django/" rel="alternate"></link><updated>2016-01-19T18:50:33+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2016-01-19:2016/01/19/log-view-parameter-before-caching-for-django/</id><summary type="html">&lt;p&gt;djangoのログ機能を使って、呼び出されたview名とかパラメーターとかを書き出してたんだけど、viewでキャッシュを使うとログを書いてくれなくなるので、それをなんとかしたいという話。&lt;/p&gt;
 &lt;p&gt;コードにするとこんな感じ&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#views.py&lt;/span&gt;
 &lt;span class="o"&gt;...&lt;/span&gt;
@@ -2017,12 +2025,11 @@ Twitterでインなんとかとか言っちゃいましたが、インキャン�
 &lt;!-- more --&gt;
 
 &lt;h2&gt;テンプレート&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{% raw %}
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;
 {% load bootstrap3 %}
 {% bootstrap_css %}
 {% bootstrap_javascript %}
 {% bootstrap_messages %}
-{% endraw %}
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -2630,7 +2637,7 @@ class MyAccountAdapter(DefaultAccountAdapter):
 &lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/6895051/passing-lists-or-tuples-as-arguments-in-django-raw-sql"&gt;passing lists or tuples as arguments in django raw sql - Stack Overflow&lt;/a&gt;&lt;/p&gt;
 &lt;h2&gt;Ajaxでpostしたい時&lt;/h2&gt;
 &lt;p&gt;csrfフィルタが初期状態で設定されてるし、csrfフィルタはあった方が良いので、次のようになったら良いかも（Jqueryを使う場合）&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;post&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;url&lt;/span&gt;&lt;span class="p"&gt;,{&lt;/span&gt;&lt;span class="nx"&gt;csrfmiddlewaretoken&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;{{csrf_token}}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;}...);&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;post&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;url&lt;/span&gt;&lt;span class="p"&gt;,{&lt;/span&gt;&lt;span class="nx"&gt;csrfmiddlewaretoken&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;}...);&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -2913,7 +2920,7 @@ break;
 
 
 &lt;p&gt;テンプレでは次のように静的ファイルにアクセスする&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt; &lt;span class="na"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;text/javascript&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;src&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;{{ STATIC_URL }}js/hoge.js&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt; &lt;span class="na"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;text/javascript&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;src&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;{path}js/hoge.js&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -3221,7 +3228,7 @@ AUTH_USER_MODEL
 &lt;p&gt;bocho/templates/list.htmlを作る。中身は一部だけ。{{ 変数名 }}でビューで割り当てた変数を表示する。
 あと、色々テンプレート用のタグがある。これもDjangoマニュアルを見ると分かる。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# list.html
-{% raw %}
+
 &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;table&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;table&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
     &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;thead&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;span2&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;日付&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;名称&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;裁判所&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;thead&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 {% for object in object_list %}
@@ -3232,7 +3239,6 @@ AUTH_USER_MODEL
 &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;tr&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 {% endfor %}
 &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;table&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-{% endraw %}
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -3265,10 +3271,9 @@ AUTH_USER_MODEL
 &lt;p&gt;どうせbootstrapを使うのでdjango-bootstrap-toolkitを使う方法を載せる。
 ページ分けする対象をobject_list、ページ送りのURLにpage=以外に設定するパラメータをreqとすると、&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# list.html
-{% raw %}
+
 {% load bootstrap_toolkit %}↲
 {% bootstrap_pagination object_list align=&amp;quot;center&amp;quot; extra=req %}
-{% endraw %}
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -3277,9 +3282,8 @@ AUTH_USER_MODEL
 &lt;p&gt;ついでにメモ
 例えば"date=2001-01-01"みたいなパラメータを設定したいんだけど、割り当ててる変数？は日付オブジェクトの場合&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# list.html
-{% raw %}
+
 {% bootstrap\_pagination object\_list align=&amp;quot;center&amp;quot; extra=date|date:&amp;quot;Y-m-d&amp;quot;|s    tringformat:&amp;quot;%date=%s&amp;quot;|slice:&amp;quot;1:&amp;quot; %}
-{% endraw %}
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -3665,14 +3669,13 @@ subprocessを使う。何か昔は別の手法だったらしい。&lt;/p&gt;
 &lt;!-- more --&gt;
 
 &lt;p&gt;テンプレートを書く&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{% raw %}
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;
 {% load bootstrap_toolkit %}} #bootstrap-toolkitを使うページ全てに必要っぽい 
 ...
 &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;head&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 {% bootstrap_stylesheet_tag %}  #bootstrapのcssへのタグ(CDNから読み込み)
 {% bootstrap_stylesheet_tag &amp;quot;responsive %} #bootstrapのレスポンシブページ用タグ(CDNから読み込み)
 {% bootstrap_javascript_tag %}  #bootstrapのjavascriptへのタグ(CDNから読み込み)
-{% endraw %}
 &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;head&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 あとは普通にbootstrapのタグを書く
 &lt;/pre&gt;&lt;/div&gt;
@@ -3732,13 +3735,15 @@ subprocessを使う。何か昔は別の手法だったらしい。&lt;/p&gt;
 &lt;p&gt;Railsだと、こういうのどうしたら良いか分からなくて困った。&lt;/p&gt;
 &lt;h2&gt;views.pyでビューを作る&lt;/h2&gt;
 &lt;p&gt;ビューはbocho/views.pyを編集すればおk。詳細表示の場合こんな感じ&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# coding: utf-8&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;raw&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="c1"&gt;# coding: utf-8&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.shortcuts&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;render&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;bocho.models&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Event&lt;/span&gt;
 
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;detail&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;event_id&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="n"&gt;event&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Event&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;event_id&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;render&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;event/detail.html&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;object&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;event&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;endraw&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -3756,7 +3761,8 @@ modelは先にインポートする。表示に使うテンプレートと変数
 
 &lt;p&gt;こうしておくと、bochoアプリのテンプレはbocho/templates/以下を参照し、さらにファイルが無い場合はtemplates/以下も調べる。上のように'event/detail.html'と指定した場合は、bocho/templates/event/detail.htmlを参照する。&lt;/p&gt;
 &lt;p&gt;設定出来たので、bocho/templates/event/detail.htmlを以下のように書く&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;body&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;h1&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;詳細画面&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;h1&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;dl&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;

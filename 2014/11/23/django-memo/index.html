@@ -412,7 +412,7 @@ shigeponが関心のある技術情報など            </a>
 <p>参考：<a href="http://stackoverflow.com/questions/6895051/passing-lists-or-tuples-as-arguments-in-django-raw-sql">passing lists or tuples as arguments in django raw sql - Stack Overflow</a></p>
 <h2>Ajaxでpostしたい時</h2>
 <p>csrfフィルタが初期状態で設定されてるし、csrfフィルタはあった方が良いので、次のようになったら良いかも（Jqueryを使う場合）</p>
-<div class="highlight"><pre><span></span><span class="nx">$</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">url</span><span class="p">,{</span><span class="nx">csrfmiddlewaretoken</span><span class="o">:</span> <span class="s1">&#39;{{csrf_token}}&#39;</span><span class="p">}...);</span>
+<div class="highlight"><pre><span></span><span class="nx">$</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">url</span><span class="p">,{</span><span class="nx">csrfmiddlewaretoken</span><span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">}...);</span>
 </pre></div>
 
 

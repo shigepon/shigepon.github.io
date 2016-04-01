@@ -112,15 +112,13 @@ shigeponが関心のある技術情報など            </a>
                 <p>ログ集計に何使うか迷ったんだけど、fluentdに<a href="https://github.com/groonga/fluent-plugin-groonga">fluent-plugin-groonga</a>ってのがあったのでfluentdを使ってgroongaにログを集計していくとこまでをやった。rbenvから色々やろうとしたら面倒だった。</p>
 <h2>rbenvを使う</h2>
 <p>バージョン管理が面倒なので、やっぱrbenv使わないといかんっしょと思ってやった。<a href="http://qiita.com/katsuhiko/items/56935225754a90d58314">Ansible と Vagrant を使って Rails 開発環境（Ubuntu + rbenv + MySQL5.6 + node.js）を構築する - Qiita</a>を参考にして変数を適当にしたりsudoのとこを変更したりして出来た</p>
-<!-- more -->
-
 <div class="highlight"><pre><span></span><span class="x">---</span>
 <span class="x">- hosts: all</span>
 <span class="x">  user: hoge</span>
 <span class="x">  tasks:</span>
 <span class="x">    - name: Install dependencies for rbenv</span>
 <span class="x">      sudo: yes</span>
-<span class="x">      apt: name=</span><span class="cp">{{</span> <span class="nv">item</span> <span class="cp">}}</span><span class="x"> state=latest</span>
+<span class="x">      apt: name=\</span><span class="err">{</span><span class="x">\</span><span class="err">{</span><span class="x"> item \}\} state=latest</span>
 <span class="x">      with_items:</span>
 <span class="x">        - git</span>
 <span class="x">    - name: Install rbenv</span>
@@ -128,13 +126,13 @@ shigeponが関心のある技術情報など            </a>
 <span class="x">    - name: Add ~.rbenv/bin to PATH</span>
 <span class="x">      lineinfile: &gt;</span>
 <span class="x">        dest=&quot;~/.bashrc&quot;</span>
-<span class="x">        line=&quot;export PATH=$HOME/.rbenv/bin:$PATH&quot;</span>
+<span class="x">        line=&quot;export PATH=</span><span class="p">$</span><span class="nv">HOME</span><span class="x">/.rbenv/bin:</span><span class="p">$</span><span class="nv">PATH</span><span class="x">&quot;</span>
 <span class="x">    - name: Eval rbenv init in ~/.bashrc</span>
 <span class="x">      lineinfile: &gt;</span>
 <span class="x">        dest=&quot;~/.bashrc&quot;</span>
-<span class="x">        line=&#39;eval &quot;$(rbenv init -)&quot;&#39;</span>
+<span class="x">        line=&#39;eval &quot;</span><span class="p">$(</span><span class="err">rbenv</span> <span class="err">init</span> <span class="err">-</span><span class="p">)</span><span class="x">&quot;&#39;</span>
 <span class="x">    - name: Install dependencies for ruby-build (see. https://github.com/sstephenson/ruby-build/wiki)</span>
-<span class="x">      apt: name=</span><span class="cp">{{</span> <span class="nv">item</span> <span class="cp">}}</span><span class="x"> state=latest</span>
+<span class="x">      apt: name=\</span><span class="err">{</span><span class="x">\</span><span class="err">{</span><span class="x"> item \}\} state=latest</span>
 <span class="x">      with_items:</span>
 <span class="x">        - autoconf</span>
 <span class="x">        - bison</span>
@@ -149,25 +147,21 @@ shigeponが関心のある技術情報など            </a>
 <span class="x">        - libgdbm-dev</span>
 <span class="x">    - name: Install ruby-build as rbenv plugin</span>
 <span class="x">      git: repo=https://github.com/sstephenson/ruby-build.git dest=~/.rbenv/plugins/ruby-build</span>
-
 <span class="x">    - name: Check if version is installed ruby</span>
-<span class="x">      shell: &quot;~/.rbenv/bin/rbenv versions | grep </span><span class="cp">{{</span> <span class="nv">rbenv_ruby_version</span> <span class="cp">}}</span><span class="x">&quot;</span>
+<span class="x">      shell: &quot;~/.rbenv/bin/rbenv versions | grep \</span><span class="err">{</span><span class="x">\</span><span class="err">{</span><span class="x"> rbenv_ruby_version \}\}&quot;</span>
 <span class="x">      register: rbenv_check_install</span>
 <span class="x">      changed_when: False</span>
 <span class="x">      ignore_errors: yes</span>
-
 <span class="x">    - name: Install ruby</span>
-<span class="x">      command: &quot;~/.rbenv/bin/rbenv install </span><span class="cp">{{</span> <span class="nv">rbenv_ruby_version</span> <span class="cp">}}</span><span class="x">&quot;</span>
+<span class="x">      command: &quot;~/.rbenv/bin/rbenv install \</span><span class="err">{</span><span class="x">\</span><span class="err">{</span><span class="x"> rbenv_ruby_version \}\}&quot;</span>
 <span class="x">      when: rbenv_check_install|failed</span>
-
 <span class="x">    - name: Check if version is the default ruby version</span>
-<span class="x">      shell: &quot;~/.rbenv/bin/rbenv version | grep </span><span class="cp">{{</span> <span class="nv">rbenv_ruby_version</span> <span class="cp">}}</span><span class="x">&quot;</span>
+<span class="x">      shell: &quot;~/.rbenv/bin/rbenv version | grep \</span><span class="err">{</span><span class="x">\</span><span class="err">{</span><span class="x"> rbenv_ruby_version \}\}&quot;</span>
 <span class="x">      register: rbenv_check_default</span>
 <span class="x">      changed_when: False</span>
 <span class="x">      ignore_errors: yes</span>
-
 <span class="x">    - name: Set default ruby version</span>
-<span class="x">      command: &quot;~/.rbenv/bin/rbenv global </span><span class="cp">{{</span> <span class="nv">rbenv_ruby_version</span> <span class="cp">}}</span><span class="x">&quot;</span>
+<span class="x">      command: &quot;~/.rbenv/bin/rbenv global \</span><span class="err">{</span><span class="x">\</span><span class="err">{</span><span class="x"> rbenv_ruby_version \}\}&quot;</span>
 <span class="x">      when: rbenv_check_default|failed</span>
 </pre></div>
 
@@ -176,26 +170,26 @@ shigeponが関心のある技術情報など            </a>
 <p>shellのところrbenvだけにしたら何回やってもエラーで止まってしまった。なので結局rbenvはフルパス指定にした。bashrcに書いた分その後色々やった時に書いたので.profileでも良いかも知れない。</p>
 <h2>fluentdのインストール</h2>
 <p>こっから面倒だった。</p>
-<div class="highlight"><pre><span></span><span class="x">    - name: Gem install fluentd</span>
-<span class="x">      gem: name=</span><span class="cp">{{</span> <span class="nv">item</span> <span class="cp">}}</span><span class="x"></span>
-<span class="x">       executable=~/.rbenv/versions/</span><span class="cp">{{</span> <span class="nv">rbenv_ruby_version</span> <span class="cp">}}</span><span class="x">/bin/gem user_install=no</span>
-<span class="x">      with_items:</span>
-<span class="x">        - fluentd</span>
-<span class="x">        - fluent-plugin-groonga</span>
+<div class="highlight"><pre><span></span>    - name: Gem install fluentd
+      gem: name=\{\{ item \}\}
+       executable=~/.rbenv/versions/\{\{ rbenv_ruby_version \}\}/bin/gem user_install=no
+      with_items:
+        - fluentd
+        - fluent-plugin-groonga
 </pre></div>
 
 
 <p>たったこれだけ書くのに2時間くらい掛かったorz。fluentdをインストールする前にtd-agentから何とかならないか試したり、gemがなかなかrbenvでインストールしたバージョンになってくれなかったり、fluentdが変な場所にインストールされたり・・・でも結論としてはこれでおk。フルパス指定とuserinstall=noがポイントかな。</p>
 <h2>fluentdの設定</h2>
 <p>設定やったこと無かったので、ここが手探りになるのは仕方ない。includeのパスを間違えてて設定を読み込めないとか色々しょーもないハマりをした。ログが正しく送られてるかどうかはsourceのタグをdebug.accessに変えて、デバッグ表示させてtailがちゃんとされているか確認→実際にlog.accessでやってみるという手順で行った</p>
-<div class="highlight"><pre><span></span><span class="x">- name: setup fluentd dir</span>
-<span class="x">      command: ~/.rbenv/versions/</span><span class="cp">{{</span> <span class="nv">rbenv_ruby_version</span> <span class="cp">}}</span><span class="x">/bin/fluentd --setup /path/to/fluent/config/file</span>
-<span class="x">    - name: set fluent.conf</span>
-<span class="x">      lineinfile: dest=/path/to/fluent/config/file/fluent.conf insertafter=EOF line=&quot;@include conf.d/*&quot; state=present</span>
-<span class="x">    - name: create conf.d folder</span>
-<span class="x">      file: path=/path/to/fluent/config/file/conf.d state=directory</span>
-<span class="x">    - name: copy groonga.fluentd.conf</span>
-<span class="x">      copy: src=groonga.fluentd.conf dest=~/path/to/fluent/config/file/conf.d</span>
+<div class="highlight"><pre><span></span>- name: setup fluentd dir
+      command: ~/.rbenv/versions/\{\{ rbenv_ruby_version \}\}/bin/fluentd --setup /path/to/fluent/config/file
+    - name: set fluent.conf
+      lineinfile: dest=/path/to/fluent/config/file/fluent.conf insertafter=EOF line=&quot;@include conf.d/*&quot; state=present
+    - name: create conf.d folder
+      file: path=/path/to/fluent/config/file/conf.d state=directory
+    - name: copy groonga.fluentd.conf
+      copy: src=groonga.fluentd.conf dest=~/path/to/fluent/config/file/conf.d
 </pre></div>
 
 
@@ -224,7 +218,13 @@ shigeponが関心のある技術情報など            </a>
 <p>とりあえずここまでで十分ハマった。</p>
 <h2>td-agentは使わない</h2>
 <p>使用OSがubuntuなので、td-agentを使ってみたんだが、rbenv上のgemでインストールしたfluent-plugin-groongaを読み込む方法が最後まで分かんなかったので使わないことにした。td-agentだとserveceコマンドでリスタートとかやってくれるので楽なんだけどなー。</p>
-<p>参考：<a href="http://mhag.hatenablog.com/entry/2014/07/04/151415">Ubuntu 14.04 LTS に Fluentd をインストールする - ´・ω・)＜ときどき書くよ</a>, <a href="http://qiita.com/h5y1m141@github/items/74029cab9706971c8dbe">Rubyが参照してるgemのパスやインストール済gemを確認する方法 - Qiita</a>, <a href="http://qiita.com/groonga/items/5c674be9daf25054c14c">Fluentdで集めたデータをGroongaに格納する方法 - Qiita</a>, <a href="http://chocoby.jp/blog/2013/03/05/fluentd-ltsv/">fluentd で LTSV がサポートされたのでメモ - 暇人じゃない</a></p>
+<p>参考：</p>
+<ul>
+<li><a href="http://mhag.hatenablog.com/entry/2014/07/04/151415">Ubuntu 14.04 LTS に Fluentd をインストールする - ´・ω・)＜ときどき書くよ</a></li>
+<li><a href="http://qiita.com/h5y1m141@github/items/74029cab9706971c8dbe">Rubyが参照してるgemのパスやインストール済gemを確認する方法 - Qiita</a></li>
+<li><a href="http://qiita.com/groonga/items/5c674be9daf25054c14c">Fluentdで集めたデータをGroongaに格納する方法 - Qiita</a></li>
+<li><a href="http://chocoby.jp/blog/2013/03/05/fluentd-ltsv/">fluentd で LTSV がサポートされたのでメモ - 暇人じゃない</a></li>
+</ul>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- Google Adsense below content -->
 <ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-3165642025902490" data-ad-slot="1749996500"></ins>

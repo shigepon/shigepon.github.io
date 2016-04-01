@@ -120,14 +120,13 @@ shigeponが関心のある技術情報など            </a>
 <!-- more -->
 
 <p>テンプレートを書く</p>
-<div class="highlight"><pre><span></span>{% raw %}
+<div class="highlight"><pre><span></span>
 {% load bootstrap_toolkit %}} #bootstrap-toolkitを使うページ全てに必要っぽい 
 ...
 <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
 {% bootstrap_stylesheet_tag %}  #bootstrapのcssへのタグ(CDNから読み込み)
 {% bootstrap_stylesheet_tag &quot;responsive %} #bootstrapのレスポンシブページ用タグ(CDNから読み込み)
 {% bootstrap_javascript_tag %}  #bootstrapのjavascriptへのタグ(CDNから読み込み)
-{% endraw %}
 <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
 あとは普通にbootstrapのタグを書く
 </pre></div>

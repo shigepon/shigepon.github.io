@@ -160,13 +160,15 @@ shigeponが関心のある技術情報など            </a>
 <p>Railsだと、こういうのどうしたら良いか分からなくて困った。</p>
 <h2>views.pyでビューを作る</h2>
 <p>ビューはbocho/views.pyを編集すればおk。詳細表示の場合こんな感じ</p>
-<div class="highlight"><pre><span></span><span class="c1"># coding: utf-8</span>
+<div class="highlight"><pre><span></span><span class="p">{</span><span class="o">%</span> <span class="n">raw</span> <span class="o">%</span><span class="p">}</span>
+<span class="c1"># coding: utf-8</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
 <span class="kn">from</span> <span class="nn">bocho.models</span> <span class="kn">import</span> <span class="n">Event</span>
 
 <span class="k">def</span> <span class="nf">detail</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="n">event_id</span><span class="p">):</span>
     <span class="n">event</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">event_id</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s1">&#39;event/detail.html&#39;</span><span class="p">,{</span><span class="s1">&#39;object&#39;</span><span class="p">:</span><span class="n">event</span><span class="p">})</span>
+<span class="p">{</span><span class="o">%</span> <span class="n">endraw</span> <span class="o">%</span><span class="p">}</span>
 </pre></div>
 
 
@@ -184,7 +186,8 @@ modelは先にインポートする。表示に使うテンプレートと変数
 
 <p>こうしておくと、bochoアプリのテンプレはbocho/templates/以下を参照し、さらにファイルが無い場合はtemplates/以下も調べる。上のように'event/detail.html'と指定した場合は、bocho/templates/event/detail.htmlを参照する。</p>
 <p>設定出来たので、bocho/templates/event/detail.htmlを以下のように書く</p>
-<div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<div class="highlight"><pre><span></span>
+<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
 <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
 <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>詳細画面<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
 <span class="p">&lt;</span><span class="nt">dl</span><span class="p">&gt;</span>

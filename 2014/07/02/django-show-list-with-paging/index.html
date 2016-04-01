@@ -149,7 +149,7 @@ shigeponが関心のある技術情報など            </a>
 <p>bocho/templates/list.htmlを作る。中身は一部だけ。{{ 変数名 }}でビューで割り当てた変数を表示する。
 あと、色々テンプレート用のタグがある。これもDjangoマニュアルを見ると分かる。</p>
 <div class="highlight"><pre><span></span># list.html
-{% raw %}
+
 <span class="p">&lt;</span><span class="nt">table</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;table&quot;</span><span class="p">&gt;</span>
     <span class="p">&lt;</span><span class="nt">thead</span><span class="p">&gt;&lt;</span><span class="nt">th</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;span2&quot;</span><span class="p">&gt;</span>日付<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;&lt;</span><span class="nt">th</span><span class="p">&gt;</span>名称<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;&lt;</span><span class="nt">th</span><span class="p">&gt;</span>裁判所<span class="p">&lt;/</span><span class="nt">th</span><span class="p">&gt;&lt;/</span><span class="nt">thead</span><span class="p">&gt;</span>
 {% for object in object_list %}
@@ -160,7 +160,6 @@ shigeponが関心のある技術情報など            </a>
 <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
 {% endfor %}
 <span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
-{% endraw %}
 </pre></div>
 
 
@@ -193,10 +192,9 @@ shigeponが関心のある技術情報など            </a>
 <p>どうせbootstrapを使うのでdjango-bootstrap-toolkitを使う方法を載せる。
 ページ分けする対象をobject_list、ページ送りのURLにpage=以外に設定するパラメータをreqとすると、</p>
 <div class="highlight"><pre><span></span># list.html
-{% raw %}
+
 {% load bootstrap_toolkit %}↲
 {% bootstrap_pagination object_list align=&quot;center&quot; extra=req %}
-{% endraw %}
 </pre></div>
 
 
@@ -205,9 +203,8 @@ shigeponが関心のある技術情報など            </a>
 <p>ついでにメモ
 例えば"date=2001-01-01"みたいなパラメータを設定したいんだけど、割り当ててる変数？は日付オブジェクトの場合</p>
 <div class="highlight"><pre><span></span># list.html
-{% raw %}
+
 {% bootstrap\_pagination object\_list align=&quot;center&quot; extra=date|date:&quot;Y-m-d&quot;|s    tringformat:&quot;%date=%s&quot;|slice:&quot;1:&quot; %}
-{% endraw %}
 </pre></div>
 
 
