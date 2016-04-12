@@ -2,7 +2,7 @@
 <html lang="ja"
 >
 <head>
-    <title>shigeponが関心のある技術情報など</title>
+    <title>Google Tag ManagerでGoogle Analyticsを使う - shigeponが関心のある技術情報など</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -10,15 +10,21 @@
 
 
 
-<link rel="canonical" href="http://blog.thoz.org">
-        <meta name="author" content="shigepon" />
+<link rel="canonical" href="http://blog.thoz.org/2016/04/02/implement_google_analytics_with_google_tag_manager/">
 
-    <!-- Open Graph tags -->
+        <meta name="author" content="shigepon" />
+        <meta name="keywords" content="update,law" />
+
         <meta property="og:site_name" content="shigeponが関心のある技術情報など" />
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content="shigeponが関心のある技術情報など"/>
-        <meta property="og:url" content="http://blog.thoz.org"/>
-        <meta property="og:description" content="shigeponが関心のある技術情報など"/>
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Google Tag ManagerでGoogle Analyticsを使う"/>
+        <meta property="og:url" content="http://blog.thoz.org/2016/04/02/implement_google_analytics_with_google_tag_manager/"/>
+        <meta property="og:description" content=""/>
+        <meta property="article:published_time" content="2016-04-02" />
+            <meta property="article:section" content="google" />
+            <meta property="article:tag" content="update" />
+            <meta property="article:tag" content="law" />
+            <meta property="article:author" content="shigepon" />
 
     <meta name="twitter:card" content="summary">
         <meta name="twitter:site" content="@shigepon">
@@ -54,6 +60,9 @@ shigeponが関心のある技術情報など            </a>
             <ul class="nav navbar-nav">
                     <li><a href="http://www.shigepon.info/">shigeponのホームページ</a></li>
                     <li><a href="http://thoz.org/">とある法律判例の全文検索トップ</a></li>
+                         <li class="active"><a href="http://blog.thoz.org/pages/konopezinitsuite.html">
+                             about
+                          </a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <li><a href="http://blog.thoz.org/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
@@ -68,82 +77,118 @@ shigeponが関心のある技術情報など            </a>
     <div class="row">
         <div class="col-sm-9">
 
-            <article>
-                <h2><a href="http://blog.thoz.org/2014/09/22/kobe-dot-r-number-9/">Kobe.R #9に参加しました</a></h2>
-                <div class="summary">
-                    <a class="btn btn-default btn-xs" href="http://blog.thoz.org/2014/09/22/kobe-dot-r-number-9/">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://blog.thoz.org/2014/08/20/vb-not-work-on-ubuntu/">ubuntuのmonoでMicrosoft.VisualBasicが動かない件</a></h2>
-                <div class="summary">
-                    <a class="btn btn-default btn-xs" href="http://blog.thoz.org/2014/08/20/vb-not-work-on-ubuntu/">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://blog.thoz.org/2014/08/06/django-error/">djangoで出てくるエラーメッセージメモ</a></h2>
-                <div class="summary">
-                    <a class="btn btn-default btn-xs" href="http://blog.thoz.org/2014/08/06/django-error/">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://blog.thoz.org/2014/07/29/matcha-139/">まっちゃ139勉強会に参加しました</a></h2>
-                <div class="summary">
-                    <a class="btn btn-default btn-xs" href="http://blog.thoz.org/2014/07/29/matcha-139/">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://blog.thoz.org/2014/07/23/use-python-social-auth-in-django/">Djangoでpython-social-authを使うための最低限の設定</a></h2>
-                <div class="summary">
-                    <a class="btn btn-default btn-xs" href="http://blog.thoz.org/2014/07/23/use-python-social-auth-in-django/">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://blog.thoz.org/2014/07/05/groonga-qa/">Groongaアンケート？</a></h2>
-                <div class="summary">
-                    <a class="btn btn-default btn-xs" href="http://blog.thoz.org/2014/07/05/groonga-qa/">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://blog.thoz.org/2014/07/02/django-show-list-with-paging/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する</a></h2>
-                <div class="summary">
-                    <a class="btn btn-default btn-xs" href="http://blog.thoz.org/2014/07/02/django-show-list-with-paging/">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://blog.thoz.org/2014/07/01/ansible-memo/">ansible memo</a></h2>
-                <div class="summary">
-                    <a class="btn btn-default btn-xs" href="http://blog.thoz.org/2014/07/01/ansible-memo/">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://blog.thoz.org/2014/06/30/python-memo/">Python memo</a></h2>
-                <div class="summary">
-                    <a class="btn btn-default btn-xs" href="http://blog.thoz.org/2014/06/30/python-memo/">more ...</a>
-                </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="http://blog.thoz.org/2014/06/28/groonga-study-kobe-2014-06-27/">全文検索エンジンGroongaユーザ勉強会＠神戸に参加しました</a></h2>
-                <div class="summary">
-                    <a class="btn btn-default btn-xs" href="http://blog.thoz.org/2014/06/28/groonga-study-kobe-2014-06-27/">more ...</a>
-                </div>
-            </article>
-            <hr/>
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="http://blog.thoz.org/2016/04/02/implement_google_analytics_with_google_tag_manager/"
+                       rel="bookmark"
+                       title="Permalink to Google Tag ManagerでGoogle Analyticsを使う">
+                        Google Tag ManagerでGoogle Analyticsを使う
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2016-04-02T10:30:00+09:00"> 土 02 4月 2016</time>
+    </span>
 
-        <ul class="pager">
-                <li class="previous"><a href="http://blog.thoz.org/index5.html">&larr; Newer</a></li>
-                <li class="next"><a
-                        href="http://blog.thoz.org/index7.html">Older &rarr;</a></li>
-        </ul>
+
+
+<span class="label label-default">Tags</span>
+	<a href="http://blog.thoz.org/tag/update.html">update</a>
+        /
+	<a href="http://blog.thoz.org/tag/law.html">law</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>Google AnalyticsのコントロールもGoogle Tag Managerに置き換えてしまった方が良いと思ったのでやってみた。Google Analytics上での設定は先にしているものとする。</p>
+<h2>アカウント作成する場合</h2>
+<p>してもしなくても良い。すでにあるものを利用するなら、必要ない。</p>
+<ul>
+<li><a href="https://tagmanager.google.com">Google Tag Manager</a>にアクセス</li>
+<li>「アカウントを作成」をクリック</li>
+<li>アカウント名を入力して続行ボタンを押す</li>
+<li>コンテナ名を入力して使用場所としてウェブを選択</li>
+<li>利用規約が出るので「はい」</li>
+<li>作成を押す</li>
+<li>スニペットが出るので、これをウェブサイトの全てのページの<body>下にコピペする</li>
+<li>「コンテナの設定」からの作業を続ける</li>
+</ul>
+<p><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Google Adsense below content -->
+<ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-3165642025902490" data-ad-slot="1749996500"></ins>
+<script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<!-- end Google Adsense -->
+</p>
+<h2>アカウント作成しない場合</h2>
+<ul>
+<li>Google Tag Managerにアクセス</li>
+<li>すでに作成しているアカウントのアカウント名右にある「・・・」が縦になってるようなメニューをクリック</li>
+<li>コンテナを作成をクリック</li>
+<li>コンテナ名を入力して使用場所としてウェブを選択</li>
+<li>作成を押す</li>
+<li>スニペットが出るので、これをウェブサイトの全てのページの<body>下にコピペする</li>
+<li>「コンテナの設定」からの作業を続ける</li>
+</ul>
+<h2>コンテナの設定</h2>
+<p>まずGoogle Analyticsのトラッキング IDを変数にしておいた方が後々便利なので設定しておく</p>
+<p>変数の設定</p>
+<h6></h6>
+<ul>
+<li>左サイドの「変数」をクリック</li>
+<li>下部にある「新規」をクリック</li>
+<li>「定数」をクリック</li>
+<li>値として「UA-xxxx-xxxx」とGoogle Analyticsのトラッキング IDを設定して「変数を作成」をクリック</li>
+<li>変数名を適当に付けて「保存」をクリック（今回は「UA」とした）</li>
+</ul>
+<p>タグの設定（Google Analyticsの設定）</p>
+<h6></h6>
+<ul>
+<li>左サイドの「サマリー」をクリック</li>
+<li>新しいタグをクリック</li>
+<li>「1.プロダクトを選択」で「Google Analytics」をクリック</li>
+<li>「2.タグの種類を選択」で「ユニバーサルアナリティックス」をクリック（従来でも良いかも？）</li>
+<li>「3.タグを設定」で「トラッキングID」に「{{ UA }}」を設定（上で設定した変数）</li>
+<li>「続行」をクリック</li>
+<li>「4.配信するタイミング」で「全てのページ」をクリック</li>
+<li>「タグを作成」をクリック</li>
+<li>「タグ名の変更」で「タグ名」を適当に設定して「保存」をクリック</li>
+</ul>
+<p>タグの公開（実行してAnalyticsを開始する）</p>
+<h6></h6>
+<ul>
+<li>タグ一覧の画面になるので右上の「公開」ボタンをクリック</li>
+<li>「今すぐ公開」ボタンをクリック</li>
+</ul>
+<p>以上でAnalyticsにデータを送信してくれるようになる。</p>
+<p>Analyticsを動かすためだけにGoogle Tag Manager使うのは手間がかかるが、クリックを検出したりと色々機能を追加したり変更したりする時に、Google Tag Manager使っているとページ上のコードを変更する必要がなくなる。このメリットはとても大きいので、使う価値はあるんじゃないかと思う。</p>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Google Adsense below content -->
+<ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-3165642025902490" data-ad-slot="1749996500"></ins>
+<script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<!-- end Google Adsense -->
+            </div>
+            <!-- /.entry-content -->
+    <hr />
+    <!-- AddThis Button BEGIN -->
+    <div class="addthis_toolbox addthis_default_style">
+            <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+            <a class="addthis_button_tweet"></a>
+            <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+    </div>
+    <!-- AddThis Button END -->
+        </article>
+    </section>
+
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>
@@ -160,6 +205,21 @@ shigeponが関心のある技術情報など            </a>
             <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
                 <ul class="list-group" id="recentposts">
                     <li class="list-group-item">
+                        <a href="http://blog.thoz.org/2016/04/12/setup_letsencrypt_ssl_using_ansible_andreaswolf_letsencrypt_role/">
+                            ansibleを使ってlets encryptを設定するーandreaswolf.letsencryptを使ってみた
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/2016/04/02/implement_google_analytics_with_google_tag_manager/">
+                            Google Tag ManagerでGoogle Analyticsを使う
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.thoz.org/2016/04/01/how_to_install_pelican_plugins_and_plugins_recommended/">
+                            pelicanのプラグイン利用法と入れておくと良さげなもの
+                        </a>
+                    </li>
+                    <li class="list-group-item">
                         <a href="http://blog.thoz.org/2016/03/31/migrate_octopress_github_page_to_pelican/">
                             github pageのブログツールをoctopressからpelicanに移行しました
                         </a>
@@ -167,21 +227,6 @@ shigeponが関心のある技術情報など            </a>
                     <li class="list-group-item">
                         <a href="http://blog.thoz.org/2016/03/08/visual-studio-memo/">
                             visual studio メモ
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="http://blog.thoz.org/2016/03/07/use-supervisord-to-control-uwsgi/">
-                            uwsgiの管理にsupervisordを使う
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="http://blog.thoz.org/2016/02/09/migrate-from-django-1-dot-8-to-1-dot-9/">
-                            django 1.8から1.9へアップした時に気にする点
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="http://blog.thoz.org/2016/01/29/pcl-memo/">
-                            PCLメモ
                         </a>
                     </li>
                 </ul>
@@ -264,9 +309,9 @@ shigeponが関心のある技術情報など            </a>
 
             <li class="list-group-item"><a href="http://blog.thoz.org/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
                 <ul class="list-group " id="tags">
-                    <li class="list-group-item tag-0">
-                        <a href="http://blog.thoz.org/tag/python.html">
-                            python
+                    <li class="list-group-item tag-1">
+                        <a href="http://blog.thoz.org/tag/django.html">
+                            django
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
@@ -280,23 +325,13 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
-                        <a href="http://blog.thoz.org/tag/django.html">
-                            django
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-1">
                         <a href="http://blog.thoz.org/tag/ruby.html">
                             ruby
                         </a>
                     </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.thoz.org/tag/bootstrap.html">
-                            bootstrap
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.thoz.org/tag/groonga.html">
-                            groonga
+                    <li class="list-group-item tag-1">
+                        <a href="http://blog.thoz.org/tag/python.html">
+                            python
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -305,8 +340,18 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.thoz.org/tag/event.html">
-                            event
+                        <a href="http://blog.thoz.org/tag/csharp.html">
+                            CSharp
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.thoz.org/tag/groonga.html">
+                            groonga
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.thoz.org/tag/nadesiko2.html">
+                            nadesiko2
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -315,23 +360,23 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
+                        <a href="http://blog.thoz.org/tag/event.html">
+                            event
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.thoz.org/tag/bootstrap.html">
+                            bootstrap
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
                         <a href="http://blog.thoz.org/tag/r.html">
                             R
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.thoz.org/tag/csharp.html">
-                            CSharp
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
                         <a href="http://blog.thoz.org/tag/nadesiko.html">
                             nadesiko
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.thoz.org/tag/nadesiko2.html">
-                            nadesiko2
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -340,48 +385,13 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.thoz.org/tag/rhaco.html">
-                            rhaco
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.thoz.org/tag/uwsgi.html">
-                            uwsgi
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.thoz.org/tag/ansible.html">
-                            ansible
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
                         <a href="http://blog.thoz.org/tag/google.html">
                             google
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.thoz.org/tag/cplusplus.html">
-                            CPlusPlus
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.thoz.org/tag/octopress.html">
-                            octopress
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.thoz.org/tag/test1st.html">
-                            test1st
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.thoz.org/tag/vim.html">
-                            vim
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.thoz.org/tag/nginx.html">
-                            nginx
+                        <a href="http://blog.thoz.org/tag/pelican.html">
+                            pelican
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -394,19 +404,49 @@ shigeponが関心のある技術情報など            </a>
                             titanium
                         </a>
                     </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.thoz.org/tag/redis.html">
-                            redis
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.thoz.org/tag/cplusplus.html">
+                            CPlusPlus
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.thoz.org/tag/uwsgi.html">
+                            uwsgi
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.thoz.org/tag/rhaco.html">
+                            rhaco
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.thoz.org/tag/nginx.html">
+                            nginx
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.thoz.org/tag/test1st.html">
+                            test1st
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.thoz.org/tag/ansible.html">
+                            ansible
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.thoz.org/tag/octopress.html">
+                            octopress
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.thoz.org/tag/vim.html">
+                            vim
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.thoz.org/tag/sqlite.html">
-                            sqlite
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.thoz.org/tag/git.html">
-                            git
+                        <a href="http://blog.thoz.org/tag/unity.html">
+                            unity
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -415,13 +455,48 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.thoz.org/tag/mt4.html">
-                            MT4
+                        <a href="http://blog.thoz.org/tag/law.html">
+                            law
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
                         <a href="http://blog.thoz.org/tag/rhaco3.html">
                             rhaco3
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.thoz.org/tag/update.html">
+                            update
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.thoz.org/tag/linkedopendata.html">
+                            linkedopendata
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.thoz.org/tag/mt4.html">
+                            MT4
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.thoz.org/tag/visualstudio.html">
+                            visualstudio
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.thoz.org/tag/redis.html">
+                            redis
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.thoz.org/tag/git.html">
+                            git
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.thoz.org/tag/sqlite.html">
+                            sqlite
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -432,26 +507,6 @@ shigeponが関心のある技術情報など            </a>
                     <li class="list-group-item tag-4">
                         <a href="http://blog.thoz.org/tag/vmware.html">
                             vmware
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.thoz.org/tag/unity.html">
-                            unity
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.thoz.org/tag/linkedopendata.html">
-                            linkedopendata
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.thoz.org/tag/pelican.html">
-                            pelican
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.thoz.org/tag/visualstudio.html">
-                            visualstudio
                         </a>
                     </li>
                 </ul>
@@ -516,5 +571,7 @@ shigeponが関心のある技術情報など            </a>
     </script>
     <!-- End Google Analytics Universal Code -->
 
+        <script type="text/javascript">var addthis_config = {"data_track_addressbar": true};</script>
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-56fb8dd95cb9034a"></script>
 </body>
 </html>

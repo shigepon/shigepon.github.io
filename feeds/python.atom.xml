@@ -1,5 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.thoz.org/" rel="alternate"></link><link href="http://blog.thoz.org/feeds/python.atom.xml" rel="self"></link><id>http://blog.thoz.org/</id><updated>2016-03-31T17:30:00+09:00</updated><entry><title>github pageのブログツールをoctopressからpelicanに移行しました</title><link href="http://blog.thoz.org/2016/03/31/migrate_octopress_github_page_to_pelican/" rel="alternate"></link><updated>2016-03-31T17:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.thoz.org,2016-03-31:2016/03/31/migrate_octopress_github_page_to_pelican/</id><summary type="html">&lt;p&gt;別のブログを&lt;a href="http://docs.getpelican.com/en/3.6.3/"&gt;pelican&lt;/a&gt;で始めようと思っているので、このブログもpelicanで管理することにしたので作業内容をメモしておく&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.thoz.org/" rel="alternate"></link><link href="http://blog.thoz.org/feeds/python.atom.xml" rel="self"></link><id>http://blog.thoz.org/</id><updated>2016-04-12T20:40:00+09:00</updated><entry><title>ansibleを使ってlets encryptを設定するーandreaswolf.letsencryptを使ってみた</title><link href="http://blog.thoz.org/2016/04/12/setup_letsencrypt_ssl_using_ansible_andreaswolf_letsencrypt_role/" rel="alternate"></link><updated>2016-04-12T20:40:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.thoz.org,2016-04-12:2016/04/12/setup_letsencrypt_ssl_using_ansible_andreaswolf_letsencrypt_role/</id><summary type="html">&lt;p&gt;ansibleを使って&lt;a href="https://letsencrypt.org/"&gt;lets encrypt&lt;/a&gt;を設定しようと思ったので、やった作業を記録しておく&lt;/p&gt;
+&lt;h2&gt;ansible-galaxyから良さげなroleを探す&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://galaxy.ansible.com/"&gt;ansible-galaxy&lt;/a&gt;を使えばansibleの設定を色々まとめてくれる。ansible-galaxyで「BROWSE ROLES」をクリックするとキーワードでroleを調べることが出来るので、「encrypt」というキーワードで調べてみると何個か「letsencrypt」という名前のroleがあった。こういう場合はダウンロード数が多い奴を選べは無難な気がするので、今回は&lt;a href="https://galaxy.ansible.com/andreaswolf/letsencrypt/"&gt;andreaswolf.letsencrypt&lt;/a&gt;を使うことにした。他も色々あったけど、READMEが不十分だったり、機能がイマイチだったりで使えなかった。ちなみにUbuntuでやっているので、Fedoraなど用のroleは対象から外したので試してない。&lt;/p&gt;
+&lt;p&gt;&lt;script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"&gt;&lt;/script&gt;
+&lt;!-- Google Adsense below content --&gt;
+&lt;ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-3165642025902490" data-ad-slot="1749996500"&gt;&lt;/ins&gt;
+&lt;script&gt;
+    (adsbygoogle = window.adsbygoogle || []).push({});
+&lt;/script&gt;
+&lt;!-- end Google Adsense --&gt;
+&lt;/p&gt;
+&lt;h2&gt;roleのインストール&lt;/h2&gt;
+&lt;p&gt;以下のコマンドでインストールした&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ ansible-galaxy install andreaswolf.letsencrypt -p /path/to/roles
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;rolesを保存する場所を指定したかったのでこんな感じにした。&lt;/p&gt;
+&lt;h2&gt;roleの設定&lt;/h2&gt;
+&lt;p&gt;READMEを見ながら設定した。&lt;/p&gt;
+&lt;h3&gt;必須の設定&lt;/h3&gt;
+&lt;p&gt;外部から「ssl化したいドメイン/.well-known/acme-challenge」にアクセス出来て、そのアクセス先を{{ acme_tiny_challenges_directory }}に設定する必要がある。今回nginxをwebサーバに使ったのでnginxの設定ファイルに&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;
+location /.well-known/acme-challenge {
+    alias { {acme_tiny_challenges_directory} };
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;な感じで書いておいて、設定ファイルをansibleのtemplateモジュールを使って反映させた。&lt;/p&gt;
+&lt;h3&gt;ssl関連の設定&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;letsencrypt_certs:
+  - 
+    name: &amp;quot;an_easily_recognizable_name__this_is_used_for_the_csr_file&amp;quot;
+    keypath: &amp;quot;/path/to/your/keys/anything-you-like.key&amp;quot;
+    certpath: &amp;quot;/path/to/your/certs/anything-you-like.crt&amp;quot;
+    chainedcertpath: &amp;quot;/path/to/your/certs/anything-you-like.chained.pem&amp;quot;
+    host: &amp;quot;myhost.example.com&amp;quot;
+  -
+    name: &amp;quot;multidomain cert&amp;quot;
+    keypath: &amp;quot;/path/to/your/keys/example.org.key&amp;quot;
+    certpath: &amp;quot;/path/to/your/certs/example.org.crt&amp;quot;
+    host:
+      - &amp;quot;foo.example.org&amp;quot;
+      - &amp;quot;bar.example.org&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;nameは適当に付けた&lt;/li&gt;
+&lt;li&gt;keypath、certpathはchainedcertpathは/etc/ssl/hoge内に設定した&lt;/li&gt;
+&lt;li&gt;hostは1個でも複数でもおk&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;他に設定出来る項目として&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;key_ownerは作成されるファイルのユーザー名&lt;/li&gt;
+&lt;li&gt;key_groupは作成されるファイルのグループ名&lt;/li&gt;
+&lt;li&gt;key_permissionsは作成されるファイルの権限、"0600"みたいにクウォートを入れて設定するらしい&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;があるらしいがやってない。&lt;/p&gt;
+&lt;h3&gt;letsencryptでssl関連のファイルを作った後の設定&lt;/h3&gt;
+&lt;p&gt;ssl設定をnginxで反映させたいので、それ用のnginxの設定テンプレートを作って反映させた。yml、テンプレートを一部抜粋するとこんな感じ。テンプレート名は「ホスト名.ssl」という名前で保存した&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;
+  tasks:
+    - name: create sites-available dir
+      template: src=/path/to/template/{ {item.1} }.ssl dest=/path/to/nginx/sites-available/{ {item.1} }
+      with_subelements:
+        - &amp;quot;{ {letsencrypt_certs} }&amp;quot;
+        - host
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;raw&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="nt"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;listen&lt;/span&gt; &lt;span class="m"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;listen&lt;/span&gt; &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="m"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;server_name&lt;/span&gt; &lt;span class="n"&gt;xxx&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;return&lt;/span&gt; &lt;span class="m"&gt;301&lt;/span&gt; &lt;span class="n"&gt;https&lt;/span&gt;&lt;span class="o"&gt;://&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;host&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;request_uri&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="nt"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;listen&lt;/span&gt; &lt;span class="m"&gt;443&lt;/span&gt; &lt;span class="n"&gt;ssl&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;server_name&lt;/span&gt; &lt;span class="n"&gt;xxx&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;ssl_certificate&lt;/span&gt; &lt;span class="err"&gt;{&lt;/span&gt; &lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;certpath&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="err"&gt;}&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+    &lt;span class="nt"&gt;ssl_certificate_key&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;keypath&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="err"&gt;}&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+    &lt;span class="nt"&gt;ssl_trusted_certificate&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;chainedcertpath&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="err"&gt;}&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+    &lt;span class="nt"&gt;ssl_stapling&lt;/span&gt; &lt;span class="nt"&gt;on&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+    &lt;span class="nt"&gt;ssl_stapling_verify&lt;/span&gt; &lt;span class="nt"&gt;on&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+    &lt;span class="o"&gt;.....&lt;/span&gt;
+    &lt;span class="nt"&gt;location&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nc"&gt;.well-known&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;acme-challenge&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;alias&lt;/span&gt; &lt;span class="err"&gt;{&lt;/span&gt; &lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="n"&gt;acme_tiny_challenges_directory&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="err"&gt;}&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+    &lt;span class="err"&gt;}&lt;/span&gt;
+    &lt;span class="o"&gt;....&lt;/span&gt;
+&lt;span class="err"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;endraw&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これで反映できる。あとはnotifyとかして、nginxをreloadして設定を反映させる。&lt;/p&gt;
+&lt;p&gt;ただし、このroleでは&lt;a href="https://gethttpsforfree.com/"&gt;get https for free&lt;/a&gt;のような手動の操作をしないと&lt;a href="https://www.ssllabs.com/index.html"&gt;Qualys ssl labs&lt;/a&gt;でB判定になっちゃうので、また別のroleを試してみようと思う。&lt;/p&gt;</summary><category term="python"></category><category term="ansible"></category></entry><entry><title>pelicanのプラグイン利用法と入れておくと良さげなもの</title><link href="http://blog.thoz.org/2016/04/01/how_to_install_pelican_plugins_and_plugins_recommended/" rel="alternate"></link><updated>2016-04-01T14:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.thoz.org,2016-04-01:2016/04/01/how_to_install_pelican_plugins_and_plugins_recommended/</id><summary type="html">&lt;p&gt;pelicanはプラグインを用いて色々機能を追加できる。プラグインを使うだけでそれっぽいブログが出来上がるので、結構便利だと思う。&lt;/p&gt;
+&lt;h2&gt;pelicanプラグインのインストール方法&lt;/h2&gt;
+&lt;p&gt;複数のブログで使うことを考えて独立したフォルダにプラグインを保存することにした。&lt;/p&gt;
+&lt;h3&gt;プラグインダウンロード&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; /path/to
+$ git --recursive clone https://github.com/getpelican/pelican-plugins.git
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;で/path/to/pelican-pluginsにgithubの&lt;a href="https://github.com/getpelican/pelican-plugins"&gt;getpelican/pelican-plugins&lt;/a&gt;上にあるプラグインを全てダウンロード出来る&lt;/p&gt;
+&lt;h3&gt;プラグイン設定&lt;/h3&gt;
+&lt;p&gt;pelicanconf.pyを編集する&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#pelicanconf.py&lt;/span&gt;
+&lt;span class="n"&gt;PLUGIN_PATHS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/path/to/pelican-plugins&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;PLUGINS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;related_posts&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;tag_cloud&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;プラグイン個別の設定&lt;/h3&gt;
+&lt;p&gt;プラグイン個別に必要な設定がある場合は別に設定する。github上のそれぞれのプラグイン個別のフォルダに設定の説明が大抵書いてある。（例：&lt;a href="https://github.com/getpelican/pelican-plugins/tree/master/tag_cloud"&gt;tag_cloud&lt;/a&gt;）&lt;/p&gt;
+&lt;h3&gt;反映&lt;/h3&gt;
+&lt;p&gt;makeすればおk。github上にアップするなら&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ make github
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"&gt;&lt;/script&gt;
+&lt;!-- Google Adsense below content --&gt;
+&lt;ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-3165642025902490" data-ad-slot="1749996500"&gt;&lt;/ins&gt;
+&lt;script&gt;
+    (adsbygoogle = window.adsbygoogle || []).push({});
+&lt;/script&gt;
+&lt;!-- end Google Adsense --&gt;
+&lt;/p&gt;
+&lt;h2&gt;おすすめプラグイン&lt;/h2&gt;
+&lt;h3&gt;tag_cloud&lt;/h3&gt;
+&lt;p&gt;これを入れておかないと、Tagsの設定が反映されない。ほぼ必須？&lt;/p&gt;
+&lt;h3&gt;related_posts&lt;/h3&gt;
+&lt;p&gt;入れておけば関連する記事を勝手に表示してくれる。入れるととてもブログっぽく見えるプラグイン&lt;/p&gt;
+&lt;h3&gt;tipue_search&lt;/h3&gt;
+&lt;p&gt;検索フォームを用意してくれる。Googleのサイト内検索フォームとか無くても良くなる。&lt;/p&gt;
+&lt;h3&gt;sitemap&lt;/h3&gt;
+&lt;p&gt;sitemapを用意してくれる。xmlかtxtかフォーマットを指定する必要がある。pelicanconf.pyを&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;raw&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;SITEMAP&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;format&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;xml&amp;#39;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;endraw&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じで設定すれば良い。&lt;/p&gt;</summary><category term="pelican"></category><category term="python"></category></entry><entry><title>github pageのブログツールをoctopressからpelicanに移行しました</title><link href="http://blog.thoz.org/2016/03/31/migrate_octopress_github_page_to_pelican/" rel="alternate"></link><updated>2016-03-31T17:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.thoz.org,2016-03-31:2016/03/31/migrate_octopress_github_page_to_pelican/</id><summary type="html">&lt;p&gt;別のブログを&lt;a href="http://docs.getpelican.com/en/3.6.3/"&gt;pelican&lt;/a&gt;で始めようと思っているので、このブログもpelicanで管理することにしたので作業内容をメモしておく&lt;/p&gt;
 &lt;h2&gt;ローカル側にpelicanをインストール&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ pip install pelican Markdown
 &lt;/pre&gt;&lt;/div&gt;

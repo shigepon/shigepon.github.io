@@ -1073,8 +1073,14 @@ $ git merge master
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;!-- more --&gt;
-
+&lt;p&gt;&lt;script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"&gt;&lt;/script&gt;
+&lt;!-- Google Adsense below content --&gt;
+&lt;ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-3165642025902490" data-ad-slot="1749996500"&gt;&lt;/ins&gt;
+&lt;script&gt;
+    (adsbygoogle = window.adsbygoogle || []).push({});
+&lt;/script&gt;
+&lt;!-- end Google Adsense --&gt;
+↲&lt;/p&gt;
 &lt;p&gt;軽くbot避けを入れてるけど、crawlerとかspiderとかを避けておくとより正確になるかも。
 これだけだと一杯出てくるので100回以上アクセスあったIPだけ取り出してみた。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="s s-Atom"&gt;cat&lt;/span&gt; &lt;span class="s s-Atom"&gt;access&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="s s-Atom"&gt;log&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="s s-Atom"&gt;grep&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="s s-Atom"&gt;v&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="s s-Atom"&gt;i&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;bot&amp;quot;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="s s-Atom"&gt;grep&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;referer:-&amp;quot;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="s s-Atom"&gt;grep&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;status:200&amp;quot;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="s s-Atom"&gt;awk&lt;/span&gt; &lt;span class="s s-Atom"&gt;&amp;#39;{print $3}&amp;#39;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="s s-Atom"&gt;sort&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="s s-Atom"&gt;uniq&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="s s-Atom"&gt;c&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="s s-Atom"&gt;grep&lt;/span&gt; &lt;span class="err"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="s s-Atom"&gt;\&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s s-Atom"&gt;\&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="s s-Atom"&gt;\s&lt;/span&gt;&lt;span class="err"&gt;&amp;quot;&lt;/span&gt;
@@ -1238,7 +1244,19 @@ password=Windowsパスワード
 &lt;p&gt;こうやるとカンマ区切りのデータの2番目のカラムでソートしてくれる&lt;/p&gt;
 &lt;p&gt;数値でソートしたい場合は-nをオプションに加える&lt;/p&gt;
 &lt;p&gt;逆順の場合は--reverseをオプションに加える&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/9471101/sort-csv-file-by-column-priority-using-the-sort-command"&gt;unix - Sort CSV file by column priority using the "sort" command - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="linux"></category><category term="memo"></category></entry><entry><title>vim memo</title><link href="http://blog.thoz.org/2014/03/01/vim-memo/" rel="alternate"></link><updated>2014-03-01T14:14:10+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-03-01:2014/03/01/vim-memo/</id><summary type="html">&lt;h2&gt;vimでsnippet&lt;/h2&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/9471101/sort-csv-file-by-column-priority-using-the-sort-command"&gt;unix - Sort CSV file by column priority using the "sort" command - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;cronjobの一覧&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ crontab -l
+$ sudo crontab -l -u username
+$ ls /etc/cron.d
+$ ls /etc/cron.hourly
+$ ls /etc/cron.daily
+$ ls /etc/cron.weekly
+$ ls /etc/cron.monthly
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これくらいチェックすればよさげ&lt;/p&gt;</summary><category term="linux"></category><category term="memo"></category></entry><entry><title>vim memo</title><link href="http://blog.thoz.org/2014/03/01/vim-memo/" rel="alternate"></link><updated>2014-03-01T14:14:10+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-03-01:2014/03/01/vim-memo/</id><summary type="html">&lt;h2&gt;vimでsnippet&lt;/h2&gt;
 &lt;p&gt;色々方法があるみたいだけど、neocomplecacheを入れているので、それと相性が良さそうな（作者が同じ）プラグインを入れた&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;NeoBundle &amp;#39;Shougo/neosnippet&amp;#39;
 NeoBundle &amp;#39;Shougo/neosnippet-snippets&amp;#39;
