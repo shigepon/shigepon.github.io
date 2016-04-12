@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.thoz.org/" rel="alternate"></link><link href="http://blog.thoz.org/feeds/rhaco.atom.xml" rel="self"></link><id>http://blog.thoz.org/</id><updated>2014-03-15T13:28:55+09:00</updated><entry><title>rhaco3 memo</title><link href="http://blog.thoz.org/2014/03/15/rhaco3-memo/" rel="alternate"></link><updated>2014-03-15T13:28:55+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-03-15:2014/03/15/rhaco3-memo/</id><summary type="html">&lt;p&gt;rhaco3を使ってる人なんて世界で何人居るのかなと思いつつ、あまりに情報が少ないので、メモ書きしていく。
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/rhaco.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2014-03-15T13:28:55+09:00</updated><entry><title>rhaco3 memo</title><link href="http://blog.shigepon.info/2014/03/15/rhaco3-memo/" rel="alternate"></link><updated>2014-03-15T13:28:55+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-03-15:2014/03/15/rhaco3-memo/</id><summary type="html">&lt;p&gt;rhaco3を使ってる人なんて世界で何人居るのかなと思いつつ、あまりに情報が少ないので、メモ書きしていく。
 大きめネタは別記事にまとめるが小さいネタはここに追記する。&lt;/p&gt;
 &lt;h3&gt;Daoで作ったSQLを確認する方法&lt;/h3&gt;
 &lt;p&gt;Daoを継承したモデルとして、Hogeモデルがあるとして&lt;/p&gt;
@@ -49,7 +49,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;これでおk。@で区切ってクラス名と取得したい値のキーを書くと値を取って来れる。&lt;/p&gt;</summary><category term="rhaco"></category><category term="rhaco3"></category><category term="memo"></category></entry><entry><title>Basic認証する時に気をつけること</title><link href="http://blog.thoz.org/2014/02/03/basic-auth/" rel="alternate"></link><updated>2014-02-03T07:48:33+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-02-03:2014/02/03/basic-auth/</id><summary type="html">&lt;p&gt;rhaco3で作ったWebサービス全体にBasic認証をかけた時にちょっとハマったのでメモ。&lt;/p&gt;
+&lt;p&gt;これでおk。@で区切ってクラス名と取得したい値のキーを書くと値を取って来れる。&lt;/p&gt;</summary><category term="rhaco"></category><category term="rhaco3"></category><category term="memo"></category></entry><entry><title>Basic認証する時に気をつけること</title><link href="http://blog.shigepon.info/2014/02/03/basic-auth/" rel="alternate"></link><updated>2014-02-03T07:48:33+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-02-03:2014/02/03/basic-auth/</id><summary type="html">&lt;p&gt;rhaco3で作ったWebサービス全体にBasic認証をかけた時にちょっとハマったのでメモ。&lt;/p&gt;
 &lt;h2&gt;症状&lt;/h2&gt;
 &lt;p&gt;rhaco3の認証が入っているサービスで全体にBasic認証をかけると、&lt;/p&gt;
 &lt;ol&gt;

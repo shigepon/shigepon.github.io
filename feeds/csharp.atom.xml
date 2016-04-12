@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.thoz.org/" rel="alternate"></link><link href="http://blog.thoz.org/feeds/csharp.atom.xml" rel="self"></link><id>http://blog.thoz.org/</id><updated>2015-11-29T20:40:36+09:00</updated><entry><title>msilを手動で出力する</title><link href="http://blog.thoz.org/2015/11/29/output-msil-manually/" rel="alternate"></link><updated>2015-11-29T20:40:36+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2015-11-29:2015/11/29/output-msil-manually/</id><summary type="html">&lt;p&gt;何個か方法がある。とりあえずは雑多にメモ書きしておく&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/csharp.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2015-11-29T20:40:36+09:00</updated><entry><title>msilを手動で出力する</title><link href="http://blog.shigepon.info/2015/11/29/output-msil-manually/" rel="alternate"></link><updated>2015-11-29T20:40:36+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-11-29:2015/11/29/output-msil-manually/</id><summary type="html">&lt;p&gt;何個か方法がある。とりあえずは雑多にメモ書きしておく&lt;/p&gt;
 &lt;h2&gt;一行一行全て手動で出力する&lt;/h2&gt;
 &lt;p&gt;System.Refrection、System.Refrection.Emitを使ってilを直接書き出していく方法。&lt;/p&gt;
 &lt;p&gt;参考：
@@ -116,7 +116,7 @@
 &lt;p&gt;他参考資料&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://home.a00.itscom.net/hatada/_toc/dotnet.html#dotnet"&gt;.NET &amp;amp; C#&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="CSharp"></category></entry><entry><title>C#で作ったdllをC++/CLIで使う</title><link href="http://blog.thoz.org/2014/01/28/nadesiko-plugin-cs/" rel="alternate"></link><updated>2014-01-28T22:27:58+09:00</updated><author><name>shigepon</name></author><id>tag:blog.thoz.org,2014-01-28:2014/01/28/nadesiko-plugin-cs/</id><summary type="html">&lt;p&gt;&lt;strong&gt;画像やファイルが無くなっていますがご了承下さい&lt;/strong&gt;&lt;/p&gt;
+&lt;/ul&gt;</summary><category term="CSharp"></category></entry><entry><title>C#で作ったdllをC++/CLIで使う</title><link href="http://blog.shigepon.info/2014/01/28/nadesiko-plugin-cs/" rel="alternate"></link><updated>2014-01-28T22:27:58+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-01-28:2014/01/28/nadesiko-plugin-cs/</id><summary type="html">&lt;p&gt;&lt;strong&gt;画像やファイルが無くなっていますがご了承下さい&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;なでしこでプラグインを作る時にC#を使いたかったので、本格的にdllを作る前に、C++/CLIからMessageBoxを表示する程度のC#のdllを呼び出してみました。&lt;/p&gt;
 &lt;p&gt;C#のdllコード&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;using System;
