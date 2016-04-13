@@ -21,34 +21,31 @@
 &lt;p&gt;READMEを見ながら設定した。&lt;/p&gt;
 &lt;h3&gt;必須の設定&lt;/h3&gt;
 &lt;p&gt;外部から「ssl化したいドメイン/.well-known/acme-challenge」にアクセス出来て、そのアクセス先を{{ acme_tiny_challenges_directory }}に設定する必要がある。今回nginxをwebサーバに使ったのでnginxの設定ファイルに&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="x"&gt;location /.well-known/acme-challenge {&lt;/span&gt;
+&lt;span class="x"&gt;    alias &lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt;&lt;span class="nv"&gt;acme_tiny_challenges_directory&lt;/span&gt;&lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt;;&lt;/span&gt;
+&lt;span class="x"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;
-    location /.well-known/acme-challenge {
-        alias {{acme_tiny_challenges_directory}};
-    }
-&lt;/p&gt;
 &lt;p&gt;な感じで書いておいて、設定ファイルをansibleのtemplateモジュールを使って反映させた。&lt;/p&gt;
 &lt;h3&gt;ssl関連の設定&lt;/h3&gt;
-&lt;p&gt;
-    :::yml
-    letsencrypt_certs:
-      - 
-        name: "an_easily_recognizable_name__this_is_used_for_the_csr_file"
-        keypath: "/path/to/your/keys/anything-you-like.key"
-        certpath: "/path/to/your/certs/anything-you-like.crt"
-        chainedcertpath: "/path/to/your/certs/anything-you-like.chained.pem"
-        host: "myhost.example.com"
-      -
-        name: "multidomain cert"
-        keypath: "/path/to/your/keys/example.org.key"
-        certpath: "/path/to/your/certs/example.org.crt"
-        host:
-          - "foo.example.org"
-          - "bar.example.org"
-&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;letsencrypt_certs:
+  - 
+    name: &amp;quot;an_easily_recognizable_name__this_is_used_for_the_csr_file&amp;quot;
+    keypath: &amp;quot;/path/to/your/keys/anything-you-like.key&amp;quot;
+    certpath: &amp;quot;/path/to/your/certs/anything-you-like.crt&amp;quot;
+    chainedcertpath: &amp;quot;/path/to/your/certs/anything-you-like.chained.pem&amp;quot;
+    host: &amp;quot;myhost.example.com&amp;quot;
+  -
+    name: &amp;quot;multidomain cert&amp;quot;
+    keypath: &amp;quot;/path/to/your/keys/example.org.key&amp;quot;
+    certpath: &amp;quot;/path/to/your/certs/example.org.crt&amp;quot;
+    host:
+      - &amp;quot;foo.example.org&amp;quot;
+      - &amp;quot;bar.example.org&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;ul&gt;
 &lt;li&gt;nameは適当に付けた&lt;/li&gt;
 &lt;li&gt;keypath、certpathはchainedcertpathは/etc/ssl/hoge内に設定した&lt;/li&gt;
@@ -64,39 +61,39 @@
 &lt;h3&gt;letsencryptでssl関連のファイルを作った後の設定&lt;/h3&gt;
 &lt;p&gt;ssl設定をnginxで反映させたいので、それ用のnginxの設定テンプレートを作って反映させた。yml、テンプレートを一部抜粋するとこんな感じ。テンプレート名は「ホスト名.ssl」という名前で保存した&lt;/p&gt;
 &lt;p&gt;ansibleのymlファイル&lt;/p&gt;
-&lt;p&gt;
-    :::yml
-      tasks:
-        - name: create sites-available dir
-          template: src=/path/to/template/{ {item.1} }.ssl dest=/path/to/nginx/sites-available/{ {item.1} }
-          with_subelements:
-            - "{ {letsencrypt_certs} }"
-            - host
-&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;  tasks:
+    - name: create sites-available dir
+      template: src=/path/to/template/{ {item.1} }.ssl dest=/path/to/nginx/sites-available/{ {item.1} }
+      with_subelements:
+        - &amp;quot;{ {letsencrypt_certs} }&amp;quot;
+        - host
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;nginxの設定&lt;/p&gt;
-&lt;p&gt;
-    :::conf
-    server {
-        listen 80;
-        listen [::]:80;
-        server_name xxx;
-        return 301 https://$host$request_uri;
-    }
-    server {
-        listen 443 ssl;
-        server_name xxx;
-        ssl_certificate {{item.0.certpath}};
-        ssl_certificate_key {{item.0.keypath}};
-        ssl_trusted_certificate {{item.0.chainedcertpath}};
-        ssl_stapling on;
-        ssl_stapling_verify on;
-        .....
-        location /.well-known/acme-challenge {
-            alias {{acme_tiny_challenges_directory}};
-        }
-        ....
-    }
-&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="x"&gt;server {&lt;/span&gt;
+&lt;span class="x"&gt;    listen 80;&lt;/span&gt;
+&lt;span class="x"&gt;    listen [::]:80;&lt;/span&gt;
+&lt;span class="x"&gt;    server_name xxx;&lt;/span&gt;
+&lt;span class="x"&gt;    return 301 https://$host$request_uri;&lt;/span&gt;
+&lt;span class="x"&gt;}&lt;/span&gt;
+&lt;span class="x"&gt;server {&lt;/span&gt;
+&lt;span class="x"&gt;    listen 443 ssl;&lt;/span&gt;
+&lt;span class="x"&gt;    server_name xxx;&lt;/span&gt;
+&lt;span class="x"&gt;    ssl_certificate &lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt;&lt;span class="nv"&gt;item.0.certpath&lt;/span&gt;&lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt;;&lt;/span&gt;
+&lt;span class="x"&gt;    ssl_certificate_key &lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt;&lt;span class="nv"&gt;item.0.keypath&lt;/span&gt;&lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt;;&lt;/span&gt;
+&lt;span class="x"&gt;    ssl_trusted_certificate &lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt;&lt;span class="nv"&gt;item.0.chainedcertpath&lt;/span&gt;&lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt;;&lt;/span&gt;
+&lt;span class="x"&gt;    ssl_stapling on;&lt;/span&gt;
+&lt;span class="x"&gt;    ssl_stapling_verify on;&lt;/span&gt;
+&lt;span class="x"&gt;    .....&lt;/span&gt;
+&lt;span class="x"&gt;    location /.well-known/acme-challenge {&lt;/span&gt;
+&lt;span class="x"&gt;        alias &lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt;&lt;span class="nv"&gt;acme_tiny_challenges_directory&lt;/span&gt;&lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt;;&lt;/span&gt;
+&lt;span class="x"&gt;    }&lt;/span&gt;
+&lt;span class="x"&gt;    ....&lt;/span&gt;
+&lt;span class="x"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;これで反映できる。あとはnotifyとかして、nginxをreloadして設定を反映させる。&lt;/p&gt;
 &lt;p&gt;ただし、このroleでは&lt;a href="https://gethttpsforfree.com/"&gt;get https for free&lt;/a&gt;のような手動の操作をしないと&lt;a href="https://www.ssllabs.com/index.html"&gt;Qualys ssl labs&lt;/a&gt;でB判定になっちゃうので、また別のroleを試してみようと思う。&lt;/p&gt;</summary><category term="python"></category><category term="ansible"></category></entry><entry><title>pelicanのプラグイン利用法と入れておくと良さげなもの</title><link href="http://blog.shigepon.info/2016/04/01/how_to_install_pelican_plugins_and_plugins_recommended/" rel="alternate"></link><updated>2016-04-01T14:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2016-04-01:2016/04/01/how_to_install_pelican_plugins_and_plugins_recommended/</id><summary type="html">&lt;p&gt;pelicanはプラグインを用いて色々機能を追加できる。プラグインを使うだけでそれっぽいブログが出来上がるので、結構便利だと思う。&lt;/p&gt;
 &lt;h2&gt;pelicanプラグインのインストール方法&lt;/h2&gt;
@@ -141,11 +138,9 @@ $ git --recursive clone https://github.com/getpelican/pelican-plugins.git
 &lt;p&gt;検索フォームを用意してくれる。Googleのサイト内検索フォームとか無くても良くなる。&lt;/p&gt;
 &lt;h3&gt;sitemap&lt;/h3&gt;
 &lt;p&gt;sitemapを用意してくれる。xmlかtxtかフォーマットを指定する必要がある。pelicanconf.pyを&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;raw&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="n"&gt;SITEMAP&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;SITEMAP&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="s1"&gt;&amp;#39;format&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;xml&amp;#39;&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;endraw&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1231,8 +1226,7 @@ Astúrias
 &lt;!-- more --&gt;
 
 &lt;h2&gt;テンプレート&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;
-{% load bootstrap3 %}
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{% load bootstrap3 %}
 {% bootstrap_css %}
 {% bootstrap_javascript %}
 {% bootstrap_messages %}
@@ -1552,7 +1546,7 @@ break;
 
 
 &lt;p&gt;テンプレでは次のように静的ファイルにアクセスする&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt; &lt;span class="na"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;text/javascript&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;src&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;{path}js/hoge.js&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt; &lt;span class="na"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;text/javascript&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;src&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;{{ STATIC_URL }}js/hoge.js&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1748,7 +1742,6 @@ AUTH_USER_MODEL
 &lt;p&gt;bocho/templates/list.htmlを作る。中身は一部だけ。{{ 変数名 }}でビューで割り当てた変数を表示する。
 あと、色々テンプレート用のタグがある。これもDjangoマニュアルを見ると分かる。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# list.html
-
 &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;table&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;table&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
     &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;thead&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;span2&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;日付&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;名称&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;裁判所&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;thead&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 {% for object in object_list %}
@@ -1791,7 +1784,6 @@ AUTH_USER_MODEL
 &lt;p&gt;どうせbootstrapを使うのでdjango-bootstrap-toolkitを使う方法を載せる。
 ページ分けする対象をobject_list、ページ送りのURLにpage=以外に設定するパラメータをreqとすると、&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# list.html
-
 {% load bootstrap_toolkit %}↲
 {% bootstrap_pagination object_list align=&amp;quot;center&amp;quot; extra=req %}
 &lt;/pre&gt;&lt;/div&gt;
@@ -1802,7 +1794,6 @@ AUTH_USER_MODEL
 &lt;p&gt;ついでにメモ
 例えば"date=2001-01-01"みたいなパラメータを設定したいんだけど、割り当ててる変数？は日付オブジェクトの場合&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# list.html
-
 {% bootstrap\_pagination object\_list align=&amp;quot;center&amp;quot; extra=date|date:&amp;quot;Y-m-d&amp;quot;|s    tringformat:&amp;quot;%date=%s&amp;quot;|slice:&amp;quot;1:&amp;quot; %}
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -1821,8 +1812,7 @@ AUTH_USER_MODEL
 &lt;!-- more --&gt;
 
 &lt;p&gt;テンプレートを書く&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;
-{% load bootstrap_toolkit %}} #bootstrap-toolkitを使うページ全てに必要っぽい 
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{% load bootstrap_toolkit %}} #bootstrap-toolkitを使うページ全てに必要っぽい 
 ...
 &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;head&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 {% bootstrap_stylesheet_tag %}  #bootstrapのcssへのタグ(CDNから読み込み)
@@ -1887,15 +1877,13 @@ AUTH_USER_MODEL
 &lt;p&gt;Railsだと、こういうのどうしたら良いか分からなくて困った。&lt;/p&gt;
 &lt;h2&gt;views.pyでビューを作る&lt;/h2&gt;
 &lt;p&gt;ビューはbocho/views.pyを編集すればおk。詳細表示の場合こんな感じ&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;raw&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="c1"&gt;# coding: utf-8&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# coding: utf-8&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.shortcuts&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;render&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;bocho.models&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Event&lt;/span&gt;
 
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;detail&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;event_id&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="n"&gt;event&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Event&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;event_id&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;render&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;event/detail.html&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;object&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;event&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;endraw&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1913,8 +1901,7 @@ modelは先にインポートする。表示に使うテンプレートと変数
 
 &lt;p&gt;こうしておくと、bochoアプリのテンプレはbocho/templates/以下を参照し、さらにファイルが無い場合はtemplates/以下も調べる。上のように'event/detail.html'と指定した場合は、bocho/templates/event/detail.htmlを参照する。&lt;/p&gt;
 &lt;p&gt;設定出来たので、bocho/templates/event/detail.htmlを以下のように書く&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;
-&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;body&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;h1&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;詳細画面&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;h1&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;dl&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
