@@ -125,31 +125,34 @@ shigeponが関心のある技術情報など            </a>
 <p>READMEを見ながら設定した。</p>
 <h3>必須の設定</h3>
 <p>外部から「ssl化したいドメイン/.well-known/acme-challenge」にアクセス出来て、そのアクセス先を{{ acme_tiny_challenges_directory }}に設定する必要がある。今回nginxをwebサーバに使ったのでnginxの設定ファイルに</p>
+<div class="highlight"><pre><span></span>
+</pre></div>
+
+
 <p>
-    :::conf
     location /.well-known/acme-challenge {
         alias {{acme_tiny_challenges_directory}};
     }
 </p>
 <p>な感じで書いておいて、設定ファイルをansibleのtemplateモジュールを使って反映させた。</p>
 <h3>ssl関連の設定</h3>
-<div class="highlight"><pre><span></span>letsencrypt_certs:
-  - 
-    name: &quot;an_easily_recognizable_name__this_is_used_for_the_csr_file&quot;
-    keypath: &quot;/path/to/your/keys/anything-you-like.key&quot;
-    certpath: &quot;/path/to/your/certs/anything-you-like.crt&quot;
-    chainedcertpath: &quot;/path/to/your/certs/anything-you-like.chained.pem&quot;
-    host: &quot;myhost.example.com&quot;
-  -
-    name: &quot;multidomain cert&quot;
-    keypath: &quot;/path/to/your/keys/example.org.key&quot;
-    certpath: &quot;/path/to/your/certs/example.org.crt&quot;
-    host:
-      - &quot;foo.example.org&quot;
-      - &quot;bar.example.org&quot;
-</pre></div>
-
-
+<p>
+    :::yml
+    letsencrypt_certs:
+      - 
+        name: "an_easily_recognizable_name__this_is_used_for_the_csr_file"
+        keypath: "/path/to/your/keys/anything-you-like.key"
+        certpath: "/path/to/your/certs/anything-you-like.crt"
+        chainedcertpath: "/path/to/your/certs/anything-you-like.chained.pem"
+        host: "myhost.example.com"
+      -
+        name: "multidomain cert"
+        keypath: "/path/to/your/keys/example.org.key"
+        certpath: "/path/to/your/certs/example.org.crt"
+        host:
+          - "foo.example.org"
+          - "bar.example.org"
+</p>
 <ul>
 <li>nameは適当に付けた</li>
 <li>keypath、certpathはchainedcertpathは/etc/ssl/hoge内に設定した</li>
@@ -165,39 +168,39 @@ shigeponが関心のある技術情報など            </a>
 <h3>letsencryptでssl関連のファイルを作った後の設定</h3>
 <p>ssl設定をnginxで反映させたいので、それ用のnginxの設定テンプレートを作って反映させた。yml、テンプレートを一部抜粋するとこんな感じ。テンプレート名は「ホスト名.ssl」という名前で保存した</p>
 <p>ansibleのymlファイル</p>
-<div class="highlight"><pre><span></span>  tasks:
-    - name: create sites-available dir
-      template: src=/path/to/template/{ {item.1} }.ssl dest=/path/to/nginx/sites-available/{ {item.1} }
-      with_subelements:
-        - &quot;{ {letsencrypt_certs} }&quot;
-        - host
-</pre></div>
-
-
+<p>
+    :::yml
+      tasks:
+        - name: create sites-available dir
+          template: src=/path/to/template/{ {item.1} }.ssl dest=/path/to/nginx/sites-available/{ {item.1} }
+          with_subelements:
+            - "{ {letsencrypt_certs} }"
+            - host
+</p>
 <p>nginxの設定</p>
-<div class="highlight"><pre><span></span><span class="nt">server</span> <span class="p">{</span>
-    <span class="n">listen</span> <span class="m">80</span><span class="p">;</span>
-    <span class="n">listen</span> <span class="cp">[</span><span class="p">::</span><span class="cp">]</span><span class="o">:</span><span class="m">80</span><span class="p">;</span>
-    <span class="n">server_name</span> <span class="n">xxx</span><span class="p">;</span>
-    <span class="n">return</span> <span class="m">301</span> <span class="n">https</span><span class="o">://</span><span class="err">$</span><span class="n">host</span><span class="err">$</span><span class="n">request_uri</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="nt">server</span> <span class="p">{</span>
-    <span class="n">listen</span> <span class="m">443</span> <span class="n">ssl</span><span class="p">;</span>
-    <span class="n">server_name</span> <span class="n">xxx</span><span class="p">;</span>
-    <span class="n">ssl_certificate</span> <span class="err">{</span> <span class="err">{</span><span class="n">item</span><span class="o">.</span><span class="m">0</span><span class="o">.</span><span class="n">certpath</span><span class="p">}</span> <span class="err">}</span><span class="o">;</span>
-    <span class="nt">ssl_certificate_key</span> <span class="p">{</span> <span class="err">{</span><span class="n">item</span><span class="o">.</span><span class="m">0</span><span class="o">.</span><span class="n">keypath</span><span class="p">}</span> <span class="err">}</span><span class="o">;</span>
-    <span class="nt">ssl_trusted_certificate</span> <span class="p">{</span> <span class="err">{</span><span class="n">item</span><span class="o">.</span><span class="m">0</span><span class="o">.</span><span class="n">chainedcertpath</span><span class="p">}</span> <span class="err">}</span><span class="o">;</span>
-    <span class="nt">ssl_stapling</span> <span class="nt">on</span><span class="o">;</span>
-    <span class="nt">ssl_stapling_verify</span> <span class="nt">on</span><span class="o">;</span>
-    <span class="o">.....</span>
-    <span class="nt">location</span> <span class="o">/</span><span class="nc">.well-known</span><span class="o">/</span><span class="nt">acme-challenge</span> <span class="p">{</span>
-        <span class="n">alias</span> <span class="err">{</span> <span class="err">{</span><span class="n">acme_tiny_challenges_directory</span><span class="p">}</span> <span class="err">}</span><span class="o">;</span>
-    <span class="err">}</span>
-    <span class="o">....</span>
-<span class="err">}</span>
-</pre></div>
-
-
+<p>
+    :::conf
+    server {
+        listen 80;
+        listen [::]:80;
+        server_name xxx;
+        return 301 https://$host$request_uri;
+    }
+    server {
+        listen 443 ssl;
+        server_name xxx;
+        ssl_certificate {{item.0.certpath}};
+        ssl_certificate_key {{item.0.keypath}};
+        ssl_trusted_certificate {{item.0.chainedcertpath}};
+        ssl_stapling on;
+        ssl_stapling_verify on;
+        .....
+        location /.well-known/acme-challenge {
+            alias {{acme_tiny_challenges_directory}};
+        }
+        ....
+    }
+</p>
 <p>これで反映できる。あとはnotifyとかして、nginxをreloadして設定を反映させる。</p>
 <p>ただし、このroleでは<a href="https://gethttpsforfree.com/">get https for free</a>のような手動の操作をしないと<a href="https://www.ssllabs.com/index.html">Qualys ssl labs</a>でB判定になっちゃうので、また別のroleを試してみようと思う。</p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -214,9 +217,9 @@ shigeponが関心のある技術情報など            </a>
     <ul>
         <li><a href="http://blog.shigepon.info/2014/07/01/ansible-memo/">ansible memo</a></li>
         <li><a href="http://blog.shigepon.info/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/">fluent-plugin-groongaをインストールして動かすまでをAnsibleでやってみた</a></li>
+        <li><a href="http://blog.shigepon.info/2014/11/04/use-django-with-uwsgi/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(4):djangoで作ったプロジェクトをnginx+uwsgiで使って公開する</a></li>
         <li><a href="http://blog.shigepon.info/2014/06/25/django-with-bootstrap/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(2):Bootstrapを使ってみる</a></li>
         <li><a href="http://blog.shigepon.info/2014/11/25/use-django-allauth/">django-allauthを使ってみた</a></li>
-        <li><a href="http://blog.shigepon.info/2015/03/09/migrate-from-django-1-dot-6-to-1-dot-7/">Django 1.6から1.7にアップデートしてみた</a></li>
     </ul>
 </section>
     <hr />
@@ -351,18 +354,18 @@ shigeponが関心のある技術情報など            </a>
             <li class="list-group-item"><a href="http://blog.shigepon.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
                 <ul class="list-group " id="tags">
                     <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/django.html">
-                            django
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-1">
                         <a href="http://blog.shigepon.info/tag/linux.html">
                             linux
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/memo.html">
-                            memo
+                        <a href="http://blog.shigepon.info/tag/django.html">
+                            django
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="http://blog.shigepon.info/tag/python.html">
+                            python
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
@@ -371,8 +374,8 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/python.html">
-                            python
+                        <a href="http://blog.shigepon.info/tag/memo.html">
+                            memo
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -381,28 +384,8 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/csharp.html">
-                            CSharp
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/rails.html">
-                            Rails
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/postgresql.html">
-                            PostgreSQL
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
                         <a href="http://blog.shigepon.info/tag/r.html">
                             R
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/nadesiko.html">
-                            nadesiko
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -420,9 +403,24 @@ shigeponが関心のある技術情報など            </a>
                             nadesiko2
                         </a>
                     </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/rhaco.html">
-                            rhaco
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/postgresql.html">
+                            PostgreSQL
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/rails.html">
+                            Rails
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/csharp.html">
+                            CSharp
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/nadesiko.html">
+                            nadesiko
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -431,13 +429,8 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/test1st.html">
-                            test1st
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/php.html">
-                            PHP
+                        <a href="http://blog.shigepon.info/tag/javascript.html">
+                            javascript
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -446,8 +439,8 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/nginx.html">
-                            nginx
+                        <a href="http://blog.shigepon.info/tag/rhaco.html">
+                            rhaco
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -456,13 +449,18 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
+                            uwsgi
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
                         <a href="http://blog.shigepon.info/tag/vim.html">
                             vim
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/google.html">
-                            google
+                        <a href="http://blog.shigepon.info/tag/test1st.html">
+                            test1st
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -471,13 +469,18 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
-                            uwsgi
+                        <a href="http://blog.shigepon.info/tag/google.html">
+                            google
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/javascript.html">
-                            javascript
+                        <a href="http://blog.shigepon.info/tag/php.html">
+                            PHP
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/nginx.html">
+                            nginx
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -486,43 +489,8 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/law.html">
-                            law
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/redis.html">
-                            redis
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/visualstudio.html">
-                            visualstudio
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
                         <a href="http://blog.shigepon.info/tag/unity.html">
                             unity
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/lua.html">
-                            Lua
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/update.html">
-                            update
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/svn.html">
-                            svn
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/sqlite.html">
-                            sqlite
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -531,13 +499,38 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/git.html">
-                            git
+                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
+                            linkedopendata
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
-                            linkedopendata
+                        <a href="http://blog.shigepon.info/tag/update.html">
+                            update
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/visualstudio.html">
+                            visualstudio
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/law.html">
+                            law
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/sqlite.html">
+                            sqlite
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/vmware.html">
+                            vmware
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/lua.html">
+                            Lua
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -546,8 +539,18 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/vmware.html">
-                            vmware
+                        <a href="http://blog.shigepon.info/tag/redis.html">
+                            redis
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/git.html">
+                            git
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/svn.html">
+                            svn
                         </a>
                     </li>
                 </ul>

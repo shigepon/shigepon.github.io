@@ -21,31 +21,34 @@
 &lt;p&gt;READMEを見ながら設定した。&lt;/p&gt;
 &lt;h3&gt;必須の設定&lt;/h3&gt;
 &lt;p&gt;外部から「ssl化したいドメイン/.well-known/acme-challenge」にアクセス出来て、そのアクセス先を{{ acme_tiny_challenges_directory }}に設定する必要がある。今回nginxをwebサーバに使ったのでnginxの設定ファイルに&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;
-    :::conf
     location /.well-known/acme-challenge {
         alias {{acme_tiny_challenges_directory}};
     }
 &lt;/p&gt;
 &lt;p&gt;な感じで書いておいて、設定ファイルをansibleのtemplateモジュールを使って反映させた。&lt;/p&gt;
 &lt;h3&gt;ssl関連の設定&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;letsencrypt_certs:
-  - 
-    name: &amp;quot;an_easily_recognizable_name__this_is_used_for_the_csr_file&amp;quot;
-    keypath: &amp;quot;/path/to/your/keys/anything-you-like.key&amp;quot;
-    certpath: &amp;quot;/path/to/your/certs/anything-you-like.crt&amp;quot;
-    chainedcertpath: &amp;quot;/path/to/your/certs/anything-you-like.chained.pem&amp;quot;
-    host: &amp;quot;myhost.example.com&amp;quot;
-  -
-    name: &amp;quot;multidomain cert&amp;quot;
-    keypath: &amp;quot;/path/to/your/keys/example.org.key&amp;quot;
-    certpath: &amp;quot;/path/to/your/certs/example.org.crt&amp;quot;
-    host:
-      - &amp;quot;foo.example.org&amp;quot;
-      - &amp;quot;bar.example.org&amp;quot;
-&lt;/pre&gt;&lt;/div&gt;
-
-
+&lt;p&gt;
+    :::yml
+    letsencrypt_certs:
+      - 
+        name: "an_easily_recognizable_name__this_is_used_for_the_csr_file"
+        keypath: "/path/to/your/keys/anything-you-like.key"
+        certpath: "/path/to/your/certs/anything-you-like.crt"
+        chainedcertpath: "/path/to/your/certs/anything-you-like.chained.pem"
+        host: "myhost.example.com"
+      -
+        name: "multidomain cert"
+        keypath: "/path/to/your/keys/example.org.key"
+        certpath: "/path/to/your/certs/example.org.crt"
+        host:
+          - "foo.example.org"
+          - "bar.example.org"
+&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;nameは適当に付けた&lt;/li&gt;
 &lt;li&gt;keypath、certpathはchainedcertpathは/etc/ssl/hoge内に設定した&lt;/li&gt;
@@ -61,39 +64,39 @@
 &lt;h3&gt;letsencryptでssl関連のファイルを作った後の設定&lt;/h3&gt;
 &lt;p&gt;ssl設定をnginxで反映させたいので、それ用のnginxの設定テンプレートを作って反映させた。yml、テンプレートを一部抜粋するとこんな感じ。テンプレート名は「ホスト名.ssl」という名前で保存した&lt;/p&gt;
 &lt;p&gt;ansibleのymlファイル&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;  tasks:
-    - name: create sites-available dir
-      template: src=/path/to/template/{ {item.1} }.ssl dest=/path/to/nginx/sites-available/{ {item.1} }
-      with_subelements:
-        - &amp;quot;{ {letsencrypt_certs} }&amp;quot;
-        - host
-&lt;/pre&gt;&lt;/div&gt;
-
-
+&lt;p&gt;
+    :::yml
+      tasks:
+        - name: create sites-available dir
+          template: src=/path/to/template/{ {item.1} }.ssl dest=/path/to/nginx/sites-available/{ {item.1} }
+          with_subelements:
+            - "{ {letsencrypt_certs} }"
+            - host
+&lt;/p&gt;
 &lt;p&gt;nginxの設定&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="n"&gt;listen&lt;/span&gt; &lt;span class="m"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="n"&gt;listen&lt;/span&gt; &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="m"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="n"&gt;server_name&lt;/span&gt; &lt;span class="n"&gt;xxx&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="n"&gt;return&lt;/span&gt; &lt;span class="m"&gt;301&lt;/span&gt; &lt;span class="n"&gt;https&lt;/span&gt;&lt;span class="o"&gt;://&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;host&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;request_uri&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="nt"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="n"&gt;listen&lt;/span&gt; &lt;span class="m"&gt;443&lt;/span&gt; &lt;span class="n"&gt;ssl&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="n"&gt;server_name&lt;/span&gt; &lt;span class="n"&gt;xxx&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="n"&gt;ssl_certificate&lt;/span&gt; &lt;span class="err"&gt;{&lt;/span&gt; &lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;certpath&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="err"&gt;}&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
-    &lt;span class="nt"&gt;ssl_certificate_key&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;keypath&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="err"&gt;}&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
-    &lt;span class="nt"&gt;ssl_trusted_certificate&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;chainedcertpath&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="err"&gt;}&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
-    &lt;span class="nt"&gt;ssl_stapling&lt;/span&gt; &lt;span class="nt"&gt;on&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
-    &lt;span class="nt"&gt;ssl_stapling_verify&lt;/span&gt; &lt;span class="nt"&gt;on&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
-    &lt;span class="o"&gt;.....&lt;/span&gt;
-    &lt;span class="nt"&gt;location&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nc"&gt;.well-known&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;acme-challenge&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="n"&gt;alias&lt;/span&gt; &lt;span class="err"&gt;{&lt;/span&gt; &lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="n"&gt;acme_tiny_challenges_directory&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="err"&gt;}&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
-    &lt;span class="err"&gt;}&lt;/span&gt;
-    &lt;span class="o"&gt;....&lt;/span&gt;
-&lt;span class="err"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
+&lt;p&gt;
+    :::conf
+    server {
+        listen 80;
+        listen [::]:80;
+        server_name xxx;
+        return 301 https://$host$request_uri;
+    }
+    server {
+        listen 443 ssl;
+        server_name xxx;
+        ssl_certificate {{item.0.certpath}};
+        ssl_certificate_key {{item.0.keypath}};
+        ssl_trusted_certificate {{item.0.chainedcertpath}};
+        ssl_stapling on;
+        ssl_stapling_verify on;
+        .....
+        location /.well-known/acme-challenge {
+            alias {{acme_tiny_challenges_directory}};
+        }
+        ....
+    }
+&lt;/p&gt;
 &lt;p&gt;これで反映できる。あとはnotifyとかして、nginxをreloadして設定を反映させる。&lt;/p&gt;
 &lt;p&gt;ただし、このroleでは&lt;a href="https://gethttpsforfree.com/"&gt;get https for free&lt;/a&gt;のような手動の操作をしないと&lt;a href="https://www.ssllabs.com/index.html"&gt;Qualys ssl labs&lt;/a&gt;でB判定になっちゃうので、また別のroleを試してみようと思う。&lt;/p&gt;</summary><category term="python"></category><category term="ansible"></category></entry><entry><title>Google Tag ManagerでGoogle Analyticsを使う</title><link href="http://blog.shigepon.info/2016/04/02/implement_google_analytics_with_google_tag_manager/" rel="alternate"></link><updated>2016-04-02T10:30:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-04-02:2016/04/02/implement_google_analytics_with_google_tag_manager/</id><summary type="html">&lt;p&gt;Google AnalyticsのコントロールもGoogle Tag Managerに置き換えてしまった方が良いと思ったのでやってみた。Google Analytics上での設定は先にしているものとする。&lt;/p&gt;
 &lt;h2&gt;アカウント作成する場合&lt;/h2&gt;
