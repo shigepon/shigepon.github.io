@@ -21,8 +21,7 @@
 &lt;p&gt;READMEを見ながら設定した。&lt;/p&gt;
 &lt;h3&gt;必須の設定&lt;/h3&gt;
 &lt;p&gt;外部から「ssl化したいドメイン/.well-known/acme-challenge」にアクセス出来て、そのアクセス先を{{ acme_tiny_challenges_directory }}に設定する必要がある。今回nginxをwebサーバに使ったのでnginxの設定ファイルに&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;
-location /.well-known/acme-challenge {
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;location /.well-known/acme-challenge {
     alias { {acme_tiny_challenges_directory} };
 }
 &lt;/pre&gt;&lt;/div&gt;
