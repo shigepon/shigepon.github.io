@@ -62,8 +62,7 @@ location /.well-known/acme-challenge {
 &lt;h3&gt;letsencryptでssl関連のファイルを作った後の設定&lt;/h3&gt;
 &lt;p&gt;ssl設定をnginxで反映させたいので、それ用のnginxの設定テンプレートを作って反映させた。yml、テンプレートを一部抜粋するとこんな感じ。テンプレート名は「ホスト名.ssl」という名前で保存した&lt;/p&gt;
 &lt;p&gt;ansibleのymlファイル&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;
-  tasks:
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;  tasks:
     - name: create sites-available dir
       template: src=/path/to/template/{ {item.1} }.ssl dest=/path/to/nginx/sites-available/{ {item.1} }
       with_subelements:
