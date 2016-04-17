@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/memo.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2016-03-08T09:50:36+09:00</updated><entry><title>visual studio メモ</title><link href="http://blog.shigepon.info/2016/03/08/visual-studio-memo/" rel="alternate"></link><updated>2016-03-08T09:50:36+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-03-08:2016/03/08/visual-studio-memo/</id><summary type="html">&lt;h2&gt;Visual Studio 2010でLNK1123エラーが出る&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/memo.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2016-03-08T09:50:36+09:00</updated><entry><title>visual studio メモ</title><link href="http://blog.shigepon.info/blog/2016/03/08/visual-studio-memo/" rel="alternate"></link><updated>2016-03-08T09:50:36+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-03-08:blog/2016/03/08/visual-studio-memo/</id><summary type="html">&lt;h2&gt;Visual Studio 2010でLNK1123エラーが出る&lt;/h2&gt;
 &lt;p&gt;Visual Studio Express 2012をインストールした後で、Visual Studio 2010でビルドしようとしたらエラーが出た。&lt;a href="http://www.microsoft.com/ja-jp/download/details.aspx?id=23691"&gt;Visual C++ Service Pack 1&lt;/a&gt;以降をインストールすれば良い。&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="http://minus9d.hatenablog.com/entry/20121212/1355312498"&gt;VS2010でLNK1123エラーが出たら、SP1にしてみよう - minus9d's diary&lt;/a&gt;&lt;/p&gt;</summary><category term="memo"></category><category term="visualstudio"></category></entry><entry><title>PCLメモ</title><link href="http://blog.shigepon.info/2016/01/29/pcl-memo/" rel="alternate"></link><updated>2016-01-29T08:42:31+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-01-29:2016/01/29/pcl-memo/</id><summary type="html">&lt;p&gt;マルチプラットフォーム用に開発するにはPCL(ポータブル・クラス・ライブラリ)を使うと良いらしいのだが情報が少ない気がするので、調べたことをメモしていく&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://minus9d.hatenablog.com/entry/20121212/1355312498"&gt;VS2010でLNK1123エラーが出たら、SP1にしてみよう - minus9d's diary&lt;/a&gt;&lt;/p&gt;</summary><category term="memo"></category><category term="visualstudio"></category></entry><entry><title>PCLメモ</title><link href="http://blog.shigepon.info/blog/2016/01/29/pcl-memo/" rel="alternate"></link><updated>2016-01-29T08:42:31+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-01-29:blog/2016/01/29/pcl-memo/</id><summary type="html">&lt;p&gt;マルチプラットフォーム用に開発するにはPCL(ポータブル・クラス・ライブラリ)を使うと良いらしいのだが情報が少ない気がするので、調べたことをメモしていく&lt;/p&gt;
 &lt;p&gt;それにしてもどこかに.netでこう書いてるものをPCLで書くには・・・みたいな書籍とかサイトとか無いものか。現在はstack&lt;/p&gt;
 &lt;h2&gt;基本事項&lt;/h2&gt;
 &lt;p&gt;プロジェクト生成時にポータブルライブラリを選択すればPCLで開発出来るようになる。すでに.netのプロジェクトで開発している場合にPCLにする方法はシラン。&lt;/p&gt;
@@ -28,7 +28,7 @@
 
 
 &lt;p&gt;みたいにして必要なインターフェースを持つクラスの型情報を取り出すとか出来る&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/20524263/portable-class-library-reflection"&gt;c# - Portable Class Library Reflection - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="memo"></category><category term="CSharp"></category></entry><entry><title>redis memo</title><link href="http://blog.shigepon.info/2016/01/13/redis-memo/" rel="alternate"></link><updated>2016-01-13T21:35:13+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-01-13:2016/01/13/redis-memo/</id><summary type="html">&lt;p&gt;redisが良く分かってないので、良く使いそうなものをメモしていく。主にredis-clientを使って行く（OSはUbuntu）&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/20524263/portable-class-library-reflection"&gt;c# - Portable Class Library Reflection - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="memo"></category><category term="CSharp"></category></entry><entry><title>redis memo</title><link href="http://blog.shigepon.info/blog/2016/01/13/redis-memo/" rel="alternate"></link><updated>2016-01-13T21:35:13+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-01-13:blog/2016/01/13/redis-memo/</id><summary type="html">&lt;p&gt;redisが良く分かってないので、良く使いそうなものをメモしていく。主にredis-clientを使って行く（OSはUbuntu）&lt;/p&gt;
 &lt;h2&gt;dbの選択&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ redis-client
 &amp;gt; &lt;span class="k"&gt;select&lt;/span&gt; 1
@@ -41,7 +41,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;で取りあえず一覧してくれる。dbにキーがあるか程度ならこれで。&lt;/p&gt;</summary><category term="redis"></category><category term="memo"></category></entry><entry><title>MT4 memo</title><link href="http://blog.shigepon.info/2016/01/07/mt4-memo/" rel="alternate"></link><updated>2016-01-07T14:00:25+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-01-07:2016/01/07/mt4-memo/</id><summary type="html">&lt;p&gt;MT4でEAを書くためのメモ&lt;/p&gt;
+&lt;p&gt;で取りあえず一覧してくれる。dbにキーがあるか程度ならこれで。&lt;/p&gt;</summary><category term="redis"></category><category term="memo"></category></entry><entry><title>MT4 memo</title><link href="http://blog.shigepon.info/blog/2016/01/07/mt4-memo/" rel="alternate"></link><updated>2016-01-07T14:00:25+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-01-07:blog/2016/01/07/mt4-memo/</id><summary type="html">&lt;p&gt;MT4でEAを書くためのメモ&lt;/p&gt;
 &lt;h2&gt;時間の扱い&lt;/h2&gt;
 &lt;!-- more --&gt;
 
@@ -89,7 +89,7 @@
 &lt;li&gt;中に出来たファイルを消す&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;でおk&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="http://www.autotrading-fx.com/mt4-tips/1930.html"&gt;MT4のバックテストでハードディスク容量が不足した時の対処法&lt;/a&gt;&lt;/p&gt;</summary><category term="MT4"></category><category term="memo"></category></entry><entry><title>Javascript memo</title><link href="http://blog.shigepon.info/2015/08/12/javascript-memo/" rel="alternate"></link><updated>2015-08-12T09:01:59+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-08-12:2015/08/12/javascript-memo/</id><summary type="html">&lt;p&gt;Javascript関連のメモ&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://www.autotrading-fx.com/mt4-tips/1930.html"&gt;MT4のバックテストでハードディスク容量が不足した時の対処法&lt;/a&gt;&lt;/p&gt;</summary><category term="MT4"></category><category term="memo"></category></entry><entry><title>Javascript memo</title><link href="http://blog.shigepon.info/blog/2015/08/12/javascript-memo/" rel="alternate"></link><updated>2015-08-12T09:01:59+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-08-12:blog/2015/08/12/javascript-memo/</id><summary type="html">&lt;p&gt;Javascript関連のメモ&lt;/p&gt;
 &lt;h2&gt;HighChartで日本時間をx軸に利用&lt;/h2&gt;
 &lt;p&gt;チャートを表示するライブラリに&lt;a href="http://www.highcharts.com/"&gt;HighChart&lt;/a&gt;ってのを使ってるけど、横軸の時間がUTCになってしまうので、ちょっとはまった。&lt;/p&gt;
 &lt;p&gt;こうすればいいらしい&lt;/p&gt;
@@ -130,7 +130,7 @@
 
 
 &lt;p&gt;shown.bs.tabってイベントがあるらしい。&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/20705905/bootstrap-3-jquery-event-for-active-tab-change"&gt;Bootstrap 3 jquery event for active tab change - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="javascript"></category><category term="memo"></category></entry><entry><title>uwsgiメモ</title><link href="http://blog.shigepon.info/2015/03/05/uwsgi-memo/" rel="alternate"></link><updated>2015-03-05T10:21:54+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-03-05:2015/03/05/uwsgi-memo/</id><summary type="html">&lt;p&gt;uwsgi関連ではまった点などをメモ&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/20705905/bootstrap-3-jquery-event-for-active-tab-change"&gt;Bootstrap 3 jquery event for active tab change - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="javascript"></category><category term="memo"></category></entry><entry><title>uwsgiメモ</title><link href="http://blog.shigepon.info/blog/2015/03/05/uwsgi-memo/" rel="alternate"></link><updated>2015-03-05T10:21:54+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-03-05:blog/2015/03/05/uwsgi-memo/</id><summary type="html">&lt;p&gt;uwsgi関連ではまった点などをメモ&lt;/p&gt;
 &lt;h2&gt;invalid request block size&lt;/h2&gt;
 &lt;p&gt;ajaxでサーバ側からデータを読み込むライブラリを使ってると、条件によって502エラーが出てる(=大体djangoとかのプログラム側のエラーで出る)ので、uwsgiのログを調べると、invalid request block sizeというエラーが出てた。&lt;/p&gt;
 &lt;p&gt;んで、調べてみると、uwsgiがリクエストのサイズが大きすぎるとエラーを吐いているらしい。ライブラリ側で勝手にパラメーター付けて送られてリクエストのサイズが大きくなっているので、こりゃ調整しないとなということで調べてみた。起動時にオプション設定するか、iniファイルで設定したらいけるらしい&lt;/p&gt;
@@ -158,7 +158,7 @@
 
 
 &lt;p&gt;すると/path/to/uwsgi/log/hoge-xxxx-xx-xx.log （xx..は日付）というログファイルが出来る。&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/28343262/how-to-create-one-uwsgi-log-file-per-day"&gt;logging - How to create one uwsgi log file per day? - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="uwsgi"></category><category term="django"></category><category term="memo"></category><category term="python"></category></entry><entry><title>Django Memo</title><link href="http://blog.shigepon.info/2014/11/23/django-memo/" rel="alternate"></link><updated>2014-11-23T22:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-11-23:2014/11/23/django-memo/</id><summary type="html">&lt;p&gt;Djangoやってて忘れっぽいところとかをメモ&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/28343262/how-to-create-one-uwsgi-log-file-per-day"&gt;logging - How to create one uwsgi log file per day? - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="uwsgi"></category><category term="django"></category><category term="memo"></category><category term="python"></category></entry><entry><title>Django Memo</title><link href="http://blog.shigepon.info/blog/2014/11/23/django-memo/" rel="alternate"></link><updated>2014-11-23T22:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-11-23:blog/2014/11/23/django-memo/</id><summary type="html">&lt;p&gt;Djangoやってて忘れっぽいところとかをメモ&lt;/p&gt;
 &lt;h2&gt;リクエストパラメーターをモデルに入れる&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# views.py&lt;/span&gt;
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;a_view&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
@@ -521,7 +521,7 @@
 
 
 &lt;p&gt;でいける&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/3765887/add-request-get-variable-using-django-shortcuts-redirect"&gt;add request.GET variable using django.shortcuts.redirect - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="memo"></category><category term="django"></category><category term="python"></category></entry><entry><title>Titanium Mobileメモ</title><link href="http://blog.shigepon.info/2014/11/23/titanium-mobile-memo/" rel="alternate"></link><updated>2014-11-23T09:48:44+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-11-23:2014/11/23/titanium-mobile-memo/</id><summary type="html">&lt;p&gt;Titanium Mobileに関するメモ&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/3765887/add-request-get-variable-using-django-shortcuts-redirect"&gt;add request.GET variable using django.shortcuts.redirect - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="memo"></category><category term="django"></category><category term="python"></category></entry><entry><title>Titanium Mobileメモ</title><link href="http://blog.shigepon.info/blog/2014/11/23/titanium-mobile-memo/" rel="alternate"></link><updated>2014-11-23T09:48:44+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-11-23:blog/2014/11/23/titanium-mobile-memo/</id><summary type="html">&lt;p&gt;Titanium Mobileに関するメモ&lt;/p&gt;
 &lt;h2&gt;アプリ固有の設定を登録する&lt;/h2&gt;
 &lt;p&gt;アプリを終了して、再起動させた時も保存される設定をしたい時はTitanium.App.Propertiesを使う&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;Ti&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;App&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;Properties&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;setString&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;hoge&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;fuga&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="c1"&gt;//設定&lt;/span&gt;
@@ -545,7 +545,7 @@
 
 
 &lt;p&gt;もしくは文字サイズをdpで指定&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="http://www.fujimotohajime.net/pukiwiki/index.php?TitaniumMobile%2FAndroid%E3%81%A7%E5%AE%9F%E6%A9%9F%E3%83%86%E3%82%B9%E3%83%88%E3%81%99%E3%82%8B%E3%81%A8%E6%96%87%E5%AD%97%E3%81%8C%E5%B0%8F%E3%81%95%E3%81%84"&gt;TitaniumMobile/Androidで実機テストすると文字が小さい - Wiki&lt;/a&gt;&lt;/p&gt;</summary><category term="titanium"></category><category term="memo"></category></entry><entry><title>ansible memo</title><link href="http://blog.shigepon.info/2014/07/01/ansible-memo/" rel="alternate"></link><updated>2014-07-01T16:56:06+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-07-01:2014/07/01/ansible-memo/</id><summary type="html">&lt;p&gt;ansibleで自分が欲しい情報が色んなページに散らばっていたので、メモ&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://www.fujimotohajime.net/pukiwiki/index.php?TitaniumMobile%2FAndroid%E3%81%A7%E5%AE%9F%E6%A9%9F%E3%83%86%E3%82%B9%E3%83%88%E3%81%99%E3%82%8B%E3%81%A8%E6%96%87%E5%AD%97%E3%81%8C%E5%B0%8F%E3%81%95%E3%81%84"&gt;TitaniumMobile/Androidで実機テストすると文字が小さい - Wiki&lt;/a&gt;&lt;/p&gt;</summary><category term="titanium"></category><category term="memo"></category></entry><entry><title>ansible memo</title><link href="http://blog.shigepon.info/blog/2014/07/01/ansible-memo/" rel="alternate"></link><updated>2014-07-01T16:56:06+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-07-01:blog/2014/07/01/ansible-memo/</id><summary type="html">&lt;p&gt;ansibleで自分が欲しい情報が色んなページに散らばっていたので、メモ&lt;/p&gt;
 &lt;!-- more --&gt;
 
 &lt;h3&gt;ansible-playbookのオプション&lt;/h3&gt;
@@ -619,7 +619,7 @@
 &lt;ul&gt;
 &lt;li&gt;まずsudoを外して-Cで動くかチェック&lt;/li&gt;
 &lt;li&gt;いけるなら、host側のsudoパスワードが入力出来ていないのが原因なので、--ask-sudo-passを使う。&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="memo"></category><category term="ansible"></category><category term="python"></category></entry><entry><title>Python memo</title><link href="http://blog.shigepon.info/2014/06/30/python-memo/" rel="alternate"></link><updated>2014-06-30T20:38:44+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-06-30:2014/06/30/python-memo/</id><summary type="html">&lt;p&gt;Djangoやり始めたので、その過程で記録しておきたいことをメモ。&lt;/p&gt;
+&lt;/ul&gt;</summary><category term="memo"></category><category term="ansible"></category><category term="python"></category></entry><entry><title>Python memo</title><link href="http://blog.shigepon.info/blog/2014/06/30/python-memo/" rel="alternate"></link><updated>2014-06-30T20:38:44+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-06-30:blog/2014/06/30/python-memo/</id><summary type="html">&lt;p&gt;Djangoやり始めたので、その過程で記録しておきたいことをメモ。&lt;/p&gt;
 &lt;h2&gt;pip freezeでWarning: cannot find svn location for distribute==0.6.24dev-r0&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo pip install --upgrade distribute
 &lt;/pre&gt;&lt;/div&gt;
@@ -883,7 +883,7 @@ subprocessを使う。何か昔は別の手法だったらしい。&lt;/p&gt;
 
 &lt;h2&gt;psycopg2をインストールする&lt;/h2&gt;
 &lt;p&gt;依存ライブラリとしてlibpg-devが必要。postgresql-server-dev-x.xが必要とか言われるけど、こっちで良い。&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/28253681/you-need-to-install-postgresql-server-dev-x-y-for-building-a-server-side-extensi"&gt;python - You need to install postgresql-server-dev-X.Y for building a server-side extension or libpq-dev for building a client-side application - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="python"></category><category term="memo"></category></entry><entry><title>git memo</title><link href="http://blog.shigepon.info/2014/04/09/git-memo/" rel="alternate"></link><updated>2014-04-09T12:36:49+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-04-09:2014/04/09/git-memo/</id><summary type="html">&lt;p&gt;git関連のメモ&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/28253681/you-need-to-install-postgresql-server-dev-x-y-for-building-a-server-side-extensi"&gt;python - You need to install postgresql-server-dev-X.Y for building a server-side extension or libpq-dev for building a client-side application - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="python"></category><category term="memo"></category></entry><entry><title>git memo</title><link href="http://blog.shigepon.info/blog/2014/04/09/git-memo/" rel="alternate"></link><updated>2014-04-09T12:36:49+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-04-09:blog/2014/04/09/git-memo/</id><summary type="html">&lt;p&gt;git関連のメモ&lt;/p&gt;
 &lt;h3&gt;変更履歴を見る&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git log -p
 &lt;/pre&gt;&lt;/div&gt;
@@ -987,7 +987,7 @@ $ git merge master
 
 
 &lt;p&gt;と先にやっておくと日本語ファイル名もちゃんと表示される&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="http://tobysoft.net/wiki/index.php?git%2F%C6%FC%CB%DC%B8%EC%A5%D5%A5%A1%A5%A4%A5%EB%CC%BE%A4%F2git%20status%A4%CA%A4%C9%A4%C7%C9%BD%BC%A8%A4%B9%A4%EB%CA%FD%CB%A1"&gt;git/日本語ファイル名をgit statusなどで表示する方法 - TOBY SOFT wiki&lt;/a&gt;&lt;/p&gt;</summary><category term="git"></category><category term="memo"></category></entry><entry><title>nginx memo</title><link href="http://blog.shigepon.info/2014/03/20/nginx-memo/" rel="alternate"></link><updated>2014-03-20T16:04:53+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-03-20:2014/03/20/nginx-memo/</id><summary type="html">&lt;h2&gt;Nginxで503コードのページをカスタマイズする&lt;/h2&gt;
+&lt;p&gt;参考：&lt;a href="http://tobysoft.net/wiki/index.php?git%2F%C6%FC%CB%DC%B8%EC%A5%D5%A5%A1%A5%A4%A5%EB%CC%BE%A4%F2git%20status%A4%CA%A4%C9%A4%C7%C9%BD%BC%A8%A4%B9%A4%EB%CA%FD%CB%A1"&gt;git/日本語ファイル名をgit statusなどで表示する方法 - TOBY SOFT wiki&lt;/a&gt;&lt;/p&gt;</summary><category term="git"></category><category term="memo"></category></entry><entry><title>nginx memo</title><link href="http://blog.shigepon.info/blog/2014/03/20/nginx-memo/" rel="alternate"></link><updated>2014-03-20T16:04:53+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-03-20:blog/2014/03/20/nginx-memo/</id><summary type="html">&lt;h2&gt;Nginxで503コードのページをカスタマイズする&lt;/h2&gt;
 &lt;p&gt;なるべく手軽にメンテナンスページを出すための手順&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;path/to/root/error/503.htmlにページを用意する。&lt;/li&gt;
@@ -1060,7 +1060,7 @@ $ git merge master
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;参考：&lt;a href="http://toshitanian.hatenablog.com/entry/2013/10/25/023838"&gt;nginxのerror_logはformat指定できない． - としたにあんの左脳&lt;/a&gt;&lt;/p&gt;</summary><category term="nginx"></category><category term="memo"></category></entry><entry><title>linux command memo</title><link href="http://blog.shigepon.info/2014/03/07/linux-command-memo/" rel="alternate"></link><updated>2014-03-07T08:50:21+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-03-07:2014/03/07/linux-command-memo/</id><summary type="html">&lt;h2&gt;アクセスログのIPアドレスを集計してみる&lt;/h2&gt;
+&lt;p&gt;参考：&lt;a href="http://toshitanian.hatenablog.com/entry/2013/10/25/023838"&gt;nginxのerror_logはformat指定できない． - としたにあんの左脳&lt;/a&gt;&lt;/p&gt;</summary><category term="nginx"></category><category term="memo"></category></entry><entry><title>linux command memo</title><link href="http://blog.shigepon.info/blog/2014/03/07/linux-command-memo/" rel="alternate"></link><updated>2014-03-07T08:50:21+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-03-07:blog/2014/03/07/linux-command-memo/</id><summary type="html">&lt;h2&gt;アクセスログのIPアドレスを集計してみる&lt;/h2&gt;
 &lt;p&gt;参考：&lt;a href="http://blog.livedoor.jp/stock_value/archives/51443839.html"&gt;Linux サーバーでお手軽にログの集計：こっそりと。 - livedoor Blog（ブログ）&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Google Analyticsでリファラ無しの変なアクセスが増えたので、アクセスログからIPを集計してみた。
 アクセスログの書式はLTSVでこんな感じ&lt;/p&gt;
@@ -1256,7 +1256,7 @@ $ ls /etc/cron.monthly
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;これくらいチェックすればよさげ&lt;/p&gt;</summary><category term="linux"></category><category term="memo"></category></entry><entry><title>vim memo</title><link href="http://blog.shigepon.info/2014/03/01/vim-memo/" rel="alternate"></link><updated>2014-03-01T14:14:10+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-03-01:2014/03/01/vim-memo/</id><summary type="html">&lt;h2&gt;vimでsnippet&lt;/h2&gt;
+&lt;p&gt;これくらいチェックすればよさげ&lt;/p&gt;</summary><category term="linux"></category><category term="memo"></category></entry><entry><title>vim memo</title><link href="http://blog.shigepon.info/blog/2014/03/01/vim-memo/" rel="alternate"></link><updated>2014-03-01T14:14:10+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-03-01:blog/2014/03/01/vim-memo/</id><summary type="html">&lt;h2&gt;vimでsnippet&lt;/h2&gt;
 &lt;p&gt;色々方法があるみたいだけど、neocomplecacheを入れているので、それと相性が良さそうな（作者が同じ）プラグインを入れた&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;NeoBundle &amp;#39;Shougo/neosnippet&amp;#39;
 NeoBundle &amp;#39;Shougo/neosnippet-snippets&amp;#39;
@@ -1310,7 +1310,7 @@ endif
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;参考：&lt;a href="http://qiita.com/quwa/items/019250dbca167985fe32"&gt;vimでペーストするときインデントさせない - Qiita&lt;/a&gt;&lt;/p&gt;</summary><category term="vim"></category><category term="memo"></category></entry><entry><title>svn memo</title><link href="http://blog.shigepon.info/2014/02/11/svn-memo/" rel="alternate"></link><updated>2014-02-11T11:53:32+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-02-11:2014/02/11/svn-memo/</id><summary type="html">&lt;p&gt;svn使っててはまることが結構あるのでメモ&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://qiita.com/quwa/items/019250dbca167985fe32"&gt;vimでペーストするときインデントさせない - Qiita&lt;/a&gt;&lt;/p&gt;</summary><category term="vim"></category><category term="memo"></category></entry><entry><title>svn memo</title><link href="http://blog.shigepon.info/blog/2014/02/11/svn-memo/" rel="alternate"></link><updated>2014-02-11T11:53:32+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-02-11:blog/2014/02/11/svn-memo/</id><summary type="html">&lt;p&gt;svn使っててはまることが結構あるのでメモ&lt;/p&gt;
 &lt;h2&gt;ubuntuでsvnコマンドすると認証失敗する場合&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Password &lt;span class="k"&gt;for&lt;/span&gt; ‘&lt;span class="o"&gt;(&lt;/span&gt;null&lt;span class="o"&gt;)&lt;/span&gt;’ GNOME keyring:
 &lt;/pre&gt;&lt;/div&gt;
@@ -1335,10 +1335,10 @@ endif
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;でおk&lt;/p&gt;</summary><category term="linux"></category><category term="svn"></category><category term="memo"></category></entry><entry><title>sqlite memo</title><link href="http://blog.shigepon.info/2014/02/11/sqlite-memo/" rel="alternate"></link><updated>2014-02-11T11:48:39+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-02-11:2014/02/11/sqlite-memo/</id><summary type="html">&lt;p&gt;SQLiteでたまに使う操作をメモ&lt;/p&gt;
+&lt;p&gt;でおk&lt;/p&gt;</summary><category term="linux"></category><category term="svn"></category><category term="memo"></category></entry><entry><title>sqlite memo</title><link href="http://blog.shigepon.info/blog/2014/02/11/sqlite-memo/" rel="alternate"></link><updated>2014-02-11T11:48:39+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-02-11:blog/2014/02/11/sqlite-memo/</id><summary type="html">&lt;p&gt;SQLiteでたまに使う操作をメモ&lt;/p&gt;
 &lt;h2&gt;テーブルの存在チェック&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;SELECT&lt;/span&gt; &lt;span class="k"&gt;COUNT&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="n"&gt;sqlite_master&lt;/span&gt; &lt;span class="k"&gt;WHERE&lt;/span&gt; &lt;span class="k"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;table&amp;#39;&lt;/span&gt; &lt;span class="k"&gt;AND&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;テーブル名&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</summary><category term="sqlite"></category><category term="memo"></category></entry><entry><title>unity memo</title><link href="http://blog.shigepon.info/2014/02/10/unity-memo/" rel="alternate"></link><updated>2014-02-10T23:25:11+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-02-10:2014/02/10/unity-memo/</id><summary type="html">&lt;p&gt;unity使ってこれから何か作っていこうと思うのでめも。&lt;/p&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="sqlite"></category><category term="memo"></category></entry><entry><title>unity memo</title><link href="http://blog.shigepon.info/blog/2014/02/10/unity-memo/" rel="alternate"></link><updated>2014-02-10T23:25:11+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-02-10:blog/2014/02/10/unity-memo/</id><summary type="html">&lt;p&gt;unity使ってこれから何か作っていこうと思うのでめも。&lt;/p&gt;
 &lt;h3&gt;最初にやったこと&lt;/h3&gt;
 &lt;p&gt;&lt;a href="http://uinyan.com/unity_7days_kusoge_challenge/"&gt;【Unity】素人が7日間クソゲーを作り続けてわかったこと – uinyan. com&lt;/a&gt;に載っていた&lt;a href="http://japan.unity3d.com/developer/document/tutorial/my-first-unity/01.html"&gt;UNITY - Developer - はじめての Unity - 第1回 世界の「骨格」をつくろう&lt;/a&gt;に沿ってブロックとボールを作ってみた。&lt;br /&gt;
 実際にどう操作するかは&lt;a href="https://www.google.com/url?q=http://dotinstall.com/&amp;amp;usd=2&amp;amp;usg=AFQjCNHZtbpqtTDbVeGhAQfx3_H-UUYI1Q"&gt;ドットインストールのUnity講座&lt;/a&gt;を参考にした。&lt;/p&gt;
@@ -1437,7 +1437,7 @@ unity側での作業は&lt;a href="http://tech.gmo-media.jp/post/54095871491/run
 &lt;li&gt;位置のScaleを-1にして反転するとアニメーションもそのまま反転した。すごい。&lt;/li&gt;
 &lt;li&gt;StartよりAwakeが先に呼び出される。初期化に使える。&lt;/li&gt;
 &lt;li&gt;MonoDevelop-UnityをMacにインストールしてて、C#の通常アプリが作れると思ったら大間違い。C#のアプリ作ろうと思ったらXamarin Studio入れた方がよさげ。NUnitが無いって怒られて散々だった。&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="unity"></category><category term="memo"></category></entry><entry><title>octpress tips</title><link href="http://blog.shigepon.info/2014/01/31/octpress-tips/" rel="alternate"></link><updated>2014-01-31T08:33:56+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-01-31:2014/01/31/octpress-tips/</id><summary type="html">&lt;p&gt;Octopressのインストール後に行ったカスタマイズをまとめておきます。&lt;/p&gt;
+&lt;/ul&gt;</summary><category term="unity"></category><category term="memo"></category></entry><entry><title>octpress tips</title><link href="http://blog.shigepon.info/blog/2014/01/31/octpress-tips/" rel="alternate"></link><updated>2014-01-31T08:33:56+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-01-31:blog/2014/01/31/octpress-tips/</id><summary type="html">&lt;p&gt;Octopressのインストール後に行ったカスタマイズをまとめておきます。&lt;/p&gt;
 &lt;h2&gt;外部リンクを別ウィンドウで開く&lt;/h2&gt;
 &lt;p&gt;下のコードを追加します&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="nx"&gt;source&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;_inclides&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;custom&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;head&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;html&lt;/span&gt;
@@ -1457,7 +1457,7 @@ unity側での作業は&lt;a href="http://tech.gmo-media.jp/post/54095871491/run
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;これを書けばおk&lt;/p&gt;</summary><category term="memo"></category><category term="Octopress"></category></entry><entry><title>PostgreSQLメモ</title><link href="http://blog.shigepon.info/2014/01/28/postgresql-memo/" rel="alternate"></link><updated>2014-01-28T21:24:42+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-01-28:2014/01/28/postgresql-memo/</id><summary type="html">&lt;p&gt;rhaco2をPostgreSQL8.3で使えるように色々調べていくうちに学んだメモ。&lt;/p&gt;
+&lt;p&gt;これを書けばおk&lt;/p&gt;</summary><category term="memo"></category><category term="Octopress"></category></entry><entry><title>PostgreSQLメモ</title><link href="http://blog.shigepon.info/blog/2014/01/28/postgresql-memo/" rel="alternate"></link><updated>2014-01-28T21:24:42+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-01-28:blog/2014/01/28/postgresql-memo/</id><summary type="html">&lt;p&gt;rhaco2をPostgreSQL8.3で使えるように色々調べていくうちに学んだメモ。&lt;/p&gt;
 &lt;h2&gt;insert時に「デフォルト値を入れる」だけの処理をしたい場合&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;insert&lt;/span&gt; &lt;span class="k"&gt;into&lt;/span&gt; &lt;span class="err"&gt;テーブル名&lt;/span&gt; &lt;span class="k"&gt;default&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;

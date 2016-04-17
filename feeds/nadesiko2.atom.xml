@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/nadesiko2.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2015-12-17T08:55:02+09:00</updated><entry><title>mono winformsがmacで文字化けする件</title><link href="http://blog.shigepon.info/2015/12/17/mono-winforms-garbled-on-mac/" rel="alternate"></link><updated>2015-12-17T08:55:02+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-12-17:2015/12/17/mono-winforms-garbled-on-mac/</id><summary type="html">&lt;p&gt;なでしこ2にフォームの機能入れるためにmonoのWinFormを試しているが、どうにも文字化けが治らないので、途中経過までのメモ。取りあえずボタンは文字化けしないようになった。&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/nadesiko2.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2015-12-17T08:55:02+09:00</updated><entry><title>mono winformsがmacで文字化けする件</title><link href="http://blog.shigepon.info/blog/2015/12/17/mono-winforms-garbled-on-mac/" rel="alternate"></link><updated>2015-12-17T08:55:02+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-12-17:blog/2015/12/17/mono-winforms-garbled-on-mac/</id><summary type="html">&lt;p&gt;なでしこ2にフォームの機能入れるためにmonoのWinFormを試しているが、どうにも文字化けが治らないので、途中経過までのメモ。取りあえずボタンは文字化けしないようになった。&lt;/p&gt;
 &lt;h2&gt;Fontプロパティを設定する&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;System&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;System.Windows.Forms&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
@@ -30,7 +30,7 @@
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://risky-safety.org/zinnia/d/2011/09/"&gt;Zinnia hacks tomorrow.&lt;/a&gt; 一番参考になった&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://www.slideshare.net/babatakao/font-config"&gt;Fontconfigことはじめ&lt;/a&gt; fontconfig回り&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="CSharp"></category><category term="nadesiko2"></category></entry><entry><title>なでしこ2でssl使うとthe authentication or decription has failedエラーが出る件</title><link href="http://blog.shigepon.info/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/" rel="alternate"></link><updated>2015-07-20T20:12:34+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-07-20:2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/</id><summary type="html">&lt;p&gt;結論から言うとmonoの問題だった。&lt;/p&gt;
+&lt;/ul&gt;</summary><category term="CSharp"></category><category term="nadesiko2"></category></entry><entry><title>なでしこ2でssl使うとthe authentication or decription has failedエラーが出る件</title><link href="http://blog.shigepon.info/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/" rel="alternate"></link><updated>2015-07-20T20:12:34+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-07-20:blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/</id><summary type="html">&lt;p&gt;結論から言うとmonoの問題だった。&lt;/p&gt;
 &lt;p&gt;参考：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://d.hatena.ne.jp/unarist/20110601/1306945858"&gt;MonoでSSL接続しようとしたら怒られた - うなてっくろぐ&lt;/a&gt;&lt;/li&gt;
@@ -70,7 +70,7 @@ public Object _dataGet(INakoFuncCallInfo info)
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;この認証本当に受入れていいの？みたいなメッセージが出たら「y」を押せばおk&lt;/p&gt;</summary><category term="nadesiko2"></category><category term="CSharp"></category></entry><entry><title>なでしこ2でradikoの録音をやってみた</title><link href="http://blog.shigepon.info/2015/07/19/record-radiko-with-nadesiko2/" rel="alternate"></link><updated>2015-07-19T17:22:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-07-19:2015/07/19/record-radiko-with-nadesiko2/</id><summary type="html">&lt;p&gt;ネット上でラジオを聞けるサービス&lt;a href="http://radiko.jp/"&gt;radiko&lt;/a&gt;の録音ソフトが調子悪くなったので、自分で作ってみるかーとやってみたら出来たのでメモ。OSはUbuntu 12.04で、cui環境で行った。&lt;/p&gt;
+&lt;p&gt;この認証本当に受入れていいの？みたいなメッセージが出たら「y」を押せばおk&lt;/p&gt;</summary><category term="nadesiko2"></category><category term="CSharp"></category></entry><entry><title>なでしこ2でradikoの録音をやってみた</title><link href="http://blog.shigepon.info/blog/2015/07/19/record-radiko-with-nadesiko2/" rel="alternate"></link><updated>2015-07-19T17:22:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-07-19:blog/2015/07/19/record-radiko-with-nadesiko2/</id><summary type="html">&lt;p&gt;ネット上でラジオを聞けるサービス&lt;a href="http://radiko.jp/"&gt;radiko&lt;/a&gt;の録音ソフトが調子悪くなったので、自分で作ってみるかーとやってみたら出来たのでメモ。OSはUbuntu 12.04で、cui環境で行った。&lt;/p&gt;
 &lt;p&gt;参考：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="https://gist.github.com/matchy2/3956266"&gt;簡易Radiko録音スクリプト&lt;/a&gt;&lt;/li&gt;
@@ -90,7 +90,7 @@ $ sudo aptitude install swftools
 &lt;p&gt;で、あとは一連の処理をなぞるスクリプトを書くだけ。pythonとかはググればあるので、なでしこ2でやってみた。&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://gist.github.com/shigepon/01acb8686e6df6accce2"&gt;record_radiko.nako&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;gistを初めて使うので、こんなやり方で良いのかちょっと分からないけどこんな感じ。wgetとかddとかコマンドをそのまま使ってるので、windowsでは動かないはず。なでしこ2では7/19時点ではpostでヘッダー指定するとか出来ないので、こうせざるを得ない。&lt;/p&gt;
-&lt;p&gt;なでしこ2の一例ということで。ちなみにこれ作るのに3時間かかった。うち1時間半がググってインストールして手作業で動作確認に使って、1時間は休憩に使った。エラー処理とかtmpファイルの処理とか全然やってない適当コードですんません＞＜。&lt;/p&gt;</summary><category term="nadesiko2"></category><category term="linux"></category></entry><entry><title>Jenkinsでなでしこ2をCIする</title><link href="http://blog.shigepon.info/2015/05/08/nadesiko2-continuous-integration-with-jenkins/" rel="alternate"></link><updated>2015-05-08T09:19:18+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-05-08:2015/05/08/nadesiko2-continuous-integration-with-jenkins/</id><summary type="html">&lt;p&gt;&lt;a href="http://blog.shigepon.info/blog/2015/05/05/nunit-console-test-for-nadesiko2/"&gt;なでしこ2をubuntu cuiでテストする - shigeponが関心のある技術情報など&lt;/a&gt;
+&lt;p&gt;なでしこ2の一例ということで。ちなみにこれ作るのに3時間かかった。うち1時間半がググってインストールして手作業で動作確認に使って、1時間は休憩に使った。エラー処理とかtmpファイルの処理とか全然やってない適当コードですんません＞＜。&lt;/p&gt;</summary><category term="nadesiko2"></category><category term="linux"></category></entry><entry><title>Jenkinsでなでしこ2をCIする</title><link href="http://blog.shigepon.info/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/" rel="alternate"></link><updated>2015-05-08T09:19:18+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-05-08:blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/</id><summary type="html">&lt;p&gt;&lt;a href="http://blog.shigepon.info/blog/2015/05/05/nunit-console-test-for-nadesiko2/"&gt;なでしこ2をubuntu cuiでテストする - shigeponが関心のある技術情報など&lt;/a&gt;
 までやったので、CIできると便利かなと思ってやってみた。と言いつつ、単にやってみたかっただけ。mono developとかvisual studio使って開発する場合も同じように出来ると思う。例によって環境はUbuntu 12.04&lt;/p&gt;
 &lt;p&gt;参考：&lt;/p&gt;
 &lt;ul&gt;
@@ -174,7 +174,7 @@ $ sudo aptitude install swftools
 &lt;/ul&gt;
 &lt;h2&gt;5. 実行&lt;/h2&gt;
 &lt;p&gt;Jenkins &amp;gt; プロジェクト(今回はnadesiko2)
-で、ビルド実行をクリックすると実行してくれる。あと、gitの指定したブランチでコミットした後もこの設定の場合30分おきにコミットをチェックしてビルドを実行してくれる。まだまだテストが通ってない部分もあるので、結果は失敗になるけど、とりあえずこれで進められる。&lt;/p&gt;</summary><category term="nadesiko2"></category><category term="linux"></category><category term="test1st"></category></entry><entry><title>なでしこ2をubuntu cuiでテストする</title><link href="http://blog.shigepon.info/2015/05/05/nunit-console-test-for-nadesiko2/" rel="alternate"></link><updated>2015-05-05T23:02:32+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-05-05:2015/05/05/nunit-console-test-for-nadesiko2/</id><summary type="html">&lt;p&gt;&lt;a href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/"&gt;ubuntuのcui環境でなでしこ2をビルドする&lt;/a&gt;の続きで、cui環境でなでしこ2のテストを実行してみる。&lt;/p&gt;
+で、ビルド実行をクリックすると実行してくれる。あと、gitの指定したブランチでコミットした後もこの設定の場合30分おきにコミットをチェックしてビルドを実行してくれる。まだまだテストが通ってない部分もあるので、結果は失敗になるけど、とりあえずこれで進められる。&lt;/p&gt;</summary><category term="nadesiko2"></category><category term="linux"></category><category term="test1st"></category></entry><entry><title>なでしこ2をubuntu cuiでテストする</title><link href="http://blog.shigepon.info/blog/2015/05/05/nunit-console-test-for-nadesiko2/" rel="alternate"></link><updated>2015-05-05T23:02:32+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-05-05:blog/2015/05/05/nunit-console-test-for-nadesiko2/</id><summary type="html">&lt;p&gt;&lt;a href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/"&gt;ubuntuのcui環境でなでしこ2をビルドする&lt;/a&gt;の続きで、cui環境でなでしこ2のテストを実行してみる。&lt;/p&gt;
 &lt;p&gt;cui環境でnunitを実行するには&lt;a href="http://www.nunit.org/index.php?p=nunit-console&amp;amp;r=2.5.10"&gt;nunit-console&lt;/a&gt;を使う。なでしこ2のテストを実行するにはテスト関連のdllをnunitで実行すると良い。コマンドはなでしこ2をインストールしたディレクトリでこんな感じ。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ nunit-console CNako2Test/bin/Debug/CNako2Test.dll
 &lt;/pre&gt;&lt;/div&gt;
@@ -193,7 +193,7 @@ $ sudo aptitude install swftools
 
 
 &lt;p&gt;とすると、外部ファイルを読み込んでくれる。
-これでcui環境でなでしこ2をビルドからテストまで出来る。&lt;/p&gt;</summary><category term="nadesiko2"></category><category term="linux"></category></entry><entry><title>ubuntuのcui環境でなでしこ2をビルドする</title><link href="http://blog.shigepon.info/2015/05/01/develop-nadesiko2-on-ubuntu-cui/" rel="alternate"></link><updated>2015-05-01T08:23:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-05-01:2015/05/01/develop-nadesiko2-on-ubuntu-cui/</id><summary type="html">&lt;p&gt;今までmono developでなでしこ2をビルド、テストして、cui環境にアップロードしてたんだけど、面倒になってきたのでcui環境で直接ビルド、テストしてみようと思ったのでついでに開発を始める段階からメモしてみる。&lt;/p&gt;
+これでcui環境でなでしこ2をビルドからテストまで出来る。&lt;/p&gt;</summary><category term="nadesiko2"></category><category term="linux"></category></entry><entry><title>ubuntuのcui環境でなでしこ2をビルドする</title><link href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/" rel="alternate"></link><updated>2015-05-01T08:23:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-05-01:blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/</id><summary type="html">&lt;p&gt;今までmono developでなでしこ2をビルド、テストして、cui環境にアップロードしてたんだけど、面倒になってきたのでcui環境で直接ビルド、テストしてみようと思ったのでついでに開発を始める段階からメモしてみる。&lt;/p&gt;
 &lt;p&gt;環境はubuntu 12.04とするが、上位バージョンでも問題無いはず&lt;/p&gt;
 &lt;h1&gt;mono環境の準備&lt;/h1&gt;
 &lt;p&gt;mono-develをインストールしたらmono関連で必要なものは勝手にインストールされたような気がする。ついでに&lt;a href="http://blog.shigepon.info/blog/2014/08/20/vb-not-work-on-ubuntu/"&gt;VisualBasicが動かない件&lt;/a&gt;にあるように、mono-vbnc、あとはnunitのインストール&lt;/p&gt;
@@ -254,7 +254,7 @@ Time Elapsed 00:00:06.1095450
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;で、再度ビルドするとビルド出来た。shigeponのリポジトリには修正したものをアップしておくのでそのままビルド出来ると思う。パスはリポジトリをcloneするディレクトリによっては変更しないといけないと思う。&lt;/p&gt;</summary><category term="nadesiko2"></category><category term="linux"></category></entry><entry><title>ubuntuのmonoでMicrosoft.VisualBasicが動かない件</title><link href="http://blog.shigepon.info/2014/08/20/vb-not-work-on-ubuntu/" rel="alternate"></link><updated>2014-08-20T13:38:34+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-08-20:2014/08/20/vb-not-work-on-ubuntu/</id><summary type="html">&lt;p&gt;なでしこ2にコミットしたりしつつ、実際にUbuntu 12.04で使ってみたりしているが、vb系のインポートが出来ないとか何とか言われたのでメモ&lt;/p&gt;
+&lt;p&gt;で、再度ビルドするとビルド出来た。shigeponのリポジトリには修正したものをアップしておくのでそのままビルド出来ると思う。パスはリポジトリをcloneするディレクトリによっては変更しないといけないと思う。&lt;/p&gt;</summary><category term="nadesiko2"></category><category term="linux"></category></entry><entry><title>ubuntuのmonoでMicrosoft.VisualBasicが動かない件</title><link href="http://blog.shigepon.info/blog/2014/08/20/vb-not-work-on-ubuntu/" rel="alternate"></link><updated>2014-08-20T13:38:34+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-08-20:blog/2014/08/20/vb-not-work-on-ubuntu/</id><summary type="html">&lt;p&gt;なでしこ2にコミットしたりしつつ、実際にUbuntu 12.04で使ってみたりしているが、vb系のインポートが出来ないとか何とか言われたのでメモ&lt;/p&gt;
 &lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/10071836/vb-net-not-working-on-ubuntu-10-04-with-mono"&gt;.net - VB.NET Not working on Ubuntu 10.04 With Mono - Stack Overflow&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;要は普通にmonoをインストールしただけ&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude install mono-devel
@@ -268,7 +268,7 @@ Time Elapsed 00:00:06.1095450
 
 &lt;!-- more --&gt;
 
-&lt;p&gt;を追加インストールしておこうということだった。情報無かったので結構はまった。&lt;/p&gt;</summary><category term="linux"></category><category term="nadesiko2"></category></entry><entry><title>なでしこ2のプラグインを作る方法</title><link href="http://blog.shigepon.info/2014/01/29/nadesiko2-make-plugin/" rel="alternate"></link><updated>2014-01-29T09:49:17+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-01-29:2014/01/29/nadesiko2-make-plugin/</id><summary type="html">&lt;p&gt;2015-12-01：情報が古くなったので古い部分を修正しました。&lt;/p&gt;
+&lt;p&gt;を追加インストールしておこうということだった。情報無かったので結構はまった。&lt;/p&gt;</summary><category term="linux"></category><category term="nadesiko2"></category></entry><entry><title>なでしこ2のプラグインを作る方法</title><link href="http://blog.shigepon.info/blog/2014/01/29/nadesiko2-make-plugin/" rel="alternate"></link><updated>2014-01-29T09:49:17+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-01-29:blog/2014/01/29/nadesiko2-make-plugin/</id><summary type="html">&lt;p&gt;2015-12-01：情報が古くなったので古い部分を修正しました。&lt;/p&gt;
 &lt;p&gt;なでしこ2でプラグインを作りたい人向けというニッチすぎるネタです。現在なでしこの時期バージョンなでしこ2が開発中です(えらい長いこと開発中です)が、構文の実装がある程度終わっているので、プラグインを開発することが出来ます。try catchの実装どうするかなーとか考えて進んでないですが、それはそれ。&lt;/p&gt;
 &lt;p&gt;なでしこ2はC#で組まれているので、プラグインもC#で組むことができます。&lt;/p&gt;
 &lt;h2&gt;準備&lt;/h2&gt;
