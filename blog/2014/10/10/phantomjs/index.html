@@ -144,11 +144,11 @@ $ ./build.sh
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
-        <li><a href="http://blog.shigepon.info/blog/2016/04/01/how_to_install_pelican_plugins_and_plugins_recommended/">pelicanのプラグイン利用法と入れておくと良さげなもの</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2014/11/04/use-django-with-uwsgi/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(4):djangoで作ったプロジェクトをnginx+uwsgiで使って公開する</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2016/01/15/use-groonga-for-django-cache/">use groonga for django cache</a></li>
         <li><a href="http://blog.shigepon.info/blog/2015/07/07/use-multiple-databases-in-django/">Djangoで複数データベースを使用する</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2016/02/09/migrate-from-django-1-dot-8-to-1-dot-9/">django 1.8から1.9へアップした時に気にする点</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2014/11/30/use-south-to-existing-project/">Southをすでにあるプロジェクトに適用する</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2014/06/18/start-django-project/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずDjangoプロジェクトとアプリを作ってみた</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2016/01/15/use-groonga-for-django-cache/">use groonga for django cache</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2014/11/20/titanium-ajax-post-to-django/">Titanium MobileとDjangoでAjax認証を行う</a></li>
     </ul>
 </section>
     <hr />
@@ -283,11 +283,6 @@ $ ./build.sh
             <li class="list-group-item"><a href="http://blog.shigepon.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
                 <ul class="list-group " id="tags">
                     <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/django.html">
-                            django
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-1">
                         <a href="http://blog.shigepon.info/tag/python.html">
                             python
                         </a>
@@ -295,6 +290,11 @@ $ ./build.sh
                     <li class="list-group-item tag-1">
                         <a href="http://blog.shigepon.info/tag/ruby.html">
                             ruby
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="http://blog.shigepon.info/tag/django.html">
+                            django
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
@@ -313,13 +313,23 @@ $ ./build.sh
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/rails.html">
-                            Rails
+                        <a href="http://blog.shigepon.info/tag/groonga.html">
+                            groonga
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
                         <a href="http://blog.shigepon.info/tag/csharp.html">
                             CSharp
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/nadesiko2.html">
+                            nadesiko2
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/r.html">
+                            R
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -333,8 +343,8 @@ $ ./build.sh
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/nadesiko2.html">
-                            nadesiko2
+                        <a href="http://blog.shigepon.info/tag/rails.html">
+                            Rails
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -342,14 +352,49 @@ $ ./build.sh
                             bootstrap
                         </a>
                     </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/r.html">
-                            R
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/octopress.html">
+                            octopress
                         </a>
                     </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/groonga.html">
-                            groonga
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/nginx.html">
+                            nginx
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/google.html">
+                            google
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
+                            CPlusPlus
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/vim.html">
+                            vim
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/rhaco.html">
+                            rhaco
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/ansible.html">
+                            ansible
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/javascript.html">
+                            javascript
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
+                            uwsgi
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -363,93 +408,13 @@ $ ./build.sh
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/javascript.html">
-                            javascript
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
-                            CPlusPlus
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/ansible.html">
-                            ansible
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
                         <a href="http://blog.shigepon.info/tag/pelican.html">
                             pelican
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
-                            uwsgi
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/nginx.html">
-                            nginx
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
                         <a href="http://blog.shigepon.info/tag/test1st.html">
                             test1st
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/vim.html">
-                            vim
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/octopress.html">
-                            octopress
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/google.html">
-                            google
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/rhaco.html">
-                            rhaco
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/update.html">
-                            update
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/sqlite.html">
-                            sqlite
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/mt4.html">
-                            MT4
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/redis.html">
-                            redis
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/law.html">
-                            law
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/git.html">
-                            git
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/rhaco3.html">
-                            rhaco3
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -458,18 +423,18 @@ $ ./build.sh
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
-                            linkedopendata
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/vmware.html">
-                            vmware
+                        <a href="http://blog.shigepon.info/tag/redis.html">
+                            redis
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
                         <a href="http://blog.shigepon.info/tag/svn.html">
                             svn
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/sqlite.html">
+                            sqlite
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -480,6 +445,31 @@ $ ./build.sh
                     <li class="list-group-item tag-4">
                         <a href="http://blog.shigepon.info/tag/unity.html">
                             unity
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/git.html">
+                            git
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
+                            linkedopendata
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/mt4.html">
+                            MT4
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/vmware.html">
+                            vmware
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/rhaco3.html">
+                            rhaco3
                         </a>
                     </li>
                 </ul>

@@ -157,7 +157,7 @@
 &lt;li&gt;「今すぐ公開」ボタンをクリック&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;以上でAnalyticsにデータを送信してくれるようになる。&lt;/p&gt;
-&lt;p&gt;Analyticsを動かすためだけにGoogle Tag Manager使うのは手間がかかるが、クリックを検出したりと色々機能を追加したり変更したりする時に、Google Tag Manager使っているとページ上のコードを変更する必要がなくなる。このメリットはとても大きいので、使う価値はあるんじゃないかと思う。&lt;/p&gt;</summary><category term="update"></category><category term="law"></category></entry><entry><title>pelicanのプラグイン利用法と入れておくと良さげなもの</title><link href="http://blog.shigepon.info/blog/2016/04/01/how_to_install_pelican_plugins_and_plugins_recommended/" rel="alternate"></link><updated>2016-04-01T14:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2016-04-01:blog/2016/04/01/how_to_install_pelican_plugins_and_plugins_recommended/</id><summary type="html">&lt;p&gt;pelicanはプラグインを用いて色々機能を追加できる。プラグインを使うだけでそれっぽいブログが出来上がるので、結構便利だと思う。&lt;/p&gt;
+&lt;p&gt;Analyticsを動かすためだけにGoogle Tag Manager使うのは手間がかかるが、クリックを検出したりと色々機能を追加したり変更したりする時に、Google Tag Manager使っているとページ上のコードを変更する必要がなくなる。このメリットはとても大きいので、使う価値はあるんじゃないかと思う。&lt;/p&gt;</summary><category term="google"></category></entry><entry><title>pelicanのプラグイン利用法と入れておくと良さげなもの</title><link href="http://blog.shigepon.info/blog/2016/04/01/how_to_install_pelican_plugins_and_plugins_recommended/" rel="alternate"></link><updated>2016-04-01T14:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2016-04-01:blog/2016/04/01/how_to_install_pelican_plugins_and_plugins_recommended/</id><summary type="html">&lt;p&gt;pelicanはプラグインを用いて色々機能を追加できる。プラグインを使うだけでそれっぽいブログが出来上がるので、結構便利だと思う。&lt;/p&gt;
 &lt;h2&gt;pelicanプラグインのインストール方法&lt;/h2&gt;
 &lt;p&gt;複数のブログで使うことを考えて独立したフォルダにプラグインを保存することにした。&lt;/p&gt;
 &lt;h3&gt;プラグインダウンロード&lt;/h3&gt;
