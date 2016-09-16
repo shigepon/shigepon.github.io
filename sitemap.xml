@@ -5,29 +5,36 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/</loc>
-<lastmod>2016-04-21T08:05:06-00:00</lastmod>
+<lastmod>2016-09-16T21:58:27-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/archives.html</loc>
-<lastmod>2016-04-21T08:05:06-00:00</lastmod>
+<lastmod>2016-09-16T21:58:27-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/tags.html</loc>
-<lastmod>2016-04-21T08:05:06-00:00</lastmod>
+<lastmod>2016-09-16T21:58:27-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/categories.html</loc>
-<lastmod>2016-04-21T08:05:06-00:00</lastmod>
+<lastmod>2016-09-16T21:58:27-00:00</lastmod>
 <changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://blog.shigepon.info/blog/2016/09/16/postgresql-memo/</loc>
+<lastmod>2016-09-16T21:24:42+09:00</lastmod>
+<changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
@@ -746,13 +753,6 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>http://blog.shigepon.info/blog/2014/01/28/postgresql-memo/</loc>
-<lastmod>2014-01-28T21:24:42+09:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
 <loc>http://blog.shigepon.info/blog/categories/csharp/</loc>
 <lastmod>2015-11-29T20:40:36+09:00</lastmod>
 <changefreq>daily</changefreq>
@@ -789,7 +789,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/blog/categories/memo/</loc>
-<lastmod>2016-03-08T09:50:36+09:00</lastmod>
+<lastmod>2016-09-16T21:24:42+09:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -852,7 +852,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/author/shigepon.html</loc>
-<lastmod>2016-04-02T10:30:00+09:00</lastmod>
+<lastmod>2016-09-16T21:24:42+09:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
