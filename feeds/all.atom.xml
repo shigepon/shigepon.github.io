@@ -5662,7 +5662,7 @@ $ ls /etc/cron.monthly
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;これくらいチェックすればよさげ&lt;/p&gt;</summary><category term="linux"></category><category term="memo"></category></entry><entry><title>vim memo</title><link href="http://blog.shigepon.info/blog/2014/03/01/vim-memo/" rel="alternate"></link><updated>2014-03-01T14:14:10+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-03-01:blog/2014/03/01/vim-memo/</id><summary type="html">&lt;h2&gt;vimでsnippet&lt;/h2&gt;
+&lt;p&gt;これくらいチェックすればよさげ&lt;/p&gt;</summary><category term="linux"></category><category term="memo"></category></entry><entry><title>vim memo</title><link href="http://blog.shigepon.info/blog/2014/03/01/vim-memo/" rel="alternate"></link><updated>2016-10-25T14:56:10+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-03-01:blog/2014/03/01/vim-memo/</id><summary type="html">&lt;h2&gt;vimでsnippet&lt;/h2&gt;
 &lt;p&gt;色々方法があるみたいだけど、neocomplecacheを入れているので、それと相性が良さそうな（作者が同じ）プラグインを入れた&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;NeoBundle &amp;#39;Shougo/neosnippet&amp;#39;
 NeoBundle &amp;#39;Shougo/neosnippet-snippets&amp;#39;
