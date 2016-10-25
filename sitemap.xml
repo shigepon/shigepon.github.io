@@ -5,35 +5,49 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/</loc>
-<lastmod>2016-10-25T13:55:53-00:00</lastmod>
+<lastmod>2016-10-25T14:52:32-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/archives.html</loc>
-<lastmod>2016-10-25T13:55:53-00:00</lastmod>
+<lastmod>2016-10-25T14:52:32-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/tags.html</loc>
-<lastmod>2016-10-25T13:55:53-00:00</lastmod>
+<lastmod>2016-10-25T14:52:32-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/categories.html</loc>
-<lastmod>2016-10-25T13:55:53-00:00</lastmod>
+<lastmod>2016-10-25T14:52:32-00:00</lastmod>
 <changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://blog.shigepon.info/blog/2016/10/25/pelican-memo/</loc>
+<lastmod>2016-10-25T15:35:38+09:00</lastmod>
+<changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/blog/2016/10/25/django-db-memo/</loc>
 <lastmod>2016-10-25T14:35:38+09:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://blog.shigepon.info/blog/2016/10/25/python_libraries_memo/</loc>
+<lastmod>2016-10-25T14:30:00+09:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -803,7 +817,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/blog/categories/memo/</loc>
-<lastmod>2016-10-25T14:35:38+09:00</lastmod>
+<lastmod>2016-10-25T15:35:38+09:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -866,14 +880,14 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/author/shigepon.html</loc>
-<lastmod>2016-10-25T14:35:38+09:00</lastmod>
+<lastmod>2016-10-25T15:35:38+09:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/author/thoz.html</loc>
-<lastmod>2016-04-12T20:40:00+09:00</lastmod>
+<lastmod>2016-10-25T14:30:00+09:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>

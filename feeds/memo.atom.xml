@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/memo.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2016-10-25T14:35:38+09:00</updated><entry><title>Django データベース関連メモ</title><link href="http://blog.shigepon.info/blog/2016/10/25/django-db-memo/" rel="alternate"></link><updated>2016-10-25T14:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-10-25:blog/2016/10/25/django-db-memo/</id><summary type="html">&lt;p&gt;Djangoのモデルやデータベース関連のメモが多くなったので、データベースが直接関わる箇所をメモから切り離してみた。&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/memo.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2016-10-25T15:35:38+09:00</updated><entry><title>Pelicanメモ</title><link href="http://blog.shigepon.info/blog/2016/10/25/pelican-memo/" rel="alternate"></link><updated>2016-10-25T15:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-10-25:blog/2016/10/25/pelican-memo/</id><summary type="html">&lt;p&gt;pythonでブログを書くアプリ「&lt;a href="http://docs.getpelican.com/en/stable/"&gt;Pelican&lt;/a&gt;」についてメモ&lt;/p&gt;
+&lt;h2&gt;記事の並び替え方法を変える&lt;/h2&gt;
+&lt;p&gt;ARTICLE_ORDER_BYに文字列で指定する。関数で定義することも出来るみたいだが、まだ方法が分からない。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;py pelicanconf.py
+...
+ARTICLE_ORDER_BY = 'reverse-date'&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;「reverse-」を付けると逆順になる。&lt;/p&gt;
+&lt;p&gt;記事のマークダウンで指定するメタデータが並び替えの対象になる。
+メタデータは全ての記事に付けていないとエラーが出る。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://docs.getpelican.com/en/3.6.3/settings.html"&gt;Settings — Pelican 3.6.3 documentation&lt;/a&gt;&lt;/p&gt;
+&lt;!-- more --&gt;</summary><category term="memo"></category><category term="pelican"></category><category term="python"></category></entry><entry><title>Django データベース関連メモ</title><link href="http://blog.shigepon.info/blog/2016/10/25/django-db-memo/" rel="alternate"></link><updated>2016-10-25T14:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-10-25:blog/2016/10/25/django-db-memo/</id><summary type="html">&lt;p&gt;Djangoのモデルやデータベース関連のメモが多くなったので、データベースが直接関わる箇所をメモから切り離してみた。&lt;/p&gt;
 &lt;h2&gt;リクエストパラメーターをモデルに入れる&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# views.py&lt;/span&gt;
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;a_view&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
@@ -152,7 +162,51 @@
 
 
 &lt;p&gt;みたいにする&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/13829082/filter-django-objects-where-related-object-exists"&gt;Filter Django objects where related object exists - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="memo"></category><category term="django"></category><category term="python"></category></entry><entry><title>PostgreSQLメモ</title><link href="http://blog.shigepon.info/blog/2016/09/16/postgresql-memo/" rel="alternate"></link><updated>2016-09-16T21:24:42+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-09-16:blog/2016/09/16/postgresql-memo/</id><summary type="html">&lt;p&gt;rhaco2をPostgreSQL8.3で使えるように色々調べていくうちに学んだメモ。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/13829082/filter-django-objects-where-related-object-exists"&gt;Filter Django objects where related object exists - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="memo"></category><category term="django"></category><category term="python"></category></entry><entry><title>pythonのライブラリメモ</title><link href="http://blog.shigepon.info/blog/2016/10/25/python_libraries_memo/" rel="alternate"></link><updated>2016-10-25T14:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2016-10-25:blog/2016/10/25/python_libraries_memo/</id><summary type="html">&lt;p&gt;pythonのライブラリは様々な種類があるので、メモしておかないと、何がどう使えるのかさっぱり分からない（英語ページを見る羽目になる）のでメモしておく。&lt;/p&gt;
+&lt;h2&gt;文字列の類似度を比較するーdifflib&lt;/h2&gt;
+&lt;p&gt;文字列の類似度や差分を計算する時にはpythonの標準ライブラリの「&lt;a href="http://docs.python.jp/2/library/difflib.html"&gt;difflib&lt;/a&gt;」が使える&lt;/p&gt;
+&lt;p&gt;類似度を計算するのはこんな感じ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# -*- coding: utf-8 -*-&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;difflib&lt;/span&gt;
+
+&lt;span class="n"&gt;str_from&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;ほげ&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;str_to&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;ふが&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;match&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;difflib&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;SequenceMatcher&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;str_from&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;str_to&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ratio&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じ&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://blog.mudatobunka.org/entry/2016/05/08/154934"&gt;Python で文字列の類似度を比較する - 無駄と文化&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Djangoでcssやjavascriptを圧縮してインライン表示できるdjango_compressor&lt;/h2&gt;
+&lt;h3&gt;インストール&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ pip install django_compressor
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;設定ファイル&lt;/h3&gt;
+&lt;p&gt;```py settings.py
+INSTALLED_APPS = (
+...
+'compressor',
+...
+)
+STATICFILES_FINDERS = (
+...
+'compressor.finders.CompressorFinder,
+...
+)
+COMPRESS_ENABLED=True #DEBUG=Trueの状態で機能させたい時はこれを設定&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;### テンプレート
+
+```html
+\{% load compress %\}
+\{% compress css inline %\}
+&amp;lt;link rel=&amp;quot;stylesheet&amp;quot; href=&amp;quot;path/to/css&amp;quot;&amp;gt;
+\{% endcompress %\}
+\{% compress js inline %\}
+&amp;lt;script src=&amp;quot;path/to/js&amp;quot;&amp;gt;
+\{% endcompress %\}
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="python"></category><category term="memo"></category></entry><entry><title>PostgreSQLメモ</title><link href="http://blog.shigepon.info/blog/2016/09/16/postgresql-memo/" rel="alternate"></link><updated>2016-09-16T21:24:42+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-09-16:blog/2016/09/16/postgresql-memo/</id><summary type="html">&lt;p&gt;rhaco2をPostgreSQL8.3で使えるように色々調べていくうちに学んだメモ。&lt;/p&gt;
 &lt;h2&gt;insert時に「デフォルト値を入れる」だけの処理をしたい場合&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;insert&lt;/span&gt; &lt;span class="k"&gt;into&lt;/span&gt; &lt;span class="err"&gt;テーブル名&lt;/span&gt; &lt;span class="k"&gt;default&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -1593,7 +1647,23 @@ endif
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;参考：&lt;a href="http://qiita.com/quwa/items/019250dbca167985fe32"&gt;vimでペーストするときインデントさせない - Qiita&lt;/a&gt;&lt;/p&gt;</summary><category term="vim"></category><category term="memo"></category></entry><entry><title>svn memo</title><link href="http://blog.shigepon.info/blog/2014/02/11/svn-memo/" rel="alternate"></link><updated>2014-02-11T11:53:32+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-02-11:blog/2014/02/11/svn-memo/</id><summary type="html">&lt;p&gt;svn使っててはまることが結構あるのでメモ&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://qiita.com/quwa/items/019250dbca167985fe32"&gt;vimでペーストするときインデントさせない - Qiita&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Diffした結果をカラー表示する&lt;/h2&gt;
+&lt;p&gt;Diffした結果テキストに落とし、そのテキストからDiffの内容をカラー表示させたかったので調べてみた。&lt;/p&gt;
+&lt;p&gt;Diffした結果をテキストにリダイレクトするとこんな感じの色コードが入る&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;^[[32m Added message^[[0m
+^[[31m Deleted message^[[0m
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;a href="https://github.com/chrisbra/Colorizer"&gt;Colorizer&lt;/a&gt;というプラグインを使うと良さげだった。&lt;/p&gt;
+&lt;p&gt;Colorizerプラグインを入れて、テキスト開いて&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;:ColorHighlight
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;のコマンドで色付けできた。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/18684419/vim-text-coloring"&gt;echo - Vim text coloring - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="vim"></category><category term="memo"></category></entry><entry><title>svn memo</title><link href="http://blog.shigepon.info/blog/2014/02/11/svn-memo/" rel="alternate"></link><updated>2014-02-11T11:53:32+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-02-11:blog/2014/02/11/svn-memo/</id><summary type="html">&lt;p&gt;svn使っててはまることが結構あるのでメモ&lt;/p&gt;
 &lt;h2&gt;ubuntuでsvnコマンドすると認証失敗する場合&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Password &lt;span class="k"&gt;for&lt;/span&gt; ‘&lt;span class="o"&gt;(&lt;/span&gt;null&lt;span class="o"&gt;)&lt;/span&gt;’ GNOME keyring:
 &lt;/pre&gt;&lt;/div&gt;
