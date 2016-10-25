@@ -5,29 +5,43 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/</loc>
-<lastmod>2016-09-16T21:58:27-00:00</lastmod>
+<lastmod>2016-10-25T13:29:30-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/archives.html</loc>
-<lastmod>2016-09-16T21:58:27-00:00</lastmod>
+<lastmod>2016-10-25T13:29:30-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/tags.html</loc>
-<lastmod>2016-09-16T21:58:27-00:00</lastmod>
+<lastmod>2016-10-25T13:29:30-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/categories.html</loc>
-<lastmod>2016-09-16T21:58:27-00:00</lastmod>
+<lastmod>2016-10-25T13:29:30-00:00</lastmod>
 <changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://blog.shigepon.info/blog/2016/10/25/django-db-memo/</loc>
+<lastmod>2016-10-25T14:35:38+09:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://blog.shigepon.info/blog/2016/09/17/uwsginofu-he-wouwsgitopdediao-bete-uwsgiwodiao-zheng-suru/</loc>
+<lastmod>2016-09-17T21:41:23+09:00</lastmod>
+<changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
@@ -362,7 +376,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/blog/2014/11/23/django-memo/</loc>
-<lastmod>2014-11-23T22:35:38+09:00</lastmod>
+<lastmod>2016-10-25T13:30:00+09:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -789,7 +803,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/blog/categories/memo/</loc>
-<lastmod>2016-09-16T21:24:42+09:00</lastmod>
+<lastmod>2016-10-25T14:35:38+09:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -831,7 +845,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/blog/categories/python/</loc>
-<lastmod>2016-04-12T20:40:00+09:00</lastmod>
+<lastmod>2016-09-17T21:41:23+09:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -852,7 +866,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/author/shigepon.html</loc>
-<lastmod>2016-09-16T21:24:42+09:00</lastmod>
+<lastmod>2016-10-25T14:35:38+09:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>

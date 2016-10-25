@@ -107,18 +107,6 @@ shigeponが関心のある技術情報など            </a>
 </footer><!-- /.post-info -->                    </div>
                 </div>
                 <p>Djangoやってて忘れっぽいところとかをメモ</p>
-<h2>リクエストパラメーターをモデルに入れる</h2>
-<div class="highlight"><pre><span></span><span class="c1"># views.py</span>
-<span class="k">def</span> <span class="nf">a_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">hoge</span> <span class="o">=</span> <span class="n">Fuga</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">)</span> <span class="c1">#新たにインスタンス作る場合</span>
-    <span class="n">fuga</span> <span class="o">=</span> <span class="n">Fuga</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">hage</span> <span class="o">=</span> <span class="n">Fuga</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span><span class="n">instance</span><span class="o">=</span><span class="n">fuga</span><span class="p">)</span> <span class="c1">#既にあるインスタンスに入れる場合</span>
-</pre></div>
-
-
-<p>instance=xxxとやるのを何度か忘れた＞＜</p>
-<!-- more -->
-
 <h2>forms.DateFieldでISO-8601フォーマットの入力を受入れる</h2>
 <p>html5でdatetime-localとか扱おうとすると、入力値がISO-8601形式になって、そのままだとDateFieldが入力をdatetimeの正しい形式として認識してくれない。</p>
 <p>で、input_formatsを設定するといけるらしいんだけど、あまりマニュアルでちゃんと説明してない。Stack Overflowの情報とかをググると設定方法が間違ってるコードとかあって、正しいのが良く分からない。で、結局色々調べたら</p>
@@ -129,6 +117,8 @@ shigeponが関心のある技術情報など            </a>
 
 <p>とタプルで渡す必要があるらしい</p>
 <p>参考：<a href="http://labs.uechoco.com/blog/2011/08/django-dateform-inputs_format-wrong.html">うえちょこ＠ぼろぐ» [Django]forms.DateFieldのinputs_formatではまった</a></p>
+<!-- more -->
+
 <h2>ModelForm使ってフォーム出力する時にrequeied属性をテンプレートで参照するとか</h2>
 <div class="highlight"><pre><span></span><span class="c1"># models.py</span>
 <span class="n">hoge</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">widget</span><span class="o">=</span><span class="n">TextInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;required&quot;</span><span class="p">:</span><span class="s2">&quot;true&quot;</span><span class="p">}))</span><span class="err">↲</span>
@@ -143,30 +133,6 @@ shigeponが関心のある技術情報など            </a>
 
 
 <p>適当だけど、こんな感じでアクセスできる。</p>
-<h2>DjangoでGroup By</h2>
-<p>DjangoでGroup Byして何個かのフィールドのデータで例えば、日付とその日に登録したデータの件数だけ欲しい時</p>
-<div class="highlight"><pre><span></span><span class="c1"># views.py</span>
-<span class="n">q</span> <span class="o">=</span> <span class="n">Hoge</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span> <span class="o">=</span> <span class="n">date</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__lt</span> <span class="o">=</span> <span class="n">dto</span><span class="p">)</span><span class="o">.</span><span class="n">extra</span><span class="p">({</span><span class="s1">&#39;date&#39;</span><span class="p">:</span><span class="s2">&quot;date_trunc(&#39;day&#39;,date)&quot;</span><span class="p">})</span>
-<span class="n">q</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">group_by</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span>
-<span class="n">values</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">()</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">c</span> <span class="o">=</span> <span class="n">Count</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">))</span>
-
-
-<span class="err">こんな感じでいける。ちなみに</span><span class="n">PostgreSQL</span><span class="err">。</span><span class="n">date</span><span class="err">が時間の情報も持っているので</span><span class="n">PostgreSQL</span><span class="err">の</span><span class="n">date_trunc</span><span class="err">関数を使って</span><span class="n">date</span><span class="err">を日付の情報だけにしてから、</span><span class="n">group_by</span><span class="err">する。</span>
-<span class="n">annotate</span><span class="err">は集計した値を新しいフィールド（ここだと</span><span class="n">c</span><span class="err">）に入れる。</span>
-<span class="err">例えば</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">c</span><span class="err">でアクセスできる。このコードで、日付とその日に登録したデータ件数が入った辞書のリストを得ることが出来る</span>
-</pre></div>
-
-
-<h2>QuerySetで吐いたクエリを出力</h2>
-<div class="highlight"><pre><span></span><span class="c1"># views.py</span>
-<span class="n">h</span> <span class="o">=</span> <span class="n">Hoge</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-<span class="k">print</span> <span class="n">h</span><span class="o">.</span><span class="n">query</span>
-</pre></div>
-
-
-<p>でおk。でもクエリが例外出す時には出せないような・・・</p>
-<p>debug_toolbar使えば見れるか</p>
-<p>参考：<a href="http://programmer-jobs.blogspot.jp/2013/01/djangosql.html">Djangoで、デバック用のSQLクエリの表示 一言多いプログラマーの独り言</a></p>
 <h2>ModelFormでcleanを使ってデータの検証する時に、updateしようとしてるかcreateしようとしてるか判断する</h2>
 <p>createの時だけチェックしたかったので、色々調べてみたらclean(self)内で、self.instanceでチェックすると良いみたい。例えばプライマリーキーでidがある場合こんな感じ</p>
 <div class="highlight"><pre><span></span><span class="c1"># models.py</span>
@@ -239,26 +205,6 @@ shigeponが関心のある技術情報など            </a>
 
 <p>こんだけ</p>
 <p>参考：<a href="http://d.hatena.ne.jp/yuheiomori0718/20120714/1342266647">DjangoでGmailを使ってメール送信 - brainstorm</a>、</p>
-<h2>MultiValueDictKeyError</h2>
-<p>モデルをgetする時にキーに何も値が指定されてなかったりすると起こる。例えば</p>
-<div class="highlight"><pre><span></span><span class="n">instance</span> <span class="o">=</span> <span class="n">SampleModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
-</pre></div>
-
-
-<p>でkeyに何も設定されてないと起こるみたい。出た時に何回かイチイチぐぐったのでメモ</p>
-<h2>PostgreSQLでDateTimeFieldの値を日付に対してグルーピングしたい</h2>
-<p>PostgreSQLではタイムゾーン入りのタイムスタンプで登録されるので、</p>
-<div class="highlight"><pre><span></span><span class="n">q</span> <span class="o">=</span> <span class="n">Hoge</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">extra</span><span class="p">({</span><span class="s2">&quot;date&quot;</span><span class="p">:</span><span class="s2">&quot;date_trunc(&#39;day&#39;,date)&quot;</span><span class="p">})</span>
-<span class="n">q</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">group_by</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span>
-</pre></div>
-
-
-<p>みたいな構文で日付だけ取り出して、グルーピングしようとすると、PostgreSQLの設定でタイムゾーンがUTCになっていた場合に、2014/12/17 00:00:00+9のデータは2014/12/16 15:00:00+0と認識されるので12/16のデータとしてグルーピングされてしまう。日本のタイムゾーンでやってると、これはまずいので、以下のようなコードにすると良い</p>
-<div class="highlight"><pre><span></span><span class="n">q</span> <span class="o">=</span> <span class="n">Hoge</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">extra</span><span class="p">({</span><span class="s2">&quot;date&quot;</span><span class="p">:</span><span class="s2">&quot;date_trunc(&#39;day&#39;,date AT TIME ZONE &#39;JST&#39;)&quot;</span><span class="p">})</span>
-<span class="n">q</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">group_by</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span>
-</pre></div>
-
-
 <h2>django+uwsgi+nginxで502エラーが出た原因の１つ</h2>
 <p>djangoはあまり関係無いけどuwsgiの設定の問題だったので、こちらに。django+uwsgi+nginxで502エラーが出て、runserverでは普通に動いたので、しばらくググって解答が得られたのでメモ</p>
 <p><a href="http://datatables.net/">DataTables</a>を使って動的にテーブルデータをロードしようとしたら、runserverでは上手く行くのにuwsgiだと502エラーが出てロード出来なかった。最初にnginxのログを見てみると、uwsgiのとこでエラーと書いてあったので、uwsgiのログをチェックした。すると</p>
@@ -307,21 +253,6 @@ shigeponが関心のある技術情報など            </a>
 </ul>
 <p>の順でテンプレートの存在を調べる</p>
 <p>参考：<a href="http://www.tsuyukimakoto.com/blog/2006/11/22/django-template-loader/">DjangoのTemplateローダ | tsuyuki.makoto</a></p>
-<h2>Many to manyなモデルで中間テーブルをthroughで指定、かつ自己参照な場合の設定</h2>
-<p>参考：<a href="http://stackoverflow.com/questions/3880489/how-do-i-write-a-django-model-with-manytomany-relationsship-with-self-through-a">How do I write a Django model with ManyToMany relationsship with self through a Model - Stack Overflow</a></p>
-<p>symmetrical設定をすると良いらしい</p>
-<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Member</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-    <span class="n">friends</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="s1">&#39;self&#39;</span><span class="p">,</span> <span class="n">through</span> <span class="o">=</span> <span class="s1">&#39;MemberFriends&#39;</span><span class="p">,</span> <span class="n">symmetrical</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
-
-<span class="k">class</span> <span class="nc">MemberFriends</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">f</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Member</span><span class="p">,</span> <span class="n">related_name</span> <span class="o">=</span> <span class="s1">&#39;f&#39;</span><span class="p">)</span>
-    <span class="n">t</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Member</span><span class="p">,</span> <span class="n">related_name</span> <span class="o">=</span> <span class="s1">&#39;t&#39;</span><span class="p">)</span>
-    <span class="n">comment</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
-</pre></div>
-
-
-<p>こんな感じ</p>
 <h2>url末尾に必ずスラッシュを入れる</h2>
 <p>url末尾にスラッシュが無い場合、スラッシュ有りにリダイレクトする設定</p>
 <div class="highlight"><pre><span></span><span class="c1"># settings.py</span>
@@ -379,37 +310,6 @@ shigeponが関心のある技術情報など            </a>
 
 <p>パラメーターに指定する名前（上の場合はfuga）がviewsとurlsで同じ名前になっていることが必要（でないとエラーが出る）</p>
 <p>参考：<a href="https://docs.djangoproject.com/en/1.8/topics/http/urls/#passing-extra-options-to-include">URL dispatcher | Django documentation | Django</a></p>
-<h2>dbにインデックスを付ける</h2>
-<p>インデックスの場合はフィールド定義にdb_index=Trueを付けるとおk</p>
-<div class="highlight"><pre><span></span><span class="n">hoge</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">db_index</span><span class="o">=</span><span class="n">true</span><span class="p">)</span>
-</pre></div>
-
-
-<p>複合インデックスの場合はMetaクラスでindex_togetherを定義する</p>
-<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Hoge</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-  <span class="o">....</span>
-  <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-    <span class="n">index_together</span> <span class="o">=</span> <span class="p">[</span>
-      <span class="p">[</span><span class="s1">&#39;hoge&#39;</span><span class="p">,</span><span class="s1">&#39;fuga&#39;</span><span class="p">]</span>
-    <span class="p">]</span>
-</pre></div>
-
-
-<p>この場合インデックス順はhoge-&gt;fugaとなる。</p>
-<h2>ForeignKeyで逆参照をしたくない場合</h2>
-<p>related_nameを+にするか末尾に+を付けるかで対応出来る。</p>
-<div class="highlight"><pre><span></span><span class="nv">user</span> <span class="o">=</span> models.ForeignKey<span class="o">(</span>User, <span class="nv">related_name</span><span class="o">=</span><span class="s1">&#39;user+&#39;</span><span class="o">)</span>
-</pre></div>
-
-
-<p>こんな感じ</p>
-<h2>生sqlを使う時にin句にパラメーターを使いたい</h2>
-<p>タプルで指定すれば良い。リストは試してない。</p>
-<div class="highlight"><pre><span></span><span class="nv">results</span> <span class="o">=</span> Hoge.objects.raw<span class="o">(</span><span class="s2">&quot;select * from application_hoge where fuga in %s&quot;</span>, tuple<span class="o">(</span>fuga<span class="o">))</span>
-</pre></div>
-
-
-<p>参考：<a href="http://stackoverflow.com/questions/6895051/passing-lists-or-tuples-as-arguments-in-django-raw-sql">passing lists or tuples as arguments in django raw sql - Stack Overflow</a></p>
 <h2>Ajaxでpostしたい時</h2>
 <p>csrfフィルタが初期状態で設定されてるし、csrfフィルタはあった方が良いので、次のようになったら良いかも（Jqueryを使う場合）</p>
 <div class="highlight"><pre><span></span><span class="nx">$</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">url</span><span class="p">,{</span><span class="nx">csrfmiddlewaretoken</span><span class="o">:</span> <span class="s1">&#39;{{csrf_token}}&#39;</span><span class="p">}...);</span>
@@ -448,19 +348,6 @@ shigeponが関心のある技術情報など            </a>
 
 <p>これでおk</p>
 <p>参考：<a href="http://yamayoshi.blogspot.jp/2013/02/django14-intcomma.html">やまよし＠Google大好き: Django1.4 で intcommaが効かない</a></p>
-<h2>サブクエリの使い方</h2>
-<p>例えばMemberモデルにname (名前)やboss(上司の名前)、stage(肩書き)フィールドがあるとして、肩書きが部長の上司を持つMemberを取り出したい場合はこんな感じ</p>
-<div class="highlight"><pre><span></span><span class="n">a_query</span> <span class="o">=</span> <span class="n">Member</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">stage</span><span class="o">=</span><span class="s1">&#39;部長&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">value_list</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
-<span class="n">b_query</span> <span class="o">=</span> <span class="n">Member</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">boss__in</span> <span class="o">=</span> <span class="n">a_query</span><span class="p">)</span>
-</pre></div>
-
-
-<div class="highlight"><pre><span></span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">member</span> <span class="k">where</span> <span class="n">boss</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">name</span> <span class="k">from</span> <span class="n">member</span> <span class="k">where</span> <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;部長&#39;</span><span class="p">);</span>
-</pre></div>
-
-
-<p>を実行したような感じになる。</p>
-<p>参考：<a href="http://stackoverflow.com/questions/8556297/how-to-subquery-in-queryset-in-django">python - how to subquery in queryset in django? - Stack Overflow</a></p>
 <h2>リダイレクト時にパラメータを渡す</h2>
 <div class="highlight"><pre><span></span><span class="n">response</span> <span class="o">=</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span>
 <span class="n">response</span><span class="p">[</span><span class="s1">&#39;Location&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39;?hoge=fuga&#39;</span>
@@ -482,11 +369,11 @@ shigeponが関心のある技術情報など            </a>
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
-        <li><a href="http://blog.shigepon.info/blog/2015/03/05/uwsgi-memo/">uwsgiメモ</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2016/10/25/django-db-memo/">Django データベース関連メモ</a></li>
         <li><a href="http://blog.shigepon.info/blog/2014/08/06/django-error/">djangoで出てくるエラーメッセージメモ</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2015/01/06/python-decorator/">pythonのデコレーターをdjangoで使って見る</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2015/07/28/use-django-model-outside-django-project/">DjangoモデルをDjangoプロジェクトの外から使う</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2014/07/02/django-show-list-with-paging/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データの一覧とページングを用意する</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2015/03/05/uwsgi-memo/">uwsgiメモ</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2014/11/27/django-locale/">djangoで国際化やってみた</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2014/06/18/start-django-project/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずDjangoプロジェクトとアプリを作ってみた</a></li>
     </ul>
 </section>
     <hr />
@@ -516,6 +403,16 @@ shigeponが関心のある技術情報など            </a>
             <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
                 <ul class="list-group" id="recentposts">
                     <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/2016/10/25/django-db-memo/">
+                            Django データベース関連メモ
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/2016/09/17/uwsginofu-he-wouwsgitopdediao-bete-uwsgiwodiao-zheng-suru/">
+                            uwsgiの負荷をuwsgitopで調べて、uwsgiを調整する
+                        </a>
+                    </li>
+                    <li class="list-group-item">
                         <a href="http://blog.shigepon.info/blog/2016/09/16/postgresql-memo/">
                             PostgreSQLメモ
                         </a>
@@ -528,16 +425,6 @@ shigeponが関心のある技術情報など            </a>
                     <li class="list-group-item">
                         <a href="http://blog.shigepon.info/blog/2016/04/02/implement_google_analytics_with_google_tag_manager/">
                             Google Tag ManagerでGoogle Analyticsを使う
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2016/04/01/how_to_install_pelican_plugins_and_plugins_recommended/">
-                            pelicanのプラグイン利用法と入れておくと良さげなもの
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2016/03/31/migrate_octopress_github_page_to_pelican/">
-                            github pageのブログツールをoctopressからpelicanに移行しました
                         </a>
                     </li>
                 </ul>
@@ -626,13 +513,13 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/ruby.html">
-                            ruby
+                        <a href="http://blog.shigepon.info/tag/django.html">
+                            django
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/memo.html">
-                            memo
+                        <a href="http://blog.shigepon.info/tag/ruby.html">
+                            ruby
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
@@ -641,13 +528,8 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/django.html">
-                            django
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/csharp.html">
-                            CSharp
+                        <a href="http://blog.shigepon.info/tag/memo.html">
+                            memo
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -656,28 +538,13 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/groonga.html">
-                            groonga
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/nadesiko.html">
-                            nadesiko
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/bootstrap.html">
-                            bootstrap
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
                         <a href="http://blog.shigepon.info/tag/event.html">
                             event
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/r.html">
-                            R
+                        <a href="http://blog.shigepon.info/tag/groonga.html">
+                            groonga
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -686,13 +553,33 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/bootstrap.html">
+                            bootstrap
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/nadesiko.html">
+                            nadesiko
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/r.html">
+                            R
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
                         <a href="http://blog.shigepon.info/tag/rails.html">
                             Rails
                         </a>
                     </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/csharp.html">
+                            CSharp
+                        </a>
+                    </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/test1st.html">
-                            test1st
+                        <a href="http://blog.shigepon.info/tag/titanium.html">
+                            titanium
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -701,8 +588,18 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/php.html">
-                            PHP
+                        <a href="http://blog.shigepon.info/tag/rhaco.html">
+                            rhaco
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/ansible.html">
+                            ansible
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/nginx.html">
+                            nginx
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -721,18 +618,8 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/ansible.html">
-                            ansible
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/nginx.html">
-                            nginx
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/rhaco.html">
-                            rhaco
+                        <a href="http://blog.shigepon.info/tag/test1st.html">
+                            test1st
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -746,8 +633,8 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/titanium.html">
-                            titanium
+                        <a href="http://blog.shigepon.info/tag/php.html">
+                            PHP
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -756,18 +643,18 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/vmware.html">
-                            vmware
+                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
+                            linkedopendata
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/mt4.html">
-                            MT4
+                        <a href="http://blog.shigepon.info/tag/sqlite.html">
+                            sqlite
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/svn.html">
-                            svn
+                        <a href="http://blog.shigepon.info/tag/rhaco3.html">
+                            rhaco3
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -781,33 +668,33 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/rhaco3.html">
-                            rhaco3
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/sqlite.html">
-                            sqlite
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/visualstudio.html">
-                            visualstudio
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
                         <a href="http://blog.shigepon.info/tag/lua.html">
                             Lua
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
-                            linkedopendata
+                        <a href="http://blog.shigepon.info/tag/unity.html">
+                            unity
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/unity.html">
-                            unity
+                        <a href="http://blog.shigepon.info/tag/mt4.html">
+                            MT4
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/vmware.html">
+                            vmware
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/svn.html">
+                            svn
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/visualstudio.html">
+                            visualstudio
                         </a>
                     </li>
                 </ul>

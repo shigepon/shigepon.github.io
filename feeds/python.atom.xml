@@ -1,5 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/python.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2016-04-12T20:40:00+09:00</updated><entry><title>ansibleを使ってlets encryptを設定するーandreaswolf.letsencryptを使ってみた</title><link href="http://blog.shigepon.info/blog/2016/04/12/setup_letsencrypt_ssl_using_ansible_andreaswolf_letsencrypt_role/" rel="alternate"></link><updated>2016-04-12T20:40:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2016-04-12:blog/2016/04/12/setup_letsencrypt_ssl_using_ansible_andreaswolf_letsencrypt_role/</id><summary type="html">&lt;p&gt;ansibleを使って&lt;a href="https://letsencrypt.org/"&gt;lets encrypt&lt;/a&gt;を設定しようと思ったので、やった作業を記録しておく&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/python.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2016-09-17T21:41:23+09:00</updated><entry><title>uwsgiの負荷をuwsgitopで調べて、uwsgiを調整する</title><link href="http://blog.shigepon.info/blog/2016/09/17/uwsginofu-he-wouwsgitopdediao-bete-uwsgiwodiao-zheng-suru/" rel="alternate"></link><updated>2016-09-17T21:41:23+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-09-17:blog/2016/09/17/uwsginofu-he-wouwsgitopdediao-bete-uwsgiwodiao-zheng-suru/</id><summary type="html">&lt;p&gt;運営してるサービスがえらい重かったので、調べてみた。
+使用しているアプリはnginx, uwsgi, django&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://qiita.com/wapa5pow/items/f4326aed6c0b63617ebd"&gt;Apacheにかわるwebサーバ: uWSGIパフォーマンスチューニング - Qiita&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;を見るとuwsgitopを使ってuwsgiのパフォーマンスを調べることが出来るらしいので、導入してみた。&lt;/p&gt;
+&lt;h2&gt;インストール&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ pip install uwsgitop
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これだけ&lt;/p&gt;
+&lt;h2&gt;uwsgiの設定&lt;/h2&gt;
+&lt;p&gt;uwsgi.iniにuwsgitop用の設定をした。今回はこの2行を追加した&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;stats = /tmp/projectname.stats.sock
+memory-report = true
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;んで、uwsgiを再起動&lt;/p&gt;
+&lt;h2&gt;uwsgitopを起動&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ uwsgitop /tmp/projectname.stats.sock
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;起動するとこんな感じになった&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;uwsgi-x.x.x - Fri Sep 16 22:24:17 2016 - req: 11366 - RPS: 1 - lq: 0 - tx: 409.
+0Mde: www10363uf - cwd: /path/to/project - uid: 1000 - gid: 1000 -
+ WID    %       PID     REQ     RPS     EXC     SIG     STATUS  AVG     RSS
+ 1      20.0    31414   2277    0       0       0       idle    2516ms  83.0M
+202.0M  71.0M   1       0       7157645 12:32:03
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;あ・・・プロセス1個しか立ち上がってない・・・&lt;/p&gt;</summary><category term="python"></category><category term="uwsgi"></category></entry><entry><title>ansibleを使ってlets encryptを設定するーandreaswolf.letsencryptを使ってみた</title><link href="http://blog.shigepon.info/blog/2016/04/12/setup_letsencrypt_ssl_using_ansible_andreaswolf_letsencrypt_role/" rel="alternate"></link><updated>2016-04-12T20:40:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2016-04-12:blog/2016/04/12/setup_letsencrypt_ssl_using_ansible_andreaswolf_letsencrypt_role/</id><summary type="html">&lt;p&gt;ansibleを使って&lt;a href="https://letsencrypt.org/"&gt;lets encrypt&lt;/a&gt;を設定しようと思ったので、やった作業を記録しておく&lt;/p&gt;
 &lt;h2&gt;ansible-galaxyから良さげなroleを探す&lt;/h2&gt;
 &lt;p&gt;&lt;a href="https://galaxy.ansible.com/"&gt;ansible-galaxy&lt;/a&gt;を使えばansibleの設定を色々まとめてくれる。ansible-galaxyで「BROWSE ROLES」をクリックするとキーワードでroleを調べることが出来るので、「encrypt」というキーワードで調べてみると何個か「letsencrypt」という名前のroleがあった。こういう場合はダウンロード数が多い奴を選べは無難な気がするので、今回は&lt;a href="https://galaxy.ansible.com/andreaswolf/letsencrypt/"&gt;andreaswolf.letsencrypt&lt;/a&gt;を使うことにした。他も色々あったけど、READMEが不十分だったり、機能がイマイチだったりで使えなかった。ちなみにUbuntuでやっているので、Fedoraなど用のroleは対象から外したので試してない。&lt;/p&gt;
 &lt;p&gt;&lt;script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"&gt;&lt;/script&gt;
