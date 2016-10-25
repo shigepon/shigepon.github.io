@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/memo.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2016-10-25T15:35:38+09:00</updated><entry><title>Pelicanメモ</title><link href="http://blog.shigepon.info/blog/2016/10/25/pelican-memo/" rel="alternate"></link><updated>2016-10-25T15:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-10-25:blog/2016/10/25/pelican-memo/</id><summary type="html">&lt;p&gt;pythonでブログを書くアプリ「&lt;a href="http://docs.getpelican.com/en/stable/"&gt;Pelican&lt;/a&gt;」についてメモ&lt;/p&gt;
 &lt;h2&gt;記事の並び替え方法を変える&lt;/h2&gt;
 &lt;p&gt;ARTICLE_ORDER_BYに文字列で指定する。関数で定義することも出来るみたいだが、まだ方法が分からない。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;pelicanconf.py py
+&lt;p&gt;&lt;code&gt;py:pelicanconf.py
 ...
 ARTICLE_ORDER_BY = 'reverse-date'&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;「reverse-」を付けると逆順になる。&lt;/p&gt;
