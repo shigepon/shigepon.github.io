@@ -110,6 +110,7 @@ shigeponが関心のある技術情報など            </a>
                 <p>pythonでブログを書くアプリ「<a href="http://docs.getpelican.com/en/stable/">Pelican</a>」についてメモ</p>
 <h2>記事の並び替え方法を変える</h2>
 <p>ARTICLE_ORDER_BYに文字列で指定する。関数で定義することも出来るみたいだが、まだ方法が分からない。</p>
+<p>pelicanconf.pyを編集</p>
 <div class="highlight"><pre><span></span><span class="o">...</span>
 <span class="n">ARTICLE_ORDER_BY</span> <span class="o">=</span> <span class="s1">&#39;reverse-date&#39;</span>
 </pre></div>
@@ -132,11 +133,11 @@ shigeponが関心のある技術情報など            </a>
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
-        <li><a href="http://blog.shigepon.info/blog/2016/04/01/how_to_install_pelican_plugins_and_plugins_recommended/">pelicanのプラグイン利用法と入れておくと良さげなもの</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2016/10/25/python_libraries_memo/">pythonのライブラリメモ</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2016/10/25/django-db-memo/">Django データベース関連メモ</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2014/06/30/python-memo/">Python memo</a></li>
         <li><a href="http://blog.shigepon.info/blog/2016/03/31/migrate_octopress_github_page_to_pelican/">github pageのブログツールをoctopressからpelicanに移行しました</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2014/08/06/django-error/">djangoで出てくるエラーメッセージメモ</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2016/10/25/python_libraries_memo/">pythonのライブラリメモ</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2015/03/05/uwsgi-memo/">uwsgiメモ</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2014/07/01/ansible-memo/">ansible memo</a></li>
     </ul>
 </section>
     <hr />
@@ -271,8 +272,18 @@ shigeponが関心のある技術情報など            </a>
             <li class="list-group-item"><a href="http://blog.shigepon.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
                 <ul class="list-group " id="tags">
                     <li class="list-group-item tag-1">
+                        <a href="http://blog.shigepon.info/tag/linux.html">
+                            linux
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
                         <a href="http://blog.shigepon.info/tag/ruby.html">
                             ruby
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="http://blog.shigepon.info/tag/memo.html">
+                            memo
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
@@ -285,29 +296,19 @@ shigeponが関心のある技術情報など            </a>
                             django
                         </a>
                     </li>
-                    <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/memo.html">
-                            memo
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/nadesiko.html">
+                            nadesiko
                         </a>
                     </li>
-                    <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/linux.html">
-                            linux
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/r.html">
+                            R
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
                         <a href="http://blog.shigepon.info/tag/bootstrap.html">
                             bootstrap
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/csharp.html">
-                            CSharp
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/postgresql.html">
-                            PostgreSQL
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -321,18 +322,18 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/postgresql.html">
+                            PostgreSQL
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
                         <a href="http://blog.shigepon.info/tag/rails.html">
                             Rails
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/r.html">
-                            R
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/nadesiko.html">
-                            nadesiko
+                        <a href="http://blog.shigepon.info/tag/csharp.html">
+                            CSharp
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -341,18 +342,8 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
-                            CPlusPlus
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/php.html">
-                            PHP
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/octopress.html">
-                            octopress
+                        <a href="http://blog.shigepon.info/tag/test1st.html">
+                            test1st
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -361,18 +352,13 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/ansible.html">
-                            ansible
+                        <a href="http://blog.shigepon.info/tag/google.html">
+                            google
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/pelican.html">
-                            pelican
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/rhaco.html">
-                            rhaco
+                        <a href="http://blog.shigepon.info/tag/octopress.html">
+                            octopress
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -381,13 +367,28 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/ansible.html">
+                            ansible
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
+                            CPlusPlus
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
                         <a href="http://blog.shigepon.info/tag/nginx.html">
                             nginx
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/test1st.html">
-                            test1st
+                        <a href="http://blog.shigepon.info/tag/php.html">
+                            PHP
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/pelican.html">
+                            pelican
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -401,43 +402,8 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/google.html">
-                            google
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/redis.html">
-                            redis
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/visualstudio.html">
-                            visualstudio
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/git.html">
-                            git
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/lua.html">
-                            Lua
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/rhaco3.html">
-                            rhaco3
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/unity.html">
-                            unity
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/sqlite.html">
-                            sqlite
+                        <a href="http://blog.shigepon.info/tag/rhaco.html">
+                            rhaco
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -451,13 +417,48 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
-                            linkedopendata
+                        <a href="http://blog.shigepon.info/tag/rhaco3.html">
+                            rhaco3
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/unity.html">
+                            unity
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
                         <a href="http://blog.shigepon.info/tag/svn.html">
                             svn
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/redis.html">
+                            redis
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
+                            linkedopendata
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/git.html">
+                            git
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/sqlite.html">
+                            sqlite
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/lua.html">
+                            Lua
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/visualstudio.html">
+                            visualstudio
                         </a>
                     </li>
                 </ul>
