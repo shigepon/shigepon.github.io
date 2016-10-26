@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/memo.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2016-10-25T15:35:38+09:00</updated><entry><title>Pelicanメモ</title><link href="http://blog.shigepon.info/blog/2016/10/25/pelican-memo/" rel="alternate"></link><updated>2016-10-25T15:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-10-25:blog/2016/10/25/pelican-memo/</id><summary type="html">&lt;p&gt;pythonでブログを書くアプリ「&lt;a href="http://docs.getpelican.com/en/stable/"&gt;Pelican&lt;/a&gt;」についてメモ&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/memo.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2016-10-27T08:30:00+09:00</updated><entry><title>Pelicanメモ</title><link href="http://blog.shigepon.info/blog/2016/10/25/pelican-memo/" rel="alternate"></link><updated>2016-10-25T15:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-10-25:blog/2016/10/25/pelican-memo/</id><summary type="html">&lt;p&gt;pythonでブログを書くアプリ「&lt;a href="http://docs.getpelican.com/en/stable/"&gt;Pelican&lt;/a&gt;」についてメモ&lt;/p&gt;
 &lt;h2&gt;記事の並び替え方法を変える&lt;/h2&gt;
 &lt;p&gt;ARTICLE_ORDER_BYに文字列で指定する。関数で定義することも出来るみたいだが、まだ方法が分からない。&lt;/p&gt;
 &lt;p&gt;pelicanconf.pyを編集&lt;/p&gt;
@@ -612,7 +612,7 @@ SQL
 
 
 &lt;p&gt;すると/path/to/uwsgi/log/hoge-xxxx-xx-xx.log （xx..は日付）というログファイルが出来る。&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/28343262/how-to-create-one-uwsgi-log-file-per-day"&gt;logging - How to create one uwsgi log file per day? - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="uwsgi"></category><category term="django"></category><category term="memo"></category><category term="python"></category></entry><entry><title>Django Memo</title><link href="http://blog.shigepon.info/blog/2014/11/23/django-memo/" rel="alternate"></link><updated>2016-10-25T13:30:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-11-23:blog/2014/11/23/django-memo/</id><summary type="html">&lt;p&gt;Djangoやってて忘れっぽいところとかをメモ&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/28343262/how-to-create-one-uwsgi-log-file-per-day"&gt;logging - How to create one uwsgi log file per day? - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="uwsgi"></category><category term="django"></category><category term="memo"></category><category term="python"></category></entry><entry><title>Django Memo</title><link href="http://blog.shigepon.info/blog/2014/11/23/django-memo/" rel="alternate"></link><updated>2016-10-27T08:30:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-11-23:blog/2014/11/23/django-memo/</id><summary type="html">&lt;p&gt;Djangoやってて忘れっぽいところとかをメモ&lt;/p&gt;
 &lt;h2&gt;forms.DateFieldでISO-8601フォーマットの入力を受入れる&lt;/h2&gt;
 &lt;p&gt;html5でdatetime-localとか扱おうとすると、入力値がISO-8601形式になって、そのままだとDateFieldが入力をdatetimeの正しい形式として認識してくれない。&lt;/p&gt;
 &lt;p&gt;で、input_formatsを設定するといけるらしいんだけど、あまりマニュアルでちゃんと説明してない。Stack Overflowの情報とかをググると設定方法が間違ってるコードとかあって、正しいのが良く分からない。で、結局色々調べたら&lt;/p&gt;
@@ -862,7 +862,17 @@ SQL
 
 
 &lt;p&gt;でいける&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/3765887/add-request-get-variable-using-django-shortcuts-redirect"&gt;add request.GET variable using django.shortcuts.redirect - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="memo"></category><category term="django"></category><category term="python"></category></entry><entry><title>Titanium Mobileメモ</title><link href="http://blog.shigepon.info/blog/2014/11/23/titanium-mobile-memo/" rel="alternate"></link><updated>2014-11-23T09:48:44+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-11-23:blog/2014/11/23/titanium-mobile-memo/</id><summary type="html">&lt;p&gt;Titanium Mobileに関するメモ&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/3765887/add-request-get-variable-using-django-shortcuts-redirect"&gt;add request.GET variable using django.shortcuts.redirect - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;テンプレートのforループで何個おきで表示&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://docs.djangoproject.com/ja/1.10/ref/templates/builtins/#divisibleby"&gt;divisiblebyフィルタ&lt;/a&gt;を使う&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{% for fuga in hoge %}
+  {% if forloop.counter0|divisibleby:4%}4個おき{%endif%}
+    {{fuga.hage}}
+{% endfor %}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/8494209/modulus-in-django-template"&gt;python - Modulus % in Django template - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="memo"></category><category term="django"></category><category term="python"></category></entry><entry><title>Titanium Mobileメモ</title><link href="http://blog.shigepon.info/blog/2014/11/23/titanium-mobile-memo/" rel="alternate"></link><updated>2014-11-23T09:48:44+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-11-23:blog/2014/11/23/titanium-mobile-memo/</id><summary type="html">&lt;p&gt;Titanium Mobileに関するメモ&lt;/p&gt;
 &lt;h2&gt;アプリ固有の設定を登録する&lt;/h2&gt;
 &lt;p&gt;アプリを終了して、再起動させた時も保存される設定をしたい時はTitanium.App.Propertiesを使う&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;Ti&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;App&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;Properties&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;setString&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;hoge&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;fuga&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="c1"&gt;//設定&lt;/span&gt;
