@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/all.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2016-10-27T08:30:00+09:00</updated><entry><title>Pelicanメモ</title><link href="http://blog.shigepon.info/blog/2016/10/25/pelican-memo/" rel="alternate"></link><updated>2016-10-25T15:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-10-25:blog/2016/10/25/pelican-memo/</id><summary type="html">&lt;p&gt;pythonでブログを書くアプリ「&lt;a href="http://docs.getpelican.com/en/stable/"&gt;Pelican&lt;/a&gt;」についてメモ&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/all.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2016-10-29T20:30:00+09:00</updated><entry><title>Pelicanメモ</title><link href="http://blog.shigepon.info/blog/2016/10/25/pelican-memo/" rel="alternate"></link><updated>2016-10-25T15:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-10-25:blog/2016/10/25/pelican-memo/</id><summary type="html">&lt;p&gt;pythonでブログを書くアプリ「&lt;a href="http://docs.getpelican.com/en/stable/"&gt;Pelican&lt;/a&gt;」についてメモ&lt;/p&gt;
 &lt;h2&gt;記事の並び替え方法を変える&lt;/h2&gt;
 &lt;p&gt;ARTICLE_ORDER_BYに文字列で指定する。関数で定義することも出来るみたいだが、まだ方法が分からない。&lt;/p&gt;
 &lt;p&gt;pelicanconf.pyを編集&lt;/p&gt;
@@ -165,7 +165,7 @@
 
 
 &lt;p&gt;みたいにする&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/13829082/filter-django-objects-where-related-object-exists"&gt;Filter Django objects where related object exists - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="memo"></category><category term="django"></category><category term="python"></category></entry><entry><title>pythonのライブラリメモ</title><link href="http://blog.shigepon.info/blog/2016/10/25/python_libraries_memo/" rel="alternate"></link><updated>2016-10-25T14:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2016-10-25:blog/2016/10/25/python_libraries_memo/</id><summary type="html">&lt;p&gt;pythonのライブラリは様々な種類があるので、メモしておかないと、何がどう使えるのかさっぱり分からない（英語ページを見る羽目になる）のでメモしておく。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/13829082/filter-django-objects-where-related-object-exists"&gt;Filter Django objects where related object exists - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="memo"></category><category term="django"></category><category term="python"></category></entry><entry><title>pythonのライブラリメモ</title><link href="http://blog.shigepon.info/blog/2016/10/25/python_libraries_memo/" rel="alternate"></link><updated>2016-10-29T20:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2016-10-25:blog/2016/10/25/python_libraries_memo/</id><summary type="html">&lt;p&gt;pythonのライブラリは様々な種類があるので、メモしておかないと、何がどう使えるのかさっぱり分からない（英語ページを見る羽目になる）のでメモしておく。&lt;/p&gt;
 &lt;h2&gt;文字列の類似度を比較するーdifflib&lt;/h2&gt;
 &lt;p&gt;文字列の類似度や差分を計算する時にはpythonの標準ライブラリの「&lt;a href="http://docs.python.jp/2/library/difflib.html"&gt;difflib&lt;/a&gt;」が使える&lt;/p&gt;
 &lt;p&gt;類似度を計算するのはこんな感じ&lt;/p&gt;
@@ -210,7 +210,49 @@
 \{% compress js inline %\}
 &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;script&lt;/span&gt; &lt;span class="na"&gt;src&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;path/to/js&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 \{% endcompress %\}
-&lt;/pre&gt;&lt;/div&gt;</summary><category term="python"></category><category term="memo"></category></entry><entry><title>uwsgiの負荷をuwsgitopで調べて、uwsgiを調整する</title><link href="http://blog.shigepon.info/blog/2016/09/17/uwsginofu-he-wouwsgitopdediao-bete-uwsgiwodiao-zheng-suru/" rel="alternate"></link><updated>2016-09-17T21:41:23+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-09-17:blog/2016/09/17/uwsginofu-he-wouwsgitopdediao-bete-uwsgiwodiao-zheng-suru/</id><summary type="html">&lt;p&gt;運営してるサービスがえらい重かったので、調べてみた。
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;モバイル検出ーdjango-mobile&lt;/h2&gt;
+&lt;p&gt;djangoでモバイル検出してテンプレート振り分けたり、条件分けしたい時
+に使うライブラリ&lt;/p&gt;
+&lt;h3&gt;インストール&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip install django_mobile
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;設定&lt;/h3&gt;
+&lt;p&gt;settings.pyを編集&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;INSTALLED_APPS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="s1"&gt;&amp;#39;django_mobile&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;MIDDLEWARE_CLASSES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="s1"&gt;&amp;#39;django_mobile.middleware.MobileDetectionMiddleware&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="s1"&gt;&amp;#39;django_mobile.middleware.SetFlavourMiddleware&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;TEMPLATES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[{&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="s1"&gt;&amp;#39;OPTIONS&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:{&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="s1"&gt;&amp;#39;django_mobile.context_processors.flavour&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="p"&gt;}]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;loaderの設定しなかったけど、条件分岐に使っただけなので出来た。テンプレート振り分けはやってない。&lt;/p&gt;
+&lt;h3&gt;テンプレート内でのモバイル判定&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;You {% if flavour == &amp;quot;mobile&amp;quot; %}use mobile{% else %}don&amp;#39;t use mobile{% endif %}.
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="https://github.com/gregmuellegger/django-mobile"&gt;GitHub - gregmuellegger/django-mobile: Detect mobile browsers and serve different template flavours to them.&lt;/a&gt;&lt;/p&gt;</summary><category term="python"></category><category term="memo"></category></entry><entry><title>uwsgiの負荷をuwsgitopで調べて、uwsgiを調整する</title><link href="http://blog.shigepon.info/blog/2016/09/17/uwsginofu-he-wouwsgitopdediao-bete-uwsgiwodiao-zheng-suru/" rel="alternate"></link><updated>2016-09-17T21:41:23+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-09-17:blog/2016/09/17/uwsginofu-he-wouwsgitopdediao-bete-uwsgiwodiao-zheng-suru/</id><summary type="html">&lt;p&gt;運営してるサービスがえらい重かったので、調べてみた。
 使用しているアプリはnginx, uwsgi, django&lt;/p&gt;
 &lt;p&gt;&lt;a href="http://qiita.com/wapa5pow/items/f4326aed6c0b63617ebd"&gt;Apacheにかわるwebサーバ: uWSGIパフォーマンスチューニング - Qiita&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;を見るとuwsgitopを使ってuwsgiのパフォーマンスを調べることが出来るらしいので、導入してみた。&lt;/p&gt;
