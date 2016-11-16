@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/memo.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2016-11-16T11:50:21+09:00</updated><entry><title>Pelicanメモ</title><link href="http://blog.shigepon.info/blog/2016/10/25/pelican-memo/" rel="alternate"></link><updated>2016-10-25T15:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-10-25:blog/2016/10/25/pelican-memo/</id><summary type="html">&lt;p&gt;pythonでブログを書くアプリ「&lt;a href="http://docs.getpelican.com/en/stable/"&gt;Pelican&lt;/a&gt;」についてメモ&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/memo.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2016-11-16T11:55:49+09:00</updated><entry><title>Pelicanメモ</title><link href="http://blog.shigepon.info/blog/2016/10/25/pelican-memo/" rel="alternate"></link><updated>2016-10-25T15:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-10-25:blog/2016/10/25/pelican-memo/</id><summary type="html">&lt;p&gt;pythonでブログを書くアプリ「&lt;a href="http://docs.getpelican.com/en/stable/"&gt;Pelican&lt;/a&gt;」についてメモ&lt;/p&gt;
 &lt;h2&gt;記事の並び替え方法を変える&lt;/h2&gt;
 &lt;p&gt;ARTICLE_ORDER_BYに文字列で指定する。関数で定義することも出来るみたいだが、まだ方法が分からない。&lt;/p&gt;
 &lt;p&gt;pelicanconf.pyを編集&lt;/p&gt;
@@ -1276,7 +1276,7 @@ subprocessを使う。何か昔は別の手法だったらしい。&lt;/p&gt;
 
 &lt;h2&gt;psycopg2をインストールする&lt;/h2&gt;
 &lt;p&gt;依存ライブラリとしてlibpg-devが必要。postgresql-server-dev-x.xが必要とか言われるけど、こっちで良い。&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/28253681/you-need-to-install-postgresql-server-dev-x-y-for-building-a-server-side-extensi"&gt;python - You need to install postgresql-server-dev-X.Y for building a server-side extension or libpq-dev for building a client-side application - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="python"></category><category term="memo"></category></entry><entry><title>git memo</title><link href="http://blog.shigepon.info/blog/2014/04/09/git-memo/" rel="alternate"></link><updated>2014-04-09T12:36:49+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-04-09:blog/2014/04/09/git-memo/</id><summary type="html">&lt;p&gt;git関連のメモ&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/28253681/you-need-to-install-postgresql-server-dev-x-y-for-building-a-server-side-extensi"&gt;python - You need to install postgresql-server-dev-X.Y for building a server-side extension or libpq-dev for building a client-side application - Stack Overflow&lt;/a&gt;&lt;/p&gt;</summary><category term="python"></category><category term="memo"></category></entry><entry><title>git memo</title><link href="http://blog.shigepon.info/blog/2014/04/09/git-memo/" rel="alternate"></link><updated>2016-11-16T11:55:49+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-04-09:blog/2014/04/09/git-memo/</id><summary type="html">&lt;p&gt;git関連のメモ&lt;/p&gt;
 &lt;h3&gt;変更履歴を見る&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git log -p
 &lt;/pre&gt;&lt;/div&gt;
@@ -1380,7 +1380,19 @@ $ git merge master
 
 
 &lt;p&gt;と先にやっておくと日本語ファイル名もちゃんと表示される&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="http://tobysoft.net/wiki/index.php?git%2F%C6%FC%CB%DC%B8%EC%A5%D5%A5%A1%A5%A4%A5%EB%CC%BE%A4%F2git%20status%A4%CA%A4%C9%A4%C7%C9%BD%BC%A8%A4%B9%A4%EB%CA%FD%CB%A1"&gt;git/日本語ファイル名をgit statusなどで表示する方法 - TOBY SOFT wiki&lt;/a&gt;&lt;/p&gt;</summary><category term="git"></category><category term="memo"></category></entry><entry><title>nginx memo</title><link href="http://blog.shigepon.info/blog/2014/03/20/nginx-memo/" rel="alternate"></link><updated>2014-03-20T16:04:53+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-03-20:blog/2014/03/20/nginx-memo/</id><summary type="html">&lt;h2&gt;Nginxで503コードのページをカスタマイズする&lt;/h2&gt;
+&lt;p&gt;参考：&lt;a href="http://tobysoft.net/wiki/index.php?git%2F%C6%FC%CB%DC%B8%EC%A5%D5%A5%A1%A5%A4%A5%EB%CC%BE%A4%F2git%20status%A4%CA%A4%C9%A4%C7%C9%BD%BC%A8%A4%B9%A4%EB%CA%FD%CB%A1"&gt;git/日本語ファイル名をgit statusなどで表示する方法 - TOBY SOFT wiki&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;過去リビジョンや他ブランチのファイル内容を見る&lt;/h2&gt;
+&lt;p&gt;過去リビジョン&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git show &amp;lt;SHA1 object name&amp;gt;:&amp;lt;path&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;他ブランチ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git show &amp;lt;branch name&amp;gt;:&amp;lt;path&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考 ：&lt;a href="http://webtech-walker.com/archive/2010/07/28113324.html"&gt;gitで過去のリビジョンとか別のbranchのファイルを見る - Webtech Walker&lt;/a&gt;&lt;/p&gt;</summary><category term="git"></category><category term="memo"></category></entry><entry><title>nginx memo</title><link href="http://blog.shigepon.info/blog/2014/03/20/nginx-memo/" rel="alternate"></link><updated>2014-03-20T16:04:53+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-03-20:blog/2014/03/20/nginx-memo/</id><summary type="html">&lt;h2&gt;Nginxで503コードのページをカスタマイズする&lt;/h2&gt;
 &lt;p&gt;なるべく手軽にメンテナンスページを出すための手順&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;path/to/root/error/503.htmlにページを用意する。&lt;/li&gt;
