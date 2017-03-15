@@ -1,5 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/all.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2016-11-16T11:55:49+09:00</updated><entry><title>Pelicanメモ</title><link href="http://blog.shigepon.info/blog/2016/10/25/pelican-memo/" rel="alternate"></link><updated>2016-10-25T15:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-10-25:blog/2016/10/25/pelican-memo/</id><summary type="html">&lt;p&gt;pythonでブログを書くアプリ「&lt;a href="http://docs.getpelican.com/en/stable/"&gt;Pelican&lt;/a&gt;」についてメモ&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/all.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2017-03-15T21:41:23+09:00</updated><entry><title>pixelをインストールしたsdカードが壊れたので修復した話</title><link href="http://blog.shigepon.info/blog/2017/03/15/pixelwoinsutorushitasdkadogahuai-retanodexiu-fu-shitahua/" rel="alternate"></link><updated>2017-03-15T21:41:23+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2017-03-15:blog/2017/03/15/pixelwoinsutorushitasdkadogahuai-retanodexiu-fu-shitahua/</id><summary type="html">&lt;p&gt;うちでホコリをかぶってたeeepcを復活させるために、pixelをsdカードにインストールして、使えるようにしてみたんだけど、何かの操作の拍子にデスクトップからメニューや背景が消えてしまう症状が出たので、色々調べてみた。&lt;/p&gt;
+&lt;p&gt;結論から言うとsdカードの一部が壊れていたのでfsckで修復したら治った。&lt;/p&gt;
+&lt;p&gt;参考（&lt;a href="http://www.switchdoc.com/2016/01/tutorial-repairing-corrupted-sd-cards-for-the-raspberry-pi-on-mac/"&gt;Tutorial: Repairing Corrupted SD Cards for the Raspberry Pi on Mac - SwitchDoc Labs&lt;/a&gt;）&lt;/p&gt;
+&lt;h2&gt;調査&lt;/h2&gt;
+&lt;p&gt;調査と言っても単純で、syslogを調べてみた程度&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;EXT4-fs error (device sdb2): ext4_lookup: deleted inode referenced:
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;みたいなメッセージが出てたので、sdb2のファイルシステムが壊れたんだなと予測した。ホームフォルダで&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ ls -la
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とかしてみると.configフォルダとかにアクセス出来なかったので、ファイルシステムが壊れてるという予測をさらに深めた。&lt;/p&gt;
+&lt;h2&gt;修復&lt;/h2&gt;
+&lt;p&gt;ファイルシステムの修復なので、fsckくらいしかすることないかなと思ったんだけど、pixelにはシングルユーザーモードが無く、sdb2をunmountしてsdb2を使ってるプロセスを切る方法が分からなかった。&lt;/p&gt;
+&lt;p&gt;sdカードにインストールしているという利点を利用して、virtualboxを用いてmacにubuntuをインストールして、そのubuntuにsdカードを読み込ませてfsckするというちょっと面倒な手順をふんでみた。&lt;/p&gt;
+&lt;h3&gt;ubuntuの準備&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;virtualboxのインストール　省略（ググれば色々出てくる）&lt;/li&gt;
+&lt;li&gt;virtualboxの仮想マシン作成&lt;ul&gt;
+&lt;li&gt;新規をクリック&lt;/li&gt;
+&lt;li&gt;名前を適当に設定してubuntu(64bit)を選ぶ&lt;/li&gt;
+&lt;li&gt;作った仮想マシンの設定をクリック&lt;/li&gt;
+&lt;li&gt;ストレージ-&amp;gt;コントローラーをクリックしてポートの数を2に設定&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;virtualboxにubuntuをインストール　省略（ググれば色々出てくる）今回は12.04をインストールした&lt;/li&gt;
+&lt;li&gt;一旦仮想マシンを終了しておく&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;SDカードをubuntuに追加する&lt;/h3&gt;
+&lt;p&gt;SDカードを差すと、手順を進めるごとに何回か「カードが読み込めない」というメッセージが出るが、全て無視する。初期化しない。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;sdカードをmacに差す&lt;/li&gt;
+&lt;li&gt;デバイス番号の確認&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ diskutil list
+/dev/disk0
+   &lt;span class="c1"&gt;#:                       TYPE NAME                    SIZE       IDENTIFIER&lt;/span&gt;
+....
+/dev/disk1
+   &lt;span class="c1"&gt;#:                       TYPE NAME                    SIZE       IDENTIFIER&lt;/span&gt;
+   0:     FDisk_partition_scheme                        *4.0 GB     disk1
+   1:                       0x17                         1.4 GB     disk1s1
+   2:                      Linux                         2.6 GB     disk1s2
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;今回はdisk1と確認できた。
++ アンマウント&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;diskutil unmountDisk /dev/disk1
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;sdカードの仮想ディスクを作る&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;/Users/username/VirtualBox VMs&amp;quot;&lt;/span&gt;
+$ sudo VBoxManage internalcommands createrawvmdk -filename ./sd-card.vmdk -rawdisk /dev/disk1
+$ sudo chmod &lt;span class="m"&gt;777&lt;/span&gt; /dev/disk1
+sudo chmod &lt;span class="m"&gt;777&lt;/span&gt; ./sd-card.vmdk
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;仮想マシンの設定-&amp;gt;ストレージ-&amp;gt;コントローラーでハードディスクの追加ボタン-&amp;gt;sd-card.vmdkを選択&lt;/li&gt;
+&lt;li&gt;仮想マシンを起動&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;sdカードの修復&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;terminalを起動（ググれば出てくる）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;fsckを実行するデバイスを調べる&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo lsblk -l
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;fsckを実行する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo fsck -fn /dev/sdb2
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でエラーがあるか確認して&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo fsck -fy /dev/sdb2
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;で修復&lt;/p&gt;
+&lt;p&gt;修復が終わったら
+仮想マシンを終了して、SDカードを取り出して、eeepcで起動確認した。&lt;/p&gt;</summary><category term="linux"></category><category term="raspberrypi"></category></entry><entry><title>Arduino microをAVRライタとして使う</title><link href="http://blog.shigepon.info/blog/2016/11/24/use-arduino-micro-as-avr-writer/" rel="alternate"></link><updated>2016-11-24T15:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-11-24:blog/2016/11/24/use-arduino-micro-as-avr-writer/</id><summary type="html">&lt;p&gt;LEGOをArduino（AVR）でコントロールして動かしたくなったので、色々やってみようと思う。まずはラクにProcessingでコードを書けるようにしたいので、市販のAVRをArduino化してみた。Arduino IDEのバージョンによってやり方が違っていたので、現在のバージョン（1.6.11）で通用するやり方をメモしておく。&lt;/p&gt;
+&lt;h2&gt;手法を選ぶ&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;ArduinoをISPとして使う&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;材料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Arduino Micro&lt;/li&gt;
+&lt;li&gt;Atmega168トレーニングボード（共立電子製）&lt;/li&gt;
+&lt;li&gt;MicroUSB - USBケーブル&lt;/li&gt;
+&lt;li&gt;Qtケーブル6本&lt;/li&gt;
+&lt;li&gt;Mac（Mac book air）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;上手く行った手順&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Arduino IDEの設定&lt;/li&gt;
+&lt;li&gt;Githubから設定ファイル（JSON）をダウンロード&lt;/li&gt;
+&lt;li&gt;Arduino IDEの設定&lt;/li&gt;
+&lt;li&gt;ISPピンを繋ぐ&lt;/li&gt;
+&lt;li&gt;USBでMacとArduino Microを繋ぐ&lt;/li&gt;
+&lt;li&gt;出力先の指定&lt;/li&gt;
+&lt;li&gt;ブートローダー書き込み&lt;/li&gt;
+&lt;li&gt;アップロード&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;はまったところ&lt;/h2&gt;
+&lt;h3&gt;ピン配置&lt;/h3&gt;
+&lt;h2&gt;参考&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://phaq.phunsites.net/2013/09/12/use-arduino-micro-as-isp-with-atmega-on-a-breadboard/"&gt;phaq » Blog Archive » Use Arduino Micro as ISP with ATmega on a breadboard&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.a2life.info/w/?tag=arduino"&gt;Arduino でAVR マイコンのプログラム&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://leftbraintinkering.blogspot.jp/2015/03/programming-atmega-168-328-using-your.html"&gt;Programming an ATmega (168, 328) using your Arduino as a programmer&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://ehbtj.com/electronics/arduino-internal-clock-8mhz/"&gt;Arduinoを内部クロック（8MHz）で動作させる | なんでも独り言&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.arduino.cc/en/uploads/Main/ArduinoMicro_Pinout3.png"&gt;ArduinoMicro_Pinout3.png (299×376) &lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://hex.ro/wp/blog/arduino-micro-as-isp-flashing-the-bootloader-of-an-arduino-leonardo/"&gt;Arduino Micro as ISP (flashing the bootloader of an Arduino Leonardo) – and thus goes by another day&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://nomolk.hatenablog.com/entry/2016/06/21/001322"&gt;Arduino IDE から、生の AVR に ISP でスケッチを書き込む方法（ArduinoIDE 1.6.4以降版） - nomolkのブログ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</summary><category term="arduino"></category><category term="avr"></category></entry><entry><title>Pelicanメモ</title><link href="http://blog.shigepon.info/blog/2016/10/25/pelican-memo/" rel="alternate"></link><updated>2016-10-25T15:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-10-25:blog/2016/10/25/pelican-memo/</id><summary type="html">&lt;p&gt;pythonでブログを書くアプリ「&lt;a href="http://docs.getpelican.com/en/stable/"&gt;Pelican&lt;/a&gt;」についてメモ&lt;/p&gt;
 &lt;h2&gt;記事の並び替え方法を変える&lt;/h2&gt;
 &lt;p&gt;ARTICLE_ORDER_BYに文字列で指定する。関数で定義することも出来るみたいだが、まだ方法が分からない。&lt;/p&gt;
 &lt;p&gt;pelicanconf.pyを編集&lt;/p&gt;
