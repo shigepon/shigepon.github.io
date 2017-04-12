@@ -1,5 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/all.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2017-04-12T10:30:00+09:00</updated><entry><title>ffmpegの最新版をUbuntu 12.04で使う</title><link href="http://blog.shigepon.info/blog/2017/04/12/use_recent_version_of_ffmpeg_for_ubuntu_1204/" rel="alternate"></link><updated>2017-04-12T10:30:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2017-04-12:blog/2017/04/12/use_recent_version_of_ffmpeg_for_ubuntu_1204/</id><summary type="html">&lt;p&gt;ffmpeg使ってradikoのタイムフリー番組をダウンロードしようとして、ffmpegの最新版を入れようとしてみたメモ&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/all.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2017-04-12T17:22:00+09:00</updated><entry><title>なでしこ2でradikoタイムフリーで録音してみたメモ</title><link href="http://blog.shigepon.info/blog/2017/04/12/record_timefree_radiko_with_nadesiko2/" rel="alternate"></link><updated>2017-04-12T17:22:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2017-04-12:blog/2017/04/12/record_timefree_radiko_with_nadesiko2/</id><summary type="html">&lt;p&gt;&lt;a href="http://blog.shigepon.info/blog/2015/07/19/record-radiko-with-nadesiko2/"&gt;なでしこ2でradikoの録音をやってみた&lt;/a&gt;の後、色々radikoの仕様が変わり、タイムフリーで1週間番組を聞くことが出来るようになった。なので、今更録音も要らないような気もするんだけど、録音はやっぱ出来たら出来たで便利なのでやってみた。気付いた点だけメモしておく。ちなみにメモの内容はまったくなでしことは関係無い。&lt;/p&gt;
+&lt;p&gt;参考：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://d.hatena.ne.jp/nyanonon/touch/20161015"&gt;radikoがタイムフリー対応で録音出来なくなったので対処&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://qiita.com/komacchi/items/2db61b16c1c81967705f"&gt;radikoの仕様変更によるRaspberry Piでの録音失敗対応&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;2015/07/19時点からの変更点&lt;/h2&gt;
+&lt;p&gt;結構色々変わってた。&lt;/p&gt;
+&lt;h3&gt;player&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;http://radiko.jp/player/swf/player_3.0.0.00.swf  -&amp;gt; http://radiko.jp/apps/js/flash/myplayer-release.swf
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;ヘッダ&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;X-Radiko-App: pc_1 -&amp;gt; X-Radiko-App: pc_ts
+X-Radiko-App-Version: 2.0.1 -&amp;gt; X-Radiko-App-Version: 4.0.0
+X-Radiko-Authtoken: ... -&amp;gt; X-Radiko-AuthToken: ...
+X-Radiko-Partialkey: ... -&amp;gt; X-Radiko-PartialKey: ...
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;録音URL&lt;/h3&gt;
+&lt;p&gt;以前はストリーミングのurlをxmlから取って来てたけど、今回は
+https://radiko.jp/v2/api/ts/playlist.m3u8?l=15&amp;amp;station_id=...&amp;amp;ft=...&amp;amp;to=...
+（station_idにはMBSなどの放送局IDを、ft、toは西暦の年月日、時分秒を数字だけで繋げた数値を用いる）
+のレスポンスに含まれるURLを仕様する&lt;/p&gt;
+&lt;h3&gt;録音ツール&lt;/h3&gt;
+&lt;p&gt;以前はrtmpdumpを使ってたけど、今回はffmpegを使った。ubuntu12.04で試したので、&lt;a href="http://blog.shigepon.info/blog/2017/04/12/use_recent_version_of_ffmpeg_for_ubuntu_1204/"&gt;ffmpegの最新版入れる必要
+があった&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;タイムフリー機能のおかげで1週間に1回聞きたいやつまとめてダウンロードとか出来るからとても楽になったかもー。&lt;/p&gt;</summary><category term="nadesiko2"></category><category term="linux"></category></entry><entry><title>ffmpegの最新版をUbuntu 12.04で使う</title><link href="http://blog.shigepon.info/blog/2017/04/12/use_recent_version_of_ffmpeg_for_ubuntu_1204/" rel="alternate"></link><updated>2017-04-12T10:30:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2017-04-12:blog/2017/04/12/use_recent_version_of_ffmpeg_for_ubuntu_1204/</id><summary type="html">&lt;p&gt;ffmpeg使ってradikoのタイムフリー番組をダウンロードしようとして、ffmpegの最新版を入れようとしてみたメモ&lt;/p&gt;
 &lt;h2&gt;ubuntu 12.04はffmpegのバージョンが古い&lt;/h2&gt;
 &lt;p&gt;-headersオプションとか使えない。エラーが出る。バージョン見たら0.8.17・・・2017/4/12現在で3.2.4なのに古杉。&lt;/p&gt;
 &lt;p&gt;&lt;script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"&gt;&lt;/script&gt;
