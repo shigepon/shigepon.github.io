@@ -1,5 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/iot.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2017-03-15T21:41:23+09:00</updated><entry><title>pixelをインストールしたsdカードが壊れたので修復した話</title><link href="http://blog.shigepon.info/blog/2017/03/15/pixelwoinsutorushitasdkadogahuai-retanodexiu-fu-shitahua/" rel="alternate"></link><updated>2017-03-15T21:41:23+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2017-03-15:blog/2017/03/15/pixelwoinsutorushitasdkadogahuai-retanodexiu-fu-shitahua/</id><summary type="html">&lt;p&gt;うちでホコリをかぶってたeeepcを復活させるために、pixelをsdカードにインストールして、使えるようにしてみたんだけど、何かの操作の拍子にデスクトップからメニューや背景が消えてしまう症状が出たので、色々調べてみた。&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/iot.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2017-03-21T21:41:23+09:00</updated><entry><title>使わなくなっていたeeepcにpixelをインストールした話</title><link href="http://blog.shigepon.info/blog/2017/03/21/shi-wanakunatsuteitaeeepcnipixelwoinsutorushitahua/" rel="alternate"></link><updated>2017-03-21T21:41:23+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2017-03-21:blog/2017/03/21/shi-wanakunatsuteitaeeepcnipixelwoinsutorushitahua/</id><summary type="html">&lt;p&gt;うちでホコリをかぶってたeeepcを子供用に復活させるために、raspbianを一般のPCで使えるようにしたosである&lt;a href="https://www.raspberrypi.org/blog/introducing-pixel/"&gt;pixel&lt;/a&gt;をsdカードにインストールして、使えるようにしてみた（紹介記事「&lt;a href="http://jp.techcrunch.com/2016/12/23/20161222raspberry-pis-pixel-for-pc-and-mac-breathes-new-life-into-old-computers/"&gt;Raspberry PiがPixelをリリース―軽量OSが古いWindowsとMacを生き返らせる&lt;/a&gt;」） 。ついでにeeepcに必要なセットアップをしてみた。&lt;/p&gt;
+&lt;h2&gt;SSDにインストールしようとして失敗&lt;/h2&gt;
+&lt;p&gt;eeepcはssdが内蔵されているので、そこにインストール出来れば高速に起動しそうだしいいなと思い、色々ググってやってみたんだけど、うまくいかなかった。デスクトップっぽいものが表示するとこまではいったんだけど、背景画面は出ないし、画面サイズは大きいしということで、初めてのインストールにはハードルが高すぎたのでやめた。多分sdbが壊れているのか参照出来てないのかそんなとこだとは思うんだけど・・・&lt;/p&gt;
+&lt;h2&gt;SDカードへインストール&lt;/h2&gt;
+&lt;p&gt;通常pixelはUSBやSDカードへインストールするので、isoイメージをSDカードへ書き込んでインストールした。&lt;a href="https://www.raspberrypi.org/blog/pixel-pc-mac/"&gt;pixelのページ&lt;/a&gt;では、etcherを使っていたので、そのままetcherを使って書き込みした。で、書き込んだSDカードをeeepcのSDカードスロットに入れて起動し、BIOSオプションで、SDカードから起動するように変更すると、何の問題もなくpixelが起動した。ssdからじゃないのでちょっとだけ遅い気もするけど、個人的には大して気にならなかった。&lt;/p&gt;
+&lt;h2&gt;設定&lt;/h2&gt;
+&lt;p&gt;先にいつもパッケージの管理にaptitude、エディタにvimを使っているので、aptitudeをインストールした。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo apt-get install aptitude vim
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;日本語化&lt;/h3&gt;
+&lt;h4&gt;メニューの日本語化&lt;/h4&gt;
+&lt;p&gt;他の記事にあるRaspberry Pi Configurationとかraspi-configみたいなコマンドは無いので注意。&lt;/p&gt;
+&lt;h4&gt;chromeの日本語化&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude install chromium-browser-l10n
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;ページの表示については設定-&amp;gt;詳細-&amp;gt;言語と入力の設定
+で、日本語を追加したり、選んだりする。。　&lt;/p&gt;
+&lt;h4&gt;日本語入力&lt;/h4&gt;
+&lt;p&gt;Mozcをインストールした&lt;/p&gt;
+&lt;h3&gt;キーボード配列&lt;/h3&gt;
+&lt;p&gt;UKになっているので、USに変更しておく。メニュー-&amp;gt;設定-&amp;gt;キーボード、マウス設定からUSキーボードを追加して、初期設定として設定する&lt;/p&gt;
+&lt;h3&gt;バッテリー確認&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude install apci apci-tool
+acpi-tool
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;フィルタリング設定&lt;/h3&gt;
+&lt;p&gt;子供用なので、不適切なサイトは見れないようにしておきたい。今回はsquidとdansguardianの組み合わせでフィルタリングを行った。&lt;/p&gt;
+&lt;h4&gt;DansGuardian&lt;/h4&gt;
+&lt;p&gt;chromeのフィルタリングにDansGuardianとSquidを使った．&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude install squid3 dansguardian
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;変更点は以下&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo vim /etc/dansguardian/dansguardian.conf
+&lt;span class="nv"&gt;language&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;japanese&amp;#39;&lt;/span&gt;
+&lt;span class="nv"&gt;filterport&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 適当に1
+&lt;span class="nv"&gt;proxyport&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 適当に2
+$ sudo vim /etc/squid3/squid.conf
+&lt;span class="nv"&gt;http_port&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 適当に1
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;プロクシ設定&lt;/h4&gt;
+&lt;p&gt;chromeストアで「proxy switchysharp」と検索し、該当する機能拡張をインストール。proxy switchsharpの設定画面でプロクシの設定が出来る。プロクシポートにdansguardianで設定した適当に2を設定する。複数設定して、切替を地球儀アイコンから選ぶことが出来る。&lt;/p&gt;
+&lt;h3&gt;Scrach1.4で日本語入力&lt;/h3&gt;
+&lt;p&gt;今回入れたpixelではvmの再インストールは要らなかったので、scrach起動オプションの変更だけで日本語入力出来るようになる。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo vim /usr/bin/scrach
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考
++ &lt;a href="http://matoken.org/blog/blog/2014/04/02/linux-battery-check/"&gt;Linux でバッテリー状況確認方法幾つか | matoken's meme&lt;/a&gt;
++ &lt;a href="http://qiita.com/tsubu-mustard/items/41e0f230a3203c01c355"&gt;Linuxのchrome,chromiumでプロキシを通す - Qiita&lt;/a&gt;
++ &lt;a href="http://qiita.com/hachisuka_nsw/items/5ec967372a7d004c7d59"&gt;Linux版Scratch1.4で日本語入力 - Qiita&lt;/a&gt;
++ &lt;a href="https://www.server-world.info/query?os=CentOS_6&amp;amp;p=squid&amp;amp;f=5"&gt;Squid + DansGuardian&lt;/a&gt;&lt;/p&gt;</summary><category term="linux"></category><category term="raspberrypi"></category></entry><entry><title>pixelをインストールしたsdカードが壊れたので修復した話</title><link href="http://blog.shigepon.info/blog/2017/03/15/pixelwoinsutorushitasdkadogahuai-retanodexiu-fu-shitahua/" rel="alternate"></link><updated>2017-03-15T21:41:23+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2017-03-15:blog/2017/03/15/pixelwoinsutorushitasdkadogahuai-retanodexiu-fu-shitahua/</id><summary type="html">&lt;p&gt;うちでホコリをかぶってたeeepcを復活させるために、pixelをsdカードにインストールして、使えるようにしてみたんだけど、何かの操作の拍子にデスクトップからメニューや背景が消えてしまう症状が出たので、色々調べてみた。&lt;/p&gt;
 &lt;p&gt;結論から言うとsdカードの一部が壊れていたのでfsckで修復したら治った。&lt;/p&gt;
 &lt;p&gt;参考（&lt;a href="http://www.switchdoc.com/2016/01/tutorial-repairing-corrupted-sd-cards-for-the-raspberry-pi-on-mac/"&gt;Tutorial: Repairing Corrupted SD Cards for the Raspberry Pi on Mac - SwitchDoc Labs&lt;/a&gt;）&lt;/p&gt;
 &lt;h2&gt;調査&lt;/h2&gt;

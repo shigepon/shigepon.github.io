@@ -1,5 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/google.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2016-04-02T10:30:00+09:00</updated><entry><title>Google Tag ManagerでGoogle Analyticsを使う</title><link href="http://blog.shigepon.info/blog/2016/04/02/implement_google_analytics_with_google_tag_manager/" rel="alternate"></link><updated>2016-04-02T10:30:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-04-02:blog/2016/04/02/implement_google_analytics_with_google_tag_manager/</id><summary type="html">&lt;p&gt;Google AnalyticsのコントロールもGoogle Tag Managerに置き換えてしまった方が良いと思ったのでやってみた。Google Analytics上での設定は先にしているものとする。&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/google.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2017-04-12T10:30:00+09:00</updated><entry><title>ffmpegの最新版をUbuntu 12.04で使う</title><link href="http://blog.shigepon.info/blog/2017/04/12/use_recent_version_of_ffmpeg_for_ubuntu_1204/" rel="alternate"></link><updated>2017-04-12T10:30:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2017-04-12:blog/2017/04/12/use_recent_version_of_ffmpeg_for_ubuntu_1204/</id><summary type="html">&lt;p&gt;ffmpeg使ってradikoのタイムフリー番組をダウンロードしようとして、ffmpegの最新版を入れようとしてみたメモ&lt;/p&gt;
+&lt;h2&gt;ubuntu 12.04はffmpegのバージョンが古い&lt;/h2&gt;
+&lt;p&gt;-headersオプションとか使えない。エラーが出る。バージョン見たら0.8.17・・・2017/4/12現在で3.2.4なのに古杉。&lt;/p&gt;
+&lt;p&gt;&lt;script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"&gt;&lt;/script&gt;
+&lt;!-- Google Adsense below content --&gt;
+&lt;ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-3165642025902490" data-ad-slot="1749996500"&gt;&lt;/ins&gt;
+&lt;script&gt;
+    (adsbygoogle = window.adsbygoogle || []).push({});
+&lt;/script&gt;
+&lt;!-- end Google Adsense --&gt;
+&lt;/p&gt;
+&lt;h2&gt;という訳でビルド済みのffmpegをインストールした&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://johnvansickle.com/ffmpeg/"&gt;FFmpeg Static Builds&lt;/a&gt;から、gitビルドのものを選んでダウンロード&lt;/li&gt;
+&lt;li&gt;ffmpeg-git-xxbit-static.tar.xzみたいなファイルがダウンロードされるので、以下のコマンドを実行&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ xz -dv ffmpeg-git-xxbit-static.tar.xz
+$ tar xfv ffmpeg-git-xxbit-static.tar
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;ffmpeg-git-xxbit-staticってフォルダにffmpegがあるので、これを実行すると良い&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;注意点？&lt;/h2&gt;
+&lt;h2&gt;ネット上の動画を直接指定してダウンロード出来ない&lt;/h2&gt;
+&lt;p&gt;nscdをインストールすると良い&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude install nscd
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;その他&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;No trailing CRLF found in HTTP header.
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とか出るけど気にしない。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Invalid cookie found, no value, path or domain specified↲
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とか出ても気にしない。&lt;/p&gt;
+&lt;p&gt;参考
+&lt;a href="http://qiita.com/yayugu/items/d7f6a15a6f988064f51c"&gt;Ubuntu 14.04 で最新の ffmpeg を簡単かつクリーンにインストールする方法&lt;/a&gt;
+&lt;a href="http://qiita.com/ymaru/items/87fbc4e68f5995d3964c"&gt;Linux で tar.xz 形式のファイルを解凍する&lt;/a&gt;&lt;/p&gt;</summary><category term="linux"></category></entry><entry><title>Google Tag ManagerでGoogle Analyticsを使う</title><link href="http://blog.shigepon.info/blog/2016/04/02/implement_google_analytics_with_google_tag_manager/" rel="alternate"></link><updated>2016-04-02T10:30:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-04-02:blog/2016/04/02/implement_google_analytics_with_google_tag_manager/</id><summary type="html">&lt;p&gt;Google AnalyticsのコントロールもGoogle Tag Managerに置き換えてしまった方が良いと思ったのでやってみた。Google Analytics上での設定は先にしているものとする。&lt;/p&gt;
 &lt;h2&gt;アカウント作成する場合&lt;/h2&gt;
 &lt;p&gt;してもしなくても良い。すでにあるものを利用するなら、必要ない。&lt;/p&gt;
 &lt;ul&gt;
