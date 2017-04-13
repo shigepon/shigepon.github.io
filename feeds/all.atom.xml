@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/all.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2017-04-12T17:22:00+09:00</updated><entry><title>なでしこ2でradikoタイムフリーで録音してみたメモ</title><link href="http://blog.shigepon.info/blog/2017/04/12/record_timefree_radiko_with_nadesiko2/" rel="alternate"></link><updated>2017-04-12T17:22:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2017-04-12:blog/2017/04/12/record_timefree_radiko_with_nadesiko2/</id><summary type="html">&lt;p&gt;&lt;a href="http://blog.shigepon.info/blog/2015/07/19/record-radiko-with-nadesiko2/"&gt;なでしこ2でradikoの録音をやってみた&lt;/a&gt;の後、色々radikoの仕様が変わり、タイムフリーで1週間番組を聞くことが出来るようになった。なので、今更録音も要らないような気もするんだけど、録音はやっぱ出来たら出来たで便利なのでやってみた。気付いた点だけメモしておく。ちなみにメモの内容はまったくなでしことは関係無い。&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/all.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2017-04-13T20:40:00+09:00</updated><entry><title>IPが変わったら自動でufwの設定変えるスクリプトをなでしこ2で組んでみた</title><link href="http://blog.shigepon.info/blog/2017/04/13/modify_ufw_setting_automatically_from_remote_server/" rel="alternate"></link><updated>2017-04-13T20:40:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2017-04-13:blog/2017/04/13/modify_ufw_setting_automatically_from_remote_server/</id><summary type="html">&lt;p&gt;うちではVPSサーバ の負荷を下げるためとか便利だからとかの理由で家のサーバからVPSサーバにアクセスすることが多いんだけど、IPがときたま変わるので、その度にufwとかの設定をやりかえないといけないのが面倒だったので、色々調べてなんとか自動で設定変更出来るスクリプトを組んでみた。セキュリティ的にびみょーな気がしないでもないけど、IPがいつの間にか変わってDBの更新が弾かれたーとかよりましなので、やってみた。&lt;/p&gt;
+&lt;p&gt;ソースは需要ないと思うのでアップしない。やったこととポイントだけ書いておく。&lt;/p&gt;
+&lt;h2&gt;やったこと&lt;/h2&gt;
+&lt;p&gt;&lt;a href="http://www.ugtop.com/spill.shtml"&gt;確認くん&lt;/a&gt;でIPを調べて、IPが変わってたらsshでコマンドを叩く。IPは保存しておく。んで、これをcronジョブで定期的にやる。&lt;/p&gt;
+&lt;h2&gt;ポイント&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;コマンドの実行結果はローカルファイルにリダイレクトしておいて、その結果から色々判定する&lt;/li&gt;
+&lt;li&gt;ufwでdeleteする時はyes/noが聞かれるので、--forceオプションを付けて、回避する&lt;/li&gt;
+&lt;li&gt;sudo使うコマンドがあるのでsudoに-Sオプションを付けてsshpassを使うかechoで標準入力からリダイレクトした。セキュリティ上あまりよくない気が・・・&lt;/li&gt;
+&lt;li&gt;sshに-tオプションは付けなくても良かった。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;参考
++ &lt;a href="http://askubuntu.com/questions/611749/how-to-run-ufw-without-interactive-mode"&gt;How to run 'ufw' without interactive mode? - Ask Ubuntu&lt;/a&gt;
++ &lt;a href="http://inamuu.com/%E3%82%B7%E3%82%A7%E3%83%AB%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88%E3%81%A7%E3%83%AA%E3%83%A2%E3%83%BC%E3%83%88%E5%85%88%E3%81%AB%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%82%92%E5%AE%9F%E8%A1%8C/"&gt;シェルスクリプトでリモート先にコマンドを実行する際のTips | inamuu.com&lt;/a&gt;
++ &lt;a href="http://kanonji.info/blog/2013/06/07/ssh%E3%81%A7%E3%83%AA%E3%83%A2%E3%83%BC%E3%83%88%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%82%92%E5%AE%9F%E8%A1%8C%E3%81%99%E3%82%8B%E6%99%82%E3%81%AE%E6%9B%B8%E3%81%8D%E6%96%B9%E3%81%A8%E6%B3%A8/"&gt;sshでリモートコマンドを実行する時の書き方と注意点 | kanonjiのブログ&lt;/a&gt;
++ &lt;a href="http://www.pictnotes.jp/memo/archives/1"&gt;cron 経由や、sshからリモートの、sudo を実行したい場合｜その他｜お仕事メモ｜Pictnotes&lt;/a&gt;&lt;/p&gt;</summary><category term="linux"></category><category term="nadesiko2"></category></entry><entry><title>なでしこ2でradikoタイムフリーで録音してみたメモ</title><link href="http://blog.shigepon.info/blog/2017/04/12/record_timefree_radiko_with_nadesiko2/" rel="alternate"></link><updated>2017-04-12T17:22:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2017-04-12:blog/2017/04/12/record_timefree_radiko_with_nadesiko2/</id><summary type="html">&lt;p&gt;&lt;a href="http://blog.shigepon.info/blog/2015/07/19/record-radiko-with-nadesiko2/"&gt;なでしこ2でradikoの録音をやってみた&lt;/a&gt;の後、色々radikoの仕様が変わり、タイムフリーで1週間番組を聞くことが出来るようになった。なので、今更録音も要らないような気もするんだけど、録音はやっぱ出来たら出来たで便利なのでやってみた。気付いた点だけメモしておく。ちなみにメモの内容はまったくなでしことは関係無い。&lt;/p&gt;
 &lt;p&gt;参考：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://d.hatena.ne.jp/nyanonon/touch/20161015"&gt;radikoがタイムフリー対応で録音出来なくなったので対処&lt;/a&gt;&lt;/li&gt;

@@ -5,29 +5,36 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/</loc>
-<lastmod>2017-04-12T17:32:33-00:00</lastmod>
+<lastmod>2017-04-13T21:10:37-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/archives.html</loc>
-<lastmod>2017-04-12T17:32:33-00:00</lastmod>
+<lastmod>2017-04-13T21:10:37-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/tags.html</loc>
-<lastmod>2017-04-12T17:32:33-00:00</lastmod>
+<lastmod>2017-04-13T21:10:37-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/categories.html</loc>
-<lastmod>2017-04-12T17:32:33-00:00</lastmod>
+<lastmod>2017-04-13T21:10:37-00:00</lastmod>
 <changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://blog.shigepon.info/blog/2017/04/13/modify_ufw_setting_automatically_from_remote_server/</loc>
+<lastmod>2017-04-13T20:40:00+09:00</lastmod>
+<changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
@@ -887,7 +894,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/blog/categories/nadesiko2/</loc>
-<lastmod>2017-04-12T17:22:00+09:00</lastmod>
+<lastmod>2017-04-13T20:40:00+09:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -929,7 +936,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/author/shigepon.html</loc>
-<lastmod>2017-04-12T17:22:00+09:00</lastmod>
+<lastmod>2017-04-13T20:40:00+09:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>

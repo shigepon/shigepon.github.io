@@ -2,7 +2,7 @@
 <html lang="ja"
 >
 <head>
-    <title>ubuntuでodbcを用いてpostgresqlにアクセスする - shigeponが関心のある技術情報など</title>
+    <title>IPが変わったら自動でufwの設定変えるスクリプトをなでしこ2で組んでみた - shigeponが関心のある技術情報など</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -10,22 +10,21 @@
 
 
 
-<link rel="canonical" href="http://blog.shigepon.info/blog/2014/05/12/access-postgresql-through-odbc-ubuntu/">
+<link rel="canonical" href="http://blog.shigepon.info/blog/2017/04/13/modify_ufw_setting_automatically_from_remote_server/">
 
         <meta name="author" content="shigepon" />
-        <meta name="keywords" content="linux,PostgreSQL,nadesiko" />
-        <meta property="modified" content="2014-05-12" />
+        <meta name="keywords" content="linux,nadesiko2" />
+        <meta property="modified" content="2017-04-13" />
 
         <meta property="og:site_name" content="shigeponが関心のある技術情報など" />
         <meta property="og:type" content="article"/>
-        <meta property="og:title" content="ubuntuでodbcを用いてpostgresqlにアクセスする"/>
-        <meta property="og:url" content="http://blog.shigepon.info/blog/2014/05/12/access-postgresql-through-odbc-ubuntu/"/>
+        <meta property="og:title" content="IPが変わったら自動でufwの設定変えるスクリプトをなでしこ2で組んでみた"/>
+        <meta property="og:url" content="http://blog.shigepon.info/blog/2017/04/13/modify_ufw_setting_automatically_from_remote_server/"/>
         <meta property="og:description" content=""/>
-        <meta property="article:published_time" content="2014-05-12" />
-            <meta property="article:section" content="PostgreSQL" />
+        <meta property="article:published_time" content="2017-04-13" />
+            <meta property="article:section" content="nadesiko2" />
             <meta property="article:tag" content="linux" />
-            <meta property="article:tag" content="PostgreSQL" />
-            <meta property="article:tag" content="nadesiko" />
+            <meta property="article:tag" content="nadesiko2" />
             <meta property="article:author" content="shigepon" />
 
     <meta name="twitter:card" content="summary">
@@ -80,10 +79,10 @@ shigeponが関心のある技術情報など            </a>
         <article>
             <header class="page-header">
                 <h1>
-                    <a href="http://blog.shigepon.info/blog/2014/05/12/access-postgresql-through-odbc-ubuntu/"
+                    <a href="http://blog.shigepon.info/blog/2017/04/13/modify_ufw_setting_automatically_from_remote_server/"
                        rel="bookmark"
-                       title="Permalink to ubuntuでodbcを用いてpostgresqlにアクセスする">
-                        ubuntuでodbcを用いてpostgresqlにアクセスする
+                       title="Permalink to IPが変わったら自動でufwの設定変えるスクリプトをなでしこ2で組んでみた">
+                        IPが変わったら自動でufwの設定変えるスクリプトをなでしこ2で組んでみた
                     </a>
                 </h1>
             </header>
@@ -93,7 +92,7 @@ shigeponが関心のある技術情報など            </a>
 <footer class="post-info">
     <span class="label label-default">Date</span>
     <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2014-05-12T22:11:33+09:00"> 月 12 5月 2014</time>
+        <i class="fa fa-calendar"></i><time datetime="2017-04-13T20:40:00+09:00"> 木 13 4月 2017</time>
     </span>
 
 
@@ -101,32 +100,26 @@ shigeponが関心のある技術情報など            </a>
 <span class="label label-default">Tags</span>
 	<a href="http://blog.shigepon.info/tag/linux.html">linux</a>
         /
-	<a href="http://blog.shigepon.info/tag/postgresql.html">PostgreSQL</a>
-        /
-	<a href="http://blog.shigepon.info/tag/nadesiko.html">nadesiko</a>
+	<a href="http://blog.shigepon.info/tag/nadesiko2.html">nadesiko2</a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
-                <p>なでしこ2のテストのためにubuntuにodbcドライバをインストールしたりしたのでメモ</p>
-<h2>odbcドライバのインストール</h2>
-<div class="highlight"><pre><span></span>$ sudo aptitude install unixodbc, odbc-postgresql
-$ sudo odbcinst -i -d -f /usr/share/psqlodbc/odbcinst.ini.template
-$ sudo odbcinst -i -s -l  -n adyoung-pg -f /usr/share/doc/odbc-postgresql/examples/odbc.ini.template
-$ vim /etc/odbc.ini
-</pre></div>
-
-
-<p>odbc.iniにはサンプルの設定が入っているので、それを参考にしながら設定</p>
-<!-- more -->
-
-<h2>odbcアクセスしてみる</h2>
-<div class="highlight"><pre><span></span>$ isql -v DSN <span class="o">(</span>UID <span class="o">(</span>PWD<span class="o">))</span>
-</pre></div>
-
-
-<p>でアクセスできる。あとはSQLを入力すれば結果を見たりできる。</p>
-<h2>monoを使ってアクセスする場合</h2>
-<p>monoというかなでしこ2でアクセスする場合に必要だった。libodbc.soが必要というエラーが出るのでunixodbc-devの追加インストールが必要。インストールすればエラー出ずに動くようになる。</p>
+                <p>うちではVPSサーバ の負荷を下げるためとか便利だからとかの理由で家のサーバからVPSサーバにアクセスすることが多いんだけど、IPがときたま変わるので、その度にufwとかの設定をやりかえないといけないのが面倒だったので、色々調べてなんとか自動で設定変更出来るスクリプトを組んでみた。セキュリティ的にびみょーな気がしないでもないけど、IPがいつの間にか変わってDBの更新が弾かれたーとかよりましなので、やってみた。</p>
+<p>ソースは需要ないと思うのでアップしない。やったこととポイントだけ書いておく。</p>
+<h2>やったこと</h2>
+<p><a href="http://www.ugtop.com/spill.shtml">確認くん</a>でIPを調べて、IPが変わってたらsshでコマンドを叩く。IPは保存しておく。んで、これをcronジョブで定期的にやる。</p>
+<h2>ポイント</h2>
+<ul>
+<li>コマンドの実行結果はローカルファイルにリダイレクトしておいて、その結果から色々判定する</li>
+<li>ufwでdeleteする時はyes/noが聞かれるので、--forceオプションを付けて、回避する</li>
+<li>sudo使うコマンドがあるのでsudoに-Sオプションを付けてsshpassを使うかechoで標準入力からリダイレクトした。セキュリティ上あまりよくない気が・・・</li>
+<li>sshに-tオプションは付けなくても良かった。</li>
+</ul>
+<p>参考
++ <a href="http://askubuntu.com/questions/611749/how-to-run-ufw-without-interactive-mode">How to run 'ufw' without interactive mode? - Ask Ubuntu</a>
++ <a href="http://inamuu.com/%E3%82%B7%E3%82%A7%E3%83%AB%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88%E3%81%A7%E3%83%AA%E3%83%A2%E3%83%BC%E3%83%88%E5%85%88%E3%81%AB%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%82%92%E5%AE%9F%E8%A1%8C/">シェルスクリプトでリモート先にコマンドを実行する際のTips | inamuu.com</a>
++ <a href="http://kanonji.info/blog/2013/06/07/ssh%E3%81%A7%E3%83%AA%E3%83%A2%E3%83%BC%E3%83%88%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%82%92%E5%AE%9F%E8%A1%8C%E3%81%99%E3%82%8B%E6%99%82%E3%81%AE%E6%9B%B8%E3%81%8D%E6%96%B9%E3%81%A8%E6%B3%A8/">sshでリモートコマンドを実行する時の書き方と注意点 | kanonjiのブログ</a>
++ <a href="http://www.pictnotes.jp/memo/archives/1">cron 経由や、sshからリモートの、sudo を実行したい場合｜その他｜お仕事メモ｜Pictnotes</a></p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- Google Adsense below content -->
 <ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-3165642025902490" data-ad-slot="1749996500"></ins>
@@ -139,11 +132,11 @@ $ vim /etc/odbc.ini
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
-        <li><a href="http://blog.shigepon.info/blog/2014/02/28/vim-dbext-postgresql/">dbext.vimでpostgresqlにアクセスする</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2015/03/03/error-log-make-php-error/">突然サーバエラーが頻発したので、調べてみたらエラーログが原因だった</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2014/01/28/nadesiko-lua/">なでしこでLuaエディタ？を作る（ネタ）</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2017/04/13/modify_ufw_setting_automatically_from_remote_server/">IPが変わったら自動でufwの設定変えるスクリプトをなでしこ2で組んでみた</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2016/09/16/postgresql-memo/">PostgreSQLメモ</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/">ubuntuのcui環境でなでしこ2をビルドする</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2017/04/12/record_timefree_radiko_with_nadesiko2/">なでしこ2でradikoタイムフリーで録音してみたメモ</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/">Jenkinsでなでしこ2をCIする</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2015/07/19/record-radiko-with-nadesiko2/">なでしこ2でradikoの録音をやってみた</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2015/05/05/nunit-console-test-for-nadesiko2/">なでしこ2をubuntu cuiでテストする</a></li>
     </ul>
 </section>
     <hr />
