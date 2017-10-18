@@ -21,84 +21,66 @@
 
 &lt;h2&gt;出力に行番号を追加&lt;/h2&gt;
 &lt;p&gt;linuxにはnlコマンドがある&lt;/p&gt;
-&lt;p&gt;```hoge.txt
-aaa
+&lt;p&gt;hoge.txtの中身をこんな感じに&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;aaa
 bbb
-ccc&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;
+ccc
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;$ cat hoge.txt | nl nl -s ','
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cat hoge.txt &lt;span class="p"&gt;|&lt;/span&gt; nl nl -s &lt;span class="s1"&gt;&amp;#39;,&amp;#39;&lt;/span&gt;
      1,aaa
      2,bbb
-     c,ccc&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;こんな感じ。行頭の空白を消したい場合はsedと組み合わせる
+     c,ccc
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;$ cat hoge.txt | nl nl -s ',' | sed 's/^ *//g'
+&lt;p&gt;こんな感じ。行頭の空白を消したい場合はsedと組み合わせる&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cat hoge.txt &lt;span class="p"&gt;|&lt;/span&gt; nl nl -s &lt;span class="s1"&gt;&amp;#39;,&amp;#39;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; sed &lt;span class="s1"&gt;&amp;#39;s/^ *//g&amp;#39;&lt;/span&gt;
 1,aaa
 2,bbb
-c,ccc&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;csvっぽく出来る
+c,ccc
+&lt;/pre&gt;&lt;/div&gt;
 
-sedで良く使うメモ
-------------------------
 
-sedはすぐ忘れる。
-
-参考：
+&lt;p&gt;csvっぽく出来る&lt;/p&gt;
+&lt;h2&gt;sedで良く使うメモ&lt;/h2&gt;
+&lt;p&gt;sedはすぐ忘れる。&lt;/p&gt;
+&lt;p&gt;参考：
 + [sed コマンド:https://hydrocul.github.io/wiki/commands/sed.html]
-+ [sedコマンドで覚えておきたい使い方12個(+3個):https://orebibou.com/2015/07/sed%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%81%A7%E8%A6%9A%E3%81%88%E3%81%A6%E3%81%8A%E3%81%8D%E3%81%9F%E3%81%84%E4%BD%BF%E3%81%84%E6%96%B912%E5%80%8B/#i-6]
-
-#### 置換（文字列削除にも使える）
++ [sedコマンドで覚えておきたい使い方12個(+3個):https://orebibou.com/2015/07/sed%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%81%A7%E8%A6%9A%E3%81%88%E3%81%A6%E3%81%8A%E3%81%8D%E3%81%9F%E3%81%84%E4%BD%BF%E3%81%84%E6%96%B912%E5%80%8B/#i-6]&lt;/p&gt;
+&lt;h4&gt;置換（文字列削除にも使える）&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed &lt;span class="s1"&gt;&amp;#39;s/正規表現/置換文字列/g&amp;#39;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;$ sed 's/正規表現/置換文字列/g'&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;#### 行削除
+&lt;h4&gt;行削除&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed &lt;span class="s1"&gt;&amp;#39;/正規表現/d&amp;#39;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;$ sed '/正規表現/d'&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;#### 指定行だけ表示
-
-文字列の編集じゃないけど、便利。
+&lt;h4&gt;指定行だけ表示&lt;/h4&gt;
+&lt;p&gt;文字列の編集じゃないけど、便利。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed -n 行番号p
+$ sed -n 開始行番号,終了行番号p
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;$ sed -n 行番号p
-$ sed -n 開始行番号,終了行番号p&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Rでプロット
-------------------------
-
-Rを入れておくとプロット用のソフトを入れなくてもプロット出来る。
-表データの計算結果を表示するのも手軽で便利。
-
-参考：
-+ [plot()関数を使った散布図によるデータの視覚化:http://monge.tec.fukuoka-u.ac.jp/R_analysis/graphics_plot01.html]
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;$ R&lt;/p&gt;
-&lt;h1&gt;ヘッダ無し。カンマ区切りのcsvを読み込む。カラムは最低3列ないとエラーが出るので、2列データの場合は3列目にダミーデータを入れるとかしたら良さそう？&lt;/h1&gt;
-&lt;blockquote&gt;
-&lt;p&gt;d &amp;lt;- read.table("data.csv", sep=",")&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h1&gt;x軸を1カラム目、y軸を2カラム目でプロット&lt;/h1&gt;
-&lt;blockquote&gt;
-&lt;p&gt;plot(d$V1, d$V2)&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h1&gt;x軸を1カラム目、y軸を2カラム目で折れ線グラフを書く&lt;/h1&gt;
-&lt;blockquote&gt;
-&lt;p&gt;plot(d$V1, d$V2, type="l")&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h1&gt;x軸を1カラム目、y軸を2カラム目と3カラム目の積で折れ線グラフを書く&lt;/h1&gt;
-&lt;blockquote&gt;
-&lt;p&gt;plot(d$V1, d$V2*d$V3, type="l")
-```&lt;/p&gt;
-&lt;/blockquote&gt;</summary><category term="memo"></category></entry><entry><title>Pelicanメモ</title><link href="http://blog.shigepon.info/blog/2016/10/25/pelican-memo/" rel="alternate"></link><updated>2016-10-25T15:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-10-25:blog/2016/10/25/pelican-memo/</id><summary type="html">&lt;p&gt;pythonでブログを書くアプリ「&lt;a href="http://docs.getpelican.com/en/stable/"&gt;Pelican&lt;/a&gt;」についてメモ&lt;/p&gt;
+&lt;h2&gt;Rでプロット&lt;/h2&gt;
+&lt;p&gt;Rを入れておくとプロット用のソフトを入れなくてもプロット出来る。
+表データの計算結果を表示するのも手軽で便利。&lt;/p&gt;
+&lt;p&gt;参考：
++ [plot()関数を使った散布図によるデータの視覚化:http://monge.tec.fukuoka-u.ac.jp/R_analysis/graphics_plot01.html]&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ R
+&lt;span class="c1"&gt;# ヘッダ無し。カンマ区切りのcsvを読み込む。カラムは最低3列ないとエラーが出るので、2列データの場合は3列目にダミーデータを入れるとかしたら良さそう？&lt;/span&gt;
+&amp;gt; d &amp;lt;- read.table&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;data.csv&amp;quot;&lt;/span&gt;, &lt;span class="nv"&gt;sep&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;,&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="c1"&gt;# x軸を1カラム目、y軸を2カラム目でプロット&lt;/span&gt;
+&amp;gt; plot&lt;span class="o"&gt;(&lt;/span&gt;d&lt;span class="nv"&gt;$V1&lt;/span&gt;, d&lt;span class="nv"&gt;$V2&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="c1"&gt;# x軸を1カラム目、y軸を2カラム目で折れ線グラフを書く&lt;/span&gt;
+&amp;gt; plot&lt;span class="o"&gt;(&lt;/span&gt;d&lt;span class="nv"&gt;$V1&lt;/span&gt;, d&lt;span class="nv"&gt;$V2&lt;/span&gt;, &lt;span class="nv"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;l&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="c1"&gt;# x軸を1カラム目、y軸を2カラム目と3カラム目の積で折れ線グラフを書く&lt;/span&gt;
+&amp;gt; plot&lt;span class="o"&gt;(&lt;/span&gt;d&lt;span class="nv"&gt;$V1&lt;/span&gt;, d&lt;span class="nv"&gt;$V2&lt;/span&gt;*d&lt;span class="nv"&gt;$V3&lt;/span&gt;, &lt;span class="nv"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;l&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="memo"></category></entry><entry><title>Pelicanメモ</title><link href="http://blog.shigepon.info/blog/2016/10/25/pelican-memo/" rel="alternate"></link><updated>2016-10-25T15:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-10-25:blog/2016/10/25/pelican-memo/</id><summary type="html">&lt;p&gt;pythonでブログを書くアプリ「&lt;a href="http://docs.getpelican.com/en/stable/"&gt;Pelican&lt;/a&gt;」についてメモ&lt;/p&gt;
 &lt;h2&gt;記事の並び替え方法を変える&lt;/h2&gt;
 &lt;p&gt;ARTICLE_ORDER_BYに文字列で指定する。関数で定義することも出来るみたいだが、まだ方法が分からない。&lt;/p&gt;
 &lt;p&gt;pelicanconf.pyを編集&lt;/p&gt;
