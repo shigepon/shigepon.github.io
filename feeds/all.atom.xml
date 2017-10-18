@@ -1,5 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/all.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2017-04-13T20:40:00+09:00</updated><entry><title>IPが変わったら自動でufwの設定変えるスクリプトをなでしこ2で組んでみた</title><link href="http://blog.shigepon.info/blog/2017/04/13/modify_ufw_setting_automatically_from_remote_server/" rel="alternate"></link><updated>2017-04-13T20:40:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2017-04-13:blog/2017/04/13/modify_ufw_setting_automatically_from_remote_server/</id><summary type="html">&lt;p&gt;うちではVPSサーバ の負荷を下げるためとか便利だからとかの理由で家のサーバからVPSサーバにアクセスすることが多いんだけど、IPがときたま変わるので、その度にufwとかの設定をやりかえないといけないのが面倒だったので、色々調べてなんとか自動で設定変更出来るスクリプトを組んでみた。セキュリティ的にびみょーな気がしないでもないけど、IPがいつの間にか変わってDBの更新が弾かれたーとかよりましなので、やってみた。&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/all.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2017-04-13T20:40:00+09:00</updated><entry><title>作業メモ(2017-10-18)</title><link href="http://blog.shigepon.info/blog/2017/10/18/memo_171018/" rel="alternate"></link><updated>2016-10-29T20:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-10-18:blog/2017/10/18/memo_171018/</id><summary type="html">&lt;h2&gt;VirtualBox上のUbuntuとMac間でフォルダ共有&lt;/h2&gt;
+&lt;p&gt;参考:
++ [UbuntuとMacとのフォルダ共有方法@Virtual Box:https://gijutsutecho.wordpress.com/2015/08/17/ubuntu%E3%81%A8mac%E3%81%A8%E3%81%AE%E3%83%95%E3%82%A9%E3%83%AB%E3%83%80%E5%85%B1%E6%9C%89%E6%96%B9%E6%B3%95virtual-box/]
++ [Virtualboxの共有フォルダのマウント位置やパーミッションを調整する:http://giraffydev.hatenablog.com/entry/set-share-folder-mount-point-permissions]&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Virtualboxのマネージャーで設定-&amp;gt;共有フォルダでMac上の適当なフォルダ（例としてvb_share_mac）を指定&lt;/li&gt;
+&lt;li&gt;自動マウントしない場合は自動マウントをチェックしなくて良い&lt;/li&gt;
+&lt;li&gt;Ubuntu側の適当なフォルダ（例：/home/ユーザー名/vb_share）に次のコマンドでマウント。権限は全て与える&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo mount -t vboxsf vb_share_mac /home/ユーザー名/vb_share -o &lt;span class="nv"&gt;fmode&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;777,dmode&lt;span class="o"&gt;=&lt;/span&gt;777
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;マウント終了は次のコマンド&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo umount /home/ユーザー名/vb_share
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;出力に行番号を追加&lt;/h2&gt;
+&lt;p&gt;linuxにはnlコマンドがある&lt;/p&gt;
+&lt;p&gt;```hoge.txt
+aaa
+bbb
+ccc&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;$ cat hoge.txt | nl nl -s ','
+     1,aaa
+     2,bbb
+     c,ccc&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;こんな感じ。行頭の空白を消したい場合はsedと組み合わせる
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;$ cat hoge.txt | nl nl -s ',' | sed 's/^ *//g'
+1,aaa
+2,bbb
+c,ccc&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;csvっぽく出来る
+
+sedで良く使うメモ
+------------------------
+
+sedはすぐ忘れる。
+
+参考：
++ [sed コマンド:https://hydrocul.github.io/wiki/commands/sed.html]
++ [sedコマンドで覚えておきたい使い方12個(+3個):https://orebibou.com/2015/07/sed%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%81%A7%E8%A6%9A%E3%81%88%E3%81%A6%E3%81%8A%E3%81%8D%E3%81%9F%E3%81%84%E4%BD%BF%E3%81%84%E6%96%B912%E5%80%8B/#i-6]
+
+### 置換（文字列削除にも使える）
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;$ sed 's/正規表現/置換文字列/g'&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;### 行削除
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;$ sed '/正規表現/d'&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;### 指定行だけ表示
+
+文字列の編集じゃないけど、便利。
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;$ sed -n 行番号p
+$ sed -n 開始行番号,終了行番号p&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Rでプロット
+------------------------
+
+Rを入れておくとプロット用のソフトを入れなくてもプロット出来る。
+表データの計算結果を表示するのも手軽で便利。
+
+参考：
++ [plot()関数を使った散布図によるデータの視覚化:http://monge.tec.fukuoka-u.ac.jp/R_analysis/graphics_plot01.html]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;$ R&lt;/p&gt;
+&lt;h1&gt;ヘッダ無し。カンマ区切りのcsvを読み込む。カラムは最低3列ないとエラーが出るので、2列データの場合は3列目にダミーデータを入れるとかしたら良さそう？&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;d &amp;lt;- read.table("data.csv", sep=",")&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1&gt;x軸を1カラム目、y軸を2カラム目でプロット&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;plot(d$V1, d$V2)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1&gt;x軸を1カラム目、y軸を2カラム目で折れ線グラフを書く&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;plot(d$V1, d$V2, type="l")&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1&gt;x軸を1カラム目、y軸を2カラム目と3カラム目の積で折れ線グラフを書く&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;plot(d$V1, d$V2*d$V3, type="l")
+```&lt;/p&gt;
+&lt;/blockquote&gt;</summary><category term="memo"></category></entry><entry><title>IPが変わったら自動でufwの設定変えるスクリプトをなでしこ2で組んでみた</title><link href="http://blog.shigepon.info/blog/2017/04/13/modify_ufw_setting_automatically_from_remote_server/" rel="alternate"></link><updated>2017-04-13T20:40:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2017-04-13:blog/2017/04/13/modify_ufw_setting_automatically_from_remote_server/</id><summary type="html">&lt;p&gt;うちではVPSサーバ の負荷を下げるためとか便利だからとかの理由で家のサーバからVPSサーバにアクセスすることが多いんだけど、IPがときたま変わるので、その度にufwとかの設定をやりかえないといけないのが面倒だったので、色々調べてなんとか自動で設定変更出来るスクリプトを組んでみた。セキュリティ的にびみょーな気がしないでもないけど、IPがいつの間にか変わってDBの更新が弾かれたーとかよりましなので、やってみた。&lt;/p&gt;
 &lt;p&gt;ソースは需要ないと思うのでアップしない。やったこととポイントだけ書いておく。&lt;/p&gt;
 &lt;h2&gt;やったこと&lt;/h2&gt;
 &lt;p&gt;&lt;a href="http://www.ugtop.com/spill.shtml"&gt;確認くん&lt;/a&gt;でIPを調べて、IPが変わってたらsshでコマンドを叩く。IPは保存しておく。んで、これをcronジョブで定期的にやる。&lt;/p&gt;

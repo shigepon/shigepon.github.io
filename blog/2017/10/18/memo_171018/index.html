@@ -2,7 +2,7 @@
 <html lang="ja"
 >
 <head>
-    <title>djangoのModelFormでMultiWidgetを使って見る - shigeponが関心のある技術情報など</title>
+    <title>作業メモ(2017-10-18) - shigeponが関心のある技術情報など</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -10,22 +10,21 @@
 
 
 
-<link rel="canonical" href="http://blog.shigepon.info/blog/2015/01/24/django-modelform-multiwidget/">
+<link rel="canonical" href="http://blog.shigepon.info/blog/2017/10/18/memo_171018/">
 
-        <meta name="author" content="shigepon" />
-        <meta name="keywords" content="python,django" />
-        <meta property="modified" content="2015-01-24" />
+        <meta name="author" content="thoz" />
+        <meta name="keywords" content="memo" />
+        <meta property="modified" content="2016-10-29" />
 
         <meta property="og:site_name" content="shigeponが関心のある技術情報など" />
         <meta property="og:type" content="article"/>
-        <meta property="og:title" content="djangoのModelFormでMultiWidgetを使って見る"/>
-        <meta property="og:url" content="http://blog.shigepon.info/blog/2015/01/24/django-modelform-multiwidget/"/>
+        <meta property="og:title" content="作業メモ(2017-10-18)"/>
+        <meta property="og:url" content="http://blog.shigepon.info/blog/2017/10/18/memo_171018/"/>
         <meta property="og:description" content=""/>
-        <meta property="article:published_time" content="2015-01-24" />
-            <meta property="article:section" content="python" />
-            <meta property="article:tag" content="python" />
-            <meta property="article:tag" content="django" />
-            <meta property="article:author" content="shigepon" />
+        <meta property="article:published_time" content="2017-10-18" />
+            <meta property="article:section" content="memo" />
+            <meta property="article:tag" content="memo" />
+            <meta property="article:author" content="thoz" />
 
     <meta name="twitter:card" content="summary">
         <meta name="twitter:site" content="@shigepon">
@@ -79,10 +78,10 @@ shigeponが関心のある技術情報など            </a>
         <article>
             <header class="page-header">
                 <h1>
-                    <a href="http://blog.shigepon.info/blog/2015/01/24/django-modelform-multiwidget/"
+                    <a href="http://blog.shigepon.info/blog/2017/10/18/memo_171018/"
                        rel="bookmark"
-                       title="Permalink to djangoのModelFormでMultiWidgetを使って見る">
-                        djangoのModelFormでMultiWidgetを使って見る
+                       title="Permalink to 作業メモ(2017-10-18)">
+                        作業メモ(2017-10-18)
                     </a>
                 </h1>
             </header>
@@ -92,82 +91,116 @@ shigeponが関心のある技術情報など            </a>
 <footer class="post-info">
     <span class="label label-default">Date</span>
     <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2015-01-24T17:23:07+09:00"> 土 24 1月 2015</time>
+        <i class="fa fa-calendar"></i><time datetime="2017-10-18T14:30:00+09:00"> 水 18 10月 2017</time>
     </span>
 
 
 
 <span class="label label-default">Tags</span>
-	<a href="http://blog.shigepon.info/tag/python.html">python</a>
-        /
-	<a href="http://blog.shigepon.info/tag/django.html">django</a>
+	<a href="http://blog.shigepon.info/tag/memo.html">memo</a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
-                <p>ModelFormでModelの１つのカラムを複数のフォーム要素（inputとか）で表現したかったので調べてみた。フォーム要素を適当に作って、clean_xxxの時にくっつけるとかそんな実装の仕方も出来るみたいだけど、MultiWidgetを使うと、Modelの１つのカラムに対して複数のinput要素を使うことが出来るみたいなので、使ってみた。名前のカラムに対して姓、名の入力要素を作るとかそんなのが出来るみたい。</p>
-<p>まずはMultiWidgetを継承したクラスを作る</p>
-<div class="highlight"><pre><span></span><span class="c1"># models.py</span>
-<span class="kn">from</span> <span class="nn">django.forms.widgets</span> <span class="kn">import</span> <span class="n">MultiWidget</span>
-
-<span class="k">class</span> <span class="nc">NameWidget</span><span class="p">(</span><span class="n">MultiWidget</span><span class="p">):</span>
+                <h2>VirtualBox上のUbuntuとMac間でフォルダ共有</h2>
+<p>参考:
++ [UbuntuとMacとのフォルダ共有方法@Virtual Box:https://gijutsutecho.wordpress.com/2015/08/17/ubuntu%E3%81%A8mac%E3%81%A8%E3%81%AE%E3%83%95%E3%82%A9%E3%83%AB%E3%83%80%E5%85%B1%E6%9C%89%E6%96%B9%E6%B3%95virtual-box/]
++ [Virtualboxの共有フォルダのマウント位置やパーミッションを調整する:http://giraffydev.hatenablog.com/entry/set-share-folder-mount-point-permissions]</p>
+<ul>
+<li>Virtualboxのマネージャーで設定-&gt;共有フォルダでMac上の適当なフォルダ（例としてvb_share_mac）を指定</li>
+<li>自動マウントしない場合は自動マウントをチェックしなくて良い</li>
+<li>Ubuntu側の適当なフォルダ（例：/home/ユーザー名/vb_share）に次のコマンドでマウント。権限は全て与える</li>
+</ul>
+<div class="highlight"><pre><span></span>$ sudo mount -t vboxsf vb_share_mac /home/ユーザー名/vb_share -o <span class="nv">fmode</span><span class="o">=</span>777,dmode<span class="o">=</span>777
 </pre></div>
 
 
-<p>次にクラスに対して、__init__をオーバーライドし、widgetとしてTextInputのフォームを2つ登録してみた。コードはこんな感じ。</p>
-<!-- more -->
-
-<div class="highlight"><pre><span></span><span class="c1"># models.py</span>
-<span class="k">class</span> <span class="nc">NameWidget</span><span class="p">(</span><span class="n">MultiWidget</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="n">widgets</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;placeholder&quot;</span><span class="p">:</span><span class="s2">&quot;姓&quot;</span><span class="p">})),</span>
-                <span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;placeholder&quot;</span><span class="p">:</span><span class="s2">&quot;名&quot;</span><span class="p">}))</span>
-                <span class="p">)</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">NameWidget</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">widgets</span><span class="p">,</span><span class="n">attrs</span><span class="p">)</span>
+<ul>
+<li>マウント終了は次のコマンド</li>
+</ul>
+<div class="highlight"><pre><span></span>$ sudo umount /home/ユーザー名/vb_share
 </pre></div>
 
 
-<p>widgetsはリストでもタプルでも良さげ？ともかくやることはwidgetのリストかタプルを作って、親クラス(MultiWidget)のinitを呼び出すこと。</p>
-<p>次に、decompress、value_from_datadictメソッドを書く。decompressはカラムの値を複数のフォームに振り分ける手順、value_from_datadictはModelFormの入力データからModelのカラムに入れる値を作る手順を記述する。姓名を半角スペースで繋げて、半角スペースで分割するように作ってみた。</p>
-<div class="highlight"><pre><span></span><span class="c1"># models.py</span>
-<span class="k">class</span> <span class="nc">NameWidget</span><span class="p">(</span><span class="n">MultiWidget</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">attrs</span><span class="o">=</span><span class="p">{}):</span>
-        <span class="n">attrsSei</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">attrsMei</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">widgets</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="n">attrsSei</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;placeholder&quot;</span><span class="p">:</span><span class="s2">&quot;姓&quot;</span><span class="p">})),</span>
-                <span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="n">attrsMei</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;placeholder&quot;</span><span class="p">:</span><span class="s2">&quot;名&quot;</span><span class="p">}))</span>
-                <span class="p">)</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">NameWidget</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">widgets</span><span class="p">,</span><span class="n">attrs</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">decompress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
-            <span class="n">names</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="p">(</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">names</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">None</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">value_from_datadict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">files</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
-        <span class="n">ulist</span> <span class="o">=</span> <span class="p">[</span><span class="n">widget</span><span class="o">.</span><span class="n">value_from_datadict</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">files</span><span class="p">,</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;_{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">widget</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">widgets</span><span class="p">)]</span>
-        <span class="k">return</span> <span class="s2">u&quot;{0} {1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">u&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">),</span><span class="n">ulist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">u&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">))</span>
+<h2>出力に行番号を追加</h2>
+<p>linuxにはnlコマンドがある</p>
+<p>```hoge.txt
+aaa
+bbb
+ccc</p>
+<div class="highlight"><pre><span></span>
 </pre></div>
 
 
-<p>あとはこのWidgetを使いたい要素にwidgetとして指定すればおk</p>
-<div class="highlight"><pre><span></span><span class="c1"># models.py</span>
-<span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">forms</span>
-<span class="o">...</span><span class="err">（上のコードなど）</span><span class="o">...</span>
-<span class="k">class</span> <span class="nc">HogeForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">u&#39;名前&#39;</span><span class="p">,</span><span class="n">widget</span><span class="o">=</span><span class="n">NameWidget</span><span class="p">())</span>
+<p>$ cat hoge.txt | nl nl -s ','
+     1,aaa
+     2,bbb
+     c,ccc</p>
+<div class="highlight"><pre><span></span>こんな感じ。行頭の空白を消したい場合はsedと組み合わせる
 </pre></div>
 
 
-<p>このコードだと姓、名のフォームが2行に表示されている。1行にしたい場合はインライン指定とかそんなのを付けたクラスをattrsで指定して後はcssでやっちゃえばいいんじゃないかなと</p>
-<div class="highlight"><pre><span></span><span class="c1"># models.py</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">u&#39;名前&#39;</span><span class="p">,</span><span class="n">widget</span><span class="o">=</span><span class="n">NameWidget</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span><span class="s2">&quot;inline&quot;</span><span class="p">}))</span>
+<p>$ cat hoge.txt | nl nl -s ',' | sed 's/^ *//g'
+1,aaa
+2,bbb
+c,ccc</p>
+<div class="highlight"><pre><span></span>csvっぽく出来る
+
+sedで良く使うメモ
+------------------------
+
+sedはすぐ忘れる。
+
+参考：
++ [sed コマンド:https://hydrocul.github.io/wiki/commands/sed.html]
++ [sedコマンドで覚えておきたい使い方12個(+3個):https://orebibou.com/2015/07/sed%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%81%A7%E8%A6%9A%E3%81%88%E3%81%A6%E3%81%8A%E3%81%8D%E3%81%9F%E3%81%84%E4%BD%BF%E3%81%84%E6%96%B912%E5%80%8B/#i-6]
+
+### 置換（文字列削除にも使える）
 </pre></div>
 
 
-<p>とかそんな感じ</p>
-<p>他にももっと細かくhtmlを記述出来るformat_outputとかあるみたいだけど、試してないので省略。なくても取りあえず出来る。</p>
-<p>参考：<a href="https://docs.djangoproject.com/en/1.7/ref/forms/widgets/#django.forms.MultiWidget">Django英語ドキュメント</a></p>
+<p>$ sed 's/正規表現/置換文字列/g'</p>
+<div class="highlight"><pre><span></span>### 行削除
+</pre></div>
+
+
+<p>$ sed '/正規表現/d'</p>
+<div class="highlight"><pre><span></span>### 指定行だけ表示
+
+文字列の編集じゃないけど、便利。
+</pre></div>
+
+
+<p>$ sed -n 行番号p
+$ sed -n 開始行番号,終了行番号p</p>
+<div class="highlight"><pre><span></span>Rでプロット
+------------------------
+
+Rを入れておくとプロット用のソフトを入れなくてもプロット出来る。
+表データの計算結果を表示するのも手軽で便利。
+
+参考：
++ [plot()関数を使った散布図によるデータの視覚化:http://monge.tec.fukuoka-u.ac.jp/R_analysis/graphics_plot01.html]
+</pre></div>
+
+
+<p>$ R</p>
+<h1>ヘッダ無し。カンマ区切りのcsvを読み込む。カラムは最低3列ないとエラーが出るので、2列データの場合は3列目にダミーデータを入れるとかしたら良さそう？</h1>
+<blockquote>
+<p>d &lt;- read.table("data.csv", sep=",")</p>
+</blockquote>
+<h1>x軸を1カラム目、y軸を2カラム目でプロット</h1>
+<blockquote>
+<p>plot(d$V1, d$V2)</p>
+</blockquote>
+<h1>x軸を1カラム目、y軸を2カラム目で折れ線グラフを書く</h1>
+<blockquote>
+<p>plot(d$V1, d$V2, type="l")</p>
+</blockquote>
+<h1>x軸を1カラム目、y軸を2カラム目と3カラム目の積で折れ線グラフを書く</h1>
+<blockquote>
+<p>plot(d$V1, d$V2*d$V3, type="l")
+```</p>
+</blockquote>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- Google Adsense below content -->
 <ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-3165642025902490" data-ad-slot="1749996500"></ins>
@@ -180,11 +213,11 @@ shigeponが関心のある技術情報など            </a>
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
-        <li><a href="http://blog.shigepon.info/blog/2015/07/01/profiling-django/">djangoをプロファイリングする</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2014/06/25/django-with-bootstrap/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(2):Bootstrapを使ってみる</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2014/06/18/start-django-project/">Django1.6.5でPostgreSQLとBootstrap使ったアプリを作ってみた(1):とりあえずDjangoプロジェクトとアプリを作ってみた</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2015/01/06/python-decorator/">pythonのデコレーターをdjangoで使って見る</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2014/11/25/use-django-allauth/">django-allauthを使ってみた</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2014/03/01/vim-memo/">vim memo</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2016/10/25/python_libraries_memo/">pythonのライブラリメモ</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2014/04/09/git-memo/">git memo</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2016/01/07/mt4-memo/">MT4 memo</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2014/11/23/django-memo/">Django Memo</a></li>
     </ul>
 </section>
     <hr />
