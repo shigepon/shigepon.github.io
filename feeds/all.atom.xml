@@ -1,8 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/all.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2017-10-17T14:30:00+09:00</updated><entry><title>作業メモ(2017-10-18)</title><link href="http://blog.shigepon.info/blog/2017/10/17/memo_171018/" rel="alternate"></link><updated>2017-10-17T14:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-10-17:blog/2017/10/17/memo_171018/</id><summary type="html">&lt;h2&gt;VirtualBox上のUbuntuとMac間でフォルダ共有&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/all.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2017-10-29T22:30:00+09:00</updated><entry><title>pythonメモ</title><link href="http://blog.shigepon.info/blog/2017/10/29/python_memo/" rel="alternate"></link><updated>2017-10-29T22:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-10-29:blog/2017/10/29/python_memo/</id><summary type="html">&lt;h2&gt;リストを日付でソート&lt;/h2&gt;
+&lt;p&gt;参考： &lt;a href="http://akiyoko.hatenablog.jp/entry/2014/09/26/235300"&gt;Python でリストのソートまとめ - akiyoko blog&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;lambda式とか使える。日付の入った要素があったりして、日付でソートしたい場合は&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;datetime&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;datetime&lt;/span&gt;
+&lt;span class="n"&gt;not_sort_list&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+  &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;id&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;datetime&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2017&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)},&lt;/span&gt;
+  &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;id&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;datetime&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2017&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;19&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)},&lt;/span&gt;
+  &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;id&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;datetime&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2017&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;29&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)},&lt;/span&gt;
+  &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;id&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;datetime&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2017&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;19&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)}&lt;/span&gt;
+&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;sorted_list&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;sorted&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;not_sort_list&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;lambda&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;timestamp&lt;/span&gt;&lt;span class="p"&gt;()))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これで日付順でソートできる&lt;/p&gt;
+&lt;p&gt;※　python3&lt;/p&gt;
+&lt;h2&gt;データをJSONファイルで保存する&lt;/h2&gt;
+&lt;p&gt;json.dumps()でいけるが、要素にdatetimeなどが入っているとjson化してくれないのでちょっと手間が必要&lt;/p&gt;
+&lt;p&gt;参考：
++ &lt;a href="http://gihyo.jp/dev/serial/01/pythonhacks/0011"&gt;第11回　標準になったjsonモジュール：Python 3.0 Hacks｜gihyo.jp … 技術評論社&lt;/a&gt;
++ &lt;a href="https://qiita.com/podhmo/items/dc748a9d40026c28556d"&gt;pythonでjson出力する際で対応していない型(e.g. datetime)の値を変換しながら出力したい - Qiita&lt;/a&gt;
++ &lt;a href="http://diveintopython3-ja.rdy.jp/serializing.html"&gt;Pythonオブジェクトをシリアライズする - Dive Into Python 3 日本語版&lt;/a&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;datetime_to_str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;o&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;isinstance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;datetime&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+      &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;o&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;isoformat&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="k"&gt;raise&lt;/span&gt; &lt;span class="ne"&gt;TypeError&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;repr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot; is not JSON serializable&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;str_to_datetime&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;o&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;date&amp;quot;&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;o&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+      &lt;span class="n"&gt;o&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;date&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;datetime&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;strptime&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;date&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;%Y-%m-&lt;/span&gt;&lt;span class="si"&gt;%d&lt;/span&gt;&lt;span class="s2"&gt;T%H:%M:%S&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;o&lt;/span&gt;
+  &lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;dump.json&amp;quot;&lt;/span&gt;
+  &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="nb"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;w&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;encoding&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;utf-8&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dump&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sorted_list&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;default&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;datetime_to_str&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;quot;&lt;/span&gt;
+  &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exists&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="nb"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;r&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+      &lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;object_hook&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;str_to_datetime&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;日時の差分を秒単位で出す&lt;/h2&gt;
+&lt;p&gt;参考：&lt;a href="https://qiita.com/puriketu99/items/568befc13510ee4d587f"&gt;pythonで日時の差分を秒単位で出す方法 - Qiita&lt;/a&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;datetime&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;datetime&lt;/span&gt;
+&lt;span class="n"&gt;from_date&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;datetime&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2017&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;to_date&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;datetime&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2017&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;21&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;to_date&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;from_date&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;total_seconds&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;リストから重複を省く&lt;/h2&gt;
+&lt;p&gt;参考：&lt;a href="http://www.lifewithpython.com/2013/11/python-remove-duplicates-from-lists.html"&gt;Python Tips：リストから重複した要素を削除したい - Life with Python&lt;/a&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sorted_list&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;uniq_list&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;sorted_list&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;uniq_list&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;uniq_list&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;他にもあるけど、まだ使ってない。&lt;/p&gt;</summary><category term="python"></category><category term="memo"></category></entry><entry><title>作業メモ(2017-10-18)</title><link href="http://blog.shigepon.info/blog/2017/10/17/memo_171018/" rel="alternate"></link><updated>2017-10-17T14:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-10-17:blog/2017/10/17/memo_171018/</id><summary type="html">&lt;h2&gt;VirtualBox上のUbuntuとMac間でフォルダ共有&lt;/h2&gt;
 &lt;p&gt;参考:
-+ [UbuntuとMacとのフォルダ共有方法@Virtual Box:https://gijutsutecho.wordpress.com/2015/08/17/ubuntu%E3%81%A8mac%E3%81%A8%E3%81%AE%E3%83%95%E3%82%A9%E3%83%AB%E3%83%80%E5%85%B1%E6%9C%89%E6%96%B9%E6%B3%95virtual-box/]
-+ [Virtualboxの共有フォルダのマウント位置やパーミッションを調整する:http://giraffydev.hatenablog.com/entry/set-share-folder-mount-point-permissions]&lt;/p&gt;
++ &lt;a href="https://gijutsutecho.wordpress.com/2015/08/17/ubuntu%E3%81%A8mac%E3%81%A8%E3%81%AE%E3%83%95%E3%82%A9%E3%83%AB%E3%83%80%E5%85%B1%E6%9C%89%E6%96%B9%E6%B3%95virtual-box/"&gt;UbuntuとMacとのフォルダ共有方法@Virtual Box&lt;/a&gt;
++ &lt;a href="http://giraffydev.hatenablog.com/entry/set-share-folder-mount-point-permissions"&gt;Virtualboxの共有フォルダのマウント位置やパーミッションを調整する&lt;/a&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Virtualboxのマネージャーで設定-&amp;gt;共有フォルダでMac上の適当なフォルダ（例としてvb_share_mac）を指定&lt;/li&gt;
 &lt;li&gt;自動マウントしない場合は自動マウントをチェックしなくて良い&lt;/li&gt;
@@ -47,8 +109,8 @@ c,ccc
 &lt;h2&gt;sedで良く使うメモ&lt;/h2&gt;
 &lt;p&gt;sedはすぐ忘れる。&lt;/p&gt;
 &lt;p&gt;参考：
-+ [sed コマンド:https://hydrocul.github.io/wiki/commands/sed.html]
-+ [sedコマンドで覚えておきたい使い方12個(+3個):https://orebibou.com/2015/07/sed%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%81%A7%E8%A6%9A%E3%81%88%E3%81%A6%E3%81%8A%E3%81%8D%E3%81%9F%E3%81%84%E4%BD%BF%E3%81%84%E6%96%B912%E5%80%8B/#i-6]&lt;/p&gt;
++ &lt;a href="https://hydrocul.github.io/wiki/commands/sed.html"&gt;sed コマンド&lt;/a&gt;
++ &lt;a href="https://orebibou.com/2015/07/sed%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%81%A7%E8%A6%9A%E3%81%88%E3%81%A6%E3%81%8A%E3%81%8D%E3%81%9F%E3%81%84%E4%BD%BF%E3%81%84%E6%96%B912%E5%80%8B/#i-6"&gt;sedコマンドで覚えておきたい使い方12個(+3個)&lt;/a&gt;&lt;/p&gt;
 &lt;h4&gt;置換（文字列削除にも使える）&lt;/h4&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed &lt;span class="s1"&gt;&amp;#39;s/正規表現/置換文字列/g&amp;#39;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -70,7 +132,7 @@ $ sed -n 開始行番号,終了行番号p
 &lt;p&gt;Rを入れておくとプロット用のソフトを入れなくてもプロット出来る。
 表データの計算結果を表示するのも手軽で便利。&lt;/p&gt;
 &lt;p&gt;参考：
-+ [plot()関数を使った散布図によるデータの視覚化:http://monge.tec.fukuoka-u.ac.jp/R_analysis/graphics_plot01.html]&lt;/p&gt;
++ &lt;a href="http://monge.tec.fukuoka-u.ac.jp/R_analysis/graphics_plot01.html"&gt;plot()関数を使った散布図によるデータの視覚化&lt;/a&gt;&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ R
 &lt;span class="c1"&gt;# ヘッダ無し。カンマ区切りのcsvを読み込む。カラムは最低3列ないとエラーが出るので、2列データの場合は3列目にダミーデータを入れるとかしたら良さそう？&lt;/span&gt;
 &amp;gt; d &amp;lt;- read.table&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;data.csv&amp;quot;&lt;/span&gt;, &lt;span class="nv"&gt;sep&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;,&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
@@ -80,7 +142,24 @@ $ sed -n 開始行番号,終了行番号p
 &amp;gt; plot&lt;span class="o"&gt;(&lt;/span&gt;d&lt;span class="nv"&gt;$V1&lt;/span&gt;, d&lt;span class="nv"&gt;$V2&lt;/span&gt;, &lt;span class="nv"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;l&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
 &lt;span class="c1"&gt;# x軸を1カラム目、y軸を2カラム目と3カラム目の積で折れ線グラフを書く&lt;/span&gt;
 &amp;gt; plot&lt;span class="o"&gt;(&lt;/span&gt;d&lt;span class="nv"&gt;$V1&lt;/span&gt;, d&lt;span class="nv"&gt;$V2&lt;/span&gt;*d&lt;span class="nv"&gt;$V3&lt;/span&gt;, &lt;span class="nv"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;l&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</summary><category term="memo"></category></entry><entry><title>IPが変わったら自動でufwの設定変えるスクリプトをなでしこ2で組んでみた</title><link href="http://blog.shigepon.info/blog/2017/04/13/modify_ufw_setting_automatically_from_remote_server/" rel="alternate"></link><updated>2017-04-13T20:40:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2017-04-13:blog/2017/04/13/modify_ufw_setting_automatically_from_remote_server/</id><summary type="html">&lt;p&gt;うちではVPSサーバ の負荷を下げるためとか便利だからとかの理由で家のサーバからVPSサーバにアクセスすることが多いんだけど、IPがときたま変わるので、その度にufwとかの設定をやりかえないといけないのが面倒だったので、色々調べてなんとか自動で設定変更出来るスクリプトを組んでみた。セキュリティ的にびみょーな気がしないでもないけど、IPがいつの間にか変わってDBの更新が弾かれたーとかよりましなので、やってみた。&lt;/p&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;目盛り&lt;/h4&gt;
+&lt;p&gt;目盛りの数を指定するにはxaxpとyaxpを指定する。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="x"&gt;&amp;gt; plot(d&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;V1&lt;/span&gt;&lt;span class="x"&gt;, d&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;V2&lt;/span&gt;&lt;span class="x"&gt;, type=&amp;quot;l&amp;quot;,yaxp=c(-1,1,15))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;という書き方だとy軸を-1から1からとして、15個目盛りを用意する形になる。&lt;/p&gt;
+&lt;h4&gt;グリッド&lt;/h4&gt;
+&lt;p&gt;グリッド付きにするにはgridを付ける&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="x"&gt;&amp;gt; plot(d&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;V1&lt;/span&gt;&lt;span class="x"&gt;, d&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;V2&lt;/span&gt;&lt;span class="x"&gt;, type=&amp;quot;l&amp;quot;,panel.first=grid())&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;グリッド
+の数を指定したい時はnx=10、ny=10のように指定する。&lt;/p&gt;</summary><category term="memo"></category></entry><entry><title>IPが変わったら自動でufwの設定変えるスクリプトをなでしこ2で組んでみた</title><link href="http://blog.shigepon.info/blog/2017/04/13/modify_ufw_setting_automatically_from_remote_server/" rel="alternate"></link><updated>2017-04-13T20:40:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2017-04-13:blog/2017/04/13/modify_ufw_setting_automatically_from_remote_server/</id><summary type="html">&lt;p&gt;うちではVPSサーバ の負荷を下げるためとか便利だからとかの理由で家のサーバからVPSサーバにアクセスすることが多いんだけど、IPがときたま変わるので、その度にufwとかの設定をやりかえないといけないのが面倒だったので、色々調べてなんとか自動で設定変更出来るスクリプトを組んでみた。セキュリティ的にびみょーな気がしないでもないけど、IPがいつの間にか変わってDBの更新が弾かれたーとかよりましなので、やってみた。&lt;/p&gt;
 &lt;p&gt;ソースは需要ないと思うのでアップしない。やったこととポイントだけ書いておく。&lt;/p&gt;
 &lt;h2&gt;やったこと&lt;/h2&gt;
 &lt;p&gt;&lt;a href="http://www.ugtop.com/spill.shtml"&gt;確認くん&lt;/a&gt;でIPを調べて、IPが変わってたらsshでコマンドを叩く。IPは保存しておく。んで、これをcronジョブで定期的にやる。&lt;/p&gt;
