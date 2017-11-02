@@ -5,42 +5,49 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/</loc>
-<lastmod>2017-10-29T22:46:34-00:00</lastmod>
+<lastmod>2017-11-02T17:36:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/archives.html</loc>
-<lastmod>2017-10-29T22:46:34-00:00</lastmod>
+<lastmod>2017-11-02T17:36:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/tags.html</loc>
-<lastmod>2017-10-29T22:46:34-00:00</lastmod>
+<lastmod>2017-11-02T17:36:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/categories.html</loc>
-<lastmod>2017-10-29T22:46:34-00:00</lastmod>
+<lastmod>2017-11-02T17:36:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://blog.shigepon.info/blog/2017/10/29/python_memo/</loc>
-<lastmod>2017-10-29T22:30:00+09:00</lastmod>
+<loc>http://blog.shigepon.info/blog/2017/11/02/linux_memo/</loc>
+<lastmod>2017-11-02T17:30:00+09:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/blog/2017/10/17/memo_171018/</loc>
-<lastmod>2017-10-17T14:30:00+09:00</lastmod>
+<lastmod>2017-11-02T15:30:00+09:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://blog.shigepon.info/blog/2017/10/29/python_memo/</loc>
+<lastmod>2017-10-29T22:30:00+09:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -887,7 +894,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/blog/categories/memo/</loc>
-<lastmod>2017-10-29T22:30:00+09:00</lastmod>
+<lastmod>2017-11-02T17:30:00+09:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -957,7 +964,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/author/thoz.html</loc>
-<lastmod>2017-10-29T22:30:00+09:00</lastmod>
+<lastmod>2017-11-02T17:30:00+09:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>

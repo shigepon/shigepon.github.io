@@ -1,5 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/all.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2017-10-29T22:30:00+09:00</updated><entry><title>pythonメモ</title><link href="http://blog.shigepon.info/blog/2017/10/29/python_memo/" rel="alternate"></link><updated>2017-10-29T22:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-10-29:blog/2017/10/29/python_memo/</id><summary type="html">&lt;h2&gt;リストを日付でソート&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/all.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2017-11-02T17:30:00+09:00</updated><entry><title>linuxメモ</title><link href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/" rel="alternate"></link><updated>2017-11-02T17:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-11-02:blog/2017/11/02/linux_memo/</id><summary type="html">&lt;h2&gt;grepの良く使うオプション&lt;/h2&gt;
+&lt;h4&gt;行番号を表示&lt;/h4&gt;
+&lt;p&gt;nオプションを使う&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cat hoge &lt;span class="p"&gt;|&lt;/span&gt; grep -n &lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;前後数行を表示&lt;/h4&gt;
+&lt;p&gt;前後3行なら&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cat hoge &lt;span class="p"&gt;|&lt;/span&gt; grep -3 &lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考: &lt;a href="http://www.atmarkit.co.jp/flinux/rensai/linuxtips/137greplineplus.html"&gt;grepで該当する行の前後も一緒に表示するには&lt;/a&gt;&lt;/p&gt;
+&lt;h4&gt;指定した文字列に当てはまらないもの&lt;/h4&gt;
+&lt;p&gt;vオプションを使う&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cat hoge &lt;span class="p"&gt;|&lt;/span&gt; grep -v &lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;出力に行番号を追加&lt;/h2&gt;
+&lt;p&gt;linuxにはnlコマンドがある&lt;/p&gt;
+&lt;p&gt;hoge.txtの中身をこんな感じに&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;aaa
+bbb
+ccc
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cat hoge.txt &lt;span class="p"&gt;|&lt;/span&gt; nl nl -s &lt;span class="s1"&gt;&amp;#39;,&amp;#39;&lt;/span&gt;
+     1,aaa
+     2,bbb
+     c,ccc
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じ。行頭の空白を消したい場合はsedと組み合わせる&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cat hoge.txt &lt;span class="p"&gt;|&lt;/span&gt; nl nl -s &lt;span class="s1"&gt;&amp;#39;,&amp;#39;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; sed &lt;span class="s1"&gt;&amp;#39;s/^ *//g&amp;#39;&lt;/span&gt;
+1,aaa
+2,bbb
+c,ccc
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;csvっぽく出来る&lt;/p&gt;
+&lt;h2&gt;sedで良く使うメモ&lt;/h2&gt;
+&lt;p&gt;sedはすぐ忘れる。&lt;/p&gt;
+&lt;p&gt;参考：
++ &lt;a href="https://hydrocul.github.io/wiki/commands/sed.html"&gt;sed コマンド&lt;/a&gt;
++ &lt;a href="https://orebibou.com/2015/07/sed%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%81%A7%E8%A6%9A%E3%81%88%E3%81%A6%E3%81%8A%E3%81%8D%E3%81%9F%E3%81%84%E4%BD%BF%E3%81%84%E6%96%B912%E5%80%8B/#i-6"&gt;sedコマンドで覚えておきたい使い方12個(+3個)&lt;/a&gt;&lt;/p&gt;
+&lt;h4&gt;置換（文字列削除にも使える）&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed &lt;span class="s1"&gt;&amp;#39;s/正規表現/置換文字列/g&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;行削除&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed &lt;span class="s1"&gt;&amp;#39;/正規表現/d&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;指定行だけ表示&lt;/h4&gt;
+&lt;p&gt;文字列の編集じゃないけど、便利。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed -n 行番号p
+$ sed -n 開始行番号,終了行番号p
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="memo"></category><category term="linux"></category></entry><entry><title>pythonメモ</title><link href="http://blog.shigepon.info/blog/2017/10/29/python_memo/" rel="alternate"></link><updated>2017-10-29T22:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-10-29:blog/2017/10/29/python_memo/</id><summary type="html">&lt;h2&gt;リストを日付でソート&lt;/h2&gt;
 &lt;p&gt;参考： &lt;a href="http://akiyoko.hatenablog.jp/entry/2014/09/26/235300"&gt;Python でリストのソートまとめ - akiyoko blog&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;lambda式とか使える。日付の入った要素があったりして、日付でソートしたい場合は&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;datetime&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;datetime&lt;/span&gt;
@@ -61,7 +125,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;他にもあるけど、まだ使ってない。&lt;/p&gt;</summary><category term="python"></category><category term="memo"></category></entry><entry><title>作業メモ(2017-10-18)</title><link href="http://blog.shigepon.info/blog/2017/10/17/memo_171018/" rel="alternate"></link><updated>2017-10-17T14:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-10-17:blog/2017/10/17/memo_171018/</id><summary type="html">&lt;h2&gt;VirtualBox上のUbuntuとMac間でフォルダ共有&lt;/h2&gt;
+&lt;p&gt;他にもあるけど、まだ使ってない。&lt;/p&gt;</summary><category term="python"></category><category term="memo"></category></entry><entry><title>作業メモ(2017-10-18)</title><link href="http://blog.shigepon.info/blog/2017/10/17/memo_171018/" rel="alternate"></link><updated>2017-11-02T15:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-10-17:blog/2017/10/17/memo_171018/</id><summary type="html">&lt;h2&gt;VirtualBox上のUbuntuとMac間でフォルダ共有&lt;/h2&gt;
 &lt;p&gt;参考:
 + &lt;a href="https://gijutsutecho.wordpress.com/2015/08/17/ubuntu%E3%81%A8mac%E3%81%A8%E3%81%AE%E3%83%95%E3%82%A9%E3%83%AB%E3%83%80%E5%85%B1%E6%9C%89%E6%96%B9%E6%B3%95virtual-box/"&gt;UbuntuとMacとのフォルダ共有方法@Virtual Box&lt;/a&gt;
 + &lt;a href="http://giraffydev.hatenablog.com/entry/set-share-folder-mount-point-permissions"&gt;Virtualboxの共有フォルダのマウント位置やパーミッションを調整する&lt;/a&gt;&lt;/p&gt;
@@ -82,52 +146,8 @@
 
 
 &lt;h2&gt;出力に行番号を追加&lt;/h2&gt;
-&lt;p&gt;linuxにはnlコマンドがある&lt;/p&gt;
-&lt;p&gt;hoge.txtの中身をこんな感じに&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;aaa
-bbb
-ccc
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cat hoge.txt &lt;span class="p"&gt;|&lt;/span&gt; nl nl -s &lt;span class="s1"&gt;&amp;#39;,&amp;#39;&lt;/span&gt;
-     1,aaa
-     2,bbb
-     c,ccc
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;こんな感じ。行頭の空白を消したい場合はsedと組み合わせる&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cat hoge.txt &lt;span class="p"&gt;|&lt;/span&gt; nl nl -s &lt;span class="s1"&gt;&amp;#39;,&amp;#39;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; sed &lt;span class="s1"&gt;&amp;#39;s/^ *//g&amp;#39;&lt;/span&gt;
-1,aaa
-2,bbb
-c,ccc
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;csvっぽく出来る&lt;/p&gt;
 &lt;h2&gt;sedで良く使うメモ&lt;/h2&gt;
-&lt;p&gt;sedはすぐ忘れる。&lt;/p&gt;
-&lt;p&gt;参考：
-+ &lt;a href="https://hydrocul.github.io/wiki/commands/sed.html"&gt;sed コマンド&lt;/a&gt;
-+ &lt;a href="https://orebibou.com/2015/07/sed%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%81%A7%E8%A6%9A%E3%81%88%E3%81%A6%E3%81%8A%E3%81%8D%E3%81%9F%E3%81%84%E4%BD%BF%E3%81%84%E6%96%B912%E5%80%8B/#i-6"&gt;sedコマンドで覚えておきたい使い方12個(+3個)&lt;/a&gt;&lt;/p&gt;
-&lt;h4&gt;置換（文字列削除にも使える）&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed &lt;span class="s1"&gt;&amp;#39;s/正規表現/置換文字列/g&amp;#39;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;行削除&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed &lt;span class="s1"&gt;&amp;#39;/正規表現/d&amp;#39;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;指定行だけ表示&lt;/h4&gt;
-&lt;p&gt;文字列の編集じゃないけど、便利。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed -n 行番号p
-$ sed -n 開始行番号,終了行番号p
-&lt;/pre&gt;&lt;/div&gt;
-
-
+&lt;p&gt;&lt;a href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/"&gt;linuxメモ&lt;/a&gt;に移動&lt;/p&gt;
 &lt;h2&gt;Rでプロット&lt;/h2&gt;
 &lt;p&gt;Rを入れておくとプロット用のソフトを入れなくてもプロット出来る。
 表データの計算結果を表示するのも手軽で便利。&lt;/p&gt;

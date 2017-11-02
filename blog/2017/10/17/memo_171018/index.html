@@ -14,7 +14,7 @@
 
         <meta name="author" content="thoz" />
         <meta name="keywords" content="memo" />
-        <meta property="modified" content="2017-10-17" />
+        <meta property="modified" content="2017-11-02" />
 
         <meta property="og:site_name" content="shigeponが関心のある技術情報など" />
         <meta property="og:type" content="article"/>
@@ -122,52 +122,8 @@ shigeponが関心のある技術情報など            </a>
 
 
 <h2>出力に行番号を追加</h2>
-<p>linuxにはnlコマンドがある</p>
-<p>hoge.txtの中身をこんな感じに</p>
-<div class="highlight"><pre><span></span>aaa
-bbb
-ccc
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>$ cat hoge.txt <span class="p">|</span> nl nl -s <span class="s1">&#39;,&#39;</span>
-     1,aaa
-     2,bbb
-     c,ccc
-</pre></div>
-
-
-<p>こんな感じ。行頭の空白を消したい場合はsedと組み合わせる</p>
-<div class="highlight"><pre><span></span>$ cat hoge.txt <span class="p">|</span> nl nl -s <span class="s1">&#39;,&#39;</span> <span class="p">|</span> sed <span class="s1">&#39;s/^ *//g&#39;</span>
-1,aaa
-2,bbb
-c,ccc
-</pre></div>
-
-
-<p>csvっぽく出来る</p>
 <h2>sedで良く使うメモ</h2>
-<p>sedはすぐ忘れる。</p>
-<p>参考：
-+ <a href="https://hydrocul.github.io/wiki/commands/sed.html">sed コマンド</a>
-+ <a href="https://orebibou.com/2015/07/sed%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%81%A7%E8%A6%9A%E3%81%88%E3%81%A6%E3%81%8A%E3%81%8D%E3%81%9F%E3%81%84%E4%BD%BF%E3%81%84%E6%96%B912%E5%80%8B/#i-6">sedコマンドで覚えておきたい使い方12個(+3個)</a></p>
-<h4>置換（文字列削除にも使える）</h4>
-<div class="highlight"><pre><span></span>$ sed <span class="s1">&#39;s/正規表現/置換文字列/g&#39;</span>
-</pre></div>
-
-
-<h4>行削除</h4>
-<div class="highlight"><pre><span></span>$ sed <span class="s1">&#39;/正規表現/d&#39;</span>
-</pre></div>
-
-
-<h4>指定行だけ表示</h4>
-<p>文字列の編集じゃないけど、便利。</p>
-<div class="highlight"><pre><span></span>$ sed -n 行番号p
-$ sed -n 開始行番号,終了行番号p
-</pre></div>
-
-
+<p><a href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/">linuxメモ</a>に移動</p>
 <h2>Rでプロット</h2>
 <p>Rを入れておくとプロット用のソフトを入れなくてもプロット出来る。
 表データの計算結果を表示するのも手軽で便利。</p>
@@ -212,11 +168,11 @@ $ sed -n 開始行番号,終了行番号p
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
-        <li><a href="http://blog.shigepon.info/blog/2017/10/29/python_memo/">pythonメモ</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2015/03/05/uwsgi-memo/">uwsgiメモ</a></li>
         <li><a href="http://blog.shigepon.info/blog/2014/02/10/unity-memo/">unity memo</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2014/11/23/django-memo/">Django Memo</a></li>
         <li><a href="http://blog.shigepon.info/blog/2014/01/31/octpress-tips/">octpress tips</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2016/10/25/pelican-memo/">Pelicanメモ</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2014/11/23/django-memo/">Django Memo</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2014/03/01/vim-memo/">vim memo</a></li>
     </ul>
 </section>
     <hr />
@@ -246,13 +202,18 @@ $ sed -n 開始行番号,終了行番号p
             <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
                 <ul class="list-group" id="recentposts">
                     <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2017/10/29/python_memo/">
-                            pythonメモ
+                        <a href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/">
+                            linuxメモ
                         </a>
                     </li>
                     <li class="list-group-item">
                         <a href="http://blog.shigepon.info/blog/2017/10/17/memo_171018/">
                             作業メモ(2017-10-18)
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/2017/10/29/python_memo/">
+                            pythonメモ
                         </a>
                     </li>
                     <li class="list-group-item">
@@ -263,11 +224,6 @@ $ sed -n 開始行番号,終了行番号p
                     <li class="list-group-item">
                         <a href="http://blog.shigepon.info/blog/2017/04/12/record_timefree_radiko_with_nadesiko2/">
                             なでしこ2でradikoタイムフリーで録音してみたメモ
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2017/04/12/use_recent_version_of_ffmpeg_for_ubuntu_1204/">
-                            ffmpegの最新版をUbuntu 12.04で使う
                         </a>
                     </li>
                 </ul>
@@ -361,13 +317,13 @@ $ sed -n 開始行番号,終了行番号p
             <li class="list-group-item"><a href="http://blog.shigepon.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
                 <ul class="list-group " id="tags">
                     <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/python.html">
-                            python
+                        <a href="http://blog.shigepon.info/tag/django.html">
+                            django
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/linux.html">
-                            linux
+                        <a href="http://blog.shigepon.info/tag/python.html">
+                            python
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
@@ -376,23 +332,18 @@ $ sed -n 開始行番号,終了行番号p
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
+                        <a href="http://blog.shigepon.info/tag/linux.html">
+                            linux
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
                         <a href="http://blog.shigepon.info/tag/ruby.html">
                             ruby
                         </a>
                     </li>
-                    <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/django.html">
-                            django
-                        </a>
-                    </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/event.html">
-                            event
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/rails.html">
-                            Rails
+                        <a href="http://blog.shigepon.info/tag/postgresql.html">
+                            PostgreSQL
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -401,23 +352,8 @@ $ sed -n 開始行番号,終了行番号p
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/nadesiko2.html">
-                            nadesiko2
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
                         <a href="http://blog.shigepon.info/tag/groonga.html">
                             groonga
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/nadesiko.html">
-                            nadesiko
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/r.html">
-                            R
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -426,28 +362,28 @@ $ sed -n 開始行番号,終了行番号p
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/postgresql.html">
-                            PostgreSQL
+                        <a href="http://blog.shigepon.info/tag/nadesiko.html">
+                            nadesiko
                         </a>
                     </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/google.html">
-                            google
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/nadesiko2.html">
+                            nadesiko2
                         </a>
                     </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/javascript.html">
-                            javascript
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/event.html">
+                            event
                         </a>
                     </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/titanium.html">
-                            titanium
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/r.html">
+                            R
                         </a>
                     </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/vim.html">
-                            vim
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/rails.html">
+                            Rails
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -456,23 +392,38 @@ $ sed -n 開始行番号,終了行番号p
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/ansible.html">
-                            ansible
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
                         <a href="http://blog.shigepon.info/tag/rhaco.html">
                             rhaco
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/octopress.html">
-                            octopress
+                        <a href="http://blog.shigepon.info/tag/php.html">
+                            PHP
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
-                            uwsgi
+                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
+                            CPlusPlus
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/raspberrypi.html">
+                            raspberrypi
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/ansible.html">
+                            ansible
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/vim.html">
+                            vim
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/titanium.html">
+                            titanium
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -486,58 +437,23 @@ $ sed -n 開始行番号,終了行番号p
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/php.html">
-                            PHP
+                        <a href="http://blog.shigepon.info/tag/octopress.html">
+                            octopress
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/raspberrypi.html">
-                            raspberrypi
+                        <a href="http://blog.shigepon.info/tag/javascript.html">
+                            javascript
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
-                            CPlusPlus
+                        <a href="http://blog.shigepon.info/tag/google.html">
+                            google
                         </a>
                     </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/arduino.html">
-                            arduino
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/visualstudio.html">
-                            visualstudio
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/unity.html">
-                            unity
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/svn.html">
-                            svn
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/mt4.html">
-                            MT4
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
-                            linkedopendata
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/avr.html">
-                            avr
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/redis.html">
-                            redis
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
+                            uwsgi
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -546,8 +462,48 @@ $ sed -n 開始行番号,終了行番号p
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/lua.html">
-                            Lua
+                        <a href="http://blog.shigepon.info/tag/rhaco3.html">
+                            rhaco3
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/avr.html">
+                            avr
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/svn.html">
+                            svn
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/visualstudio.html">
+                            visualstudio
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
+                            linkedopendata
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/mt4.html">
+                            MT4
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/unity.html">
+                            unity
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/git.html">
+                            git
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/redis.html">
+                            redis
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -556,13 +512,13 @@ $ sed -n 開始行番号,終了行番号p
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/rhaco3.html">
-                            rhaco3
+                        <a href="http://blog.shigepon.info/tag/lua.html">
+                            Lua
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/git.html">
-                            git
+                        <a href="http://blog.shigepon.info/tag/arduino.html">
+                            arduino
                         </a>
                     </li>
                 </ul>
