@@ -179,7 +179,14 @@ $ sed -n 開始行番号,終了行番号p
 
 
 &lt;p&gt;グリッド
-の数を指定したい時はnx=10、ny=10のように指定する。&lt;/p&gt;</summary><category term="memo"></category></entry><entry><title>Pelicanメモ</title><link href="http://blog.shigepon.info/blog/2016/10/25/pelican-memo/" rel="alternate"></link><updated>2016-10-25T15:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-10-25:blog/2016/10/25/pelican-memo/</id><summary type="html">&lt;p&gt;pythonでブログを書くアプリ「&lt;a href="http://docs.getpelican.com/en/stable/"&gt;Pelican&lt;/a&gt;」についてメモ&lt;/p&gt;
+の数を指定したい時はnx=10、ny=10のように指定する。&lt;/p&gt;
+&lt;h4&gt;2つ以上のy値を重ね合わせる&lt;/h4&gt;
+&lt;p&gt;参考：&lt;a href="https://stackoverflow.com/questions/6853204/plotting-multiple-curves-same-graph-and-same-scale"&gt;Stack-Overflow:Plotting multiple curves same graph and same scale&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;2つ以上の値を1つのグラフに表示したい場合はpar(new=T)コマンドの後、plotを再度呼び出すことで出来る。その時最初のplotと次のplotで軸をylimパラメーターを用いて合わせておく&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="x"&gt;&amp;gt; plot(d&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;V1&lt;/span&gt;&lt;span class="x"&gt;, d&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;V2&lt;/span&gt;&lt;span class="x"&gt;, type=&amp;quot;l&amp;quot;, ylim=range(c(d&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;V2&lt;/span&gt;&lt;span class="x"&gt;, d&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;V3&lt;/span&gt;&lt;span class="x"&gt;)))&lt;/span&gt;
+&lt;span class="x"&gt;&amp;gt; par(new=T)&lt;/span&gt;
+&lt;span class="x"&gt;&amp;gt; plot(d&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;V1&lt;/span&gt;&lt;span class="x"&gt;, d&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;V3&lt;/span&gt;&lt;span class="x"&gt;, ylim=range(c(d&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;V2&lt;/span&gt;&lt;span class="x"&gt;, d&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;V3&lt;/span&gt;&lt;span class="x"&gt;)), col=2)&lt;/span&gt;&lt;span class="cp"&gt;#&lt;/span&gt;&lt;span class="nf"&gt;col&lt;/span&gt;&lt;span class="x"&gt;=2は赤でプロット&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="memo"></category></entry><entry><title>Pelicanメモ</title><link href="http://blog.shigepon.info/blog/2016/10/25/pelican-memo/" rel="alternate"></link><updated>2016-10-25T15:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-10-25:blog/2016/10/25/pelican-memo/</id><summary type="html">&lt;p&gt;pythonでブログを書くアプリ「&lt;a href="http://docs.getpelican.com/en/stable/"&gt;Pelican&lt;/a&gt;」についてメモ&lt;/p&gt;
 &lt;h2&gt;記事の並び替え方法を変える&lt;/h2&gt;
 &lt;p&gt;ARTICLE_ORDER_BYに文字列で指定する。関数で定義することも出来るみたいだが、まだ方法が分からない。&lt;/p&gt;
 &lt;p&gt;pelicanconf.pyを編集&lt;/p&gt;
