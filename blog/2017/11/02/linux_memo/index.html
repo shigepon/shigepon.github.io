@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="ja"
+>
+<head>
+    <title>linuxメモ - shigeponが関心のある技術情報など</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/">
+
+        <meta name="author" content="thoz" />
+        <meta name="keywords" content="memo,linux" />
+        <meta property="modified" content="2017-11-02" />
+
+        <meta property="og:site_name" content="shigeponが関心のある技術情報など" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="linuxメモ"/>
+        <meta property="og:url" content="http://blog.shigepon.info/blog/2017/11/02/linux_memo/"/>
+        <meta property="og:description" content=""/>
+        <meta property="article:published_time" content="2017-11-02" />
+            <meta property="article:section" content="memo" />
+            <meta property="article:tag" content="memo" />
+            <meta property="article:tag" content="linux" />
+            <meta property="article:author" content="thoz" />
+
+    <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="@shigepon">
+        <meta name="twitter:creator" content="@shigepon">
+    <meta name="twitter:domain" content="http://blog.shigepon.info">
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="http://blog.shigepon.info/theme/css/bootstrap.united.min.css" type="text/css"/>
+    <link href="http://blog.shigepon.info/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="http://blog.shigepon.info/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://blog.shigepon.info/theme/css/style.css" type="text/css"/>
+
+        <link href="http://blog.shigepon.info/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="shigeponが関心のある技術情報など ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="http://blog.shigepon.info/" class="navbar-brand">
+shigeponが関心のある技術情報など            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                    <li><a href="http://www.shigepon.info/">shigeponのホームページ</a></li>
+                    <li><a href="http://thoz.org/">とある法律判例の全文検索トップ</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="http://blog.shigepon.info/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/"
+                       rel="bookmark"
+                       title="Permalink to linuxメモ">
+                        linuxメモ
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2017-11-02T17:30:00+09:00"> 木 02 11月 2017</time>
+    </span>
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="http://blog.shigepon.info/tag/memo.html">memo</a>
+        /
+	<a href="http://blog.shigepon.info/tag/linux.html">linux</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <h2>sshでリモートサーバーのフォルダをマウント</h2>
+<p>sshfsってのを使う。Ubuntuはaptitudeでインストール</p>
+<div class="highlight"><pre><span></span>$ aptitude install sshfs
+</pre></div>
+
+
+<p>Macは<a href="https://osxfuse.github.io/">FUSE for macOS</a>
+からFUSE for macOSとSSHFS for macOSをインストールすれば使えるようになる。</p>
+<p>マウントは</p>
+<div class="highlight"><pre><span></span>$ sshfs username@host:path_to_remote_dir path_to_local_dir
+</pre></div>
+
+
+<p>でいける</p>
+<p>アンマウントは</p>
+<div class="highlight"><pre><span></span>$ unmount mountpoint <span class="c1">#Ubuntu</span>
+$ diskutil unmount mountpoint <span class="c1">#Mac</span>
+</pre></div>
+
+
+<p>参考：</p>
+<ul>
+<li><a href="https://qiita.com/ysk24ok/items/bb148530a55a4e55d99b">Macでsshfsを使ってローカルからリモートのファイルを触る</a></li>
+<li><a href="http://wadap.hatenablog.com/entry/20080603/1212506793">sshでリモートサーバーをマウント、便利にsshfs</a></li>
+</ul>
+<h2>sshが切れても標準出力を残す</h2>
+<p>screenを使うのが無難？</p>
+<div class="highlight"><pre><span></span>$ screen -S hoge
+$ 何かコマンド
+$ Ctrl+a c　でウィンドウ作成
+$ Ctrl+a <span class="s2">&quot;　でウィンドウ選択</span>
+$<span class="s2"> screen -ls でxxx.hogeとか出てくる</span>
+$<span class="s2"> screen -d xxx　で元のターミナル？に戻る</span>
+$<span class="s2"> screen -r xxx　でコマンドを行ってるウィンドウに戻る</span>
+</pre></div>
+
+
+<h2>ファイルのリアルタイム更新状況をチェック</h2>
+<p>tailとかlessとか使う</p>
+<div class="highlight"><pre><span></span>$ less +F hoge.log
+$ tail -f hoge.log
+</pre></div>
+
+
+<p>lessはCtrl+Cで通常のlessに戻る
+Shift+fでリアルタイム更新チェックに戻る</p>
+<p>参考：<a href="https://qiita.com/genreh/items/8d935526571ccfe171ae">tail -fやtailfを使うのはやめてless +Fを使おう - Qiita</a></p>
+<h2>grepの良く使うオプション</h2>
+<h4>行番号を表示</h4>
+<p>nオプションを使う</p>
+<div class="highlight"><pre><span></span>$ cat hoge <span class="p">|</span> grep -n <span class="s1">&#39;hoge&#39;</span>
+</pre></div>
+
+
+<h4>前後数行を表示</h4>
+<p>前後3行なら</p>
+<div class="highlight"><pre><span></span>$ cat hoge <span class="p">|</span> grep -3 <span class="s1">&#39;hoge&#39;</span>
+</pre></div>
+
+
+<p>参考: <a href="http://www.atmarkit.co.jp/flinux/rensai/linuxtips/137greplineplus.html">grepで該当する行の前後も一緒に表示するには</a></p>
+<h4>指定した文字列に当てはまらないもの</h4>
+<p>vオプションを使う</p>
+<div class="highlight"><pre><span></span>$ cat hoge <span class="p">|</span> grep -v <span class="s1">&#39;hoge&#39;</span>
+</pre></div>
+
+
+<h2>出力に行番号を追加</h2>
+<p>linuxにはnlコマンドがある</p>
+<p>hoge.txtの中身をこんな感じに</p>
+<div class="highlight"><pre><span></span>aaa
+bbb
+ccc
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>$ cat hoge.txt <span class="p">|</span> nl nl -s <span class="s1">&#39;,&#39;</span>
+     1,aaa
+     2,bbb
+     c,ccc
+</pre></div>
+
+
+<p>こんな感じ。行頭の空白を消したい場合はsedと組み合わせる</p>
+<div class="highlight"><pre><span></span>$ cat hoge.txt <span class="p">|</span> nl nl -s <span class="s1">&#39;,&#39;</span> <span class="p">|</span> sed <span class="s1">&#39;s/^ *//g&#39;</span>
+1,aaa
+2,bbb
+c,ccc
+</pre></div>
+
+
+<p>csvっぽく出来る</p>
+<h2>sedで良く使うメモ</h2>
+<p>sedはすぐ忘れる。</p>
+<p>参考：
++ <a href="https://hydrocul.github.io/wiki/commands/sed.html">sed コマンド</a>
++ <a href="https://orebibou.com/2015/07/sed%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%81%A7%E8%A6%9A%E3%81%88%E3%81%A6%E3%81%8A%E3%81%8D%E3%81%9F%E3%81%84%E4%BD%BF%E3%81%84%E6%96%B912%E5%80%8B/#i-6">sedコマンドで覚えておきたい使い方12個(+3個)</a></p>
+<h4>置換（文字列削除にも使える）</h4>
+<div class="highlight"><pre><span></span>$ sed <span class="s1">&#39;s/正規表現/置換文字列/g&#39;</span>
+</pre></div>
+
+
+<h4>行削除</h4>
+<div class="highlight"><pre><span></span>$ sed <span class="s1">&#39;/正規表現/d&#39;</span>
+</pre></div>
+
+
+<h4>指定行だけ表示</h4>
+<p>文字列の編集じゃないけど、便利。</p>
+<div class="highlight"><pre><span></span>$ sed -n 行番号p
+$ sed -n 開始行番号,終了行番号p
+</pre></div>
+
+
+<h2>アクセスログのIPアドレスを集計してみる</h2>
+<p>参考：<a href="http://blog.livedoor.jp/stock_value/archives/51443839.html">Linux サーバーでお手軽にログの集計：こっそりと。 - livedoor Blog（ブログ）</a></p>
+<p>Google Analyticsでリファラ無しの変なアクセスが増えたので、アクセスログからIPを集計してみた。
+アクセスログの書式はLTSVでこんな感じ</p>
+<div class="highlight"><pre><span></span><span class="nn">time</span><span class="p">:</span><span class="mi">07</span><span class="o">/</span><span class="nv">Mar</span><span class="o">/</span><span class="mi">2014</span><span class="s s-Atom">:</span><span class="mi">06</span><span class="s s-Atom">:</span><span class="mi">25</span><span class="s s-Atom">:</span><span class="mi">22</span> <span class="o">+</span><span class="mi">0900</span>       <span class="nn">host</span><span class="p">:</span><span class="s s-Atom">:</span><span class="mf">11.22.33.46</span>       <span class="nn">forwardedfor</span><span class="p">:</span><span class="o">-</span>  <span class="nn">req</span><span class="p">:</span><span class="nv">GET</span> <span class="o">/</span> <span class="nv">HTTP</span><span class="o">/</span><span class="mf">1.1</span>   <span class="nn">status</span><span class="p">:</span><span class="mi">200</span>      <span class="nn">size</span><span class="p">:</span><span class="mi">1</span>       <span class="nn">referer</span><span class="p">:</span><span class="o">-</span><span class="nn">ua</span><span class="p">:</span><span class="nv">Mozilla</span><span class="o">/</span><span class="mf">5.0</span> <span class="p">(</span><span class="s s-Atom">***</span><span class="p">)</span>      <span class="nn">reqtime</span><span class="p">:</span><span class="mf">0.777</span>   <span class="nn">cache</span><span class="p">:</span><span class="o">-</span> <span class="nn">runtime</span><span class="p">:</span><span class="o">-</span>       <span class="nn">vhost</span><span class="p">:</span><span class="s s-Atom">hoge</span><span class="p">.</span><span class="s s-Atom">fuga</span>
+</pre></div>
+
+
+<p>なんか色々ソフト使うのとか面倒だったのでgrepとかawkでほげほげした。要はhost:11.22.33.44に当たる箇所を取り出して表示回数をまとめれば良い。</p>
+<div class="highlight"><pre><span></span><span class="err">$</span> <span class="s s-Atom">cat</span> <span class="s s-Atom">access</span><span class="p">.</span><span class="s s-Atom">log</span> <span class="p">|</span> <span class="s s-Atom">grep</span> <span class="o">-</span><span class="s s-Atom">v</span> <span class="o">-</span><span class="s s-Atom">i</span> <span class="s2">&quot;bot&quot;</span> <span class="p">|</span> <span class="s s-Atom">grep</span> <span class="s2">&quot;referer:-&quot;</span> <span class="p">|</span> <span class="s s-Atom">grep</span> <span class="s2">&quot;status:200&quot;</span> <span class="p">|</span> <span class="s s-Atom">awk</span> <span class="s s-Atom">&#39;{print $3}&#39;</span> <span class="p">|</span> <span class="s s-Atom">sort</span> <span class="p">|</span> <span class="s s-Atom">uniq</span> <span class="o">-</span><span class="s s-Atom">c</span>
+</pre></div>
+
+
+<p>{% include 'includes/ad-content.html' %}↲</p>
+<p>軽くbot避けを入れてるけど、crawlerとかspiderとかを避けておくとより正確になるかも。
+これだけだと一杯出てくるので100回以上アクセスあったIPだけ取り出してみた。</p>
+<div class="highlight"><pre><span></span><span class="err">$</span> <span class="s s-Atom">cat</span> <span class="s s-Atom">access</span><span class="p">.</span><span class="s s-Atom">log</span> <span class="p">|</span> <span class="s s-Atom">grep</span> <span class="o">-</span><span class="s s-Atom">v</span> <span class="o">-</span><span class="s s-Atom">i</span> <span class="s2">&quot;bot&quot;</span> <span class="p">|</span> <span class="s s-Atom">grep</span> <span class="s2">&quot;referer:-&quot;</span> <span class="p">|</span> <span class="s s-Atom">grep</span> <span class="s2">&quot;status:200&quot;</span> <span class="p">|</span> <span class="s s-Atom">awk</span> <span class="s s-Atom">&#39;{print $3}&#39;</span> <span class="p">|</span> <span class="s s-Atom">sort</span> <span class="p">|</span> <span class="s s-Atom">uniq</span> <span class="o">-</span><span class="s s-Atom">c</span> <span class="p">|</span> <span class="s s-Atom">grep</span> <span class="err">&quot;</span><span class="p">[</span><span class="mi">0</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="s s-Atom">\</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span><span class="s s-Atom">\</span><span class="p">}</span><span class="s s-Atom">\s</span><span class="err">&quot;</span>
+</pre></div>
+
+
+<p>ただ、最初の目的には最初の集計の方が役に立った。結局Bingのボットだったみたい。Analyticsではじけなかったアクセスがあったのかな。</p>
+<h2>大きなファイルを探す</h2>
+<p>例：100MB以上のファイルを探す</p>
+<div class="highlight"><pre><span></span>$ find path -size 100M
+</pre></div>
+
+
+<h2>Windows共有フォルダをマウント</h2>
+<p>参考：<a href="http://qiita.com/mdstoy/items/54925cdcbca6d558b666">Ubuntu から Windows の共有フォルダをマウントして利用する - Qiita</a>というかほぼそのまま</p>
+<div class="highlight"><pre><span></span>$ sudo aptitude install cifs-utils
+$ sudo mkdir -p /mnt/windows
+$ sudo mount -t cifs -o <span class="nv">username</span><span class="o">=</span>WindowsUsername,password<span class="o">=</span>WindowsPassword //ServerNameOrIp/path/to/share /mnt/windows
+</pre></div>
+
+
+<h2>ファイルのフルパス一覧を取得</h2>
+<p>参考：<a href="http://linux.just4fun.biz/%E9%80%86%E5%BC%95%E3%81%8DUNIX%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%81%AE%E3%83%95%E3%83%AB%E3%83%91%E3%82%B9%E5%90%8D%E3%82%92%E5%8F%96%E5%BE%97%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95.html">逆引きUNIXコマンド/ファイルのフルパス名を取得する方法 - Linuxと過ごす</a></p>
+<p>単純なlsだとファイル名だけが一覧になるので、フルパスの一覧が欲しい場合は一工夫必要</p>
+<div class="highlight"><pre><span></span>$ ls -dF /path/to/dir/*
+$ find <span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span> -maxdepth <span class="m">1</span> -mindepth 1
+</pre></div>
+
+
+<h2>SSHを使ってリモートでコマンド実行する</h2>
+<p>単純なコマンド実行</p>
+<div class="highlight"><pre><span></span>$ ssh username@hostname options... <span class="s2">&quot;command&quot;</span>
+</pre></div>
+
+
+<p>ローカルのファイルをリダイレクトしてリモートコマンドに使用する。</p>
+<div class="highlight"><pre><span></span>$ ssh username@hostname options... <span class="s2">&quot;command&quot;</span> &lt; localfile
+</pre></div>
+
+
+<h2>重複行を削除する</h2>
+<div class="highlight"><pre><span></span>$ cat hoge <span class="p">|</span> sort <span class="p">|</span> uniq
+</pre></div>
+
+
+<p>参考：<a href="http://codenote.net/linux/1300.html">[Linux] sort と uniq をパイプでつないで重複行を削除する | CodeNote.net</a></p>
+<h2>文字列置換(sed)関連</h2>
+<h3>一番最初にマッチしたものを置換</h3>
+<div class="highlight"><pre><span></span>$ sed 1,/pattern/s/pattern/replace/
+</pre></div>
+
+
+<p>1は1行目からの意味。10行目から始めたければ10に変えるとか、数字はパターンにしても良い</p>
+<div class="highlight"><pre><span></span>$ sed /pattern from/,/pattern/s/pattern/replace/
+</pre></div>
+
+
+<p>一行目に文字列を追加する</p>
+<div class="highlight"><pre><span></span>$ sed -i hoge -e <span class="s2">&quot;1i fuga&quot;</span>
+</pre></div>
+
+
+<p>参考:
+<a href="http://d.hatena.ne.jp/n9d/20081110/1226284188">sedにて一番最初にマッチしたモノだけを置換するには - 計算機と戯れる日々</a></p>
+<h3>ファイルを上書き保存</h3>
+<p>オプション -iを使う。一括でファイル上書きならこんな感じ</p>
+<div class="highlight"><pre><span></span>$ find . -name <span class="s2">&quot;*.html&quot;</span> <span class="p">|</span> xargs sed -i -e s/hoge/fuga/
+</pre></div>
+
+
+<p>参考:
+<a href="http://www.dab.hi-ho.ne.jp/sasa/biboroku/unix/sed-i.html">sedでファイルを上書き保存</a></p>
+<h3>grepで該当行前後を表示する</h3>
+<div class="highlight"><pre><span></span>$ cat hoge.txt <span class="p">|</span> grep <span class="s2">&quot;fuga&quot;</span> -3 <span class="c1">#前後3行</span>
+$ cat hoge.txt <span class="p">|</span> grep <span class="s2">&quot;fuga&quot;</span> -B <span class="m">3</span> <span class="c1">#前3行</span>
+$ cat hoge.txt <span class="p">|</span> grep <span class="s2">&quot;fuga&quot;</span> -A <span class="m">3</span> <span class="c1">#後3行</span>
+</pre></div>
+
+
+<h3>sshでポートフォワーディング</h3>
+<p>例えばPostgreSQLのポート5432をローカルの6542にポートフォワードする場合は</p>
+<div class="highlight"><pre><span></span>$ ssh -N -f -L 6543:localhost:5432 username@hostname
+</pre></div>
+
+
+<h2>時刻調整</h2>
+<p>ntpをインストールする必要はない。Ubuntuの場合、ntpdate-debianコマンドがあればいける。ntpdateコマンドだとエラーが出た。</p>
+<div class="highlight"><pre><span></span>$ sudo ntpdate
+no servers can be used, exiting
+$ sudo ntpdate-debian
+step <span class="nb">time</span> server xxx.xxx.xxx.xxx offset -914.392749 sec
+</pre></div>
+
+
+<p>参考：<a href="http://ubuntuforums.org/showthread.php?t=2193509">[SOLVED] ntpdate - No Servers</a></p>
+<p>ntpサーバを指定するには/etc/default/ntpdateを変更する</p>
+<div class="highlight"><pre><span></span>NTP_USE_NTP_CONF=no
+NTPSERVERS=&quot;ntp.nict.jp&quot;
+</pre></div>
+
+
+<p>毎日のcronjobで動作させる</p>
+<div class="highlight"><pre><span></span>sudo <span class="nb">cd</span> /etc/cron.daily
+sudo ln -s /etc/network/if-up.d/ntpdate ./ntpdate
+</pre></div>
+
+
+<p>でおk
+参考：<a href="http://d.hatena.ne.jp/kobapan/20090909/1252472963">Ubuntu ntpdate 時刻合わせ - ガットポンポコ</a></p>
+<h2>windows共有フォルダをマウント</h2>
+<p>コマンドはこんな感じ</p>
+<div class="highlight"><pre><span></span>$ sudo aptitude install cifs-utils
+$ sudo mount -t cifs -o <span class="nv">username</span><span class="o">=</span>Windowsユーザー名,password<span class="o">=</span>Windowsパスワード,uid<span class="o">=</span>Linuxユーザーid,gid<span class="o">=</span>Linuxグループid //windows ip/path/to/share /mnt/path/to/share
+</pre></div>
+
+
+<p>こうしておくとファイルの編集も可能。uidとかgidが無いとrootで共有する。</p>
+<p>linux(ubuntu)起動時に共有したい場合、fstabを編集する</p>
+<div class="highlight"><pre><span></span>//windows ip/path/to/share  /mnt/path/to/share  cifs  credentials=/home/username/.windowscredentials,uid=Linuxユーザーid,gid=Linuxグループid,iocharset=utf8  0  0
+</pre></div>
+
+
+<p>上のコマンドみたいにWindowsユーザー名、パスワードを入力してもいけるが、fstabは複数人から見ることが出来るので、ユーザーフォルダ内に認証用のファイルを作ってパスワードを隠す</p>
+<p>/home/username/.windowscredentialsを次のようにして600で保存すればおk</p>
+<div class="highlight"><pre><span></span>username=Windowsユーザー名
+password=Windowsパスワード
+</pre></div>
+
+
+<p>参考：<a href="https://wiki.ubuntu.com/MountWindowsSharesPermanently">MountWindowsSharesPermanently - Ubuntu Wiki</a></p>
+<h2>LANで利用されているIPアドレスを調べる</h2>
+<p>arp-scanコマンドを使う。
+まずはインストール</p>
+<div class="highlight"><pre><span></span>$ sudo aptitude install arp-scan
+</pre></div>
+
+
+<p>使い方</p>
+<div class="highlight"><pre><span></span>$ sudo arp-scan -I eth0 -l
+</pre></div>
+
+
+<p>eth0はスキャンしたいネットワークアダプタ</p>
+<h2>csvからカラム切り出し</h2>
+<p>例としてhoge.csvの2カラム目を取り出す</p>
+<div class="highlight"><pre><span></span>$ cut -f <span class="m">2</span> hoge.csv
+</pre></div>
+
+
+<p>この場合タブ区切り、カンマ区切りしたい場合は</p>
+<div class="highlight"><pre><span></span>$ cut -d , -f <span class="m">2</span> hoge.csv
+</pre></div>
+
+
+<p>参考：<a href="http://linux.just4fun.biz/?%E9%80%86%E5%BC%95%E3%81%8DUNIX%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%2F%E6%8C%87%E5%AE%9A%E3%81%97%E3%81%9F%E3%83%95%E3%82%A3%E3%83%BC%E3%83%AB%E3%83%89%E3%82%92%E6%8A%9C%E3%81%8D%E5%87%BA%E3%81%99#q05e8b64">逆引きUNIXコマンド/指定したフィールドを抜き出す - Linuxと過ごす</a></p>
+<h2>csvのソート</h2>
+<div class="highlight"><pre><span></span>$ sort --field-separator<span class="o">=</span><span class="s1">&#39;,&#39;</span> --key<span class="o">=</span>2
+</pre></div>
+
+
+<p>こうやるとカンマ区切りのデータの2番目のカラムでソートしてくれる</p>
+<p>数値でソートしたい場合は-nをオプションに加える</p>
+<p>逆順の場合は--reverseをオプションに加える</p>
+<p>参考：<a href="http://stackoverflow.com/questions/9471101/sort-csv-file-by-column-priority-using-the-sort-command">unix - Sort CSV file by column priority using the "sort" command - Stack Overflow</a></p>
+<h2>cronjobの一覧</h2>
+<div class="highlight"><pre><span></span>$ crontab -l
+$ sudo crontab -l -u username
+$ ls /etc/cron.d
+$ ls /etc/cron.hourly
+$ ls /etc/cron.daily
+$ ls /etc/cron.weekly
+$ ls /etc/cron.monthly
+</pre></div>
+
+
+<p>これくらいチェックすればよさげ</p>
+<h2>iconvでエラーをスキップ</h2>
+<p>cオプションを付ければ良い</p>
+<div class="highlight"><pre><span></span>$ iconv -c -f SJIS -t UTF-8 hoge.txt
+</pre></div>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Google Adsense below content -->
+<ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-3165642025902490" data-ad-slot="1749996500"></ins>
+<script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<!-- end Google Adsense -->
+            </div>
+            <!-- /.entry-content -->
+<section class="well" id="related-posts">
+    <h4>Related Posts:</h4>
+    <ul>
+        <li><a href="http://blog.shigepon.info/blog/2014/02/11/svn-memo/">svn memo</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2015/05/05/nunit-console-test-for-nadesiko2/">なでしこ2をubuntu cuiでテストする</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2015/03/03/error-log-make-php-error/">突然サーバエラーが頻発したので、調べてみたらエラーログが原因だった</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/">Jenkinsでなでしこ2をCIする</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2014/08/20/vb-not-work-on-ubuntu/">ubuntuのmonoでMicrosoft.VisualBasicが動かない件</a></li>
+    </ul>
+</section>
+    <hr />
+    <!-- AddThis Button BEGIN -->
+    <div class="addthis_toolbox addthis_default_style">
+            <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+            <a class="addthis_button_tweet"></a>
+            <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+    </div>
+    <!-- AddThis Button END -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<section class="well well-sm">
+    <ul class="list-group list-group-flush">
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+              <ul class="list-group" id="social">
+                <li class="list-group-item"><a href="https://twitter.com/shigepon"><i class="fa fa-twitter-square fa-lg"></i> twitter</a></li>
+                <li class="list-group-item"><a href="https://www.facebook.com/takeshi.shigeta.56"><i class="fa fa-facebook-square fa-lg"></i> facebook</a></li>
+              </ul>
+            </li>
+
+            <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
+                <ul class="list-group" id="recentposts">
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/">
+                            linuxメモ
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/2017/10/17/memo_171018/">
+                            作業メモ(2017-10-18)
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/2017/10/29/python_memo/">
+                            pythonメモ
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/2017/04/13/modify_ufw_setting_automatically_from_remote_server/">
+                            IPが変わったら自動でufwの設定変えるスクリプトをなでしこ2で組んでみた
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/2017/04/12/record_timefree_radiko_with_nadesiko2/">
+                            なでしこ2でradikoタイムフリーで録音してみたメモ
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="list-group-item"><a href="http://blog.shigepon.info/"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
+                <ul class="list-group" id="categories">
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/categories/csharp/">
+                            <i class="fa fa-folder-open fa-lg"></i> CSharp
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/categories/event/">
+                            <i class="fa fa-folder-open fa-lg"></i> event
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/categories/google/">
+                            <i class="fa fa-folder-open fa-lg"></i> google
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/categories/iot/">
+                            <i class="fa fa-folder-open fa-lg"></i> iot
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/categories/javascript/">
+                            <i class="fa fa-folder-open fa-lg"></i> javascript
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/categories/linux/">
+                            <i class="fa fa-folder-open fa-lg"></i> linux
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/categories/make/">
+                            <i class="fa fa-folder-open fa-lg"></i> make
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/categories/memo/">
+                            <i class="fa fa-folder-open fa-lg"></i> memo
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/categories/mobile/">
+                            <i class="fa fa-folder-open fa-lg"></i> mobile
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/categories/nadesiko/">
+                            <i class="fa fa-folder-open fa-lg"></i> nadesiko
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/categories/nadesiko2/">
+                            <i class="fa fa-folder-open fa-lg"></i> nadesiko2
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/categories/php/">
+                            <i class="fa fa-folder-open fa-lg"></i> php
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/categories/postgresql/">
+                            <i class="fa fa-folder-open fa-lg"></i> PostgreSQL
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/categories/python/">
+                            <i class="fa fa-folder-open fa-lg"></i> python
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/categories/rhaco/">
+                            <i class="fa fa-folder-open fa-lg"></i> rhaco
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/categories/ruby/">
+                            <i class="fa fa-folder-open fa-lg"></i> ruby
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="list-group-item"><a href="http://blog.shigepon.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                <ul class="list-group " id="tags">
+                    <li class="list-group-item tag-1">
+                        <a href="http://blog.shigepon.info/tag/django.html">
+                            django
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="http://blog.shigepon.info/tag/linux.html">
+                            linux
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="http://blog.shigepon.info/tag/memo.html">
+                            memo
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="http://blog.shigepon.info/tag/python.html">
+                            python
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/ruby.html">
+                            ruby
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/csharp.html">
+                            CSharp
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/nadesiko.html">
+                            nadesiko
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/r.html">
+                            R
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/nadesiko2.html">
+                            nadesiko2
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/rails.html">
+                            Rails
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/event.html">
+                            event
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/groonga.html">
+                            groonga
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/postgresql.html">
+                            PostgreSQL
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/bootstrap.html">
+                            bootstrap
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/rhaco.html">
+                            rhaco
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/javascript.html">
+                            javascript
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/octopress.html">
+                            octopress
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
+                            CPlusPlus
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/titanium.html">
+                            titanium
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/test1st.html">
+                            test1st
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/google.html">
+                            google
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/php.html">
+                            PHP
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/nginx.html">
+                            nginx
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/pelican.html">
+                            pelican
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/ansible.html">
+                            ansible
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
+                            uwsgi
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/vim.html">
+                            vim
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/raspberrypi.html">
+                            raspberrypi
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/avr.html">
+                            avr
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/redis.html">
+                            redis
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
+                            linkedopendata
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/arduino.html">
+                            arduino
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/lua.html">
+                            Lua
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/unity.html">
+                            unity
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/sqlite.html">
+                            sqlite
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/svn.html">
+                            svn
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/visualstudio.html">
+                            visualstudio
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/mt4.html">
+                            MT4
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/git.html">
+                            git
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/vmware.html">
+                            vmware
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/rhaco3.html">
+                            rhaco3
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+    <li class="list-group-item"><h4><i class="fa fa-twitter fa-lg"></i><span class="icon-label">Latest Tweets</span></h4></li>
+    <div id="twitter_timeline">
+        <a class="twitter-timeline" data-chrome="noheader" href="https://twitter.com/shigepon" data-widget-id="715722386713149440">Tweets by shigepon</a>
+    </div>
+
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+    <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+      <ul class="list-group" id="links">
+        <li class="list-group-item">
+            <a href="http://www.shigepon.info/" target="_blank">
+                shigeponのHP
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="http://thoz.org/" target="_blank">
+                とある法律判例の全文検索
+            </a>
+        </li>
+      </ul>
+    </li>
+    </ul>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017 shigepon
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="http://blog.shigepon.info/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://blog.shigepon.info/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="http://blog.shigepon.info/theme/js/respond.min.js"></script>
+
+    <!-- Google Analytics Universal -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-6001470-1', '');
+        ga('send', 'pageview');
+    </script>
+    <!-- End Google Analytics Universal Code -->
+
+        <script type="text/javascript">var addthis_config = {"data_track_addressbar": true};</script>
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-56fb8dd95cb9034a"></script>
+</body>
+</html>

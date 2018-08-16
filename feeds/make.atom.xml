@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など - make</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/make.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2016-11-24T15:35:38+09:00</updated><entry><title>Arduino microをAVRライタとして使う</title><link href="http://blog.shigepon.info/blog/2016/11/24/use-arduino-micro-as-avr-writer/" rel="alternate"></link><published>2016-11-24T15:35:38+09:00</published><updated>2016-11-24T15:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-11-24:/blog/2016/11/24/use-arduino-micro-as-avr-writer/</id><summary type="html"></summary><content type="html">&lt;p&gt;LEGOをArduino（AVR）でコントロールして動かしたくなったので、色々やってみようと思う。まずはラクにProcessingでコードを書けるようにしたいので、市販のAVRをArduino化してみた。Arduino IDEのバージョンによってやり方が違っていたので、現在のバージョン（1.6.11）で通用するやり方をメモしておく。&lt;/p&gt;
+&lt;h2&gt;手法を選ぶ&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;ArduinoをISPとして使う&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;材料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Arduino Micro&lt;/li&gt;
+&lt;li&gt;Atmega168トレーニングボード（共立電子製）&lt;/li&gt;
+&lt;li&gt;MicroUSB - USBケーブル&lt;/li&gt;
+&lt;li&gt;Qtケーブル6本&lt;/li&gt;
+&lt;li&gt;Mac（Mac book air）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;上手く行った手順&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Arduino IDEの設定&lt;/li&gt;
+&lt;li&gt;Githubから設定ファイル（JSON）をダウンロード&lt;/li&gt;
+&lt;li&gt;Arduino IDEの設定&lt;/li&gt;
+&lt;li&gt;ISPピンを繋ぐ&lt;/li&gt;
+&lt;li&gt;USBでMacとArduino Microを繋ぐ&lt;/li&gt;
+&lt;li&gt;出力先の指定&lt;/li&gt;
+&lt;li&gt;ブートローダー書き込み&lt;/li&gt;
+&lt;li&gt;アップロード&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;はまったところ&lt;/h2&gt;
+&lt;h3&gt;ピン配置&lt;/h3&gt;
+&lt;h2&gt;参考&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://phaq.phunsites.net/2013/09/12/use-arduino-micro-as-isp-with-atmega-on-a-breadboard/"&gt;phaq » Blog Archive » Use Arduino Micro as ISP with ATmega on a breadboard&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.a2life.info/w/?tag=arduino"&gt;Arduino でAVR マイコンのプログラム&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://leftbraintinkering.blogspot.jp/2015/03/programming-atmega-168-328-using-your.html"&gt;Programming an ATmega (168, 328) using your Arduino as a programmer&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://ehbtj.com/electronics/arduino-internal-clock-8mhz/"&gt;Arduinoを内部クロック（8MHz）で動作させる | なんでも独り言&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.arduino.cc/en/uploads/Main/ArduinoMicro_Pinout3.png"&gt;ArduinoMicro_Pinout3.png (299×376) &lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://hex.ro/wp/blog/arduino-micro-as-isp-flashing-the-bootloader-of-an-arduino-leonardo/"&gt;Arduino Micro as ISP (flashing the bootloader of an Arduino Leonardo) – and thus goes by another day&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://nomolk.hatenablog.com/entry/2016/06/21/001322"&gt;Arduino IDE から、生の AVR に ISP でスケッチを書き込む方法（ArduinoIDE 1.6.4以降版） - nomolkのブログ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><category term="arduino"></category><category term="avr"></category></entry></feed>
