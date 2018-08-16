@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など - memo</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/memo.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2017-11-02T17:30:00+09:00</updated><entry><title>linuxメモ</title><link href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/" rel="alternate"></link><published>2017-11-02T17:30:00+09:00</published><updated>2017-11-02T17:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-11-02:/blog/2017/11/02/linux_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;sshでリモートサーバーのフォルダをマウント&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など - memo</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/memo.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2018-08-16T16:30:00+09:00</updated><entry><title>linuxメモ</title><link href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/" rel="alternate"></link><published>2017-11-02T17:30:00+09:00</published><updated>2018-08-16T16:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-11-02:/blog/2017/11/02/linux_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;sshでリモートサーバーのフォルダをマウント&lt;/h2&gt;
 &lt;p&gt;sshfsってのを使う。Ubuntuはaptitudeでインストール&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ aptitude install sshfs
 &lt;/pre&gt;&lt;/div&gt;
@@ -306,6 +306,19 @@ $ ls /etc/cron.monthly
 &lt;h2&gt;iconvでエラーをスキップ&lt;/h2&gt;
 &lt;p&gt;cオプションを付ければ良い&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ iconv -c -f SJIS -t UTF-8 hoge.txt
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;ip, gateway, DNSの手動設定&lt;/h2&gt;
+&lt;p&gt;\/etc\/network\/interfaces&lt;/p&gt;
+&lt;p&gt;を編集する&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;auto eth0
+iface eth0 inet static
+address アドレス
+netmask 255.255.255.0
+gateway ゲートウェイ
+
+dns-namaservers ネームサーバーのアドレス
 &lt;/pre&gt;&lt;/div&gt;</content><category term="memo"></category><category term="linux"></category></entry><entry><title>pythonメモ</title><link href="http://blog.shigepon.info/blog/2017/10/29/python_memo/" rel="alternate"></link><published>2017-10-29T22:30:00+09:00</published><updated>2017-10-29T22:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-10-29:/blog/2017/10/29/python_memo/</id><summary type="html">&lt;p&gt;pythonでググることになった使い方をメモしておく&lt;/p&gt;</summary><content type="html">&lt;h2&gt;pyenvをUbuntuにインストール&lt;/h2&gt;
 &lt;p&gt;なんか色々依存関係があるので、先にこれを実行&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev &lt;span class="se"&gt;\&lt;/span&gt;

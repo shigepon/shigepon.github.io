@@ -14,7 +14,7 @@
 
         <meta name="author" content="thoz" />
         <meta name="keywords" content="memo,linux" />
-        <meta property="modified" content="2017-11-02" />
+        <meta property="modified" content="2018-08-16" />
 
         <meta property="og:site_name" content="shigeponが関心のある技術情報など" />
         <meta property="og:type" content="article"/>
@@ -412,6 +412,19 @@ $ ls /etc/cron.monthly
 <p>cオプションを付ければ良い</p>
 <div class="highlight"><pre><span></span>$ iconv -c -f SJIS -t UTF-8 hoge.txt
 </pre></div>
+
+
+<h2>ip, gateway, DNSの手動設定</h2>
+<p>\/etc\/network\/interfaces</p>
+<p>を編集する</p>
+<div class="highlight"><pre><span></span>auto eth0
+iface eth0 inet static
+address アドレス
+netmask 255.255.255.0
+gateway ゲートウェイ
+
+dns-namaservers ネームサーバーのアドレス
+</pre></div>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- Google Adsense below content -->
 <ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-3165642025902490" data-ad-slot="1749996500"></ins>
@@ -425,10 +438,10 @@ $ ls /etc/cron.monthly
     <h4>Related Posts:</h4>
     <ul>
         <li><a href="http://blog.shigepon.info/blog/2014/02/11/svn-memo/">svn memo</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2018/08/16/install_esxi_6_0/">Vmware Esxi6.0 update2をASRock B360、Core i5にインストールした</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2014/03/01/vim-memo/">vim memo</a></li>
         <li><a href="http://blog.shigepon.info/blog/2016/01/13/redis-memo/">redis memo</a></li>
         <li><a href="http://blog.shigepon.info/blog/2016/03/08/visual-studio-memo/">visual studio メモ</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2014/04/08/update-openssl-security-patch/">Ubuntuでopensslのsecurity patchを当てる</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2015/11/02/use-mecab-in-python-virtualenv-ubuntu1-12-dot-04/">virtualenv上のpythonでmecabを使う (ubuntu1 12.04)</a></li>
     </ul>
 </section>
     <hr />
@@ -458,13 +471,13 @@ $ ls /etc/cron.monthly
             <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
                 <ul class="list-group" id="recentposts">
                     <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2018/08/16/install_esxi_6_0/">
-                            Vmware Esxi6.0 update2をASRock B360、Core i5にインストールした
+                        <a href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/">
+                            linuxメモ
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/">
-                            linuxメモ
+                        <a href="http://blog.shigepon.info/blog/2018/08/16/install_esxi_6_0/">
+                            Vmware Esxi6.0 update2をASRock B360、Core i5にインストールした
                         </a>
                     </li>
                     <li class="list-group-item">
@@ -573,8 +586,18 @@ $ ls /etc/cron.monthly
             <li class="list-group-item"><a href="http://blog.shigepon.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
                 <ul class="list-group " id="tags">
                     <li class="list-group-item tag-1">
+                        <a href="http://blog.shigepon.info/tag/python.html">
+                            python
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
                         <a href="http://blog.shigepon.info/tag/memo.html">
                             memo
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="http://blog.shigepon.info/tag/linux.html">
+                            linux
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
@@ -587,19 +610,14 @@ $ ls /etc/cron.monthly
                             ruby
                         </a>
                     </li>
-                    <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/linux.html">
-                            linux
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/python.html">
-                            python
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/r.html">
+                            R
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/rails.html">
-                            Rails
+                        <a href="http://blog.shigepon.info/tag/event.html">
+                            event
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -608,8 +626,8 @@ $ ls /etc/cron.monthly
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/r.html">
-                            R
+                        <a href="http://blog.shigepon.info/tag/csharp.html">
+                            CSharp
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -618,8 +636,8 @@ $ ls /etc/cron.monthly
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/nadesiko.html">
-                            nadesiko
+                        <a href="http://blog.shigepon.info/tag/rails.html">
+                            Rails
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -633,63 +651,8 @@ $ ls /etc/cron.monthly
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/csharp.html">
-                            CSharp
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/event.html">
-                            event
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/titanium.html">
-                            titanium
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
-                            CPlusPlus
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/rhaco.html">
-                            rhaco
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
-                            uwsgi
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/vim.html">
-                            vim
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/javascript.html">
-                            javascript
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/raspberrypi.html">
-                            raspberrypi
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/nginx.html">
-                            nginx
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/pelican.html">
-                            pelican
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/google.html">
-                            google
+                        <a href="http://blog.shigepon.info/tag/nadesiko.html">
+                            nadesiko
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -698,13 +661,8 @@ $ ls /etc/cron.monthly
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/php.html">
-                            PHP
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/octopress.html">
-                            octopress
+                        <a href="http://blog.shigepon.info/tag/vmware.html">
+                            vmware
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -713,13 +671,98 @@ $ ls /etc/cron.monthly
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/vmware.html">
-                            vmware
+                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
+                            CPlusPlus
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/google.html">
+                            google
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/raspberrypi.html">
+                            raspberrypi
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/php.html">
+                            PHP
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/vim.html">
+                            vim
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
+                            uwsgi
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/titanium.html">
+                            titanium
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/javascript.html">
+                            javascript
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/rhaco.html">
+                            rhaco
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/nginx.html">
+                            nginx
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/octopress.html">
+                            octopress
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/pelican.html">
+                            pelican
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/sqlite.html">
-                            sqlite
+                        <a href="http://blog.shigepon.info/tag/git.html">
+                            git
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/mt4.html">
+                            MT4
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/visualstudio.html">
+                            visualstudio
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/arduino.html">
+                            arduino
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/unity.html">
+                            unity
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
+                            linkedopendata
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/lua.html">
+                            Lua
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -733,48 +776,18 @@ $ ls /etc/cron.monthly
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/unity.html">
-                            unity
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/avr.html">
-                            avr
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/mt4.html">
-                            MT4
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/arduino.html">
-                            arduino
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
                         <a href="http://blog.shigepon.info/tag/svn.html">
                             svn
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/git.html">
-                            git
+                        <a href="http://blog.shigepon.info/tag/sqlite.html">
+                            sqlite
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/visualstudio.html">
-                            visualstudio
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/lua.html">
-                            Lua
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
-                            linkedopendata
+                        <a href="http://blog.shigepon.info/tag/avr.html">
+                            avr
                         </a>
                     </li>
                 </ul>
@@ -811,7 +824,7 @@ $ ls /etc/cron.monthly
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2018 shigepon
+         <div class="col-xs-10">&copy; 2017 shigepon
             &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
