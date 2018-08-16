@@ -1,5 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など - linux</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/linux.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2016-01-25T21:20:26+09:00</updated><entry><title>インストールしたfluentdをserviceから使えるようにする</title><link href="http://blog.shigepon.info/blog/2016/01/25/enable-service-fluentd-start/" rel="alternate"></link><published>2016-01-25T21:20:26+09:00</published><updated>2016-01-25T21:20:26+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-01-25:/blog/2016/01/25/enable-service-fluentd-start/</id><summary type="html"></summary><content type="html">&lt;p&gt;&lt;a href="http://blog.shigepon.info/blog/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/"&gt;前回&lt;/a&gt;の続き&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など - linux</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/linux.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2018-08-16T16:00:31+09:00</updated><entry><title>Vmware Esxi6.0 update2をASRock B360、Core i5にインストールした</title><link href="http://blog.shigepon.info/blog/2018/08/16/install_esxi_6_0/" rel="alternate"></link><published>2018-08-16T16:00:31+09:00</published><updated>2018-08-16T16:00:31+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2018-08-16:/blog/2018/08/16/install_esxi_6_0/</id><summary type="html"></summary><content type="html">&lt;p&gt;ずっと使っていたVmware Esxiサーバのマザーボードが壊れたので、マザーボードを買い換えるついでにEsxiを6.0 update2にしてみた。
+ググると6.7は特に使う必要なさそうだし、6.5でも良いけど、アップデートのバージョン差は少なめの方が良いかなと思って6.0にした。&lt;/p&gt;
+&lt;p&gt;マシン構成は次の通り&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;マザーボード：ASRock B360 Pro4&lt;/li&gt;
+&lt;li&gt;CPU：Core i5 8400&lt;/li&gt;
+&lt;li&gt;メモリ：16GB １枚&lt;/li&gt;
+&lt;li&gt;LAN：&lt;/li&gt;
+&lt;li&gt;HDD：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;手順&lt;/h2&gt;
+&lt;h3&gt;本体組み立て&lt;/h3&gt;
+&lt;p&gt;省略&lt;/p&gt;
+&lt;h3&gt;Esxiインストーラーの準備&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Esxiのisoをダウンロード&lt;/li&gt;
+&lt;li&gt;Macにダウンロードしたので、&lt;a href="https://unetbootin.github.io/"&gt;UNetbootin&lt;/a&gt;というアプリを使ってisoをUSBに焼いた。アプリを立ち上げてisoを開いて、書き込み先を選べばおk（参考：&lt;a href="https://www.admfactory.com/prepare-esxi-vsphere-usb-drive-boot-image-using-macos/"&gt;Prepare ESXI vSphere USB drive boot image using MacOS&lt;/a&gt;）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Esxiインストール&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;サーバに「インストーラーUSB」と「インストール先になるUSB」をそれぞれ挿して、インストーラーUSBを起動&lt;/li&gt;
+&lt;li&gt;インストール先として「インストール先になるUSB」を選んで問題なくインストール出来た
+細かいインストール手順（パスワード設定など）は&lt;a href="http://blog.shigepon.info/blog/2015/08/05/esxi-shows-fatal-error-33/"&gt;以前の記事&lt;/a&gt;の通り &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;起動&lt;/h3&gt;
+&lt;p&gt;インストーラーUSBは抜いて、USBから起動するとあっさり起動出来た。
+sshでEsxiホストを操作する手順は&lt;a href="http://blog.shigepon.info/blog/2015/08/05/esxi-shows-fatal-error-33/"&gt;以前の記事&lt;/a&gt;の通り。
+&lt;a href="https://kb.vmware.com/s/article/1017910?lang=ja"&gt;ESXi 4.1、ESXi 5.x および ESXi 6.0 での Tech Support モードの使用&lt;/a&gt;を参考にした。&lt;/p&gt;
+&lt;h3&gt;vSphere Clientのインストール&lt;/h3&gt;
+&lt;p&gt;Esxiの起動画面で出てくるipにアクセスして、vSphere Clientとダウンロードしてインストール。特に問題はなかった。&lt;/p&gt;
+&lt;h3&gt;トラブル&lt;/h3&gt;
+&lt;p&gt;元々Esxiが入ってるUSBを消去してインストーラーとして使おうとしたら、Macでうまくパーティションを消去出来なくて困った。fsckでごちゃごちゃやってたらいつのまにか出来てしまったので、実際どうやったらよかったのかは良くわからない・・・。&lt;/p&gt;
+&lt;p&gt;それから起動時にBIOSではデータストアのHDDが見れていたのにEsxiからは見えないというトラブルがあった。
+結論から言うとSATAコントローラーがAHCIモードだったのがまずかったみたい。BIOS画面でSATAコントローラーをAHCIモード以外にすると認識するようになった。
+このトラブルの解決だけで2時間かかった＞＜。ここらへんを参考にした（&lt;a href="http://d.hatena.ne.jp/igapyon/20140720"&gt;ESXi 5.5 を MSI H97 GAMING 3 にインストール&lt;/a&gt;、&lt;a href="http://zappy.hatenablog.jp/entry/2015/01/09/002505"&gt;自作PCにVMware ESXiをインストールした&lt;/a&gt;）
+データストアを認識しているかどうかは&lt;a href="https://kb.vmware.com/articleview?docid=1014953&amp;amp;lang=ja"&gt;VMware ESXi/ESX を操作するときのディスクの識別&lt;/a&gt;を参考にした。&lt;/p&gt;
+&lt;p&gt;しかもEsxiのトラブルとは関係ないけどHDDが2つも動かない状態になってるし・・・。どーしよー。&lt;/p&gt;</content><category term="vmware"></category><category term="linux"></category></entry><entry><title>インストールしたfluentdをserviceから使えるようにする</title><link href="http://blog.shigepon.info/blog/2016/01/25/enable-service-fluentd-start/" rel="alternate"></link><published>2016-01-25T21:20:26+09:00</published><updated>2016-01-25T21:20:26+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-01-25:/blog/2016/01/25/enable-service-fluentd-start/</id><summary type="html"></summary><content type="html">&lt;p&gt;&lt;a href="http://blog.shigepon.info/blog/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/"&gt;前回&lt;/a&gt;の続き&lt;/p&gt;
 &lt;p&gt;rbenvのgemを使ってインストールしたfluentdはserviceからの起動スクリプトが無いので、service fluentd startみたいなことをしたければ自分で登録するしかない。&lt;/p&gt;
 &lt;p&gt;でも1からスクリプトを書くのは面倒なので、td-agentのスクリプトを利用することにした。
 まずはtd-agentのインストール、削除&lt;/p&gt;
