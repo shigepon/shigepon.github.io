@@ -150,10 +150,10 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
     <h4>Related Posts:</h4>
     <ul>
         <li><a href="http://blog.shigepon.info/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/">Jenkinsでなでしこ2をCIする</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2016/01/25/enable-service-fluentd-start/">インストールしたfluentdをserviceから使えるようにする</a></li>
         <li><a href="http://blog.shigepon.info/blog/2014/08/20/vb-not-work-on-ubuntu/">ubuntuのmonoでMicrosoft.VisualBasicが動かない件</a></li>
         <li><a href="http://blog.shigepon.info/blog/2015/05/05/nunit-console-test-for-nadesiko2/">なでしこ2をubuntu cuiでテストする</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2014/06/08/ubuntu-aptitude-error-in-initramfs-tools/">ubuntuでaptitude installした時にinitramfs-toolsのエラーが出た</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2015/11/02/use-mecab-in-python-virtualenv-ubuntu1-12-dot-04/">virtualenv上のpythonでmecabを使う (ubuntu1 12.04)</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2015/08/05/esxi-shows-fatal-error-33/">Vmware Esxiがfatal error 33を出したのでインストールしなおしてついでに色々試した話</a></li>
     </ul>
 </section>
     <hr />
@@ -298,8 +298,8 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
             <li class="list-group-item"><a href="http://blog.shigepon.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
                 <ul class="list-group " id="tags">
                     <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/memo.html">
-                            memo
+                        <a href="http://blog.shigepon.info/tag/ruby.html">
+                            ruby
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
@@ -308,18 +308,18 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
+                        <a href="http://blog.shigepon.info/tag/python.html">
+                            python
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
                         <a href="http://blog.shigepon.info/tag/linux.html">
                             linux
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/python.html">
-                            python
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/nadesiko2.html">
-                            nadesiko2
+                        <a href="http://blog.shigepon.info/tag/memo.html">
+                            memo
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -328,13 +328,13 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/ruby.html">
-                            ruby
+                        <a href="http://blog.shigepon.info/tag/nadesiko.html">
+                            nadesiko
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/r.html">
-                            R
+                        <a href="http://blog.shigepon.info/tag/event.html">
+                            event
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -343,13 +343,13 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/nadesiko.html">
-                            nadesiko
+                        <a href="http://blog.shigepon.info/tag/nadesiko2.html">
+                            nadesiko2
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/bootstrap.html">
-                            bootstrap
+                        <a href="http://blog.shigepon.info/tag/r.html">
+                            R
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -358,13 +358,63 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/bootstrap.html">
+                            bootstrap
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
                         <a href="http://blog.shigepon.info/tag/groonga.html">
                             groonga
                         </a>
                     </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/event.html">
-                            event
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/vim.html">
+                            vim
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/nginx.html">
+                            nginx
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/javascript.html">
+                            javascript
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/php.html">
+                            PHP
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
+                            uwsgi
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
+                            CPlusPlus
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/raspberrypi.html">
+                            raspberrypi
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/test1st.html">
+                            test1st
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/octopress.html">
+                            octopress
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/titanium.html">
+                            titanium
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -378,73 +428,13 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/php.html">
-                            PHP
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/nginx.html">
-                            nginx
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
                         <a href="http://blog.shigepon.info/tag/pelican.html">
                             pelican
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/vim.html">
-                            vim
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
                         <a href="http://blog.shigepon.info/tag/ansible.html">
                             ansible
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/test1st.html">
-                            test1st
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
-                            uwsgi
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/raspberrypi.html">
-                            raspberrypi
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/octopress.html">
-                            octopress
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
-                            CPlusPlus
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/javascript.html">
-                            javascript
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/titanium.html">
-                            titanium
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/lua.html">
-                            Lua
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/svn.html">
-                            svn
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -453,18 +443,23 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/avr.html">
+                            avr
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
                         <a href="http://blog.shigepon.info/tag/mt4.html">
                             MT4
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/arduino.html">
-                            arduino
+                        <a href="http://blog.shigepon.info/tag/svn.html">
+                            svn
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/vmware.html">
-                            vmware
+                        <a href="http://blog.shigepon.info/tag/lua.html">
+                            Lua
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -473,8 +468,18 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/avr.html">
-                            avr
+                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
+                            linkedopendata
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/sqlite.html">
+                            sqlite
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/vmware.html">
+                            vmware
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -493,13 +498,8 @@ Jenkins本体でアップグレード可能らしいので、aptitudeでイン�
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
-                            linkedopendata
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/sqlite.html">
-                            sqlite
+                        <a href="http://blog.shigepon.info/tag/arduino.html">
+                            arduino
                         </a>
                     </li>
                 </ul>

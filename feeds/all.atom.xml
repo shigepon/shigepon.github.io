@@ -5505,7 +5505,37 @@ $ vim /etc/odbc.ini
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;を追記したら上手く動いた。&lt;/p&gt;</content><category term="Rails"></category><category term="ruby"></category></entry><entry><title>Capistrano3でbitbucketからデプロイしようとしたらハマった話</title><link href="http://blog.shigepon.info/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/" rel="alternate"></link><published>2014-05-04T10:04:00+09:00</published><updated>2014-05-04T10:04:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-05-04:/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/</id><summary type="html"></summary><content type="html">&lt;p&gt;まだデプロイ作業を途中までしか確認していないので、とりあえずハマったポイントを書いておく。
+&lt;p&gt;を追記したら上手く動いた。&lt;/p&gt;</content><category term="Rails"></category><category term="ruby"></category></entry><entry><title>Rails4でJSONを出力する</title><link href="http://blog.shigepon.info/blog/2014/05/05/output-json-by-rails4/" rel="alternate"></link><published>2014-05-05T10:33:26+09:00</published><updated>2014-05-05T10:33:26+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-05-05:/blog/2014/05/05/output-json-by-rails4/</id><summary type="html"></summary><content type="html">&lt;p&gt;Rails4にはjbuilderが標準で入っていて、viewを設定するだけでJSON出力が可能ならしい。
+ 例えば&lt;a href="http://blog.shigepon.info/blog/2014/03/10/a-way-of-creating-rails-application3/"&gt;Rails4でPostgreSQLとBootstrap使ったアプリを作ってみた(3):データ一覧ページを作って、詳細ページへのリンクを貼る - shigeponが関心のある技術情報など&lt;/a&gt;のページをとりあえずjsonで出力するにはapp/views/events/index.json.jbuilderを用意するだけでOK。http://0.0.0.0:3000/events/index.json にアクセスするとJSONで表示してくれる。なんと楽チンな！
+ JSONの出力形式を変更する場合はindex.json.jbuilderを編集する&lt;/p&gt;
+&lt;p&gt;例えばこんな感じ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;array!&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="vi"&gt;@events&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;
+  &lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;  &lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;
+  &lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;date&lt;/span&gt;  &lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;date&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;例えばこうしておくと一覧を配列出力しつつ、出力したいフィールドを指定出来る。viewだけで操作出来るのは楽チンだわ。
+ 詳しい書式はブログ等の記事を見るよりも、英語だけど&lt;a href="https://github.com/rails/jbuilder"&gt;rails/jbuilder · GitHub&lt;/a&gt;を見るとよさげ。&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;h2&gt;jbuilderでネストした配列を出力する&lt;/h2&gt;
+&lt;p&gt;大抵の説明では一番外側が配列で、中身はハッシュというものばかりで、配列の中が配列という形での出力方法の説明が無かったのでメモ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;],[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;],[&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;みたいなjsonを出力する場合&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;array!&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="vi"&gt;@events&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;
+  &lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;array!&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;to_i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;to_i&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;という指定をする。&lt;/p&gt;</content><category term="ruby"></category></entry><entry><title>Capistrano3でbitbucketからデプロイしようとしたらハマった話</title><link href="http://blog.shigepon.info/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/" rel="alternate"></link><published>2014-05-04T10:04:00+09:00</published><updated>2014-05-04T10:04:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-05-04:/blog/2014/05/04/capistrano3-shows-error-when-deploy-from-bitbucket/</id><summary type="html"></summary><content type="html">&lt;p&gt;まだデプロイ作業を途中までしか確認していないので、とりあえずハマったポイントを書いておく。
  デプロイ作業をテストしてみたらこんなエラーが出た&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ bundle &lt;span class="nb"&gt;exec&lt;/span&gt; cap production deploy:check
  INFO &lt;span class="o"&gt;[&lt;/span&gt;5f874a7e&lt;span class="o"&gt;]&lt;/span&gt; Running /usr/bin/env mkdir -p /tmp/hoge/ on fuga
