@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など - nadesiko</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/nadesiko.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2014-01-30T09:22:46+09:00</updated><entry><title>なでしこで実行ファイルを作る時のメモ</title><link href="http://blog.shigepon.info/blog/2014/01/30/nadesiko-make-exe/" rel="alternate"></link><published>2014-01-30T09:22:46+09:00</published><updated>2014-01-30T09:22:46+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-01-30:/blog/2014/01/30/nadesiko-make-exe/</id><summary type="html"></summary><content type="html">&lt;ul&gt;
+&lt;li&gt;パックファイル作る時はメインになるファイルだけnadesiko.nakoというパック名にして、その他はファイル名自身をパック名とする&lt;/li&gt;
+&lt;li&gt;データを埋め込む場合は、そのデータを呼び出す時にフルパスにしない。データが無いと言われる。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;何となくマニュアル見ても分かりにくかったのでメモ&lt;/p&gt;
+&lt;p&gt;ついでにリンク&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://nadesi.com"&gt;なでしこ&lt;/a&gt;&lt;/p&gt;</content><category term="nadesiko"></category></entry><entry><title>C#で作ったdllをなでしこで使う</title><link href="http://blog.shigepon.info/blog/2014/01/28/nadesiko-plugin-cs2/" rel="alternate"></link><published>2014-01-28T22:42:43+09:00</published><updated>2014-01-28T22:42:43+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-01-28:/blog/2014/01/28/nadesiko-plugin-cs2/</id><summary type="html"></summary><content type="html">&lt;p&gt;C#のdllを呼び出せるように、C#のdllを参照した後、Plugin.cppの一部を以下のように書き換えました&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;PHiValue&lt;/span&gt; &lt;span class="nt"&gt;__stdcall&lt;/span&gt; &lt;span class="nt"&gt;sample01&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nt"&gt;DWORD&lt;/span&gt; &lt;span class="nt"&gt;param&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="err"&gt;PHiValue&lt;/span&gt; &lt;span class="err"&gt;result&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;ClassLibrary1&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;Class1&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="nf"&gt;Method1&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+    &lt;span class="err"&gt;result&lt;/span&gt; &lt;span class="err"&gt;=&lt;/span&gt; &lt;span class="err"&gt;nako_var_new(NULL)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="err"&gt;hi_setStr(result&amp;amp;cedil&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="err"&gt;&amp;amp;quot&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="err"&gt;abc&amp;amp;quot&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="err"&gt;&amp;amp;cedil&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="err"&gt;sizeof(&amp;amp;quot&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="err"&gt;abc&amp;amp;quot&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="err"&gt;))&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="err"&gt;return&lt;/span&gt; &lt;span class="err"&gt;result&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="nt"&gt;NAKO_API&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nt"&gt;void&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="nt"&gt;ImportNakoFunction&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nt"&gt;void&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="err"&gt;//&lt;/span&gt; &lt;span class="err"&gt;ユーザー命令の追加&lt;/span&gt;
+    &lt;span class="err"&gt;nako_addFunction(&amp;amp;quot&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="err"&gt;sample01&amp;amp;quot&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="err"&gt;&amp;amp;cedil&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="err"&gt;&amp;amp;quot&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="err"&gt;&amp;amp;quot&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="err"&gt;&amp;amp;cedil&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="err"&gt;sample01&amp;amp;cedil&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="err"&gt;0)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;なでしこ側のソースは以下のようにして呼び出してみました&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;結果=sample01
+結果を言う
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これでダイアログボックスに「method1」が表示され、続いて「abc」が表示されればOKです。&lt;/p&gt;
+&lt;p&gt;しかし・・・結果は外部例外　E0434F4Dを出力してちゃんと動きませんでしたorz。この例外はtry...catchで掴もうとしても掴めません。どうも処理の関数（ここではsample01）に入った瞬間にエラーを返してしまうようです。ちなみにこのコードでググっても原因は理解できませんでした。ということで、クジラ飛行机氏（なでしこ作者）にメールで泣きつきました。&lt;/p&gt;
+&lt;p&gt;すると&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;vnako.exe と同じフォルダに配置したらエラー出ませんでした。たぶん、plug-ins フォルダにパスを通さない限り、DLLがもう一方を参照できなくなるのだと思います。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;という返事が！まじで！？と思い試してみると・・・上手くいくじゃないですか！これでC#で作ったdllもなでしこで利用できるようになりました。&lt;/p&gt;</content><category term="nadesiko"></category><category term="CSharp"></category><category term="CPlusPlus"></category></entry><entry><title>C++/CLIでなでしこのプラグインを作る方法(Visual C++ Express Edition)</title><link href="http://blog.shigepon.info/blog/2014/01/28/nadesiko-plugin/" rel="alternate"></link><published>2014-01-28T21:45:15+09:00</published><updated>2014-01-28T21:45:15+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-01-28:/blog/2014/01/28/nadesiko-plugin/</id><summary type="html"></summary><content type="html">&lt;p&gt;なでしこでプラグインを作る時にC#を使いたかったので、その前段階としてC++/CLIでプラグインを作る方法を探ってみました。&lt;/p&gt;
+&lt;p&gt;C++/CLIが使えると、.Netを使えるようになり、C#で作ったdllもVC++の参照設定から読み込んで使えるようになります。&lt;/p&gt;
+&lt;p&gt;なでしこにはC++でプラグイン開発するためのsdkがあります。&lt;/p&gt;
+&lt;p&gt;ただし、VC++で使用するには&lt;a href="http://www.himanavi.net/cgi/nade-bbs2/cbbs.cgi?mode=one&amp;amp;number=7462&amp;amp;type=7446&amp;amp;space=60&amp;amp;no=0"&gt;なでしこ質問掲示板&lt;/a&gt;にあるような設定をしなければいけません。（以下引用）&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Win32プロジェクトを作成&lt;/li&gt;
+&lt;li&gt;plugins_sdk_cからソースを追加&lt;/li&gt;
+&lt;li&gt;dnako_import.defを作成&lt;/li&gt;
+&lt;li&gt;すべての構成でプロジェクトのプロパティを修正　全般→文字セットを「マルチ バイト文字セットを使用する」に変更　リンカ→入力→モジュール定義ファイルに「dnako_import.def」と入力&lt;/li&gt;
+&lt;li&gt;ビルド&lt;/li&gt;
+&lt;/ol&gt;
+&lt;!-- more --&gt;
+
+&lt;p&gt;dnako_import.defは以下&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;EXPORTS
+ImportNakoFunction
+PluginInfo
+PluginVersion
+PluginRequire
+PluginInit
+PluginFin
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;実際こちらで試した場合は他にも4の箇所で&lt;/p&gt;
+&lt;p&gt;全般→共通言語ランタイムサポートを「共通言語ランタイムサポートを使用しない」に
+C/C++→プリコンパイル済みヘッダー→プリコンパイル済みヘッダーの作成/使用を「プリコンパイル済みヘッダーを使用しない」に&lt;/p&gt;
+&lt;p&gt;変更が必要でした。&lt;/p&gt;
+&lt;p&gt;ただし、この方法だとC++/CLIを使えないので、.Netを使うことは出来ません。そこで、次のように変更しました。&lt;/p&gt;
+&lt;p&gt;+sdkに含まれる.cファイルを全て.cppに変更
++dnako_import\let.h内にある各GetProcAddressの第一引数hDllをstatic_castでHMODULE型にキャスト&lt;/p&gt;
+&lt;p&gt;すると問題なくビルドが通り、.Netを使用することが出来ました。と言ってもMessageBoxを試した程度ですが。&lt;/p&gt;</content><category term="nadesiko"></category><category term="CPlusPlus"></category><category term="CSharp"></category></entry><entry><title>なでしこでLuaエディタ？を作る（ネタ）</title><link href="http://blog.shigepon.info/blog/2014/01/28/nadesiko-lua/" rel="alternate"></link><published>2014-01-28T21:37:03+09:00</published><updated>2014-01-28T21:37:03+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-01-28:/blog/2014/01/28/nadesiko-lua/</id><summary type="html"></summary><content type="html">&lt;p&gt;なでしこではLuaを使えるので、なでしこのGUIと組み合わせたら簡単にLuaエディタ作れるんじゃね？ということで作ってみました。（ただのネタです）&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;母艦は「メインフォーム」
+そのクライアントW=640#数値
+そのクライアントH=400#数値
+そのタイトル=「なでしこ」#文字列
+※ ---
+LuaエディタとはTエディタ##生成
+そのX=8#数値
+そのY=8#数値
+そのW=616#数値
+そのH=344#数値
+そのテキスト=「」#文字列
+そのスクロールバー=「」#文字列
+※ ---
+Luaボタンとはボタン##生成
+そのX=280#数値
+そのY=360#数値
+そのW=64#数値
+そのH=32#数値
+そのテキスト=「luaする」#文字列
+そのクリックした時は～Luaボタン__クリックした時#イベント
+※※※積み木デザイナ:ここまで※
+●Luaボタン__クリックした時　　# ここにイベントを書きます。
+# 字下げした部分がイベント範囲です。
+    エラー監視
+        ソース=Luaエディタのテキスト
+        A=50
+        結果とは変数
+        LUA(&amp;amp;quot;---
+        {ソース}
+        ---&amp;amp;quot;)
+    エラーならば
+        「エラー」と言う。
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;セーブやロードなどは全て省いてますが実装は簡単です。&lt;/p&gt;
+&lt;p&gt;あとLUA(&amp;quot;&lt;del&gt;...&lt;/del&gt;&amp;quot;)の箇所を変更すれば、返り値を得ることも簡単にできます。例えばこんな感じ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;LUA(&amp;amp;quot;---ret=0{ソース}nako_set(&amp;amp;#039;結果&amp;amp;#039;&amp;amp;cedil;ret)---&amp;amp;quot;)結果を言う。
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Luaをちょっといじってみたいなと思う時に使えるんじゃないかと思います。&lt;/p&gt;
+&lt;p&gt;※なぜか「LUAする」命令だとieとかexcelを立ち上げた時にvisible=trueに出来ませんでした。何かやり方が悪かったのかな。（なでしこのバージョンはデラックス版1.5322です）&lt;/p&gt;
+&lt;p&gt;※LuaComではUTF-8を扱うので、日本語をまぜる場合はソースをUTF-8に変換しておく必要があります&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;LUA(UTF8N変換(&amp;amp;quot;...&amp;amp;quot;))
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;結果もnako_setでセットした値もUTF8で返ってきますのでSJIS変換命令で変換する必要があります。&lt;/p&gt;</content><category term="nadesiko"></category><category term="Lua"></category></entry></feed>

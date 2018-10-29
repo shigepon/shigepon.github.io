@@ -1,0 +1,698 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など - linux</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/linux.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2018-09-06T15:30:00+09:00</updated><entry><title>Universal Media ServiceでDLNAする</title><link href="http://blog.shigepon.info/blog/2018/09/06/dlna_for_ums/" rel="alternate"></link><published>2018-09-06T15:30:00+09:00</published><updated>2018-09-06T15:30:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2018-09-06:/blog/2018/09/06/dlna_for_ums/</id><summary type="html"></summary><content type="html">&lt;p&gt;Universal Media Server(UMS)で立てたDLNAサーバにiPhoneやPanasonic Digaでアクセスしようとしたらハマったので、その間のノウハウをまとめておく。&lt;/p&gt;
+&lt;h2&gt;参考にした記事&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://yaslab.hatenablog.com/entry/2015/12/06/010514"&gt;DebianでUniversal Media Serverを運用する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://bbs.kakaku.com/bbs/K0000697878/SortID=18550622/"&gt;『NASにあるMP4ファイルをお部屋ジャンプリンクで再生できません』のクチコミ掲示板&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.universalmediaserver.com/forum/viewtopic.php?t=9868"&gt;VLC for Desktop detected as Sony Xperia&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/UniversalMediaServer/UniversalMediaServer/wiki/How-to-change-to-TRACE-Logging"&gt;How to change to TRACE Logging&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://raw.githubusercontent.com/UniversalMediaServer/UniversalMediaServer/master/src/main/external-resources/renderers/DefaultRenderer.conf"&gt;DefaultRenderer.conf&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.universalmediaserver.com/faq/#RendererSupport1"&gt;Universal Media Studio FAQ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://umsrenderer.blogspot.com/2018/04/universal-media-server-ums-renderer.html"&gt;Universal Media Server (UMS) で異なるファイル形式，縦横比，解像度に一括して対応するためのレンダラー(renderer)設定メモ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://plaza.rakuten.co.jp/ku10raku10/diary/201210130000/"&gt;DIGA BZT720で DLNA動画再生テスト 3&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://blog.asial.co.jp/1315"&gt;FFmpegによる動画エンコードの基本&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://mobilehackerz.jp/archive/wiki/index.php?%BA%C7%BF%B7ffmpeg%A4%CE%A5%AA%A5%D7%A5%B7%A5%E7%A5%F3%A4%DE%A4%C8%A4%E1"&gt;最新ffmpegオプションまとめ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://askubuntu.com/questions/999271/ffmpeg-command-for-mpeg-ts-encoding"&gt;ffmpegのオプションを決めていく手順みたいなもの？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://trac.ffmpeg.org/wiki/Scaling"&gt;FFmpeg wiki Scaling&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://nico-lab.net/streaming_nicolive_beta_with_scale_pad/"&gt;新配信で4:3映像に余白をつけて800×450配信にする&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;DLNA設定&lt;/h2&gt;
+&lt;p&gt;~/.config/UMS/UMS.confにUniversal Media Serverの設定を書く&lt;/p&gt;
+&lt;p&gt;対象にするフォルダは&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;folders = /path/to/folder1, /path/to/folder2
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とカンマ区切りで書く&lt;/p&gt;
+&lt;p&gt;前の記事でサービス設定ファイルを作っているので設定の反映は&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo systemctl restart ums.service
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でおk&lt;/p&gt;
+&lt;h2&gt;iPhoneでdlnaサーバからストリーミングで動画を見る&lt;/h2&gt;
+&lt;p&gt;iPhoneで動画を見る場合は、dlnaクライアントのアプリを入れてやれば良い。
+dlnaクライアントのアプリは何個もあるが、&lt;/p&gt;
+&lt;p&gt;PlayerXtremeが良い感じだった。&lt;/p&gt;
+&lt;p&gt;アップグレードして！というメッセージがちょくちょく出るのに目を瞑れば問題ない。&lt;/p&gt;
+&lt;p&gt;視聴手順は&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;アプリを開く&lt;/li&gt;
+&lt;li&gt;右下メニューのNETWORKを選ぶ（広告のボタンが重なっているので、しばらく待つか移動させれば選べる）&lt;/li&gt;
+&lt;li&gt;DiscoveredからUniversal Media Serverが見つかるはずなのでそれを選択&lt;/li&gt;
+&lt;li&gt;視聴したいファイルを探して（Media Library -&amp;gt; ビデオ -&amp;gt; 日付別かすべてのビデオ　が無難？）タップすれば視聴できる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ちなみにVLC for iphoneは最初ダメみたいに見えるけど、起動してしばらくしたら問題なく使用できた。こっちでも良いかもしれない。&lt;/p&gt;
+&lt;h2&gt;digaでdlnaサーバからストリーミングで動画を見る&lt;/h2&gt;
+&lt;p&gt;これはハマった。本当にハマった。
+とりあえずそのまま視聴しようとしても全く見ることが出来ない。
+調べてみると&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;nas上のMP4が再生できないのは、旧digaの仕様です。
+wmp12から再生できるのは、wmp12がMpeg2にトランスコードして配信しているためです。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;とあって、どうもMpeg2のトランスコード形式にしないとうまく表示出来ないっぽい。&lt;/p&gt;
+&lt;p&gt;で、まずはログを確認しないと何も出来ないなということで、ログを探ってみた。
+ログは&lt;/p&gt;
+&lt;p&gt;~/.config/UMS/debug.log&lt;/p&gt;
+&lt;p&gt;に存在する。チェックしてみると、UMSは&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ファイルの情報を読み込む&lt;/li&gt;
+&lt;li&gt;情報にマッチしたレンダラー(renderer)を読み込む&lt;/li&gt;
+&lt;li&gt;レンダラーの指示に従ってそのまま配信、またはffmpegでトランスコードして配信する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;という流れで動いている。&lt;/p&gt;
+&lt;p&gt;で、マッチしてるレンダラーを調べて見ると&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Matched media renderer &amp;quot;Sony Xperia Z/ZL/ZQ/Z1/Z2&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;なぜかSony Xperiaがマッチしていた。UMSの掲示板を調べると、どうも何にもマッチしなかったらSony Xperiaが選ばれるらしい。&lt;/p&gt;
+&lt;p&gt;ということはマッチするレンダラーを書かないと視聴出来ないということになる。&lt;/p&gt;
+&lt;p&gt;ここからはもっと細かくログを取る必要があるので、設定を変更した。&lt;/p&gt;
+&lt;h3&gt;ログレベルを変える&lt;/h3&gt;
+&lt;p&gt;ログレベルを変えるには&lt;/p&gt;
+&lt;p&gt;/path/to/ums/logback.headless.xml&lt;/p&gt;
+&lt;p&gt;を編集すると良い。TRACEよりALLの方が沢山ログを出せると思うので、&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;    &amp;lt;logger name=&amp;quot;net.pms.dlna.DLNAResource&amp;quot; level=&amp;quot;ALL&amp;quot; /&amp;gt;
+    &amp;lt;logger name=&amp;quot;net.pms.network.RequestHandlerV2&amp;quot; level=&amp;quot;ALL&amp;quot; /&amp;gt;
+    &amp;lt;logger name=&amp;quot;net.pms.util&amp;quot; level=&amp;quot;ALL&amp;quot; /&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;を&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;logger name=&amp;quot;org.apache&amp;quot; level=&amp;quot;WARN&amp;quot; /&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;の前に挿入した。&lt;/p&gt;
+&lt;h2&gt;レンダラーのマッチ部分を書く&lt;/h2&gt;
+&lt;p&gt;/path/to/ums/renderer/の中にレンダラーファイルが沢山入って居るので、読みながらどうやってレンダラーを選んでいるのか調べてみた。UMSのサイトにあるFAQとDefaultRenderer.confにどんな基準になるかが書いてある。&lt;/p&gt;
+&lt;p&gt;FAQによると、&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;/path/to/ums/renderer/Hoge.conf みたいなファイルを作って&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;UserAgentSearch = This should not match anything
+UserAgentAdditionalHeader = 
+UserAgentAdditionalHeaderSearch =
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;という形で書いておく&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;UMSを立ち上げて、Digaでdlnaサーバにアクセスしてなにか動画にアクセスしてみる。&lt;/li&gt;
+&lt;li&gt;UMSを終わらせる&lt;/li&gt;
+&lt;li&gt;denug.logを開いて「User-Agent」(大文字小文字は色々)という文字列を含むところを見る。Digaの場合「USER-AGENT: Panasonic-UPnPSDK/1.00 DLNADOC/1.50」と書いてあった。&lt;/li&gt;
+&lt;li&gt;この文字列にマッチするように条件を書く&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;UserAgentSearch = Panasonic
+UserAgentAdditionalHeaderSearch = Panasonic
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;(UserAgentAdditionalHeaderは削った)&lt;/p&gt;
+&lt;p&gt;これでDigaでDlnaにアクセスした時にHoge.confがマッチしてくれるようになる。&lt;/p&gt;
+&lt;h2&gt;レンダラーのトランスコーディング部分を書く&lt;/h2&gt;
+&lt;p&gt;トランスコーディングはPanasonicの他のレンダラーのものをそのままコピペで大丈夫。例えばこんな感じ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;SeekByTime = exclusive
+DLNALocalizationRequired = true
+TranscodeVideo = MPEGTS-MPEG2-AC3
+TranscodeAudio = WAV
+TranscodeFastStart = true
+TranscodedVideoFileSize = 1000000
+KeepAspectRatio = true
+SendDateMetadata = false
+MediaInfo = true
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;レンダラーのサポートされているエンコード指定を書く&lt;/h2&gt;
+&lt;p&gt;サポートされているエンコードは全然情報がなかったので、Mpeg2のトランスコードだけにしておく。書き方は他のレンダラーのものを参考にした。音はac3, aac, mpaをサポートしたが、音が出ないケースがあったので、余計な設定があるっぽい。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Supported = f:mpegts   v:h264|mpeg2   a:ac3|aac-lc|mpa        m:video/mpeg
+Supported = f:mpa    m:audio/mpeg
+Supported = f:m4a    m:audio/x-m4a
+Supported = f:mp3    m:audio/mpeg
+Supported = f:wav    m:audio/L16
+SupportedInternalSubtitlesFormats = ASS,SUBRIP
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;ffmpegのログを出せるように設定&lt;/h2&gt;
+&lt;p&gt;これだけ設定すると、とりあえずネットでダウンロードできるようなmp4の動画は見ることが出来た。しかし、iPhoneの動画は見ることが出来ない。そこで、ffmpegのログを見たくなったのだが、ffmpegはUMS内部で動くので、初期状態ではログを見ることが出来ない。&lt;/p&gt;
+&lt;p&gt;調べて見ると、レンダラーにffmpegのオプションを追加する項目があったので、そこを編集することでログを取って見た。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;CustomFFmpegOptions = -loglevel debug
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これをレンダラーに追記するとffmpegのログをdebug.logに出してくれるようになった&lt;/p&gt;
+&lt;h2&gt;iPhoneの動画を視聴する&lt;/h2&gt;
+&lt;p&gt;ここまでやってもiPhoneで記録されるmovファイルは直接トランスコード出来てないので、ubuntu側でmovをMpeg2トランスコードにエンコードすることで視聴できるかやってみた。&lt;/p&gt;
+&lt;p&gt;すると、「File "hoge.ts" will not be streamed because the resolution is incompatible with the renderer.」みたいなメッセージを確認出来た。どうも決まった解像度の動画でないと読み込まないらしい。
+それから「アスペクト比が16:9でない」というメッセージも出ていた。&lt;/p&gt;
+&lt;p&gt;ということはiPhoneで縦向きに取った映像の場合はアスペクト比が16:9になるように調整しないといけない。さすがにレンダラーにやってもらうのは難しそうなので、手動で行う。&lt;/p&gt;
+&lt;p&gt;手動でffmpegを行う場合、できることがとても広いので、少しずつ試してみて何が最適かを調べる方法を取ってみた。&lt;/p&gt;
+&lt;p&gt;まずは&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ffmpeg -i hoge.mov
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でコーデックを調べた&lt;/p&gt;
+&lt;p&gt;基本的にはコーデックは大丈夫みたいだったので&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ffmpeg -i hoge.mov -c copy output.ts
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でそのまま変換はできる。横向きの動画はこれだけで表示できるようになった。
+まずは解像度を調整するためにscaleオプションを入れてみる。オプション中の「-1」は自動調整という意味。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ffmpeg -i hoge.mov -vf &amp;quot;scale=-1:720&amp;quot; output.ts
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;やはりアスペクト比を16:9にしてないので視聴できない。アスペクト比のオプションを次に入れてみる&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ffmpeg -i hoge.mov -vf &amp;quot;scale=-1:720&amp;quot; -aspect 16:9 output.ts
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こうすると視聴できるようになった。しかしアスペクト比の調整のせいで、横に引き伸ばされた映像みたいになってしまった。そこで、余白を入れて見ることにした。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ffmpeg -i hoge.mov -vf &amp;quot;scale=-1:720,pad=1280:720:437:0:black&amp;quot; -aspect 16:9 output.ts
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こうすると縦向きの動画をDigaでちゃんと表示できるようになった。&lt;/p&gt;
+&lt;p&gt;dlnaのフォルダにmovが追加されて、縦向きの動画だった場合、この処理を自動で行うようにすればよさそうだ。&lt;/p&gt;</content><category term="linux"></category></entry><entry><title>Ubuntu 18.04でUniversal Media Serviceを使う</title><link href="http://blog.shigepon.info/blog/2018/09/05/use_ums_for_headless_ubuntu_1804/" rel="alternate"></link><published>2018-09-05T15:30:00+09:00</published><updated>2018-09-05T15:30:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2018-09-05:/blog/2018/09/05/use_ums_for_headless_ubuntu_1804/</id><summary type="html"></summary><content type="html">&lt;p&gt;Mac BookがHDD容量少なくなってきたので、NASサーバを立てて、ついでにDLNAでテレビとかiPhoneとかから動画とか見れるようにしたいなーと思って、色々調べてみた。結果、Universal Media Serviceを入れて自分でいじるのが良いかなと思ったので、その作業記録をメモしておく。NASサーバを立てる作業、メディアサーバーの比較、DLNAの設定については別記事で。&lt;/p&gt;
+&lt;h2&gt;参考にした記事&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/UniversalMediaServer/UniversalMediaServer/wiki/Linux-install-instructions"&gt;install universal media server&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://yaslab.hatenablog.com/entry/2015/12/06/010514"&gt;DebianでUniversal Media Serverを運用する&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;インストール&lt;/h2&gt;
+&lt;p&gt;aptからインストール(aptitudeを先にインストールしている)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude install openjdk-8-jre
+$ sudo aptitude install mediainfo
+$ sudo aptitude install dcraw vlc
+$ sudo dpkg --add-architecture i386
+$ sudo aptitude update
+$ sudo aptitude install lib32z1 lib32ncurses5 libbz2-1.0:i386 libstdc++6:i386
+$ sudo aptitude install p7zip
+$ wget https://sourceforge.net/projects/unimediaserver/files/Official%20Releases/Linux/UMS-&amp;lt;version&amp;gt;.tgz/download
+$ tar xzvf ums-&amp;lt;version&amp;gt;.tgz
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;起動チェック&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ums-&amp;lt;version&amp;gt;
+$ ./UMS.sh
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;サービス化は次の通り。
+/etc/systemd/system/ums.serviceに起動スクリプト&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[Unit]&lt;/span&gt;
+&lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Universal Media Server&lt;/span&gt;
+&lt;span class="na"&gt;After&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network.target&lt;/span&gt;
+
+&lt;span class="k"&gt;[Service]&lt;/span&gt;
+&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/path/to/ums-&amp;lt;version&amp;gt;/UMS.sh&lt;/span&gt;
+&lt;span class="na"&gt;ExecStop&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/bin/kill -INT $MAINPID&lt;/span&gt;
+&lt;span class="na"&gt;ExecReload&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/bin/kill -HUP $MAINPID&lt;/span&gt;
+&lt;span class="na"&gt;Type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;simple&lt;/span&gt;
+&lt;span class="na"&gt;User&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;ユーザー名&lt;/span&gt;
+
+&lt;span class="k"&gt;[Install]&lt;/span&gt;
+&lt;span class="na"&gt;WantedBy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;multi-user.target&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;入れて&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo systemctl start ums.service
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;で起動&lt;/p&gt;
+&lt;p&gt;&lt;version&gt;にはインストールしたバージョンを入れる。&lt;/p&gt;
+&lt;h2&gt;DLNAで公開するフォルダを設定&lt;/h2&gt;
+&lt;p&gt;~/.config/UMS/UMS.confを編集(UMSが読めるように権限に注意)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;folders = /path/to/video, /path/to/music, /path/to/picture
+&lt;/pre&gt;&lt;/div&gt;</content><category term="linux"></category></entry><entry><title>Ubuntu 18.04でNASサーバを作る</title><link href="http://blog.shigepon.info/blog/2018/09/05/make_nas_server_by_headless_ubuntu_1804/" rel="alternate"></link><published>2018-09-05T10:30:00+09:00</published><updated>2018-09-05T10:30:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2018-09-05:/blog/2018/09/05/make_nas_server_by_headless_ubuntu_1804/</id><summary type="html"></summary><content type="html">&lt;p&gt;Mac BookがHDD容量少なくなってきたので、使っていないマザボやケースを使ってNASサーバを立てて、そこに全部入れてしまおうと思った。作業内容を記録しておく。
+最初は市販のNASにしようかと思ったが、使っていないマザボとケースがあったので、それを使って作った方が安上がりかなと思ったので、市販のものはやめた。&lt;/p&gt;
+&lt;h2&gt;参考にした記事&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.yokoweb.net/2018/05/04/ubuntu-18_04-lts-server-install/"&gt;【Ubuntu 18.04 LTS Server】インストールする&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.yokoweb.net/2018/05/09/ubuntu18-network-fix-ip-address/"&gt;【Ubuntu 18.04 LTS Server】ネットワーク設定を固定IPに変更&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://intothevoid.hatenablog.com/entry/20121014/1350171023"&gt;UbuntuをSSDにインストール&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/suisuina/items/4fa8b001d7aa59d865a4"&gt;Ubuntu USBにswap領域を確保する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/ikuwow/items/f0b4d1f509a0b83b5d7e"&gt;スワップされて困っちゃうのでswappinessを設定する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://askubuntu.com/questions/1034169/is-trim-enabled-on-my-ubuntu-18-04-installation"&gt;Is TRIM enabled on my Ubuntu 18.04 installation?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.linux-beginner.com/linux_kihon64.html"&gt;/etc/fstabについて その1&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.lesstep.jp/step_on_board/linux/214/"&gt;大容量HDDをparted (GNU Parted)でフォーマットして使えるようにする手順&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://thr3a.hatenablog.com/entry/20140731/1406757982"&gt;2014-07-31 UbuntuでRAID１を構築してみる&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://inaz2.hatenablog.com/entry/2013/07/07/054616"&gt;SambaでWindowsファイル共有を行う正しいやり方&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.samba.gr.jp/project/translation/3.5/htmldocs/manpages-3/pdbedit.8.html"&gt;pdbedit &lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://runble1.com/post-296/"&gt;rsyncでconfigファイルを使ってssh接続を簡単にする&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://ytooyama.hatenadiary.jp/entry/2018/07/27/223815"&gt;Ubuntu 18.04.1を新規インストールするときはapt lineに注意しよう&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://yanor.net/wiki/?UNIX%2Frsync%2F%E6%8C%87%E5%AE%9A%E3%81%97%E3%81%9F%E6%8B%A1%E5%BC%B5%E5%AD%90%E3%81%AE%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%81%A0%E3%81%91%E5%90%8C%E6%9C%9F%E3%81%99%E3%82%8B"&gt;指定した拡張子のファイルだけ同期する&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;NASとして欲しい機能&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Raidは1で十分（バックアップは別のHDDに取る）&lt;/li&gt;
+&lt;li&gt;GUIは要らない。&lt;/li&gt;
+&lt;li&gt;Sambaを使う&lt;/li&gt;
+&lt;li&gt;定期的にフォルダを同期したい&lt;/li&gt;
+&lt;li&gt;メディアサーバとして使いたい&lt;/li&gt;
+&lt;li&gt;何か問題があった時にどこから手をつけて良いか分かる仕組みを使いたい&lt;/li&gt;
+&lt;li&gt;重複ファイルを消したい&lt;/li&gt;
+&lt;li&gt;SSD起動&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;OSの選定&lt;/h2&gt;
+&lt;p&gt;最初はNAS4Freeを入れてzfsにしてみたんだけど、問題があった時にややこしそうなのでやめた。慣れているUbuntuのGUI無し版を使うことにした。&lt;/p&gt;
+&lt;h2&gt;インストール&lt;/h2&gt;
+&lt;h3&gt;USBインストーラーの準備&lt;/h3&gt;
+&lt;h3&gt;SSDへのインストール&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;USBインストーラーを起動&lt;/li&gt;
+&lt;li&gt;言語設定はEnglish&lt;/li&gt;
+&lt;li&gt;キーボードはJapanese&lt;/li&gt;
+&lt;li&gt;固定IPの設定をする(DHCPだとIPが変わるから)&lt;/li&gt;
+&lt;li&gt;Proxyは入力しない&lt;/li&gt;
+&lt;li&gt;Use An Entire Disk&lt;/li&gt;
+&lt;li&gt;HDDの選択&lt;/li&gt;
+&lt;li&gt;フォーマットとか選択&lt;/li&gt;
+&lt;li&gt;ユーザー情報の入力&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;インストール後にIPを変更する&lt;/h2&gt;
+&lt;p&gt;/etc/netplan/50-cloud-init.yamlを変更&lt;/p&gt;
+&lt;h2&gt;swap領域をSSDの外(USB)に設定&lt;/h2&gt;
+&lt;p&gt;USBはFATでフォーマットされている&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo cat /proc/swaps
+sudo swapoff -a (必要なら)
+sudo fdisk -l
+sudo umount /dev/sda1 (sdaがUSBの場合)
+sudo mkswap -c /dev/sda1
+sudo swapon /devsda1
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;/etc/fstabを次のように設定&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;/dev/sda1 swap swap defaults 0 0
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;メモリのスワップ設定&lt;/h2&gt;
+&lt;p&gt;/etc/sysctl.confに以下を追記&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;vm.swappiness = 10
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;反映&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sysctl -p
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;よく書き込むフォルダをSSDの外に設定&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;/tmp, /var/tmp, /var/logをRamディスクに設定&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;/etc/fstabを次のように設定&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;tmpfs /tmp  tmpfs   defaults,noatime,size=128m  0   0
+tmpfs /var/tmp  tmpfs   defaults,noatime,size=512m  0   0
+tmpfs /var/log  tmpfs   defaults,noatime,size=128m  0   0
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;TRIMの設定&lt;/h2&gt;
+&lt;p&gt;Ubuntu18.04では最初から設定されてた&lt;/p&gt;
+&lt;h2&gt;ディスクI/Oスケジーラの設定&lt;/h2&gt;
+&lt;p&gt;SSDのアルゴリズムをdeadlineアルゴリズムに変更する&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;echo deadline &amp;gt;/sys/block/sda/queue/scheduler
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;パッケージのバージョン追加&lt;/h2&gt;
+&lt;p&gt;Ubuntu 18.04 Serverは/etc/apt/sources.listでmainリポジトリしか有効にしていないので、restricter, universe, multiverseを追加しておく&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://archive.ubuntu.com/ubuntu&lt;/span&gt; &lt;span class="kp"&gt;bionic&lt;/span&gt; &lt;span class="kp"&gt;main&lt;/span&gt; &lt;span class="kp"&gt;restricted&lt;/span&gt; &lt;span class="kp"&gt;universe&lt;/span&gt; &lt;span class="kp"&gt;multiverse&lt;/span&gt;
+&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://archive.ubuntu.com/ubuntu&lt;/span&gt; &lt;span class="kp"&gt;bionic-security&lt;/span&gt; &lt;span class="kp"&gt;main&lt;/span&gt; &lt;span class="kp"&gt;restricted&lt;/span&gt; &lt;span class="kp"&gt;universe&lt;/span&gt; &lt;span class="kp"&gt;multiverse&lt;/span&gt;
+&lt;span class="k"&gt;deb&lt;/span&gt; &lt;span class="s"&gt;http://archive.ubuntu.com/ubuntu&lt;/span&gt; &lt;span class="kp"&gt;bionic-updates&lt;/span&gt; &lt;span class="kp"&gt;main&lt;/span&gt; &lt;span class="kp"&gt;restricted&lt;/span&gt; &lt;span class="kp"&gt;universe&lt;/span&gt; &lt;span class="kp"&gt;multiverse&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;HDD2つを使ってRAID1を組む&lt;/h2&gt;
+&lt;h3&gt;GPartedを使ってHDDをフォーマット&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;parted /dev/sdb
+(parted) mklabel gpt
+(parted) mkpart
+  primary (partition name)
+  ext4 (file system)
+  0% (start)
+  100% (end)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;mdadmは最初から入ってる&lt;/p&gt;
+&lt;h3&gt;RAID1作成&lt;/h3&gt;
+&lt;p&gt;sdb, sdcを使ってRAID1を作ると仮定する。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;mdadm -C /dev/md0 -l1 -n2 --assume-clean /dev/sd[bc]1
+mdadm --detail --scan &amp;gt;&amp;gt; /etc/mdadm/mdadm.conf
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;確認&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;cat /proc/mdstat
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;activeとか出てればおk&lt;/p&gt;
+&lt;h2&gt;Sambaを使う&lt;/h2&gt;
+&lt;h3&gt;インストール&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo aptitude install samba
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;設定&lt;/h3&gt;
+&lt;p&gt;/etc/samba/smb.confを修正&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[global]&lt;/span&gt;
+  &lt;span class="na"&gt;dos charset&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;CP932 #文字コード&lt;/span&gt;
+&lt;span class="s"&gt;  unix charset = UTF8 #文字コード&lt;/span&gt;
+&lt;span class="s"&gt;  load printers = no #共有プリンタ設定をはずす&lt;/span&gt;
+&lt;span class="s"&gt;  printing = bsd #共有プリンタ設定をはずす&lt;/span&gt;
+&lt;span class="s"&gt;  printcap name = /dev/null #共有プリンタ設定をはずす&lt;/span&gt;
+&lt;span class="k"&gt;[&amp;lt;share name&amp;gt;]&lt;/span&gt;
+  &lt;span class="na"&gt;path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/path/to/share&lt;/span&gt;
+&lt;span class="s"&gt;  read only = no #書き込み許可&lt;/span&gt;
+&lt;span class="s"&gt;  guest ok = yes  #ゲストでのアクセスを許可する&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;確認&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;testparm
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;アカウント追加&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo pdbedit -a -u &amp;lt;username&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;定期的なフォルダ同期&lt;/h2&gt;
+&lt;p&gt;rsyncを使う
+外部サーバとの同期（外部サーバ-&amp;gt;ローカルサーバ）なので、公開鍵認証を設定しておく（そこらへんの設定は省略）。sshの設定名をhogeと仮定する。&lt;/p&gt;
+&lt;h3&gt;同期の確認&lt;/h3&gt;
+&lt;p&gt;rsyncを打って、実際に同期するか確認する&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;rsync -a hoge:/path/to/share/from /path/to/share/to
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;拡張子txtのものだけを同期&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;rsync -a --include=&amp;quot;*.txt&amp;quot; --exclude=&amp;quot;*&amp;quot; hoge:/path/to/share/from /path/to/share/to
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;cronを設定&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;crontab -e
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;0 6 * * * rsync -a --include=&amp;quot;*.txt&amp;quot; --exclude=&amp;quot;*&amp;quot; hoge:/path/to/share/from /path/to/share/to
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これで毎日6時に同期してくれる&lt;/p&gt;</content><category term="linux"></category></entry><entry><title>Vmware Esxi6.0 update2をASRock B360、Core i5にインストールした</title><link href="http://blog.shigepon.info/blog/2018/08/16/install_esxi_6_0/" rel="alternate"></link><published>2018-08-16T16:00:31+09:00</published><updated>2018-08-16T16:00:31+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2018-08-16:/blog/2018/08/16/install_esxi_6_0/</id><summary type="html"></summary><content type="html">&lt;p&gt;ずっと使っていたVmware Esxiサーバのマザーボードが壊れたので、マザーボードを買い換えるついでにEsxiを6.0 update2にしてみた。
+ググると6.7は特に使う必要なさそうだし、6.5でも良いけど、アップデートのバージョン差は少なめの方が良いかなと思って6.0にした。&lt;/p&gt;
+&lt;p&gt;マシン構成は次の通り&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;マザーボード：ASRock B360 Pro4&lt;/li&gt;
+&lt;li&gt;CPU：Core i5 8400&lt;/li&gt;
+&lt;li&gt;メモリ：16GB １枚&lt;/li&gt;
+&lt;li&gt;LAN：&lt;/li&gt;
+&lt;li&gt;HDD：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;手順&lt;/h2&gt;
+&lt;h3&gt;本体組み立て&lt;/h3&gt;
+&lt;p&gt;省略&lt;/p&gt;
+&lt;h3&gt;Esxiインストーラーの準備&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Esxiのisoをダウンロード&lt;/li&gt;
+&lt;li&gt;Macにダウンロードしたので、&lt;a href="https://unetbootin.github.io/"&gt;UNetbootin&lt;/a&gt;というアプリを使ってisoをUSBに焼いた。アプリを立ち上げてisoを開いて、書き込み先を選べばおk（参考：&lt;a href="https://www.admfactory.com/prepare-esxi-vsphere-usb-drive-boot-image-using-macos/"&gt;Prepare ESXI vSphere USB drive boot image using MacOS&lt;/a&gt;）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Esxiインストール&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;サーバに「インストーラーUSB」と「インストール先になるUSB」をそれぞれ挿して、インストーラーUSBを起動&lt;/li&gt;
+&lt;li&gt;インストール先として「インストール先になるUSB」を選んで問題なくインストール出来た
+細かいインストール手順（パスワード設定など）は&lt;a href="http://blog.shigepon.info/blog/2015/08/05/esxi-shows-fatal-error-33/"&gt;以前の記事&lt;/a&gt;の通り &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;起動&lt;/h3&gt;
+&lt;p&gt;インストーラーUSBは抜いて、USBから起動するとあっさり起動出来た。
+sshでEsxiホストを操作する手順は&lt;a href="http://blog.shigepon.info/blog/2015/08/05/esxi-shows-fatal-error-33/"&gt;以前の記事&lt;/a&gt;の通り。
+&lt;a href="https://kb.vmware.com/s/article/1017910?lang=ja"&gt;ESXi 4.1、ESXi 5.x および ESXi 6.0 での Tech Support モードの使用&lt;/a&gt;を参考にした。&lt;/p&gt;
+&lt;h3&gt;vSphere Clientのインストール&lt;/h3&gt;
+&lt;p&gt;Esxiの起動画面で出てくるipにアクセスして、vSphere Clientとダウンロードしてインストール。特に問題はなかった。&lt;/p&gt;
+&lt;h3&gt;トラブル&lt;/h3&gt;
+&lt;p&gt;元々Esxiが入ってるUSBを消去してインストーラーとして使おうとしたら、Macでうまくパーティションを消去出来なくて困った。fsckでごちゃごちゃやってたらいつのまにか出来てしまったので、実際どうやったらよかったのかは良くわからない・・・。&lt;/p&gt;
+&lt;p&gt;それから起動時にBIOSではデータストアのHDDが見れていたのにEsxiからは見えないというトラブルがあった。
+結論から言うとSATAコントローラーがAHCIモードだったのがまずかったみたい。BIOS画面でSATAコントローラーをAHCIモード以外にすると認識するようになった。
+このトラブルの解決だけで2時間かかった＞＜。ここらへんを参考にした（&lt;a href="http://d.hatena.ne.jp/igapyon/20140720"&gt;ESXi 5.5 を MSI H97 GAMING 3 にインストール&lt;/a&gt;、&lt;a href="http://zappy.hatenablog.jp/entry/2015/01/09/002505"&gt;自作PCにVMware ESXiをインストールした&lt;/a&gt;）
+データストアを認識しているかどうかは&lt;a href="https://kb.vmware.com/articleview?docid=1014953&amp;amp;lang=ja"&gt;VMware ESXi/ESX を操作するときのディスクの識別&lt;/a&gt;を参考にした。&lt;/p&gt;
+&lt;p&gt;しかもEsxiのトラブルとは関係ないけどHDDが2つも動かない状態になってるし・・・。どーしよー。&lt;/p&gt;</content><category term="vmware"></category><category term="linux"></category></entry><entry><title>インストールしたfluentdをserviceから使えるようにする</title><link href="http://blog.shigepon.info/blog/2016/01/25/enable-service-fluentd-start/" rel="alternate"></link><published>2016-01-25T21:20:26+09:00</published><updated>2016-01-25T21:20:26+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-01-25:/blog/2016/01/25/enable-service-fluentd-start/</id><summary type="html"></summary><content type="html">&lt;p&gt;&lt;a href="http://blog.shigepon.info/blog/2016/01/23/install-and-setting-up-fluentd-pluhin-groonga-using-ansible/"&gt;前回&lt;/a&gt;の続き&lt;/p&gt;
+&lt;p&gt;rbenvのgemを使ってインストールしたfluentdはserviceからの起動スクリプトが無いので、service fluentd startみたいなことをしたければ自分で登録するしかない。&lt;/p&gt;
+&lt;p&gt;でも1からスクリプトを書くのは面倒なので、td-agentのスクリプトを利用することにした。
+まずはtd-agentのインストール、削除&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude install td-agent
+$ sudo aptitude remove td-agent
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;削除してもserviceで使うスクリプトは残るみたいなので、これを元に起動スクリプトを作る。&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;p&gt;td-agentの起動スクリプトは&lt;/p&gt;
+&lt;p&gt;/etc/init.d/td-agentにある。&lt;/p&gt;
+&lt;p&gt;td-agentをfluentdに変えて、編集した。編集内容は主に以下の通り&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;td-agentをfluentdに変更&lt;/li&gt;
+&lt;li&gt;DAEMONをfluentdまでのパスに変更&lt;/li&gt;
+&lt;li&gt;USER、GROUPをfluentdをインストールしたユーザー、グループに変更&lt;/li&gt;
+&lt;li&gt;DAEMON_ARGSに"--config /path/to/config"を追加&lt;/li&gt;
+&lt;li&gt;/var/log/fluentd/fluentd.logを作っておく。ユーザー、グループはfluentdのユーザー、グループにする&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;必要無くて消して良い部分も結構ある気がするが、とりあえず動く為に最小限の修正にしておく。
+最後にserviceに登録するために&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo update-rc.d fluentd defaults
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でserviceにfluentdが登録される。ちなみにスクリプトのデバッグは&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ bash -x /etc/init.d/fluentd start
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とすればある程度出来るので、変なエラーが出ないかはここでチェックしてしまうと良い。&lt;/p&gt;
+&lt;p&gt;以上をansibleで動かすようにしてみた。&lt;/p&gt;
+&lt;p&gt;参考：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://l-w-i.net/t/ubuntu/service_001.txt"&gt;[Ubuntu] サービスを有効化/無効化する方法 - Life with IT&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://askubuntu.com/questions/36200/how-to-debug-upstart-scripts"&gt;debugging - how to debug upstart scripts? - Ask Ubuntu&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><category term="linux"></category></entry><entry><title>Vmware Esxiがfatal error 33を出したのでインストールしなおしてついでに色々試した話</title><link href="http://blog.shigepon.info/blog/2015/08/05/esxi-shows-fatal-error-33/" rel="alternate"></link><published>2015-08-05T16:45:31+09:00</published><updated>2015-08-05T16:45:31+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-08-05:/blog/2015/08/05/esxi-shows-fatal-error-33/</id><summary type="html"></summary><content type="html">&lt;p&gt;Vmware Esxiがある日&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;error loading /s.v00
+fatal error: &lt;span class="m"&gt;33&lt;/span&gt; inconsistent data
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;というメッセージを出して起動しなくなったので、修復方法をメモしておく&lt;/p&gt;
+&lt;h2&gt;結論&lt;/h2&gt;
+&lt;p&gt;まず結論から言うと、Vmware Esxiを入れ直すことになった。他にも方法があるらしいが、その方法のページが途中で会員登録しないと見れなくなったので、参考にしなかった。&lt;/p&gt;
+&lt;p&gt;参考：
+&lt;a href="https://communities.vmware.com/thread/342182"&gt;error loading s.v00 fatal error 33 inconsistent... | VMware Communities&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Vmware Esxiの入れ直し&lt;/h2&gt;
+&lt;p&gt;USBにインストールしていたので、要はそのままインストールし直すだけなんだけど、以下手順&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Esxiのisoをダウンロード&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://my.vmware.com/jp/web/vmware/login"&gt;my vmware&lt;/a&gt;からログイン(ユーザー登録はフォームに記入して・・・という良くある方法なので省略)
+-- &lt;a href="https://my.vmware.com/group/vmware/downloads#tab2"&gt;製品ダウンロード&lt;/a&gt;に移動&lt;/li&gt;
+&lt;li&gt;VMware vSphere Hypervisor (ESXi)の横の&lt;a href="https://my.vmware.com/group/vmware/info/slug/datacenter_cloud_infrastructure/vmware_vsphere_hypervisor_esxi/6_0"&gt;View Download Components&lt;/a&gt;をクリック&lt;/li&gt;
+&lt;li&gt;左にバージョン選択用のコンボボックスがあるので、バージョンを選択して、Downloadリンクをクリック&lt;/li&gt;
+&lt;li&gt;Registerのボタンが出てる場合、まずクリックして、ライセンスの登録を行う&lt;/li&gt;
+&lt;li&gt;License Informationにlicense keysが出るので保存しておく。(Vmware ESXi Clientでのライセンスキー登録に使う)&lt;/li&gt;
+&lt;li&gt;ライセンスの登録が済んだらDownload Packages以下の項目からダウンロードするためのリンクが出るのでダウンロードする&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;em&gt;AdBlockを入れてるとダウンロードが開始しなかったので注意&lt;/em&gt;&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;ダウンロードしたisoをCDに焼く&lt;/li&gt;
+&lt;li&gt;Esxiのハード要件を全て満たすハード上でCD起動する&lt;/li&gt;
+&lt;li&gt;ESXiをインストールする&lt;ul&gt;
+&lt;li&gt;Boot MenuでESXi Installerを選択する&lt;/li&gt;
+&lt;li&gt;インストールを進めるかどうか聞かれる(Enter)&lt;/li&gt;
+&lt;li&gt;ライセンス許諾を聞かれる(F11でおk)&lt;/li&gt;
+&lt;li&gt;インストール先を選ぶ(入れたい場所を選ぶ。USB差しておけばUSBも出て選択出来る)&lt;/li&gt;
+&lt;li&gt;キーボードレイアウトを選択する&lt;/li&gt;
+&lt;li&gt;rootアカウントのパスワードを設定する(タブで移動、2回設定するEnterで完了)&lt;/li&gt;
+&lt;li&gt;最後の確認(F11でおk)&lt;/li&gt;
+&lt;li&gt;インストール終了後Enterで再起動&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;バージョン5.5、6.0&lt;/h2&gt;
+&lt;p&gt;今まで入れてたのがEsxiバージョン5.0だったので、ついでに5.5、6.0を試してみた。インストール方法は入れ直し方法と同じ。&lt;/p&gt;
+&lt;p&gt;で、インストール後にクライアントをDLしてホストに接続してみた。どのバージョンでも問題なく出来たが、Windows XPの端末ではこの2つのバージョンは接続出来ないそうな。&lt;/p&gt;
+&lt;p&gt;Vmの操作（インベントリへの追加、起動、コンソール表示、終了）は全てのバージョンで同じように出来た。Vmはバージョン5で作ったものだが他のバージョンでの操作も問題ないらしい。これは便利。&lt;/p&gt;
+&lt;h2&gt;sshでEsxiホストを操作する&lt;/h2&gt;
+&lt;p&gt;linuxやmacからEsxiホストを操作して、vmの起動、終了とかやりたかったので、ついでに試してみた。手順は以下の通り&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;EsxiホストでSSHを有効にする&lt;ul&gt;
+&lt;li&gt;初期画面からCustomize Systemへ移動(F2)&lt;/li&gt;
+&lt;li&gt;カーソルを上下移動して「Troubleshooting Options」のところでEnter&lt;/li&gt;
+&lt;li&gt;Disable ESXi Shellにカーソルを合わせてEnterを押すとEnable ESXi Shellに変わる&lt;/li&gt;
+&lt;li&gt;Disable SSHにカーソルを合わせてEnterを押すとEnable SSHに変わる&lt;/li&gt;
+&lt;li&gt;Restart Management Agentsにカーソルを合わせてEnterを押す&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;ESXiクライアントでSSHを有効にする&lt;ul&gt;
+&lt;li&gt;インベントリが選択されている状態で、構成(Configuration) -&amp;gt; セキュリティプロファイル(Security Profile)の上部、サービス(Services)の「プロパティ(Properties)をクリック&lt;/li&gt;
+&lt;li&gt;SSHを選択し、オプション(Options)をクリック&lt;/li&gt;
+&lt;li&gt;ホストに連動して開始および停止(Start and stop with host)を選択し、サービスコマンドの開始(Start)ボタンを押す。その後okをクリックしてダイアログを消す。&lt;/li&gt;
+&lt;li&gt;同中部、ファイアウォール(Firewall)の「プロパティ(Properties)をクリック&lt;/li&gt;
+&lt;li&gt;SSHサーバ(SSH Server)をチェック&lt;/li&gt;
+&lt;li&gt;ファイアーウォール(Firewall)ボタンをクリック&lt;/li&gt;
+&lt;li&gt;IPアドレスの許可設定を行う。任意のIPアドレスからの接続を許可(Allow connections from any IP address)するのが一番楽。&lt;/li&gt;
+&lt;li&gt;okをクリックしていって、ダイアログを閉じる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;以上で、linuxやmacから&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ssh root@ESXiのip
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でインストール時に指定したパスワードを入力するとsshでESXiホストにアクセス出来るようになる。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://www.serenity-networks.com/networking/how-to-enable-ssh-on-vmware-esxi-5-5-5-6-all-other-versions/"&gt;How To Enable SSH on VMware ESXi 5 / 5.5 / 6 &amp;amp; All Other Versions | Serenity-Networks&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;ESXiの管理コマンド(ごく一部。追記予定)&lt;/h2&gt;
+&lt;h3&gt;インベントリへのVMの追加、削除&lt;/h3&gt;
+&lt;p&gt;追加&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ vim-cmd solo/registervm &lt;span class="o"&gt;[&lt;/span&gt;vmxのパス.vmx&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;vm名&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;削除&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ vim-cmd vmsvc/unregister &lt;span class="o"&gt;[&lt;/span&gt;vmのid&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;vm一覧&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ vim-cmd vmsvc/getallvms
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;ここで出て来たvmidをvmのidとして色んなコマンド内で使用する。&lt;/p&gt;
+&lt;h3&gt;vm起動、シャットダウン&lt;/h3&gt;
+&lt;p&gt;起動&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ vim-cmd vmsvc/power.on &lt;span class="o"&gt;[&lt;/span&gt;vmのid&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;終了&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ vim-cmd vmsvc/power.shutdown &lt;span class="o"&gt;[&lt;/span&gt;vmのid&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="http://qiita.com/binzume/items/096ce77f73b6e853c342"&gt;VMware ESXiをSSHでがんばるぞい(コマンドライン操作色々) - Qiita&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;ちなみに各コマンドについてはヘルプを出すオプションとか無いみたい。コマンド失敗した時に使用法が出ることもあるが、失敗するまで分からないとか怖いわー。&lt;/p&gt;
+&lt;h3&gt;ESXiシャットダウン&lt;/h3&gt;
+&lt;p&gt;シャットダウンと同時に電源を切る作業も必要&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ shutdown.sh &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; poweroff
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でおk。USBにインストールしているせいか分からないが、poweroffが無い場合、SSHの設定が再起動後、元に戻っていた。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://www.nojokeit.com/2013/02/shut-down-esxi-51-guest-vms-and-host.html"&gt;No Joke IT: Shut down ESXi 5.1 guest VMs and the host (free edition) via SSH - the easy way!&lt;/a&gt;&lt;/p&gt;</content><category term="vmware"></category><category term="linux"></category></entry><entry><title>Ubuntu12.04でjenkinsのインストールと設定</title><link href="http://blog.shigepon.info/blog/2014/06/18/jenkins-setting/" rel="alternate"></link><published>2014-06-18T15:08:25+09:00</published><updated>2014-06-18T15:08:25+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-06-18:/blog/2014/06/18/jenkins-setting/</id><summary type="html"></summary><content type="html">&lt;p&gt;&lt;a href="http://jnst.hateblo.jp/entry/2013/10/03/123012"&gt;Ubuntu 12.04 LTS に Jenkins をインストール - MELODIC-X&lt;/a&gt;を参考にして設定した。
+Jenkins本体でアップグレード可能らしいので、aptitudeでインストール&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude install jenkins
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Nginx設定&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;location&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;jenkins&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="err"&gt;proxy_pass&lt;/span&gt; &lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="mf"&gt;127.0.0.1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;8080&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;で、nginxは起動してたので再読み込み&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo service nginx reload
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Jenkins設定ファイル修正&lt;/h2&gt;
+&lt;p&gt;jenkinsの設定ファイルは/etc/default/jenkinsにあるので編集
+最下行の起動パラメーターに&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;--prefix=/jenkins
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;を追加。jenkins再起動&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo service jenkins restart
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;以上&lt;/p&gt;</content><category term="linux"></category><category term="test1st"></category></entry><entry><title>ubuntuでaptitude installした時にinitramfs-toolsのエラーが出た</title><link href="http://blog.shigepon.info/blog/2014/06/08/ubuntu-aptitude-error-in-initramfs-tools/" rel="alternate"></link><published>2014-06-08T21:41:18+09:00</published><updated>2014-06-08T21:41:18+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-06-08:/blog/2014/06/08/ubuntu-aptitude-error-in-initramfs-tools/</id><summary type="html"></summary><content type="html">&lt;p&gt;virtualboxをインストールしようとしたら&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;以下のパッケージの処理中にエラーが発生しました:
+ initramfs-tools
+E: Sub-process /usr/bin/dpkg returned an error code &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+パッケージをインストールできませんでした。復旧を試みています:
+initramfs-tools &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;.99ubuntu13.5&lt;span class="o"&gt;)&lt;/span&gt; を設定しています ...
+update-initramfs: deferring update &lt;span class="o"&gt;(&lt;/span&gt;trigger activated&lt;span class="o"&gt;)&lt;/span&gt;
+initramfs-tools のトリガを処理しています ...
+update-initramfs: Generating /boot/initrd.img-3.2.0-53-generic
+
+gzip: stdout: No space left on device
+cpio: 書き込みエラー: Broken pipe
+E: mkinitramfs failure cpio &lt;span class="m"&gt;1&lt;/span&gt; gzip &lt;span class="m"&gt;1&lt;/span&gt;
+update-initramfs: failed &lt;span class="k"&gt;for&lt;/span&gt; /boot/initrd.img-3.2.0-53-generic with &lt;span class="m"&gt;1&lt;/span&gt;.
+dpkg: initramfs-tools の処理中にエラーが発生しました &lt;span class="o"&gt;(&lt;/span&gt;--configure&lt;span class="o"&gt;)&lt;/span&gt;:
+ サブプロセス インストール済みの post-installation スクリプト はエラー終了ステータス &lt;span class="m"&gt;1&lt;/span&gt; を返しました
+以下のパッケージの処理中にエラーが発生しました:
+ initramfs-tools
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;みたいなエラーが出た。どうも/bootが一杯になってると出るらしい。
+&lt;a href="http://www.cagylogic.com/archives/2012/11/04150426.php"&gt;/bootがあふれてapt-get upgradeが失敗したでござる | cagylogic&lt;/a&gt;を参考にして削除することにした。ただ、普通にapt-get purgeとかapt-get removeしても結局エラーメッセージはなぜか出たまま。&lt;/p&gt;
+&lt;p&gt;で、さらにググって&lt;a href="http://tatuas.hatenablog.com/entry/2013/08/22/015141"&gt;Ubuntuでboot容量不足という警告の対処法 - Tatuas Blog&lt;/a&gt;のように&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo apt-get remove linux-image-xxxx
+$ sudo apt-get autoremove
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とすると、上手く消すことが出来た&lt;/p&gt;</content><category term="linux"></category></entry><entry><title>Ubuntuでopensslのsecurity patchを当てる</title><link href="http://blog.shigepon.info/blog/2014/04/08/update-openssl-security-patch/" rel="alternate"></link><published>2014-04-08T14:39:21+09:00</published><updated>2014-04-08T14:39:21+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-04-08:/blog/2014/04/08/update-openssl-security-patch/</id><summary type="html"></summary><content type="html">&lt;p&gt;本日、&lt;a href="http://jp.techcrunch.com/2014/04/08/20140407massive-security-bug-in-openssl-could-effect-a-huge-chunk-of-the-internet/"&gt;OpenSSLの重大バグが発覚。インターネットの大部分に影響の可能性 | TechCrunch Japan&lt;/a&gt;というニュースで&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;過去2年以内のあらゆるバージョンのOpenSSLが走るシステムで、システムメモリー上にある大量のデータを暴露することが可能&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;と書いてあった、これはまずいので、あわててセキュリティパッチを当てたので手順をメモ。 OSはUbuntu 12.04LTS。&lt;/p&gt;
+&lt;p&gt;Ubuntuでは&lt;a href="http://www.ubuntu.com/usn/usn-2165-1/"&gt;USN-2165-1: OpenSSL vulnerabilities | Ubuntu&lt;/a&gt;にあるように、Ubuntu 13.10、12.10、12.04 LTSでセキュリティパッチが出ている（2014年4月7日現在)。ということでaptを使えばセキュリティパッチを当てることが出来る。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo apt-get update
+$ sudo apt-get upgrade
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;または&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude update
+$ sudo aptitude upgrade
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でおk。ただしopenssl versionでバージョン確認してもパッチが当たったかどうか良く分からないので以下のコマンドで確認&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ dpkg -l &lt;span class="p"&gt;|&lt;/span&gt; grep openssl
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Ubuntu 12.04LTSの場合&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ii  openssl                              &lt;span class="m"&gt;1&lt;/span&gt;.0.1-4ubuntu5.12                   Secure Socket Layer &lt;span class="o"&gt;(&lt;/span&gt;SSL&lt;span class="o"&gt;)&lt;/span&gt; binary and related cryptographic tools
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;と出ればおk。確認してないけど、Ubuntu 13.10なら1.0.1e-3ubuntu1.2、Ubuntu 12.10なら1.0.1c-3ubuntu2.7と出ていればおk。&lt;/p&gt;</content><category term="linux"></category></entry></feed>

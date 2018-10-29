@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など - php</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/php.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2015-03-03T09:56:56+09:00</updated><entry><title>突然サーバエラーが頻発したので、調べてみたらエラーログが原因だった</title><link href="http://blog.shigepon.info/blog/2015/03/03/error-log-make-php-error/" rel="alternate"></link><published>2015-03-03T09:56:56+09:00</published><updated>2015-03-03T09:56:56+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-03-03:/blog/2015/03/03/error-log-make-php-error/</id><summary type="html"></summary><content type="html">&lt;p&gt;参考：&lt;a href="http://zapanet.info/blog/item/2489"&gt;PHPのエラーログが肥大してPHPが動かなくなった話&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;ある日、運用しているサービスがサーバエラーを頻出しだしたので、調べてみた。環境はUbuntu、nginx、php-fpm、postgresql。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;他のサーバへのdbアクセスがおかしくなったのかと思い、他の方法でdbアクセス→問題無し&lt;/li&gt;
+&lt;li&gt;サービスを色々再起動してみた。→変化なし&lt;/li&gt;
+&lt;li&gt;サーバを再起動。しばらくエラーでないが、しばらくするとエラーががが&lt;/li&gt;
+&lt;li&gt;php-fpmを再起動。しばらくエラーでないが、しばらくするとエラーががが&lt;/li&gt;
+&lt;li&gt;php周りかなと思ったので、phpのログを開く→開かない！&lt;/li&gt;
+&lt;li&gt;良く見たらphp-fpmのログが2GB超えてた。ナンテコッタイ。&lt;/li&gt;
+&lt;li&gt;ログを退避して、ローテーション設定して改めてphp-fpmを再起動したら直った。めでたしめでたし。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;メモがてらローテーション設定を書いておく&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;p&gt;/etc/logrotate.d/php.conf&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;/path/to/php5-fpm.log {
+  daily
+  missingok
+  rotate 52
+  compress
+  delaycompress
+  notifyempty
+  create 0644 group username
+  dateext
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;エラーチェックテストはこんな感じ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;logrotate -dv /etc/logrotate.d/php.conf
+&lt;/pre&gt;&lt;/div&gt;</content><category term="rhaco"></category><category term="PHP"></category><category term="linux"></category></entry><entry><title>phpenvとphp-buildを使って適当なバージョンのphpをビルドする</title><link href="http://blog.shigepon.info/blog/2014/06/07/build-php-with-phpenv/" rel="alternate"></link><published>2014-06-07T00:42:03+09:00</published><updated>2014-06-07T00:42:03+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-06-07:/blog/2014/06/07/build-php-with-phpenv/</id><summary type="html"></summary><content type="html">&lt;p&gt;基本は&lt;a href="http://d.hatena.ne.jp/hnw/20130626"&gt;php-buildで複数バージョンのPHP-FPMを用意する - hnwの日記&lt;/a&gt;を参考にして進める&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ curl https://raw.github.com/CHH/phpenv/master/bin/phpenv-install.sh &lt;span class="p"&gt;|&lt;/span&gt; bash
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これが何故か上手くいかなかったので&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ wget https://raw.github.com/CHH/phpenv/master/bin/phpenv-install.sh
+$ chmod +x phpenv-install.sh
+$ ./phpenv-install.sh
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;こうやった。コマンド終了時のメッセージに従って.zshrcを変更して反映。
+php-buildのインストールは下のような感じ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git clone git://github.com/CHH/php-build.git ~/.phpenv/plugins/php-build
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;で、おもむろにphpをインストール&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ phpenv install &lt;span class="m"&gt;5&lt;/span&gt;.5.5
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とかやると出るわ出るわエラーが出るわ。どうもビルド用のライブラリやヘッダファイルみたいなのが何かと足りないみたいで色々出て来た。出るメッセージは人によって違うと思うので、入れるライブラリの一覧より、ライブラリが無い場合の対処法を書いておく。ubuntuにはapt-fileというアプリ？があって、これを使うとライブラリをインストールした時にインストールされるファイル名で検索することが出来る。&lt;/p&gt;
+&lt;p&gt;例えば「configure: error: mcrypt.h not found. Please reinstall libmcrypt.」みたいなエラーが出た場合、&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ apt-file search mcrypt.h
+libmcrypt-dev: /usr/include/mcrypt.h
+libmcrypt-dev: /usr/include/mutils/mcrypt.h
+libtomcrypt-dev: /usr/include/tomcrypt.h
+php-doc: /usr/share/doc/php-doc/html/book.mcrypt.html
+php-doc: /usr/share/doc/php-doc/html/intro.mcrypt.html
+php-doc: /usr/share/doc/php-doc/html/ref.mcrypt.html
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;みたいにすると、mcrypt.hを含むライブラリとインストール箇所が表示されるので、これを見ながらインストールするライブラリを選んだ（この場合だとlibmcrypt-devをインストールした）&lt;/p&gt;
+&lt;p&gt;これを地道に何度か繰り返して何とかビルド出来た。rbenvに比べると面倒だった。&lt;/p&gt;</content><category term="php"></category></entry></feed>

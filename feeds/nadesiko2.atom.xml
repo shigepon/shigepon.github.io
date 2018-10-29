@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など - nadesiko2</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/nadesiko2.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2017-04-13T20:40:00+09:00</updated><entry><title>IPが変わったら自動でufwの設定変えるスクリプトをなでしこ2で組んでみた</title><link href="http://blog.shigepon.info/blog/2017/04/13/modify_ufw_setting_automatically_from_remote_server/" rel="alternate"></link><published>2017-04-13T20:40:00+09:00</published><updated>2017-04-13T20:40:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2017-04-13:/blog/2017/04/13/modify_ufw_setting_automatically_from_remote_server/</id><summary type="html"></summary><content type="html">&lt;p&gt;うちではVPSサーバ の負荷を下げるためとか便利だからとかの理由で家のサーバからVPSサーバにアクセスすることが多いんだけど、IPがときたま変わるので、その度にufwとかの設定をやりかえないといけないのが面倒だったので、色々調べてなんとか自動で設定変更出来るスクリプトを組んでみた。セキュリティ的にびみょーな気がしないでもないけど、IPがいつの間にか変わってDBの更新が弾かれたーとかよりましなので、やってみた。&lt;/p&gt;
+&lt;p&gt;ソースは需要ないと思うのでアップしない。やったこととポイントだけ書いておく。&lt;/p&gt;
+&lt;h2&gt;やったこと&lt;/h2&gt;
+&lt;p&gt;&lt;a href="http://www.ugtop.com/spill.shtml"&gt;確認くん&lt;/a&gt;でIPを調べて、IPが変わってたらsshでコマンドを叩く。IPは保存しておく。んで、これをcronジョブで定期的にやる。&lt;/p&gt;
+&lt;h2&gt;ポイント&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;コマンドの実行結果はローカルファイルにリダイレクトしておいて、その結果から色々判定する&lt;/li&gt;
+&lt;li&gt;ufwでdeleteする時はyes/noが聞かれるので、--forceオプションを付けて、回避する&lt;/li&gt;
+&lt;li&gt;sudo使うコマンドがあるのでsudoに-Sオプションを付けてsshpassを使うかechoで標準入力からリダイレクトした。セキュリティ上あまりよくない気が・・・&lt;/li&gt;
+&lt;li&gt;sshに-tオプションは付けなくても良かった。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;参考&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://askubuntu.com/questions/611749/how-to-run-ufw-without-interactive-mode"&gt;How to run 'ufw' without interactive mode? - Ask Ubuntu&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://inamuu.com/%E3%82%B7%E3%82%A7%E3%83%AB%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88%E3%81%A7%E3%83%AA%E3%83%A2%E3%83%BC%E3%83%88%E5%85%88%E3%81%AB%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%82%92%E5%AE%9F%E8%A1%8C/"&gt;シェルスクリプトでリモート先にコマンドを実行する際のTips | inamuu.com&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://kanonji.info/blog/2013/06/07/ssh%E3%81%A7%E3%83%AA%E3%83%A2%E3%83%BC%E3%83%88%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%82%92%E5%AE%9F%E8%A1%8C%E3%81%99%E3%82%8B%E6%99%82%E3%81%AE%E6%9B%B8%E3%81%8D%E6%96%B9%E3%81%A8%E6%B3%A8/"&gt;sshでリモートコマンドを実行する時の書き方と注意点 | kanonjiのブログ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.pictnotes.jp/memo/archives/1"&gt;cron 経由や、sshからリモートの、sudo を実行したい場合｜その他｜お仕事メモ｜Pictnotes&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><category term="linux"></category><category term="nadesiko2"></category></entry><entry><title>なでしこ2でradikoタイムフリーで録音してみたメモ</title><link href="http://blog.shigepon.info/blog/2017/04/12/record_timefree_radiko_with_nadesiko2/" rel="alternate"></link><published>2017-04-12T17:22:00+09:00</published><updated>2017-04-12T17:22:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2017-04-12:/blog/2017/04/12/record_timefree_radiko_with_nadesiko2/</id><summary type="html"></summary><content type="html">&lt;p&gt;&lt;a href="http://blog.shigepon.info/blog/2015/07/19/record-radiko-with-nadesiko2/"&gt;なでしこ2でradikoの録音をやってみた&lt;/a&gt;の後、色々radikoの仕様が変わり、タイムフリーで1週間番組を聞くことが出来るようになった。なので、今更録音も要らないような気もするんだけど、録音はやっぱ出来たら出来たで便利なのでやってみた。気付いた点だけメモしておく。ちなみにメモの内容はまったくなでしことは関係無い。&lt;/p&gt;
+&lt;p&gt;参考：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://d.hatena.ne.jp/nyanonon/touch/20161015"&gt;radikoがタイムフリー対応で録音出来なくなったので対処&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://qiita.com/komacchi/items/2db61b16c1c81967705f"&gt;radikoの仕様変更によるRaspberry Piでの録音失敗対応&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;2015/07/19時点からの変更点&lt;/h2&gt;
+&lt;p&gt;結構色々変わってた。&lt;/p&gt;
+&lt;h3&gt;player&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;http://radiko.jp/player/swf/player_3.0.0.00.swf  -&amp;gt; http://radiko.jp/apps/js/flash/myplayer-release.swf
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;ヘッダ&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;X-Radiko-App: pc_1 -&amp;gt; X-Radiko-App: pc_ts
+X-Radiko-App-Version: 2.0.1 -&amp;gt; X-Radiko-App-Version: 4.0.0
+X-Radiko-Authtoken: ... -&amp;gt; X-Radiko-AuthToken: ...
+X-Radiko-Partialkey: ... -&amp;gt; X-Radiko-PartialKey: ...
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;録音URL&lt;/h3&gt;
+&lt;p&gt;以前はストリーミングのurlをxmlから取って来てたけど、今回は
+https://radiko.jp/v2/api/ts/playlist.m3u8?l=15&amp;amp;station_id=...&amp;amp;ft=...&amp;amp;to=...
+（station_idにはMBSなどの放送局IDを、ft、toは西暦の年月日、時分秒を数字だけで繋げた数値を用いる）
+のレスポンスに含まれるURLを仕様する&lt;/p&gt;
+&lt;h3&gt;録音ツール&lt;/h3&gt;
+&lt;p&gt;以前はrtmpdumpを使ってたけど、今回はffmpegを使った。ubuntu12.04で試したので、&lt;a href="http://blog.shigepon.info/blog/2017/04/12/use_recent_version_of_ffmpeg_for_ubuntu_1204/"&gt;ffmpegの最新版入れる必要
+があった&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;タイムフリー機能のおかげで1週間に1回聞きたいやつまとめてダウンロードとか出来るからとても楽になったかもー。&lt;/p&gt;</content><category term="nadesiko2"></category><category term="linux"></category></entry><entry><title>mono winformsがmacで文字化けする件</title><link href="http://blog.shigepon.info/blog/2015/12/17/mono-winforms-garbled-on-mac/" rel="alternate"></link><published>2015-12-17T08:55:02+09:00</published><updated>2015-12-17T08:55:02+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-12-17:/blog/2015/12/17/mono-winforms-garbled-on-mac/</id><summary type="html"></summary><content type="html">&lt;p&gt;なでしこ2にフォームの機能入れるためにmonoのWinFormを試しているが、どうにも文字化けが治らないので、途中経過までのメモ。取りあえずボタンは文字化けしないようになった。&lt;/p&gt;
+&lt;h2&gt;Fontプロパティを設定する&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;System&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;System.Windows.Forms&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;System.Drawing&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;...&lt;/span&gt;
+&lt;span class="n"&gt;Form&lt;/span&gt; &lt;span class="n"&gt;win&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;Form&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;span class="n"&gt;win&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Font&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;Font&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Osaka&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;10&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じ。&lt;/p&gt;
+&lt;h2&gt;~/.config/fonts.confを設定&lt;/h2&gt;
+&lt;p&gt;とりあえず必ず日本語フォントにするように設定してみる&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;fontconfig&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;match&lt;/span&gt; &lt;span class="na"&gt;target=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;pattern&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;edit&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;family&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;mode=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;assign&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;binding=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;strong&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;string&amp;gt;&lt;/span&gt;Hiragino Kaku Gothic Pro W3&lt;span class="nt"&gt;&amp;lt;/strong&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;/edit&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/match&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/fontconfig&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;一応どっちもメインフォームにボタン貼付けくらいなら日本語になった。でもメインフォームのタイトルが文字化けするのが治らない。メインフォームは豆腐でない文字化けなので、フォントじゃないような気がする。どうしたものか。&lt;/p&gt;
+&lt;p&gt;とここまで書いて、Eto.Formsっての使ってみた方が今後を考えると良いんじゃないかと思い始めたのでこれ以上やらないと思う。&lt;/p&gt;
+&lt;p&gt;ここまでで参考にしたページ（情報少ない）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://risky-safety.org/zinnia/d/2011/09/"&gt;Zinnia hacks tomorrow.&lt;/a&gt; 一番参考になった&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.slideshare.net/babatakao/font-config"&gt;Fontconfigことはじめ&lt;/a&gt; fontconfig回り&lt;/li&gt;
+&lt;/ul&gt;</content><category term="CSharp"></category><category term="nadesiko2"></category></entry><entry><title>なでしこ2でssl使うとthe authentication or decription has failedエラーが出る件</title><link href="http://blog.shigepon.info/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/" rel="alternate"></link><published>2015-07-20T20:12:34+09:00</published><updated>2015-07-20T20:12:34+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-07-20:/blog/2015/07/20/nadesiko2-ssl-error-the-authentication-or-decription-has-failed/</id><summary type="html"></summary><content type="html">&lt;p&gt;結論から言うとmonoの問題だった。&lt;/p&gt;
+&lt;p&gt;参考：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://d.hatena.ne.jp/unarist/20110601/1306945858"&gt;MonoでSSL接続しようとしたら怒られた - うなてっくろぐ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://ramorenoc.wordpress.com/2012/12/05/the-authentication-or-decryption-has-failed-mono/"&gt;The authentication or decryption has failed – Mono | Code Adventures&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://ubuntuforums.org/showthread.php?t=1841740"&gt;Problems using SSL in C#&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;なでしこ2でsslにアクセスするとエラーが出る&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;「https://どこかhttpsでアクセスするurl」からHTTPデータ取得してそれを表示
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;エラーメッセージはこんな感じ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[SystemError]Error getting response stream (Write: The authentication or decryption has failed.): SendFailure  at System.Net.HttpWebRequest.EndGetResponse (IAsyncResult asyncResult) [0x00000] in &amp;lt;filename unknown&amp;gt;:0 
+  at System.Net.HttpWebRequest.GetResponse () [0x00000] in &amp;lt;filename unknown&amp;gt;:0 
+  at System.Net.WebClient.GetWebResponse (System.Net.WebRequest request) [0x00000] in &amp;lt;filename unknown&amp;gt;:0 
+  at System.Net.WebClient.ReadAll (System.Net.WebRequest request, System.Object userToken) [0x00000] in &amp;lt;filename unknown&amp;gt;:0 
+  at System.Net.WebClient.DownloadDataCore (System.Uri address, System.Object userToken) [0x00000] in &amp;lt;filename unknown&amp;gt;:0
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;調べてみると、コードで何とかなるというのがまず出て来たので、試してみたら対処出来た。C#のコードはこんな感じ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="n"&gt;Object&lt;/span&gt; &lt;span class="nf"&gt;_dataGet&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;INakoFuncCallInfo&lt;/span&gt; &lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Net&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ServicePointManager&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ServerCertificateValidationCallback&lt;/span&gt; &lt;span class="p"&gt;+=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;ce&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;ca&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="k"&gt;true&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;....&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;ただし、この対処だとhttpアクセスとhttpsアクセスが大差なくなるみたいなことが書いてあったので、これじゃいかんなともうちょっと調べてみると、要はmonoにルート証明書がインストールされてなかったのが原因らしかった。対処法は参考にしたページほぼそのままで&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ mozroots --import --sync
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;サードパーティーの認証を受入れる場合は&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ certmgr -ssl https://どこかhttpsでアクセスするドメイン
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;この認証本当に受入れていいの？みたいなメッセージが出たら「y」を押せばおk&lt;/p&gt;</content><category term="nadesiko2"></category><category term="CSharp"></category></entry><entry><title>なでしこ2でradikoの録音をやってみた</title><link href="http://blog.shigepon.info/blog/2015/07/19/record-radiko-with-nadesiko2/" rel="alternate"></link><published>2015-07-19T17:22:00+09:00</published><updated>2015-07-19T17:22:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-07-19:/blog/2015/07/19/record-radiko-with-nadesiko2/</id><summary type="html"></summary><content type="html">&lt;p&gt;ネット上でラジオを聞けるサービス&lt;a href="http://radiko.jp/"&gt;radiko&lt;/a&gt;の録音ソフトが調子悪くなったので、自分で作ってみるかーとやってみたら出来たのでメモ。OSはUbuntu 12.04で、cui環境で行った。&lt;/p&gt;
+&lt;p&gt;参考：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://gist.github.com/matchy2/3956266"&gt;簡易Radiko録音スクリプト&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://d.hatena.ne.jp/zariganitosh/20130124/rtmpdump_radiko_access"&gt;rtmpdumpでradikoにアクセスする手順 - ザリガニが見ていた...。&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://lifeonubuntu.com/ubuntu-missing-add-apt-repository-command/"&gt;Ubuntu Missing add-apt-repository command&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.ubuntugeek.com/how-to-install-swftools-in-ubuntu-12-0411-10-using-ppa.html"&gt;How to install SWFTools in ubuntu 12.04/11.10 using PPA | Ubuntu Geek&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Radiko録音スクリプトをまず参考にしたが、実際に手順を手作業で追いたかったので、参考記事を見ながら再現してみた。するとまずswfextractコマンドが無くてつまずく。ぐぐるとaptのリポジトリを追加してインストールする必要があるらしい。しかもリポジトリ追加用コマンドも無いのでインストールする必要があった。swfextractを使えるようになるまでの手順は以下の通り&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude install software-properties-common python-software-properties
+$ sudo add-apt-repository ppa:guilhem-fr/swftools
+$ sudo aptitude update
+$ sudo aptitude install swftools
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;あとは参考ページの手順通りで録音出来た。&lt;a href="http://www.dcc-jpl.com/foltia/wiki/radikomemo"&gt;radikomemo - foltia - Trac&lt;/a&gt;で放送局のid（xml取得に使ったりする）をチェックした。&lt;/p&gt;
+&lt;p&gt;で、あとは一連の処理をなぞるスクリプトを書くだけ。pythonとかはググればあるので、なでしこ2でやってみた。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://gist.github.com/shigepon/01acb8686e6df6accce2"&gt;record_radiko.nako&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;gistを初めて使うので、こんなやり方で良いのかちょっと分からないけどこんな感じ。wgetとかddとかコマンドをそのまま使ってるので、windowsでは動かないはず。なでしこ2では7/19時点ではpostでヘッダー指定するとか出来ないので、こうせざるを得ない。&lt;/p&gt;
+&lt;p&gt;なでしこ2の一例ということで。ちなみにこれ作るのに3時間かかった。うち1時間半がググってインストールして手作業で動作確認に使って、1時間は休憩に使った。エラー処理とかtmpファイルの処理とか全然やってない適当コードですんません＞＜。&lt;/p&gt;</content><category term="nadesiko2"></category><category term="linux"></category></entry><entry><title>Jenkinsでなでしこ2をCIする</title><link href="http://blog.shigepon.info/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/" rel="alternate"></link><published>2015-05-08T09:19:18+09:00</published><updated>2015-05-08T09:19:18+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-05-08:/blog/2015/05/08/nadesiko2-continuous-integration-with-jenkins/</id><summary type="html"></summary><content type="html">&lt;p&gt;&lt;a href="http://blog.shigepon.info/blog/2015/05/05/nunit-console-test-for-nadesiko2/"&gt;なでしこ2をubuntu cuiでテストする - shigeponが関心のある技術情報など&lt;/a&gt;
+までやったので、CIできると便利かなと思ってやってみた。と言いつつ、単にやってみたかっただけ。mono developとかvisual studio使って開発する場合も同じように出来ると思う。例によって環境はUbuntu 12.04&lt;/p&gt;
+&lt;p&gt;参考：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://d.hatena.ne.jp/Crest/20121220/1356023823"&gt;.NETとJenkinsで始めるCI開発 - CREST’S WEBLOG&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://blog.bekijkhet.com/2013/01/create-mono-c-buildserver-using-jenkins.html"&gt;Create a Mono C# Buildserver using Jenkins and GitHub ~ BroersA Blog&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;1. Jenkinsインストール&lt;/h2&gt;
+&lt;p&gt;(略) 追記するかも？&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;h2&gt;2. Jenkins設定&lt;/h2&gt;
+&lt;!-- more --&gt;
+
+&lt;h3&gt;一般&lt;/h3&gt;
+&lt;p&gt;(略) 追記するかも？&lt;/p&gt;
+&lt;h3&gt;C#関連&lt;/h3&gt;
+&lt;p&gt;Jenkins &amp;gt; Jenkinsの管理 &amp;gt; プラグインの管理 &amp;gt; 利用可能(タブ)&lt;/p&gt;
+&lt;p&gt;からプラグインをインストールする。インストールするプラグインは&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;GIT Plugin&lt;/li&gt;
+&lt;li&gt;MSBuild Plugin&lt;/li&gt;
+&lt;li&gt;NUnit plugin&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Jenkins &amp;gt; Jenkinsの管理 &amp;gt; システム設定&lt;/p&gt;
+&lt;p&gt;から&lt;/p&gt;
+&lt;p&gt;MSBuildの項目を編集。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;インストール済みMSBuild...をクリック&lt;/li&gt;
+&lt;li&gt;name&lt;/li&gt;
+&lt;li&gt;適当（とりあえず「mono」とした）&lt;/li&gt;
+&lt;li&gt;Path to MSBuild&lt;/li&gt;
+&lt;li&gt;/usr/bin/xbuild  (Warning出るけど気にしない)&lt;/li&gt;
+&lt;li&gt;Default Parameters&lt;/li&gt;
+&lt;li&gt;なし(Debugでビルドするかとか指定したりするかも。) &lt;/li&gt;
+&lt;li&gt;適用ボタンを押す&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Gitの項目は編集したか覚えてないけど&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Path to Git executable&lt;/li&gt;
+&lt;li&gt;/usr/bin/git&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;くらいやっとけばいいかも？　&lt;/p&gt;
+&lt;h2&gt;3. プロジェクト作成&lt;/h2&gt;
+&lt;p&gt;Jenkins &amp;gt; 新規ジョブ作成　から&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ジョブ名&lt;/li&gt;
+&lt;li&gt;適当(nadesiko2とか付けてみた)&lt;/li&gt;
+&lt;li&gt;フリースタイル・プロジェクトのビルドを選択&lt;/li&gt;
+&lt;li&gt;OKボタンを押す&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;4. プロジェクト設定&lt;/h2&gt;
+&lt;p&gt;プロジェクトの設定画面に移動するので編集。Jenkins &amp;gt; プロジェクト(今回はnadesiko2) &amp;gt; 設定　からいつでも編集可能。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ソースコード管理&lt;/li&gt;
+&lt;li&gt;Gitを選択&lt;/li&gt;
+&lt;li&gt;Repository URL&lt;/li&gt;
+&lt;li&gt;なでしこ2のリポジトリの場所。今回は&lt;a href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/"&gt;ubuntuのcui環境でなでしこ2をビルドする - shigeponが関心のある技術情報など&lt;/a&gt;の続きなので/home/username/nadesiko2&lt;/li&gt;
+&lt;li&gt;Branches to build&lt;/li&gt;
+&lt;li&gt;なでしこ2では変更点はpull requestする予定なので、pull requestする時のブランチを指定した。ここは色んな設定がありえる。&lt;/li&gt;
+&lt;li&gt;ビルド・トリガ&lt;/li&gt;
+&lt;li&gt;SCMをポーリングを選択&lt;/li&gt;
+&lt;li&gt;スケジュール&lt;/li&gt;
+&lt;li&gt;H/30 * &lt;em&gt; * &lt;/em&gt; (大体30分おき)&lt;/li&gt;
+&lt;li&gt;ビルド&lt;/li&gt;
+&lt;li&gt;ビルド手順の追加 &amp;gt; Build a Visual Studio project or solution using MSBuild&lt;/li&gt;
+&lt;li&gt;Build a Visual Studio project or solution using MSBuildの設定&lt;/li&gt;
+&lt;li&gt;MSBuild Version&lt;ul&gt;
+&lt;li&gt;monoを選択&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;MSBuild Build File&lt;ul&gt;
+&lt;li&gt;cnakoのソリューションファイルとしてNako2_CNako.slnを指定した。プラグインのソリューションファイルでも出来ると思う&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;ビルド手順の追加 &amp;gt; シェルの実行(Windowsだと多分Windowsバッチコマンドの実行)&lt;/li&gt;
+&lt;li&gt;シェルの実行&lt;/li&gt;
+&lt;li&gt;nunit-console $WORKSPACE/CNako2Test/bin/Debug/CNako2Test.dll -xml cnako2test.xml -noshadow&lt;/li&gt;
+&lt;li&gt;ビルド後の処理&lt;/li&gt;
+&lt;li&gt;ビルド後の処理の追加 &amp;gt; Publish NUnit test result report&lt;/li&gt;
+&lt;li&gt;cnako2test.xml&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;5. 実行&lt;/h2&gt;
+&lt;p&gt;Jenkins &amp;gt; プロジェクト(今回はnadesiko2)
+で、ビルド実行をクリックすると実行してくれる。あと、gitの指定したブランチでコミットした後もこの設定の場合30分おきにコミットをチェックしてビルドを実行してくれる。まだまだテストが通ってない部分もあるので、結果は失敗になるけど、とりあえずこれで進められる。&lt;/p&gt;</content><category term="nadesiko2"></category><category term="linux"></category><category term="test1st"></category></entry><entry><title>なでしこ2をubuntu cuiでテストする</title><link href="http://blog.shigepon.info/blog/2015/05/05/nunit-console-test-for-nadesiko2/" rel="alternate"></link><published>2015-05-05T23:02:32+09:00</published><updated>2015-05-05T23:02:32+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-05-05:/blog/2015/05/05/nunit-console-test-for-nadesiko2/</id><summary type="html"></summary><content type="html">&lt;p&gt;&lt;a href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/"&gt;ubuntuのcui環境でなでしこ2をビルドする&lt;/a&gt;の続きで、cui環境でなでしこ2のテストを実行してみる。&lt;/p&gt;
+&lt;p&gt;cui環境でnunitを実行するには&lt;a href="http://www.nunit.org/index.php?p=nunit-console&amp;amp;r=2.5.10"&gt;nunit-console&lt;/a&gt;を使う。なでしこ2のテストを実行するにはテスト関連のdllをnunitで実行すると良い。コマンドはなでしこ2をインストールしたディレクトリでこんな感じ。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ nunit-console CNako2Test/bin/Debug/CNako2Test.dll
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;プラグインのテスト(NakoPluginTest)プロジェクトでは外部ファイルを利用するので&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ nunit-console NakoPluginTest/bin/Debug/NakoPluginTest.dll
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;だと、外部ファイルを読み込むテスト（例えばTest_read）で、Could not find fileと怒られる。なので、コマンドにnoshadowオプションを付ける。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ nunit-console -noshadow NakoPluginTest/bin/Debug/NakoPluginTest.dll
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とすると、外部ファイルを読み込んでくれる。
+これでcui環境でなでしこ2をビルドからテストまで出来る。&lt;/p&gt;</content><category term="nadesiko2"></category><category term="linux"></category></entry><entry><title>ubuntuのcui環境でなでしこ2をビルドする</title><link href="http://blog.shigepon.info/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/" rel="alternate"></link><published>2015-05-01T08:23:00+09:00</published><updated>2015-05-01T08:23:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-05-01:/blog/2015/05/01/develop-nadesiko2-on-ubuntu-cui/</id><summary type="html"></summary><content type="html">&lt;p&gt;今までmono developでなでしこ2をビルド、テストして、cui環境にアップロードしてたんだけど、面倒になってきたのでcui環境で直接ビルド、テストしてみようと思ったのでついでに開発を始める段階からメモしてみる。&lt;/p&gt;
+&lt;p&gt;環境はubuntu 12.04とするが、上位バージョンでも問題無いはず&lt;/p&gt;
+&lt;h1&gt;mono環境の準備&lt;/h1&gt;
+&lt;p&gt;mono-develをインストールしたらmono関連で必要なものは勝手にインストールされたような気がする。ついでに&lt;a href="http://blog.shigepon.info/blog/2014/08/20/vb-not-work-on-ubuntu/"&gt;VisualBasicが動かない件&lt;/a&gt;にあるように、mono-vbnc、あとはnunitのインストール&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ aptitude install mono-devel mono-vbnc nunit
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;!-- more --&gt;
+
+&lt;h1&gt;なでしこ2リポジトリを取得&lt;/h1&gt;
+&lt;p&gt;&lt;a href="http://it.slashdot.jp/story/15/03/13/0340256/"&gt;Google Codeが2016年1月に閉鎖される&lt;/a&gt;ので、なでしこ2のリポジトリはgithubに移動している。&lt;/p&gt;
+&lt;p&gt;なので、リポジトリの取得はgit cloneでいける。kujirahandさんのリポジトリをcloneするなら&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git clone https://github.com/kujirahand/nadesiko2.git
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;shigeponがfolkしたリポジトリなら&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git clone https://github.com/shigepon/nadesiko2.git
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;で、カレントディレクトリにnadesiko2ディレクトリが出来て、その下にプロジェクト1式が入っている。中にはソリューションが3つあり、それぞれ&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Nako2_CNako.sln → cui環境で動かすなでしこ2(cnako)関連&lt;/li&gt;
+&lt;li&gt;Nako2_Plugins.sln → なでしこ2のプラグイン関連&lt;/li&gt;
+&lt;li&gt;Nako2_Plugins_Office.sln → なでしこ2のOffice関係プラグイン&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;のソリューションである。今回は\/home\/usernameディレクトリ上でcloneすると考える&lt;/p&gt;
+&lt;h1&gt;おもむろにビルド&lt;/h1&gt;
+&lt;p&gt;kujirahandさんのリポジトリをcloneしたとして、とりあえず何もせずにCNakoのソリューションをビルドしてみると&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ xbuild Nako2_CNako.sln
+...
+NakoPluginArrayTest.cs&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;9&lt;/span&gt;,7&lt;span class="o"&gt;)&lt;/span&gt;: error CS0246: The &lt;span class="nb"&gt;type&lt;/span&gt; or namespace name &lt;span class="sb"&gt;`&lt;/span&gt;NUnit&lt;span class="err"&gt;&amp;#39;&lt;/span&gt; could not be found. Are you missing a using directive or an assembly reference?
+...
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;みたいなエラーメッセージを出してビルド出来ない。一方でプラグイン関連のソリューションは&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ xbuild Nako2_Plugins.sln
+...
+    &lt;span class="m"&gt;18&lt;/span&gt; Warning&lt;span class="o"&gt;(&lt;/span&gt;s&lt;span class="o"&gt;)&lt;/span&gt;
+     &lt;span class="m"&gt;0&lt;/span&gt; Error&lt;span class="o"&gt;(&lt;/span&gt;s&lt;span class="o"&gt;)&lt;/span&gt;
+Time Elapsed &lt;span class="m"&gt;00&lt;/span&gt;:00:06.1095450
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;と出て、エラー無くビルド出来る。この違いはそれぞれのソリューションで参照しているテストプロジェクトにnunitへの参照パスが入っているかどうかの違いだったので、NakoPluginTest/NakoPluginTest.csprojを参考にしてCNakoTest/CNakoTest.csprojの&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;Reference Include=&amp;quot;nunit.framework.extensions, ...&amp;quot; /&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;行に３行追記する&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;   &lt;span class="nt"&gt;&amp;lt;Reference&lt;/span&gt; &lt;span class="na"&gt;Include=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;nunit.framework&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+       &lt;span class="nt"&gt;&amp;lt;HintPath&amp;gt;&lt;/span&gt;..\..\..\..\usr\lib\mono\gac\nunit.framework\2.5.10.0__96d09a1eb7f44a77\nunit.framework.dll&lt;span class="nt"&gt;&amp;lt;/HintPath&amp;gt;&lt;/span&gt;
+   &lt;span class="nt"&gt;&amp;lt;/Reference&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;で、再度ビルドするとビルド出来た。shigeponのリポジトリには修正したものをアップしておくのでそのままビルド出来ると思う。パスはリポジトリをcloneするディレクトリによっては変更しないといけないと思う。&lt;/p&gt;</content><category term="nadesiko2"></category><category term="linux"></category></entry><entry><title>ubuntuのmonoでMicrosoft.VisualBasicが動かない件</title><link href="http://blog.shigepon.info/blog/2014/08/20/vb-not-work-on-ubuntu/" rel="alternate"></link><published>2014-08-20T13:38:34+09:00</published><updated>2014-08-20T13:38:34+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-08-20:/blog/2014/08/20/vb-not-work-on-ubuntu/</id><summary type="html"></summary><content type="html">&lt;p&gt;なでしこ2にコミットしたりしつつ、実際にUbuntu 12.04で使ってみたりしているが、vb系のインポートが出来ないとか何とか言われたのでメモ&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/10071836/vb-net-not-working-on-ubuntu-10-04-with-mono"&gt;.net - VB.NET Not working on Ubuntu 10.04 With Mono - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;要は普通にmonoをインストールしただけ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude install mono-devel
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;だとVB系のライブラリはインストールされないらしい。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude install mono-vbnc
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;を追加インストールしておこうということだった。情報無かったので結構はまった。&lt;/p&gt;</content><category term="linux"></category><category term="nadesiko2"></category></entry><entry><title>なでしこ2のプラグインを作る方法</title><link href="http://blog.shigepon.info/blog/2014/01/29/nadesiko2-make-plugin/" rel="alternate"></link><published>2014-01-29T09:49:17+09:00</published><updated>2014-01-29T09:49:17+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-01-29:/blog/2014/01/29/nadesiko2-make-plugin/</id><summary type="html"></summary><content type="html">&lt;p&gt;2015-12-01：情報が古くなったので古い部分を修正しました。&lt;/p&gt;
+&lt;p&gt;なでしこ2でプラグインを作りたい人向けというニッチすぎるネタです。現在なでしこの時期バージョンなでしこ2が開発中です(えらい長いこと開発中です)が、構文の実装がある程度終わっているので、プラグインを開発することが出来ます。try catchの実装どうするかなーとか考えて進んでないですが、それはそれ。&lt;/p&gt;
+&lt;p&gt;なでしこ2はC#で組まれているので、プラグインもC#で組むことができます。&lt;/p&gt;
+&lt;h2&gt;準備&lt;/h2&gt;
+&lt;p&gt;~~まずは準備として、なでしこ2のソースをsvnでチェックアウトします。 &lt;a href="http://code.google.com/p/nadesiko2/source/checkout"&gt;URL&lt;/a&gt;~~&lt;/p&gt;
+&lt;p&gt;まずは準備として、なでしこ2のソースをGithubからクローンします。 ~~&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git clone https://github.com/kujirahand/nadesiko2.git
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;~~SharpDevelopで開発中なので、SharpDevelopでソリューションを開きます。~~XamarinやVisualStudioで開発出来るので、そこらへんでソリューションを開きます。&lt;/p&gt;
+&lt;p&gt;cnakoをビルドする必要があるので、Nako2_CNakoソリューション(Nako2_CNako.sln)を開いて、cnako2プロジェクトをビルドしておきます。cnako2/bin/Debugフォルダにcnako2.exeが出来ます。これをなでしこ2のコード実行に使います。&lt;/p&gt;
+&lt;h2&gt;プラグイン作成&lt;/h2&gt;
+&lt;p&gt;プラグイン作成には今まで作成したプラグインがNakoPluginXXXというプロジェクト名であるので、それを参考にすれば良いわけですが、軽く説明しておきます。&lt;/p&gt;
+&lt;p&gt;プラグインのソースは下のようになります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cm"&gt;/*&lt;/span&gt;
+&lt;span class="cm"&gt; * Created by SharpDevelop.&lt;/span&gt;
+&lt;span class="cm"&gt; * User: shigepon&lt;/span&gt;
+&lt;span class="cm"&gt; * Date: 2011/04/04&lt;/span&gt;
+&lt;span class="cm"&gt; * Time: 9:42&lt;/span&gt;
+&lt;span class="cm"&gt; *&lt;/span&gt;
+&lt;span class="cm"&gt; * To change this template use Tools | Options | Coding | Edit Standard Headers.&lt;/span&gt;
+&lt;span class="cm"&gt; */&lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;System&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;System.Collections.Generic&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;System.Text&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;Libnako.JPNCompiler&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;NakoPlugin&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;namespace&lt;/span&gt; &lt;span class="nn"&gt;NakoPluginSample&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;NakoPluginSample&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;INakoPlugin&lt;/span&gt;    &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;_description&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="p"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;quot&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="err"&gt;サンプルプラグイン&lt;/span&gt;&lt;span class="p"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;quot&lt;/span&gt;&lt;span class="p"&gt;;;&lt;/span&gt;
+        &lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="n"&gt;_version&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="m"&gt;1.0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="c1"&gt;//&amp;lt;del&amp;gt; プラグイン共通の部分 &amp;lt;/del&amp;gt;&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="n"&gt;TargetNakoVersion&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="m"&gt;2.0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="n"&gt;Used&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;Name&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;GetType&lt;/span&gt;&lt;span class="p"&gt;().&lt;/span&gt;&lt;span class="n"&gt;FullName&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="n"&gt;PluginVersion&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;_version&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;Description&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;_description&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="c1"&gt;//&amp;lt;del&amp;gt; 関数の定義 &amp;lt;/del&amp;gt;&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;DefineFunction&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;INakoPluginBank&lt;/span&gt; &lt;span class="n"&gt;bank&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;        &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="n"&gt;bank&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;AddFunc&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="err"&gt;関数名&lt;/span&gt;&lt;span class="p"&gt;}&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;cedil&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="err"&gt;なでしこ形式の引数&lt;/span&gt;&lt;span class="p"&gt;}&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;cedil&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="err"&gt;戻り値の形式&lt;/span&gt;&lt;span class="p"&gt;}&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;cedil&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="err"&gt;実際の呼び出し先&lt;/span&gt;&lt;span class="p"&gt;}&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;cedil&lt;/span&gt;&lt;span class="p"&gt;;{&lt;/span&gt;&lt;span class="err"&gt;関数の説明&lt;/span&gt;&lt;span class="p"&gt;}&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;cedil&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="err"&gt;関数のよみかた&lt;/span&gt;&lt;span class="p"&gt;});&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="c1"&gt;// プラグインの初期化処理&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;PluginInit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;INakoInterpreter&lt;/span&gt; &lt;span class="n"&gt;runner&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;        &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="c1"&gt;// プラグインの終了処理&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;PluginFin&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;INakoInterpreter&lt;/span&gt; &lt;span class="n"&gt;runner&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;        &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+       &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="n"&gt;Object&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="err"&gt;実際の処理&lt;/span&gt;&lt;span class="p"&gt;}(&lt;/span&gt;&lt;span class="n"&gt;INakoFuncCallInfo&lt;/span&gt; &lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+            &lt;span class="p"&gt;...&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;実装時に大事なとこを説明します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;まずプラグイン共通部分とPluginInit、PluginFinはコピペでもかまわないと思います。私もまだ初期処理、終了処理の必要なプラグインは作っていません。&lt;/li&gt;
+&lt;li&gt;なでしこ上での関数呼び出し方法の定義はDefineFunctionで行います。bank.AddFuncメソッドで関数を追加できます。メソッド内の引数は下のように設定します。
+++ 関数名はなでしこで呼び出す名前になります。（例：文字検索）なでしこで使う助詞を使わないとか、他の命令の名称とかぶらないなどの制限があります。
+++ なでしこ形式の引数は「SでAを」のようになでしこで一般的に使う形式で指定します。引数を参照渡しにしたい場合は「{参照渡し}SでAを」のように指定します。助詞を複数指定したい場合は「SでAを|Sが」という形式で指定します。参照渡しを使う場合は実装が少々複雑になります。後日やり方を書こうと思います。
+++ 戻り値の形式はenum NakoVarTypeで指定します。(Void&amp;cedil; Int&amp;cedil; Double&amp;cedil; String&amp;cedil; Array)
+++ 実際の呼び出し先はそのままメソッド名を指定します。(_hogeとか)
+++ 関数の説明と関数のよみかたは分かりやすさの為に必要です。個人用なら適当でも良いと思います。（多分今後エディタとかそういうのにつかわれると思います）&lt;/li&gt;
+&lt;li&gt;実際の処理は必ずINakoFuncCallInfo型のインスタンスを引数に取ります。なでしこで渡された引数はこのインスタンスから取得します。取得方法は以下&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;long&lt;/span&gt; &lt;span class="n"&gt;l&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;StackPopAsInt&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="n"&gt;d&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;StackPopAsDouble&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;StackPopAsString&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;span class="n"&gt;Object&lt;/span&gt; &lt;span class="n"&gt;o&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;StackPop&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;&lt;span class="c1"&gt;//配列の場合はこれを使う&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;~~StackPopメソッドで得られる値はNakoVariable型なので、ちょっと扱いが難しくなります。実際の処理の実装方法はまた今度~~&lt;/p&gt;
+&lt;h2&gt;簡単なプラグイン&lt;/h2&gt;
+&lt;p&gt;例として「なでしこ」という文字があったら、「なでしこ2最高！」と変換するだけの命令として「アピール」という命令を作ってみます。仕様は次のようにしてみます。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;引数は文字列として助詞は「を」を使う&lt;/li&gt;
+&lt;li&gt;引数は１つ&lt;/li&gt;
+&lt;li&gt;プラグイン名はNakoPluginAppealとする&lt;/li&gt;
+&lt;li&gt;実装用のメソッドは_appealとする&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Xamarinでの作成手順は次のようになります（多分VisualStudioでも似たようなもん）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Nako2_Pluginsソリューション(Nako2_Plugins.slnを開く)で新しいプロジェクトとしてNakoPluginAppealという名前のC#のライブラリを作ります。（ソリューションで歯車アイコンクリック（又は右クリック））→追加→新しいプロジェクトを追加→ダイアログでC#をクリック→ライブラリを選択→名前をNakoPluginAppealとする→OK）&lt;/li&gt;
+&lt;li&gt;参照にNakoPluginを追加する（NakoPluginAppealの参照で歯車アイコンクリック（又は右クリック）→参照アセンブリの編集→ダイアログで.NETアセンブリタブを選択→NakoPlugin.dllをチェック、又は閲覧ボタンからNakoPlugin.dllを選ぶ→OK）&lt;/li&gt;
+&lt;li&gt;NakoPluginAppeal.csを編集する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="n"&gt;NakoPluginAppeal&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cs&lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;System&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;System.Text&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;Libnako.JPNCompiler&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="nn"&gt;NakoPlugin&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;namespace&lt;/span&gt; &lt;span class="nn"&gt;NakoPluginAppeal&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;NakoPluginAppeal&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;INakoPlugin&lt;/span&gt;    &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;_description&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="p"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;quot&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="err"&gt;サンプルプラグイン&lt;/span&gt;&lt;span class="p"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;quot&lt;/span&gt;&lt;span class="p"&gt;;;&lt;/span&gt;
+        &lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="n"&gt;_version&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="m"&gt;1.0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="c1"&gt;//&amp;lt;del&amp;gt; プラグイン共通の部分 &amp;lt;/del&amp;gt;&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="n"&gt;TargetNakoVersion&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="m"&gt;2.0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="n"&gt;Used&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;Name&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;GetType&lt;/span&gt;&lt;span class="p"&gt;().&lt;/span&gt;&lt;span class="n"&gt;FullName&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="n"&gt;PluginVersion&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;_version&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;Description&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;_description&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="c1"&gt;//&amp;lt;del&amp;gt; 関数の定義 &amp;lt;/del&amp;gt;&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;DefineFunction&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;INakoPluginBank&lt;/span&gt; &lt;span class="n"&gt;bank&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;        &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="n"&gt;bank&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;AddFunc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;アピール&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Aを&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;NakoVarType&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;_appeal&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;なでしこ2をアピールする&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;あぴーる&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="c1"&gt;// プラグインの初期化処理&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;PluginInit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;INakoInterpreter&lt;/span&gt; &lt;span class="n"&gt;runner&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;        &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="c1"&gt;// プラグインの終了処理&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;PluginFin&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;INakoInterpreter&lt;/span&gt; &lt;span class="n"&gt;runner&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;        &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="nf"&gt;_appeal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;INakoFuncCallInfo&lt;/span&gt; &lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+            &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;fr&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;StackPopAsString&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;fr&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;なでしこ&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;なでしこ2最高！&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;ビルドする&lt;/li&gt;
+&lt;li&gt;NakoPluginAppeal/bin/Debug/NakoPluginAppeal.dllをcnako2/bin/Debug/にコピー&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;実行するなでしこ2のコードは次のようになります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;A = 「なでしこ」をアピール
+Aを表示
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;これをcnako2/bin/Debug/test.nakoに保存&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;あとは下のコマンドを実行すれば結果が表示されます&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; cnako2/bin/Debug/
+$ mono cnako2.exe test.nako
+なでしこ最高！
+&lt;/pre&gt;&lt;/div&gt;</content><category term="nadesiko"></category><category term="nadesiko2"></category><category term="CSharp"></category></entry></feed>
