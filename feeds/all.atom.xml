@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/all.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2018-09-27T16:30:00+09:00</updated><entry><title>pythonメモ</title><link href="http://blog.shigepon.info/blog/2018/09/15/python_memo/" rel="alternate"></link><published>2018-09-15T22:30:00+09:00</published><updated>2018-09-15T22:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2018-09-15:/blog/2018/09/15/python_memo/</id><summary type="html">&lt;p&gt;pythonでググることになった使い方をメモしておく&lt;/p&gt;</summary><content type="html">&lt;h2&gt;pyenvをUbuntuにインストール&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/all.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2018-11-12T16:30:00+09:00</updated><entry><title>pythonメモ</title><link href="http://blog.shigepon.info/blog/2018/09/15/python_memo/" rel="alternate"></link><published>2018-09-15T22:30:00+09:00</published><updated>2018-09-15T22:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2018-09-15:/blog/2018/09/15/python_memo/</id><summary type="html">&lt;p&gt;pythonでググることになった使い方をメモしておく&lt;/p&gt;</summary><content type="html">&lt;h2&gt;pyenvをUbuntuにインストール&lt;/h2&gt;
 &lt;p&gt;なんか色々依存関係があるので、先にこれを実行&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev &lt;span class="se"&gt;\&lt;/span&gt;
 libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev &lt;span class="se"&gt;\&lt;/span&gt;
@@ -429,76 +429,7 @@ chromium、chromeドライバーをインストール
 &lt;span class="n"&gt;driver&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;webdriver&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Chrome&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;chrome_options&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;options&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;driver&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;https://www.google.co.jp/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Google&amp;#39;&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;driver&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</content><category term="python"></category><category term="memo"></category></entry><entry><title>vmwareメモ</title><link href="http://blog.shigepon.info/blog/2018/09/10/mac_memo/" rel="alternate"></link><published>2018-09-10T17:30:00+09:00</published><updated>2018-09-27T16:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2018-09-10:/blog/2018/09/10/mac_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;コンソールで文字化け回避&lt;/h2&gt;
-&lt;p&gt;sshで文字化けしてなくても、コンソールで文字化けする。
-zshを使っているので、.zshrcに以下を追記&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;export LANG=ja_JP.UTF-8↲
-case &amp;quot;$TERM&amp;quot; in↲
-    linux)↲
-        export LANG=&amp;quot;C&amp;quot; ;;↲
-    *)↲
-        export LANG=&amp;quot;ja_JP.UTF-8&amp;quot; ;;↲
-esac↲
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;参考：
-+ &lt;a href="https://www57.atwiki.jp/hiiragiwiki/pages/25.html"&gt;仮想コンソールの文字化け回避
-&lt;/a&gt;&lt;/p&gt;
-&lt;h2&gt;コンソールのキーボードレイアウト変更&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;dpkg-reconfigure keyboard-configuration
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;でGeneric 105-key (Intl) PC -&amp;gt; Japanese -&amp;gt; Japanese -&amp;gt; The default for the keyboard layout -&amp;gt; No compose key&lt;/p&gt;
-&lt;p&gt;参考：
-+ &lt;a href="https://qiita.comii26/items/af134896483ae9d32a7d/"&gt;キーボードレイアウト変更&lt;/a&gt;&lt;/p&gt;
-&lt;h2&gt;vSphereでのキーボードレイアウト変更&lt;/h2&gt;
-&lt;p&gt;vSphere上部のアカウントをクリックして&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;クライアントの設定&lt;/li&gt;
-&lt;li&gt;キーボード設定&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;で変更&lt;/p&gt;
-&lt;h2&gt;UbuntuクライアントにHDD追加&lt;/h2&gt;
-&lt;p&gt;電源切った状態で&lt;/p&gt;
-&lt;p&gt;設定の編集→ハードディスクの追加&lt;/p&gt;
-&lt;p&gt;で追加する。&lt;/p&gt;
-&lt;p&gt;マウント手順は&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo fdisk -l
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;で追加したハードディスクのパスを確認（/dev/sdaとする）&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo fdisk /dev/sda
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;でパーティション作成
-入力は、n -&amp;gt; enter -&amp;gt; enterでおk&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo mkfs.ext4 /dev/sda
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;でフォーマット&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo mkdir /mnt/hoge
-sudo mount /dev/sda /mnt/hoge
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;でマウント&lt;/p&gt;
-&lt;p&gt;起動時に自動マウントするには&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo blkid /dev/sda
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;でUUIDやTYPEの情報を取得して/etc/fstabに&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;UUID&lt;/span&gt;&lt;span class="o"&gt;={&lt;/span&gt;UUID&lt;span class="o"&gt;}&lt;/span&gt; /mnt/hoge   &lt;span class="o"&gt;{&lt;/span&gt;TYPE&lt;span class="o"&gt;}&lt;/span&gt;    defaults    &lt;span class="m"&gt;0&lt;/span&gt;   &lt;span class="m"&gt;0&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;を追加すればおk&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="https://hirooka.pro/?p=8450"&gt;Ubuntu 16.04 で HDD を増設する件&lt;/a&gt;&lt;/p&gt;</content><category term="memo"></category><category term="vmware"></category></entry><entry><title>vmwareメモ</title><link href="http://blog.shigepon.info/blog/2018/09/10/mac_memo/" rel="alternate"></link><published>2018-09-10T17:30:00+09:00</published><updated>2018-09-27T16:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2018-09-10:/blog/2018/09/10/mac_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;コンソールで文字化け回避&lt;/h2&gt;
+&lt;/pre&gt;&lt;/div&gt;</content><category term="python"></category><category term="memo"></category></entry><entry><title>vmwareメモ</title><link href="http://blog.shigepon.info/blog/2018/09/10/vmware_memo/" rel="alternate"></link><published>2018-09-10T17:30:00+09:00</published><updated>2018-09-27T16:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2018-09-10:/blog/2018/09/10/vmware_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;コンソールで文字化け回避&lt;/h2&gt;
 &lt;p&gt;sshで文字化けしてなくても、コンソールで文字化けする。
 zshを使っているので、.zshrcに以下を追記&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;export LANG=ja_JP.UTF-8↲
@@ -923,12 +854,13 @@ mdadm --detail --scan &amp;gt;&amp;gt; /etc/mdadm/mdadm.conf
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;確認&lt;/p&gt;
+&lt;h3&gt;状態確認&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;cat /proc/mdstat
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;activeとか出てればおk&lt;/p&gt;
+&lt;p&gt;activeとか出てればおk
+どのデバイスを使ったかも表示できる&lt;/p&gt;
 &lt;h2&gt;Sambaを使う&lt;/h2&gt;
 &lt;h3&gt;インストール&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo aptitude install samba
@@ -1019,22 +951,7 @@ sshでEsxiホストを操作する手順は&lt;a href="http://blog.shigepon.info
 結論から言うとSATAコントローラーがAHCIモードだったのがまずかったみたい。BIOS画面でSATAコントローラーをAHCIモード以外にすると認識するようになった。
 このトラブルの解決だけで2時間かかった＞＜。ここらへんを参考にした（&lt;a href="http://d.hatena.ne.jp/igapyon/20140720"&gt;ESXi 5.5 を MSI H97 GAMING 3 にインストール&lt;/a&gt;、&lt;a href="http://zappy.hatenablog.jp/entry/2015/01/09/002505"&gt;自作PCにVMware ESXiをインストールした&lt;/a&gt;）
 データストアを認識しているかどうかは&lt;a href="https://kb.vmware.com/articleview?docid=1014953&amp;amp;lang=ja"&gt;VMware ESXi/ESX を操作するときのディスクの識別&lt;/a&gt;を参考にした。&lt;/p&gt;
-&lt;p&gt;しかもEsxiのトラブルとは関係ないけどHDDが2つも動かない状態になってるし・・・。どーしよー。&lt;/p&gt;</content><category term="vmware"></category><category term="linux"></category></entry><entry><title>macメモ</title><link href="http://blog.shigepon.info/blog/2017/11/02/mac_memo/" rel="alternate"></link><published>2017-11-02T17:30:00+09:00</published><updated>2018-09-06T16:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-11-02:/blog/2017/11/02/mac_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;sambaで「オリジナルの項目が見つからなかったため開けません」と出た&lt;/h2&gt;
-&lt;p&gt;接続しなおし&lt;/p&gt;
-&lt;p&gt;Finder -&amp;gt; 移動 -&amp;gt; サーバへ接続 -&amp;gt; ブラウズ&lt;/p&gt;
-&lt;p&gt;でおk&lt;/p&gt;
-&lt;p&gt;参考：
-+ &lt;a href="https://synkers.net/?p=5355"&gt;MacでNASに接続しようとしたら「オリジナルの項目が見つかりません」と出た場合の対処法&lt;/a&gt;&lt;/p&gt;
-&lt;h2&gt;sambaのフォルダにコマンドラインからアクセス&lt;/h2&gt;
-&lt;p&gt;/Volume内にある&lt;/p&gt;
-&lt;p&gt;例としてsambaにhogeというフォルダがある場合は&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;cd /Volume/hoge
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;でアクセスできる。&lt;/p&gt;
-&lt;p&gt;参考：
-+ &lt;a href="https://stackoverflow.com/questions/17412069/how-to-copy-files-from-mac-os-to-windows-which-are-in-same-network-using-command"&gt;How to copy files from Mac OS to Windows which are in same network using command line?&lt;/a&gt;&lt;/p&gt;</content><category term="memo"></category><category term="mac"></category></entry><entry><title>linuxメモ</title><link href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/" rel="alternate"></link><published>2017-11-02T17:30:00+09:00</published><updated>2018-08-16T16:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-11-02:/blog/2017/11/02/linux_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;sshでリモートサーバーのフォルダをマウント&lt;/h2&gt;
+&lt;p&gt;しかもEsxiのトラブルとは関係ないけどHDDが2つも動かない状態になってるし・・・。どーしよー。&lt;/p&gt;</content><category term="vmware"></category><category term="linux"></category></entry><entry><title>linuxメモ</title><link href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/" rel="alternate"></link><published>2017-11-02T17:30:00+09:00</published><updated>2018-11-12T16:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-11-02:/blog/2017/11/02/linux_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;sshでリモートサーバーのフォルダをマウント&lt;/h2&gt;
 &lt;p&gt;sshfsってのを使う。Ubuntuはaptitudeでインストール&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ aptitude install sshfs
 &lt;/pre&gt;&lt;/div&gt;
@@ -1516,7 +1433,28 @@ Enter the new value, or press ENTER &lt;span class="k"&gt;for&lt;/span&gt; the d
 &lt;/ul&gt;
 &lt;p&gt;が良く使われる&lt;/p&gt;
 &lt;p&gt;参考：&lt;a href="http://ubulog.blogspot.com/2009/01/ubuntu.html"&gt;Ubuntuで重複ファイルを削除する&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="http://ubulog.blogspot.com/2009/01/ubuntu.html"&gt;Ubuntuで重複ファイルを削除する&lt;/a&gt;&lt;/p&gt;</content><category term="memo"></category><category term="linux"></category></entry><entry><title>macメモ</title><link href="http://blog.shigepon.info/blog/2017/11/02/mac_memo/" rel="alternate"></link><published>2017-11-02T17:30:00+09:00</published><updated>2018-09-06T16:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-11-02:/blog/2017/11/02/mac_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;sambaで「オリジナルの項目が見つからなかったため開けません」と出た&lt;/h2&gt;
+&lt;p&gt;参考：&lt;a href="http://ubulog.blogspot.com/2009/01/ubuntu.html"&gt;Ubuntuで重複ファイルを削除する&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;sshでUbuntuにログインする時にパスワード入力のところで固まりやすくなる場合の対処&lt;/h2&gt;
+&lt;p&gt;Ubuntuの場合のみ&lt;/p&gt;
+&lt;p&gt;sshでログインする時に、/etc/update-motd.d
+にある処理を行うようになっている。ここのファイルで必要の無いものを消すか&lt;/p&gt;
+&lt;p&gt;/etc/pam.d/sshdで&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;session optional pam_motd.so motd=/run/motd.dynamic
+session optional pam_motd.so noupdate
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;をコメントアウトするとupdate-motd.dの処理を行わなくなる。&lt;/p&gt;
+&lt;p&gt;/etc/hosts
+$HOME/.ssh/config
+/etc/resolv.conf&lt;/p&gt;
+&lt;p&gt;をいじってもダメな場合は試してみると良い&lt;/p&gt;
+&lt;p&gt;参考：
++ &lt;a href="http://breezegale.blogspot.com/2013/12/ubuntu-motd.html"&gt;Ubuntu ログイン時のMotDを止める&lt;/a&gt;
++ &lt;a href="http://emasaka.blog65.fc2.com/blog-entry-1015.html"&gt;Ubuntuでmotdメッセージをいじる&lt;/a&gt;
++ &lt;a href="https://askubuntu.com/questions/11538/long-wait-time-on-login"&gt;Long wait time on login&lt;/a&gt;
++ &lt;a href="http://d.hatena.ne.jp/yuyarin/20090410/1239298235"&gt;sshの接続確立が遅い場合の対処方法&lt;/a&gt;
++ &lt;a href="http://d.hatena.ne.jp/ohzeki/20130412/1365749798"&gt;sshの接続（ログイン時）に時間がかかる&lt;/a&gt;&lt;/p&gt;</content><category term="memo"></category><category term="linux"></category></entry><entry><title>macメモ</title><link href="http://blog.shigepon.info/blog/2017/11/02/mac_memo/" rel="alternate"></link><published>2017-11-02T17:30:00+09:00</published><updated>2018-09-06T16:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-11-02:/blog/2017/11/02/mac_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;sambaで「オリジナルの項目が見つからなかったため開けません」と出た&lt;/h2&gt;
 &lt;p&gt;接続しなおし&lt;/p&gt;
 &lt;p&gt;Finder -&amp;gt; 移動 -&amp;gt; サーバへ接続 -&amp;gt; ブラウズ&lt;/p&gt;
 &lt;p&gt;でおk&lt;/p&gt;

@@ -5,34 +5,41 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/</loc>
-<lastmod>2018-10-29T19:11:36-00:00</lastmod>
+<lastmod>2018-11-12T21:02:47-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/archives.html</loc>
-<lastmod>2018-10-29T19:11:36-00:00</lastmod>
+<lastmod>2018-11-12T21:02:47-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/tags.html</loc>
-<lastmod>2018-10-29T19:11:36-00:00</lastmod>
+<lastmod>2018-11-12T21:02:47-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/categories.html</loc>
-<lastmod>2018-10-29T19:11:36-00:00</lastmod>
+<lastmod>2018-11-12T21:02:47-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://blog.shigepon.info/blog/2018/09/10/mac_memo/</loc>
+<loc>http://blog.shigepon.info/blog/2017/11/02/linux_memo/</loc>
+<lastmod>2018-11-12T16:30:00+09:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://blog.shigepon.info/blog/2018/09/10/vmware_memo/</loc>
 <lastmod>2018-09-27T16:30:00+09:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
@@ -69,13 +76,6 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>http://blog.shigepon.info/blog/2018/09/05/make_nas_server_by_headless_ubuntu_1804/</loc>
 <lastmod>2018-09-05T10:30:00+09:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>http://blog.shigepon.info/blog/2017/11/02/linux_memo/</loc>
-<lastmod>2018-08-16T16:30:00+09:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -922,7 +922,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/blog/categories/memo/</loc>
-<lastmod>2018-09-27T16:30:00+09:19</lastmod>
+<lastmod>2018-11-12T16:30:00+09:19</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -992,22 +992,8 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/author/thoz.html</loc>
-<lastmod>2018-09-27T16:30:00+09:19</lastmod>
+<lastmod>2018-11-12T16:30:00+09:19</lastmod>
 <changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>http://blog.shigepon.info/blog/2017/11/02/mac_memo/</loc>
-<lastmod>2018-09-06T16:30:00+09:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>http://blog.shigepon.info/blog/2018/09/10/mac_memo/</loc>
-<lastmod>2018-09-27T16:30:00+09:00</lastmod>
-<changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 

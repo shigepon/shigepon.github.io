@@ -355,12 +355,13 @@ mdadm --detail --scan &amp;gt;&amp;gt; /etc/mdadm/mdadm.conf
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;確認&lt;/p&gt;
+&lt;h3&gt;状態確認&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;cat /proc/mdstat
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;activeとか出てればおk&lt;/p&gt;
+&lt;p&gt;activeとか出てればおk
+どのデバイスを使ったかも表示できる&lt;/p&gt;
 &lt;h2&gt;Sambaを使う&lt;/h2&gt;
 &lt;h3&gt;インストール&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo aptitude install samba
