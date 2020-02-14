@@ -15,11 +15,11 @@ $HOME/.ssh/config
 /etc/resolv.conf&lt;/p&gt;
 &lt;p&gt;をいじってもダメな場合は試してみると良い&lt;/p&gt;
 &lt;p&gt;参考：
-+ &lt;a href="http://breezegale.blogspot.com/2013/12/ubuntu-motd.html"&gt;Ubuntu ログイン時のMotDを止める&lt;/a&gt;
-+ &lt;a href="http://emasaka.blog65.fc2.com/blog-entry-1015.html"&gt;Ubuntuでmotdメッセージをいじる&lt;/a&gt;
-+ &lt;a href="https://askubuntu.com/questions/11538/long-wait-time-on-login"&gt;Long wait time on login&lt;/a&gt;
-+ &lt;a href="http://d.hatena.ne.jp/yuyarin/20090410/1239298235"&gt;sshの接続確立が遅い場合の対処方法&lt;/a&gt;
-+ &lt;a href="http://d.hatena.ne.jp/ohzeki/20130412/1365749798"&gt;sshの接続（ログイン時）に時間がかかる&lt;/a&gt;&lt;/p&gt;
+- &lt;a href="http://breezegale.blogspot.com/2013/12/ubuntu-motd.html"&gt;Ubuntu ログイン時のMotDを止める&lt;/a&gt;
+- &lt;a href="http://emasaka.blog65.fc2.com/blog-entry-1015.html"&gt;Ubuntuでmotdメッセージをいじる&lt;/a&gt;
+- &lt;a href="https://askubuntu.com/questions/11538/long-wait-time-on-login"&gt;Long wait time on login&lt;/a&gt;
+- &lt;a href="http://d.hatena.ne.jp/yuyarin/20090410/1239298235"&gt;sshの接続確立が遅い場合の対処方法&lt;/a&gt;
+- &lt;a href="http://d.hatena.ne.jp/ohzeki/20130412/1365749798"&gt;sshの接続（ログイン時）に時間がかかる&lt;/a&gt;&lt;/p&gt;
 &lt;h2&gt;Ubuntu 18.04LTSでnslookupは出来るのにpingが出来ない&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;nslookup thoz.org
 Server:     xxx.xxx.xxx.xx
@@ -51,7 +51,7 @@ ping: thoz.org: Name or service not known
 &lt;p&gt;と変更すれば治った。
 &lt;a href="https://linuc.org/study/knowledge/508/"&gt;linux豆知識&lt;/a&gt;によると、nsswitch.confは名前解決を行う優先順位を指定するファイルなので、そこでファイルしか指定してないと、そりゃdns参照してくれないよねという話であった。&lt;/p&gt;
 &lt;p&gt;参考：
-+ &lt;a href="https://askubuntu.com/questions/81797/nslookup-finds-ip-but-ping-doesnt"&gt;nslookup finds id, but ping doesnt&lt;/a&gt;&lt;/p&gt;</content><category term="memo"></category><category term="linux"></category><category term="ubuntu"></category></entry><entry><title>pythonメモ</title><link href="http://blog.shigepon.info/blog/2018/09/15/python_memo/" rel="alternate"></link><published>2018-09-15T22:30:00+09:00</published><updated>2018-09-15T22:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2018-09-15:/blog/2018/09/15/python_memo/</id><summary type="html">&lt;p&gt;pythonでググることになった使い方をメモしておく&lt;/p&gt;</summary><content type="html">&lt;h2&gt;pyenvをUbuntuにインストール&lt;/h2&gt;
+- &lt;a href="https://askubuntu.com/questions/81797/nslookup-finds-ip-but-ping-doesnt"&gt;nslookup finds id, but ping doesnt&lt;/a&gt;&lt;/p&gt;</content><category term="memo"></category><category term="linux"></category><category term="ubuntu"></category></entry><entry><title>pythonメモ</title><link href="http://blog.shigepon.info/blog/2018/09/15/python_memo/" rel="alternate"></link><published>2018-09-15T22:30:00+09:00</published><updated>2018-09-15T22:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2018-09-15:/blog/2018/09/15/python_memo/</id><summary type="html">&lt;p&gt;pythonでググることになった使い方をメモしておく&lt;/p&gt;</summary><content type="html">&lt;h2&gt;pyenvをUbuntuにインストール&lt;/h2&gt;
 &lt;p&gt;なんか色々依存関係があるので、先にこれを実行&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev &lt;span class="se"&gt;\&lt;/span&gt;
 libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev &lt;span class="se"&gt;\&lt;/span&gt;
