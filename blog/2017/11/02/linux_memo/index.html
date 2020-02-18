@@ -104,7 +104,19 @@ shigeponが関心のある技術情報など            </a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
-                <h2>sshでリモートサーバーのフォルダをマウント</h2>
+                <h2>nkfを使ってurlエンコード、デコード</h2>
+<p>urlエンコード</p>
+<div class="highlight"><pre><span></span>$ <span class="nb">echo</span> <span class="s1">&#39;ほげ&#39;</span> <span class="p">|</span> nkf -WwMQ <span class="p">|</span> <span class="nv">tr</span> <span class="o">=</span> %
+</pre></div>
+
+
+<p>urlデコード</p>
+<div class="highlight"><pre><span></span>$ <span class="nb">echo</span> %E3%81%BB%E3%81%92 <span class="p">|</span> nkf -w --url-input
+</pre></div>
+
+
+<p>参考：<a href="https://blog.offline-net.com/2014/11/09/linux_nkf_command_urlencode_and_decode/">Linux：コマンドラインでURLエンコード・デコードする(nkf編)</a></p>
+<h2>sshでリモートサーバーのフォルダをマウント</h2>
 <p>sshfsってのを使う。Ubuntuはaptitudeでインストール</p>
 <div class="highlight"><pre><span></span>$ aptitude install sshfs
 </pre></div>
@@ -624,9 +636,9 @@ Enter the new value, or press ENTER <span class="k">for</span> the default
     <ul>
         <li><a href="http://blog.shigepon.info/blog/2020/02/14/ubuntu_troubleshooting/">ubuntuトラブルシューティング</a></li>
         <li><a href="http://blog.shigepon.info/blog/2014/02/11/svn-memo/">svn memo</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2014/03/20/nginx-memo/">nginx memo</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2020/02/16/groonga_memo/">groongaメモ</a></li>
         <li><a href="http://blog.shigepon.info/blog/2018/09/10/vmware_memo/">vmwareメモ</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2018/09/15/python_memo/">pythonメモ</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2017/11/02/mac_memo/">macメモ</a></li>
     </ul>
 </section>
     <hr />
@@ -656,6 +668,16 @@ Enter the new value, or press ENTER <span class="k">for</span> the default
             <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
                 <ul class="list-group" id="recentposts">
                     <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/2014/03/20/nginx-memo/">
+                            nginx memo
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/2020/02/16/groonga_memo/">
+                            groongaメモ
+                        </a>
+                    </li>
+                    <li class="list-group-item">
                         <a href="http://blog.shigepon.info/blog/2020/02/14/ubuntu_troubleshooting/">
                             ubuntuトラブルシューティング
                         </a>
@@ -668,16 +690,6 @@ Enter the new value, or press ENTER <span class="k">for</span> the default
                     <li class="list-group-item">
                         <a href="http://blog.shigepon.info/blog/2018/09/10/vmware_memo/">
                             vmwareメモ
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2018/09/15/python_memo/">
-                            pythonメモ
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2017/11/02/mac_memo/">
-                            macメモ
                         </a>
                     </li>
                 </ul>
@@ -776,8 +788,8 @@ Enter the new value, or press ENTER <span class="k">for</span> the default
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/memo.html">
-                            memo
+                        <a href="http://blog.shigepon.info/tag/linux.html">
+                            linux
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
@@ -786,8 +798,8 @@ Enter the new value, or press ENTER <span class="k">for</span> the default
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/linux.html">
-                            linux
+                        <a href="http://blog.shigepon.info/tag/memo.html">
+                            memo
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
@@ -796,13 +808,23 @@ Enter the new value, or press ENTER <span class="k">for</span> the default
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/r.html">
-                            R
+                        <a href="http://blog.shigepon.info/tag/csharp.html">
+                            CSharp
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/csharp.html">
-                            CSharp
+                        <a href="http://blog.shigepon.info/tag/groonga.html">
+                            groonga
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/event.html">
+                            event
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/postgresql.html">
+                            PostgreSQL
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -816,8 +838,8 @@ Enter the new value, or press ENTER <span class="k">for</span> the default
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/postgresql.html">
-                            PostgreSQL
+                        <a href="http://blog.shigepon.info/tag/nadesiko.html">
+                            nadesiko
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -826,33 +848,8 @@ Enter the new value, or press ENTER <span class="k">for</span> the default
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/event.html">
-                            event
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/nadesiko.html">
-                            nadesiko
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/groonga.html">
-                            groonga
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/google.html">
-                            google
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/octopress.html">
-                            octopress
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
-                            uwsgi
+                        <a href="http://blog.shigepon.info/tag/r.html">
+                            R
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -861,8 +858,13 @@ Enter the new value, or press ENTER <span class="k">for</span> the default
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/php.html">
-                            PHP
+                        <a href="http://blog.shigepon.info/tag/rhaco.html">
+                            rhaco
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/google.html">
+                            google
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -871,8 +873,8 @@ Enter the new value, or press ENTER <span class="k">for</span> the default
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
-                            CPlusPlus
+                        <a href="http://blog.shigepon.info/tag/test1st.html">
+                            test1st
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -881,23 +883,13 @@ Enter the new value, or press ENTER <span class="k">for</span> the default
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/nginx.html">
-                            nginx
+                        <a href="http://blog.shigepon.info/tag/php.html">
+                            PHP
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/pelican.html">
-                            pelican
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/rhaco.html">
-                            rhaco
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/titanium.html">
-                            titanium
+                        <a href="http://blog.shigepon.info/tag/octopress.html">
+                            octopress
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -906,8 +898,13 @@ Enter the new value, or press ENTER <span class="k">for</span> the default
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/test1st.html">
-                            test1st
+                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
+                            uwsgi
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
+                            CPlusPlus
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -915,39 +912,19 @@ Enter the new value, or press ENTER <span class="k">for</span> the default
                             vim
                         </a>
                     </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/svn.html">
-                            svn
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/pelican.html">
+                            pelican
                         </a>
                     </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/unity.html">
-                            unity
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/titanium.html">
+                            titanium
                         </a>
                     </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/sqlite.html">
-                            sqlite
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/avr.html">
-                            avr
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/ubuntu.html">
-                            ubuntu
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/mac.html">
-                            mac
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/lua.html">
-                            Lua
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/nginx.html">
+                            nginx
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -956,13 +933,8 @@ Enter the new value, or press ENTER <span class="k">for</span> the default
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/visualstudio.html">
-                            visualstudio
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
-                            linkedopendata
+                        <a href="http://blog.shigepon.info/tag/mac.html">
+                            mac
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -971,8 +943,48 @@ Enter the new value, or press ENTER <span class="k">for</span> the default
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/visualstudio.html">
+                            visualstudio
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
                         <a href="http://blog.shigepon.info/tag/rhaco3.html">
                             rhaco3
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/unity.html">
+                            unity
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/svn.html">
+                            svn
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/lua.html">
+                            Lua
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/avr.html">
+                            avr
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/sqlite.html">
+                            sqlite
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/ubuntu.html">
+                            ubuntu
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/git.html">
+                            git
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -981,8 +993,8 @@ Enter the new value, or press ENTER <span class="k">for</span> the default
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/git.html">
-                            git
+                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
+                            linkedopendata
                         </a>
                     </li>
                 </ul>
@@ -1019,7 +1031,7 @@ Enter the new value, or press ENTER <span class="k">for</span> the default
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2020 shigepon
+         <div class="col-xs-10">&copy; 2014 shigepon
             &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>

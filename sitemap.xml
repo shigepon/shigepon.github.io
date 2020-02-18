@@ -5,29 +5,43 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/</loc>
-<lastmod>2020-02-14T22:24:32-00:00</lastmod>
+<lastmod>2020-02-18T17:58:49-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/archives.html</loc>
-<lastmod>2020-02-14T22:24:32-00:00</lastmod>
+<lastmod>2020-02-18T17:58:49-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/tags.html</loc>
-<lastmod>2020-02-14T22:24:32-00:00</lastmod>
+<lastmod>2020-02-18T17:58:49-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/categories.html</loc>
-<lastmod>2020-02-14T22:24:32-00:00</lastmod>
+<lastmod>2020-02-18T17:58:49-00:00</lastmod>
 <changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://blog.shigepon.info/blog/2014/03/20/nginx-memo/</loc>
+<lastmod>2020-02-18T11:04:53+09:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://blog.shigepon.info/blog/2020/02/16/groonga_memo/</loc>
+<lastmod>2020-02-16T17:30:00+09:00</lastmod>
+<changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
@@ -739,13 +753,6 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>http://blog.shigepon.info/blog/2014/03/20/nginx-memo/</loc>
-<lastmod>2014-03-20T16:04:53+09:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
 <loc>http://blog.shigepon.info/blog/2014/03/15/rhaco3-memo/</loc>
 <lastmod>2014-03-15T13:28:55+09:00</lastmod>
 <changefreq>monthly</changefreq>
@@ -929,7 +936,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/blog/categories/memo/</loc>
-<lastmod>2020-02-14T10:00:00+09:19</lastmod>
+<lastmod>2020-02-18T11:04:53+09:19</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -992,14 +999,14 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/author/shigepon.html</loc>
-<lastmod>2018-09-06T15:30:00+09:19</lastmod>
+<lastmod>2020-02-18T11:04:53+09:19</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/author/thoz.html</loc>
-<lastmod>2020-02-14T10:00:00+09:19</lastmod>
+<lastmod>2020-02-16T17:30:00+09:19</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>

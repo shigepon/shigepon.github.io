@@ -159,6 +159,39 @@ ping: thoz.org: Name or service not known
 <p>と変更すれば治った。
 <a href="https://linuc.org/study/knowledge/508/">linux豆知識</a>によると、nsswitch.confは名前解決を行う優先順位を指定するファイルなので、そこでファイルしか指定してないと、そりゃdns参照してくれないよねという話であった。</p>
 <p>参考：<a href="https://askubuntu.com/questions/81797/nslookup-finds-ip-but-ping-doesnt">nslookup finds id, but ping doesnt</a></p>
+<h2>Ubuntu 18.04LTSではタイムゾーンがUTCになっている</h2>
+<p>Ubuntu 18.04でOSインストール時にタイムゾーン設定が無いのに気づかずに、ずっと使ってた。</p>
+<div class="highlight"><pre><span></span>$ timedatectl
+                      Local time: 日 <span class="m">2020</span>-02-16 <span class="m">22</span>:53:25 UTC
+                  Universal time: 日 <span class="m">2020</span>-02-16 <span class="m">22</span>:53:25 UTC
+                        RTC time: 日 <span class="m">2020</span>-02-16 <span class="m">22</span>:53:25
+                       Time zone: Etc/UTC <span class="o">(</span>UTC, +0000<span class="o">)</span>
+       System clock synchronized: yes
+systemd-timesyncd.service active: yes
+                 RTC in <span class="nb">local</span> TZ: no
+</pre></div>
+
+
+<p>タイムゾーンにAsia/Tokyoがあるか確認</p>
+<div class="highlight"><pre><span></span>$ timedatectl list-timezones <span class="p">|</span> grep -i tokyo 
+Asia/Tokyo
+</pre></div>
+
+
+<p>Asia/Tokyoにタイムゾーン設定</p>
+<div class="highlight"><pre><span></span>$ timedatectl set-timezone Asia/Tokyo
+</pre></div>
+
+
+<p>cronの時刻設定はタイムゾーン変更してもそのままUTCのままなので、cronサービスを再起動する</p>
+<div class="highlight"><pre><span></span>$ service cron restart
+</pre></div>
+
+
+<p>以上でタイムゾーンの変更作業は完了。タイムゾーン変更しただけだと、トラブるのでメモ</p>
+<p>参考：
+<a href="https://qiita.com/zaki-lknr/items/cd9844fa6a1efa58cab1">ubuntu 18.04 時刻とタイムゾーン設定</a>
+<a href="https://harupong-blog.github.io/2013/09/ubuntu-cron-timezone/">タイムゾーンを変更したら Cron の実施時刻がずれたので修正した作業メモ</a></p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- Google Adsense below content -->
 <ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-3165642025902490" data-ad-slot="1749996500"></ins>
@@ -173,9 +206,9 @@ ping: thoz.org: Name or service not known
     <ul>
         <li><a href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/">linuxメモ</a></li>
         <li><a href="http://blog.shigepon.info/blog/2014/02/11/svn-memo/">svn memo</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2014/03/20/nginx-memo/">nginx memo</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2020/02/16/groonga_memo/">groongaメモ</a></li>
         <li><a href="http://blog.shigepon.info/blog/2018/09/10/vmware_memo/">vmwareメモ</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2018/09/15/python_memo/">pythonメモ</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2017/11/02/mac_memo/">macメモ</a></li>
     </ul>
 </section>
     <hr />
@@ -205,6 +238,16 @@ ping: thoz.org: Name or service not known
             <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
                 <ul class="list-group" id="recentposts">
                     <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/2014/03/20/nginx-memo/">
+                            nginx memo
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/2020/02/16/groonga_memo/">
+                            groongaメモ
+                        </a>
+                    </li>
+                    <li class="list-group-item">
                         <a href="http://blog.shigepon.info/blog/2020/02/14/ubuntu_troubleshooting/">
                             ubuntuトラブルシューティング
                         </a>
@@ -217,16 +260,6 @@ ping: thoz.org: Name or service not known
                     <li class="list-group-item">
                         <a href="http://blog.shigepon.info/blog/2018/09/10/vmware_memo/">
                             vmwareメモ
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2018/09/15/python_memo/">
-                            pythonメモ
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2017/11/02/mac_memo/">
-                            macメモ
                         </a>
                     </li>
                 </ul>
@@ -325,8 +358,8 @@ ping: thoz.org: Name or service not known
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/memo.html">
-                            memo
+                        <a href="http://blog.shigepon.info/tag/linux.html">
+                            linux
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
@@ -335,8 +368,8 @@ ping: thoz.org: Name or service not known
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/linux.html">
-                            linux
+                        <a href="http://blog.shigepon.info/tag/memo.html">
+                            memo
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
@@ -345,13 +378,23 @@ ping: thoz.org: Name or service not known
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/r.html">
-                            R
+                        <a href="http://blog.shigepon.info/tag/csharp.html">
+                            CSharp
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/csharp.html">
-                            CSharp
+                        <a href="http://blog.shigepon.info/tag/groonga.html">
+                            groonga
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/event.html">
+                            event
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/postgresql.html">
+                            PostgreSQL
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -365,8 +408,8 @@ ping: thoz.org: Name or service not known
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/postgresql.html">
-                            PostgreSQL
+                        <a href="http://blog.shigepon.info/tag/nadesiko.html">
+                            nadesiko
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -375,33 +418,8 @@ ping: thoz.org: Name or service not known
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/event.html">
-                            event
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/nadesiko.html">
-                            nadesiko
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/groonga.html">
-                            groonga
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/google.html">
-                            google
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/octopress.html">
-                            octopress
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
-                            uwsgi
+                        <a href="http://blog.shigepon.info/tag/r.html">
+                            R
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -410,8 +428,13 @@ ping: thoz.org: Name or service not known
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/php.html">
-                            PHP
+                        <a href="http://blog.shigepon.info/tag/rhaco.html">
+                            rhaco
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/google.html">
+                            google
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -420,8 +443,8 @@ ping: thoz.org: Name or service not known
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
-                            CPlusPlus
+                        <a href="http://blog.shigepon.info/tag/test1st.html">
+                            test1st
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -430,23 +453,13 @@ ping: thoz.org: Name or service not known
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/nginx.html">
-                            nginx
+                        <a href="http://blog.shigepon.info/tag/php.html">
+                            PHP
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/pelican.html">
-                            pelican
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/rhaco.html">
-                            rhaco
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/titanium.html">
-                            titanium
+                        <a href="http://blog.shigepon.info/tag/octopress.html">
+                            octopress
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -455,8 +468,13 @@ ping: thoz.org: Name or service not known
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/test1st.html">
-                            test1st
+                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
+                            uwsgi
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
+                            CPlusPlus
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -464,39 +482,19 @@ ping: thoz.org: Name or service not known
                             vim
                         </a>
                     </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/svn.html">
-                            svn
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/pelican.html">
+                            pelican
                         </a>
                     </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/unity.html">
-                            unity
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/titanium.html">
+                            titanium
                         </a>
                     </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/sqlite.html">
-                            sqlite
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/avr.html">
-                            avr
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/ubuntu.html">
-                            ubuntu
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/mac.html">
-                            mac
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/lua.html">
-                            Lua
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/nginx.html">
+                            nginx
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -505,13 +503,8 @@ ping: thoz.org: Name or service not known
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/visualstudio.html">
-                            visualstudio
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
-                            linkedopendata
+                        <a href="http://blog.shigepon.info/tag/mac.html">
+                            mac
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -520,8 +513,48 @@ ping: thoz.org: Name or service not known
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/visualstudio.html">
+                            visualstudio
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
                         <a href="http://blog.shigepon.info/tag/rhaco3.html">
                             rhaco3
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/unity.html">
+                            unity
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/svn.html">
+                            svn
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/lua.html">
+                            Lua
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/avr.html">
+                            avr
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/sqlite.html">
+                            sqlite
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/ubuntu.html">
+                            ubuntu
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/git.html">
+                            git
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -530,8 +563,8 @@ ping: thoz.org: Name or service not known
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/git.html">
-                            git
+                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
+                            linkedopendata
                         </a>
                     </li>
                 </ul>
@@ -568,7 +601,7 @@ ping: thoz.org: Name or service not known
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2020 shigepon
+         <div class="col-xs-10">&copy; 2014 shigepon
             &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>

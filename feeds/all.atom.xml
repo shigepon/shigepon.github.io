@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/all.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2020-02-14T10:00:00+09:00</updated><entry><title>ubuntuトラブルシューティング</title><link href="http://blog.shigepon.info/blog/2020/02/14/ubuntu_troubleshooting/" rel="alternate"></link><published>2020-02-14T10:00:00+09:00</published><updated>2020-02-14T10:00:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2020-02-14:/blog/2020/02/14/ubuntu_troubleshooting/</id><summary type="html"></summary><content type="html">&lt;h2&gt;sshでUbuntuにログインする時にパスワード入力のところで固まりやすくなる場合の対処&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/all.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2020-02-18T11:04:53+09:00</updated><entry><title>groongaメモ</title><link href="http://blog.shigepon.info/blog/2020/02/16/groonga_memo/" rel="alternate"></link><published>2020-02-16T17:30:00+09:00</published><updated>2020-02-16T17:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2020-02-16:/blog/2020/02/16/groonga_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;groongaで良く使うコマンド&lt;/h2&gt;
+&lt;h3&gt;バックアップ、リストア&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;バックアップ
+$ groonga &lt;span class="o"&gt;[&lt;/span&gt;db name&lt;span class="o"&gt;]&lt;/span&gt; dump &amp;gt; &lt;span class="o"&gt;[&lt;/span&gt;bkup file&lt;span class="o"&gt;]&lt;/span&gt;
+リストア
+$ groonga -n &lt;span class="o"&gt;[&lt;/span&gt;db name&lt;span class="o"&gt;]&lt;/span&gt; &amp;lt; &lt;span class="o"&gt;[&lt;/span&gt;bkup file&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;httpアクセスできるようにする&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ groonga -d -p &lt;span class="o"&gt;[&lt;/span&gt;port&lt;span class="o"&gt;]&lt;/span&gt; --protocol http &lt;span class="o"&gt;[&lt;/span&gt;path to db&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</content><category term="memo"></category><category term="groonga"></category></entry><entry><title>ubuntuトラブルシューティング</title><link href="http://blog.shigepon.info/blog/2020/02/14/ubuntu_troubleshooting/" rel="alternate"></link><published>2020-02-14T10:00:00+09:00</published><updated>2020-02-14T10:00:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2020-02-14:/blog/2020/02/14/ubuntu_troubleshooting/</id><summary type="html"></summary><content type="html">&lt;h2&gt;sshでUbuntuにログインする時にパスワード入力のところで固まりやすくなる場合の対処&lt;/h2&gt;
 &lt;p&gt;Ubuntuの場合のみ&lt;/p&gt;
 &lt;p&gt;sshでログインする時に、/etc/update-motd.d
 にある処理を行うようになっている。ここのファイルで必要の無いものを消すか&lt;/p&gt;
@@ -50,7 +61,48 @@ ping: thoz.org: Name or service not known
 
 &lt;p&gt;と変更すれば治った。
 &lt;a href="https://linuc.org/study/knowledge/508/"&gt;linux豆知識&lt;/a&gt;によると、nsswitch.confは名前解決を行う優先順位を指定するファイルなので、そこでファイルしか指定してないと、そりゃdns参照してくれないよねという話であった。&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="https://askubuntu.com/questions/81797/nslookup-finds-ip-but-ping-doesnt"&gt;nslookup finds id, but ping doesnt&lt;/a&gt;&lt;/p&gt;</content><category term="memo"></category><category term="linux"></category><category term="ubuntu"></category></entry><entry><title>pythonメモ</title><link href="http://blog.shigepon.info/blog/2018/09/15/python_memo/" rel="alternate"></link><published>2018-09-15T22:30:00+09:00</published><updated>2018-09-15T22:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2018-09-15:/blog/2018/09/15/python_memo/</id><summary type="html">&lt;p&gt;pythonでググることになった使い方をメモしておく&lt;/p&gt;</summary><content type="html">&lt;h2&gt;pyenvをUbuntuにインストール&lt;/h2&gt;
+&lt;p&gt;参考：&lt;a href="https://askubuntu.com/questions/81797/nslookup-finds-ip-but-ping-doesnt"&gt;nslookup finds id, but ping doesnt&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Ubuntu 18.04LTSではタイムゾーンがUTCになっている&lt;/h2&gt;
+&lt;p&gt;Ubuntu 18.04でOSインストール時にタイムゾーン設定が無いのに気づかずに、ずっと使ってた。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ timedatectl
+                      Local time: 日 &lt;span class="m"&gt;2020&lt;/span&gt;-02-16 &lt;span class="m"&gt;22&lt;/span&gt;:53:25 UTC
+                  Universal time: 日 &lt;span class="m"&gt;2020&lt;/span&gt;-02-16 &lt;span class="m"&gt;22&lt;/span&gt;:53:25 UTC
+                        RTC time: 日 &lt;span class="m"&gt;2020&lt;/span&gt;-02-16 &lt;span class="m"&gt;22&lt;/span&gt;:53:25
+                       Time zone: Etc/UTC &lt;span class="o"&gt;(&lt;/span&gt;UTC, +0000&lt;span class="o"&gt;)&lt;/span&gt;
+       System clock synchronized: yes
+systemd-timesyncd.service active: yes
+                 RTC in &lt;span class="nb"&gt;local&lt;/span&gt; TZ: no
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;タイムゾーンにAsia/Tokyoがあるか確認&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ timedatectl list-timezones &lt;span class="p"&gt;|&lt;/span&gt; grep -i tokyo 
+Asia/Tokyo
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Asia/Tokyoにタイムゾーン設定&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ timedatectl set-timezone Asia/Tokyo
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;cronの時刻設定はタイムゾーン変更してもそのままUTCのままなので、cronサービスを再起動する&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ service cron restart
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;以上でタイムゾーンの変更作業は完了。タイムゾーン変更しただけだと、トラブるのでメモ&lt;/p&gt;
+&lt;p&gt;参考：
+&lt;a href="https://qiita.com/zaki-lknr/items/cd9844fa6a1efa58cab1"&gt;ubuntu 18.04 時刻とタイムゾーン設定&lt;/a&gt;
+&lt;a href="https://harupong-blog.github.io/2013/09/ubuntu-cron-timezone/"&gt;タイムゾーンを変更したら Cron の実施時刻がずれたので修正した作業メモ&lt;/a&gt;&lt;/p&gt;</content><category term="memo"></category><category term="linux"></category><category term="ubuntu"></category></entry><entry><title>pythonメモ</title><link href="http://blog.shigepon.info/blog/2018/09/15/python_memo/" rel="alternate"></link><published>2018-09-15T22:30:00+09:00</published><updated>2018-09-15T22:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2018-09-15:/blog/2018/09/15/python_memo/</id><summary type="html">&lt;p&gt;pythonでググることになった使い方をメモしておく&lt;/p&gt;</summary><content type="html">&lt;h2&gt;リスト内包表現を用いて2次元配列を1次元に変換&lt;/h2&gt;
+&lt;p&gt;d2を2次元配列として&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;d1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;sublist&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;d2&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;sublist&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でおk&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="https://stackoverflow.com/questions/2961983/convert-multi-dimensional-list-to-a-1d-list-in-python"&gt;Convert multi-dimensional list to a 1D list in Python&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;pyenvをUbuntuにインストール&lt;/h2&gt;
 &lt;p&gt;なんか色々依存関係があるので、先にこれを実行&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev &lt;span class="se"&gt;\&lt;/span&gt;
 libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev &lt;span class="se"&gt;\&lt;/span&gt;
@@ -1002,7 +1054,19 @@ sshでEsxiホストを操作する手順は&lt;a href="http://blog.shigepon.info
 結論から言うとSATAコントローラーがAHCIモードだったのがまずかったみたい。BIOS画面でSATAコントローラーをAHCIモード以外にすると認識するようになった。
 このトラブルの解決だけで2時間かかった＞＜。ここらへんを参考にした（&lt;a href="http://d.hatena.ne.jp/igapyon/20140720"&gt;ESXi 5.5 を MSI H97 GAMING 3 にインストール&lt;/a&gt;、&lt;a href="http://zappy.hatenablog.jp/entry/2015/01/09/002505"&gt;自作PCにVMware ESXiをインストールした&lt;/a&gt;）
 データストアを認識しているかどうかは&lt;a href="https://kb.vmware.com/articleview?docid=1014953&amp;amp;lang=ja"&gt;VMware ESXi/ESX を操作するときのディスクの識別&lt;/a&gt;を参考にした。&lt;/p&gt;
-&lt;p&gt;しかもEsxiのトラブルとは関係ないけどHDDが2つも動かない状態になってるし・・・。どーしよー。&lt;/p&gt;</content><category term="vmware"></category><category term="linux"></category></entry><entry><title>linuxメモ</title><link href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/" rel="alternate"></link><published>2017-11-02T17:30:00+09:00</published><updated>2018-11-12T16:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-11-02:/blog/2017/11/02/linux_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;sshでリモートサーバーのフォルダをマウント&lt;/h2&gt;
+&lt;p&gt;しかもEsxiのトラブルとは関係ないけどHDDが2つも動かない状態になってるし・・・。どーしよー。&lt;/p&gt;</content><category term="vmware"></category><category term="linux"></category></entry><entry><title>linuxメモ</title><link href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/" rel="alternate"></link><published>2017-11-02T17:30:00+09:00</published><updated>2018-11-12T16:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-11-02:/blog/2017/11/02/linux_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;nkfを使ってurlエンコード、デコード&lt;/h2&gt;
+&lt;p&gt;urlエンコード&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;ほげ&amp;#39;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; nkf -WwMQ &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="nv"&gt;tr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; %
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;urlデコード&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;echo&lt;/span&gt; %E3%81%BB%E3%81%92 &lt;span class="p"&gt;|&lt;/span&gt; nkf -w --url-input
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="https://blog.offline-net.com/2014/11/09/linux_nkf_command_urlencode_and_decode/"&gt;Linux：コマンドラインでURLエンコード・デコードする(nkf編)&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;sshでリモートサーバーのフォルダをマウント&lt;/h2&gt;
 &lt;p&gt;sshfsってのを使う。Ubuntuはaptitudeでインストール&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ aptitude install sshfs
 &lt;/pre&gt;&lt;/div&gt;
@@ -6731,7 +6795,40 @@ $ sudo aptitude upgrade
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;と出ればおk。確認してないけど、Ubuntu 13.10なら1.0.1e-3ubuntu1.2、Ubuntu 12.10なら1.0.1c-3ubuntu2.7と出ていればおk。&lt;/p&gt;</content><category term="linux"></category></entry><entry><title>nginx memo</title><link href="http://blog.shigepon.info/blog/2014/03/20/nginx-memo/" rel="alternate"></link><published>2014-03-20T16:04:53+09:00</published><updated>2014-03-20T16:04:53+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-03-20:/blog/2014/03/20/nginx-memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;Nginxで503コードのページをカスタマイズする&lt;/h2&gt;
+&lt;p&gt;と出ればおk。確認してないけど、Ubuntu 13.10なら1.0.1e-3ubuntu1.2、Ubuntu 12.10なら1.0.1c-3ubuntu2.7と出ていればおk。&lt;/p&gt;</content><category term="linux"></category></entry><entry><title>nginx memo</title><link href="http://blog.shigepon.info/blog/2014/03/20/nginx-memo/" rel="alternate"></link><published>2014-03-20T16:04:53+09:00</published><updated>2020-02-18T11:04:53+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-03-20:/blog/2014/03/20/nginx-memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;let's encryptでsslを設定&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://thoz.org/"&gt;とある法律判例の全文検索&lt;/a&gt;をssl化するにあたって、let's encryptを用いることにした。&lt;a href="https://certbot.eff.org/"&gt;certbot&lt;/a&gt;を使うようになっている。certbotのHPに行くと、httpサーバソフトとosを選んだらcertbot導入の手順が表示されるので、それに従ってみる（今回はNginxとUbuntu(other)）を選んだ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;sshでサーバーにログイン&lt;/li&gt;
+&lt;li&gt;certbotをインストール&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ wget https://dl.eff.org/certbot-auto
+$ sudo mv certbot-auto /usr/local/bin/certbot-auto
+$ sudo chown root /usr/local/bin/certbot-auto
+$ sudo chmod &lt;span class="m"&gt;0755&lt;/span&gt; /usr/local/bin/certbot-auto
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;certbotコマンドを打つ&lt;/li&gt;
+&lt;li&gt;nginxの設定ファイルの自動変更とssl認証を同時に行う&lt;/li&gt;
+&lt;li&gt;nginxのssl認証だけ行う（こちらを行った）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo /usr/local/bin/certbot-auto certonly --nginx
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;自動更新のcronジョブを書く&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;0 0,12 * * * root python -c &amp;#39;import random; import time; time.sleep(random.random() * 3600)&amp;#39; &amp;amp;&amp;amp; /usr/local/bin/certbot-auto renew&amp;quot;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; sudo tee -a /etc/crontab &amp;gt; /dev/null
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;certbotの動作確認&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;という手順が表示されるのでその通りに行った。&lt;/p&gt;
+&lt;h2&gt;Nginxで503コードのページをカスタマイズする&lt;/h2&gt;
 &lt;p&gt;なるべく手軽にメンテナンスページを出すための手順&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;path/to/root/error/503.htmlにページを用意する。&lt;/li&gt;
