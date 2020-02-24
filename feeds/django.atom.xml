@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など - django</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/django.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2020-02-24T10:40:00+09:00</updated><entry><title>複数のuwsgiプロセスでログを取る</title><link href="http://blog.shigepon.info/blog/2020/02/24/fu-shu-nouwsgipurosesuderoguwoqu-ru/" rel="alternate"></link><published>2020-02-24T10:40:00+09:00</published><updated>2020-02-24T10:40:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2020-02-24:/blog/2020/02/24/fu-shu-nouwsgipurosesuderoguwoqu-ru/</id><summary type="html"></summary><content type="html">&lt;p&gt;複数のDjangoプロセスを起動している状態で、共通の設定でログを取りたいと思ったので、失敗も含めてメモ&lt;/p&gt;
+&lt;p&gt;※ Ubuntuのバージョンは14.04LTS&lt;/p&gt;
+&lt;h2&gt;TimedRotatingFileHandlerを使ってみた（失敗）&lt;/h2&gt;
+&lt;p&gt;ログはファイルに書き出してログローテーションをしたかったので、TimedRotatingFileHandlerを使ってみた。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;handlers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;accesslog&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;level&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;INFO&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;class&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;logging.handlers.TimedRotatingFileHandler&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;filename&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;access.log&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;when&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;MIDNIGHT&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;formatter&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;verbose&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="p"&gt;},&lt;/span&gt;
+ &lt;span class="p"&gt;},&lt;/span&gt;
+ &lt;span class="s1"&gt;&amp;#39;loggers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;accesslog&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;handlers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;accesslog&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;level&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;INFO&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;propagate&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;  
+     &lt;span class="p"&gt;},&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これでログは取れるんだけど、しばらく放っておいてもほんの一部しかログが取れない。whenを「D」にしたりしてみたんだけど、変わらない。よくわからんなと思ったら、「&lt;a href="https://scrapbox.io/shimizukawa/Python%E3%81%AEFileHandler%E3%82%92%E8%A4%87%E6%95%B0%E3%83%97%E3%83%AD%E3%82%BB%E3%82%B9%E3%81%A7%E5%90%8C%E6%99%82%E3%81%AB%E4%BD%BF%E3%81%A3%E3%81%A6%E3%81%AF%E3%81%84%E3%81%91%E3%81%AA%E3%81%84"&gt;PythonのFileHandlerを複数プロセスで同時に使ってはいけない&lt;/a&gt;」という情報が出てきた。まじか。&lt;/p&gt;
+&lt;h2&gt;SocketHandlerを使ってみた（実装失敗）&lt;/h2&gt;
+&lt;p&gt;そこで、上記参照ページで対策として書かれていたSocketHandlerを使ってログを取れないか試してみた。&lt;a href="https://symfoware.blog.fc2.com/blog-entry-885.html"&gt;Python logging 各種出力ハンドラーの使い方について&lt;/a&gt;を見ながら、socketの受け側は該当コードをとりあえずコピペ、送信側は設定を&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;handlers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;accesslog&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;level&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;INFO&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;class&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;logging.handlers.SocketHandler&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;ip&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;localhost&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;port&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;12345&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;formatter&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;verbose&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="p"&gt;},&lt;/span&gt;
+ &lt;span class="p"&gt;},&lt;/span&gt;
+ &lt;span class="s1"&gt;&amp;#39;loggers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;accesslog&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;handlers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;accesslog&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;level&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;INFO&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;propagate&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;  
+     &lt;span class="p"&gt;},&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;として、動かしてみた。でも結局うまくいかなかった。うんともすんとも言わなかったのと、&lt;a href="https://code.djangoproject.com/ticket/29186"&gt;なんかエラーが出るらしい？&lt;/a&gt;という情報も見たので（あれ？これパッチがちゃんと当たってる？）、あまり深く調べずに採用をやめた。&lt;/p&gt;
+&lt;h2&gt;SysLogHandlerを使ってみた（失敗のち成功）&lt;/h2&gt;
+&lt;p&gt;SocketHandlerは早々にあきらめて、SysLogHandlerを使ってみた。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;logging.handlers&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;SysLogHandler&lt;/span&gt;
+&lt;span class="s1"&gt;&amp;#39;handlers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;accesslog&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;level&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;INFO&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;class&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;logging.handlers.SysLogHandler&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;facilyty&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;SysLogHandler.LOG_LOCAL0,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;formatter&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;verbose&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="p"&gt;},&lt;/span&gt;
+ &lt;span class="p"&gt;},&lt;/span&gt;
+ &lt;span class="s1"&gt;&amp;#39;loggers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;accesslog&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;handlers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;accesslog&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;level&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;INFO&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;propagate&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;  
+     &lt;span class="p"&gt;},&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;django以外にrsyslogの設定も必要&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cat /etc/rsyslog.d/hoge.conf
+local0.*                         /var/log/hoge.log
+$ sudo service rsyslogd restart
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;としてみたが動かない・・・。色々調べてみると&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://www.simonkrueger.com/2015/05/27/logging-django-apps-to-syslog.html"&gt;Logging django apps to syslog&lt;/a&gt;などのソースを見ると、&lt;/p&gt;
+&lt;p&gt;handlersの項目に&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;address&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;/dev/log&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とあったので、それを加えるとうまくいった。/dev/logはシステムロギングのデフォルトエントリなのでそこをログの書き出し先として指定しないといけないのね。なるほど。&lt;/p&gt;</content><category term="django"></category><category term="python"></category></entry></feed>
