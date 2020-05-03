@@ -15,7 +15,7 @@
         <meta name="author" content="thoz" />
         <meta name="keywords" content="python,memo" />
         <meta name="description" content="pythonでググることになった使い方をメモしておく" />
-        <meta property="modified" content="2018-09-15" />
+        <meta property="modified" content="2020-05-03" />
 
         <meta property="og:site_name" content="shigeponが関心のある技術情報など" />
         <meta property="og:type" content="article"/>
@@ -544,6 +544,35 @@ chromium、chromeドライバーをインストール
 <span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://www.google.co.jp/&#39;</span><span class="p">)</span>
 <span class="k">assert</span> <span class="s1">&#39;Google&#39;</span> <span class="ow">in</span> <span class="n">driver</span><span class="o">.</span><span class="n">title</span>
 </pre></div>
+
+
+<h2>python 2.7でパラメータのurlエンコードで指定したハッシュの順番通りにする</h2>
+<p>普通にハッシュをパラメータに指定すると順番通りにいかないので一工夫必要</p>
+<div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">:</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">:</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="s1">&#39;d&#39;</span><span class="p">:</span><span class="s1">&#39;d&#39;</span><span class="p">}</span>
+<span class="n">sorted_values</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">val</span><span class="p">:</span> <span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">urllib</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">sorted_values</span><span class="p">)</span><span class="err">↲</span>
+</pre></div>
+
+
+<p>これで</p>
+<div class="highlight"><pre><span></span>a=a&amp;b=b&amp;c=c&amp;d=d
+</pre></div>
+
+
+<p>で出力される</p>
+<h2>python 2.7系をアップデートする</h2>
+<p>ソースをダウンロードしてmake</p>
+<div class="highlight"><pre><span></span>$ wget https://www.python.org/ftp/python/2.7.x/Python-2.7.x.tgz
+$ tar -xvf Python-2.7.x.tgz
+$ <span class="nb">cd</span> Python-2.7.x
+$ ./configure --prefix<span class="o">=</span>/path/to/install
+$ make
+$ sudo make install
+</pre></div>
+
+
+<p>参考：<a href="https://ludwig125.hatenablog.com/entry/2018/08/10/234331">Ubuntu 14.04のPython2のデフォルトバージョンをPython 2.7.9にする</a></p>
+<p>上書きしてアップデートする場合は、エラーが出たりするので、出たファイルを消したらいける</p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- Google Adsense below content -->
 <ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-3165642025902490" data-ad-slot="1749996500"></ins>
@@ -556,10 +585,10 @@ chromium、chromeドライバーをインストール
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
-        <li><a href="http://blog.shigepon.info/blog/2016/10/25/python_libraries_memo/">pythonのライブラリメモ</a></li>
         <li><a href="http://blog.shigepon.info/blog/2014/11/23/django-memo/">Django Memo</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2016/10/25/django-detabesuguan-lian-memo/">Django データベース関連メモ</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2016/10/25/python_libraries_memo/">pythonのライブラリメモ</a></li>
         <li><a href="http://blog.shigepon.info/blog/2016/10/25/pelican-memo/">Pelicanメモ</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2016/10/25/django-db-memo/">Django データベース関連メモ</a></li>
         <li><a href="http://blog.shigepon.info/blog/2015/03/05/uwsgi-memo/">uwsgiメモ</a></li>
     </ul>
 </section>
@@ -590,28 +619,28 @@ chromium、chromeドライバーをインストール
             <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
                 <ul class="list-group" id="recentposts">
                     <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2020/02/24/fu-shu-nouwsgipurosesuderoguwoqu-ru/">
-                            複数のuwsgiプロセスでログを取る
+                        <a href="http://blog.shigepon.info/blog/2018/09/15/python_memo/">
+                            pythonメモ
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/">
-                            linuxメモ
+                        <a href="http://blog.shigepon.info/blog/2014/11/23/django-memo/">
+                            Django Memo
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2014/03/20/nginx-memo/">
-                            nginx memo
+                        <a href="http://blog.shigepon.info/blog/2016/09/16/postgresqlmemo/">
+                            PostgreSQLメモ
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2020/02/16/groonga_memo/">
-                            groongaメモ
+                        <a href="http://blog.shigepon.info/blog/2016/10/25/django-detabesuguan-lian-memo/">
+                            Django データベース関連メモ
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2020/02/14/ubuntu_troubleshooting/">
-                            ubuntuトラブルシューティング
+                        <a href="http://blog.shigepon.info/blog/2020/02/24/djangonokiyatsushiyudeinstancemethod-objects-cant-pickle/">
+                            Djangoのキャッシュで「Instancemethod objects can't pickle」
                         </a>
                     </li>
                 </ul>
@@ -710,18 +739,13 @@ chromium、chromeドライバーをインストール
             <li class="list-group-item"><a href="http://blog.shigepon.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
                 <ul class="list-group " id="tags">
                     <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/linux.html">
-                            linux
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/django.html">
-                            django
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-1">
                         <a href="http://blog.shigepon.info/tag/memo.html">
                             memo
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="http://blog.shigepon.info/tag/python.html">
+                            python
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
@@ -730,43 +754,13 @@ chromium、chromeドライバーをインストール
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/python.html">
-                            python
+                        <a href="http://blog.shigepon.info/tag/django.html">
+                            django
                         </a>
                     </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/groonga.html">
-                            groonga
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/nadesiko2.html">
-                            nadesiko2
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/r.html">
-                            R
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/csharp.html">
-                            CSharp
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/rails.html">
-                            Rails
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/postgresql.html">
-                            PostgreSQL
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/nadesiko.html">
-                            nadesiko
+                    <li class="list-group-item tag-1">
+                        <a href="http://blog.shigepon.info/tag/linux.html">
+                            linux
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -775,8 +769,73 @@ chromium、chromeドライバーをインストール
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/nadesiko.html">
+                            nadesiko
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/groonga.html">
+                            groonga
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/csharp.html">
+                            CSharp
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
                         <a href="http://blog.shigepon.info/tag/event.html">
                             event
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/nadesiko2.html">
+                            nadesiko2
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/rails.html">
+                            Rails
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/r.html">
+                            R
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/postgresql.html">
+                            PostgreSQL
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/ansible.html">
+                            ansible
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/nginx.html">
+                            nginx
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/octopress.html">
+                            octopress
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/javascript.html">
+                            javascript
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
+                            CPlusPlus
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/php.html">
+                            PHP
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -785,13 +844,8 @@ chromium、chromeドライバーをインストール
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/titanium.html">
-                            titanium
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/vmware.html">
-                            vmware
+                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
+                            uwsgi
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -805,33 +859,8 @@ chromium、chromeドライバーをインストール
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/test1st.html">
-                            test1st
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/javascript.html">
-                            javascript
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/nginx.html">
-                            nginx
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/ansible.html">
-                            ansible
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/octopress.html">
-                            octopress
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
-                            CPlusPlus
+                        <a href="http://blog.shigepon.info/tag/titanium.html">
+                            titanium
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -840,23 +869,28 @@ chromium、chromeドライバーをインストール
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/test1st.html">
+                            test1st
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/vmware.html">
+                            vmware
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
                         <a href="http://blog.shigepon.info/tag/vim.html">
                             vim
                         </a>
                     </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/php.html">
-                            PHP
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
-                            uwsgi
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/mt4.html">
+                            MT4
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/avr.html">
-                            avr
+                        <a href="http://blog.shigepon.info/tag/mac.html">
+                            mac
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -870,13 +904,8 @@ chromium、chromeドライバーをインストール
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/sqlite.html">
-                            sqlite
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/rhaco3.html">
-                            rhaco3
+                        <a href="http://blog.shigepon.info/tag/redis.html">
+                            redis
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -885,23 +914,13 @@ chromium、chromeドライバーをインストール
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/mt4.html">
-                            MT4
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
                         <a href="http://blog.shigepon.info/tag/unity.html">
                             unity
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/svn.html">
-                            svn
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/mac.html">
-                            mac
+                        <a href="http://blog.shigepon.info/tag/arduino.html">
+                            arduino
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -910,18 +929,28 @@ chromium、chromeドライバーをインストール
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/avr.html">
+                            avr
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
                         <a href="http://blog.shigepon.info/tag/visualstudio.html">
                             visualstudio
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/redis.html">
-                            redis
+                        <a href="http://blog.shigepon.info/tag/rhaco3.html">
+                            rhaco3
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/arduino.html">
-                            arduino
+                        <a href="http://blog.shigepon.info/tag/svn.html">
+                            svn
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/sqlite.html">
+                            sqlite
                         </a>
                     </li>
                 </ul>
@@ -958,7 +987,7 @@ chromium、chromeドライバーをインストール
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2020 shigepon
+         <div class="col-xs-10">&copy; 2018 shigepon
             &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>

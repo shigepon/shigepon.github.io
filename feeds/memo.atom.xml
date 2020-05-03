@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など - memo</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/memo.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2020-02-24T09:30:00+09:00</updated><entry><title>groongaメモ</title><link href="http://blog.shigepon.info/blog/2020/02/16/groonga_memo/" rel="alternate"></link><published>2020-02-16T17:30:00+09:00</published><updated>2020-02-16T17:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2020-02-16:/blog/2020/02/16/groonga_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;groongaで良く使うコマンド&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など - memo</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/memo.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2020-05-03T22:30:00+09:00</updated><entry><title>groongaメモ</title><link href="http://blog.shigepon.info/blog/2020/02/16/groonga_memo/" rel="alternate"></link><published>2020-02-16T17:30:00+09:00</published><updated>2020-02-16T17:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2020-02-16:/blog/2020/02/16/groonga_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;groongaで良く使うコマンド&lt;/h2&gt;
 &lt;h3&gt;バックアップ、リストア&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;バックアップ
 $ groonga &lt;span class="o"&gt;[&lt;/span&gt;db name&lt;span class="o"&gt;]&lt;/span&gt; dump &amp;gt; &lt;span class="o"&gt;[&lt;/span&gt;bkup file&lt;span class="o"&gt;]&lt;/span&gt;
@@ -94,7 +94,7 @@ Asia/Tokyo
 &lt;p&gt;以上でタイムゾーンの変更作業は完了。タイムゾーン変更しただけだと、トラブるのでメモ&lt;/p&gt;
 &lt;p&gt;参考：
 &lt;a href="https://qiita.com/zaki-lknr/items/cd9844fa6a1efa58cab1"&gt;ubuntu 18.04 時刻とタイムゾーン設定&lt;/a&gt;
-&lt;a href="https://harupong-blog.github.io/2013/09/ubuntu-cron-timezone/"&gt;タイムゾーンを変更したら Cron の実施時刻がずれたので修正した作業メモ&lt;/a&gt;&lt;/p&gt;</content><category term="memo"></category><category term="linux"></category><category term="ubuntu"></category></entry><entry><title>pythonメモ</title><link href="http://blog.shigepon.info/blog/2018/09/15/python_memo/" rel="alternate"></link><published>2018-09-15T22:30:00+09:00</published><updated>2018-09-15T22:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2018-09-15:/blog/2018/09/15/python_memo/</id><summary type="html">&lt;p&gt;pythonでググることになった使い方をメモしておく&lt;/p&gt;</summary><content type="html">&lt;h2&gt;リスト内包表現を用いて2次元配列を1次元に変換&lt;/h2&gt;
+&lt;a href="https://harupong-blog.github.io/2013/09/ubuntu-cron-timezone/"&gt;タイムゾーンを変更したら Cron の実施時刻がずれたので修正した作業メモ&lt;/a&gt;&lt;/p&gt;</content><category term="memo"></category><category term="linux"></category><category term="ubuntu"></category></entry><entry><title>pythonメモ</title><link href="http://blog.shigepon.info/blog/2018/09/15/python_memo/" rel="alternate"></link><published>2018-09-15T22:30:00+09:00</published><updated>2020-05-03T22:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2018-09-15:/blog/2018/09/15/python_memo/</id><summary type="html">&lt;p&gt;pythonでググることになった使い方をメモしておく&lt;/p&gt;</summary><content type="html">&lt;h2&gt;リスト内包表現を用いて2次元配列を1次元に変換&lt;/h2&gt;
 &lt;p&gt;d2を2次元配列として&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;d1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;sublist&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;d2&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;sublist&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -532,7 +532,36 @@ chromium、chromeドライバーをインストール
 &lt;span class="n"&gt;driver&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;webdriver&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Chrome&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;chrome_options&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;options&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;driver&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;https://www.google.co.jp/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Google&amp;#39;&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;driver&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</content><category term="python"></category><category term="memo"></category></entry><entry><title>vmwareメモ</title><link href="http://blog.shigepon.info/blog/2018/09/10/vmware_memo/" rel="alternate"></link><published>2018-09-10T17:30:00+09:00</published><updated>2018-09-27T16:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2018-09-10:/blog/2018/09/10/vmware_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;コンソールで文字化け回避&lt;/h2&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;python 2.7でパラメータのurlエンコードで指定したハッシュの順番通りにする&lt;/h2&gt;
+&lt;p&gt;普通にハッシュをパラメータに指定すると順番通りにいかないので一工夫必要&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;params&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;a&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;a&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;b&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;b&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;d&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;d&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;sorted_values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;sorted&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;items&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;lambda&lt;/span&gt; &lt;span class="n"&gt;val&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;val&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;span class="n"&gt;urllib&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;urlencode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sorted_values&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これで&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;a=a&amp;amp;b=b&amp;amp;c=c&amp;amp;d=d
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;で出力される&lt;/p&gt;
+&lt;h2&gt;python 2.7系をアップデートする&lt;/h2&gt;
+&lt;p&gt;ソースをダウンロードしてmake&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ wget https://www.python.org/ftp/python/2.7.x/Python-2.7.x.tgz
+$ tar -xvf Python-2.7.x.tgz
+$ &lt;span class="nb"&gt;cd&lt;/span&gt; Python-2.7.x
+$ ./configure --prefix&lt;span class="o"&gt;=&lt;/span&gt;/path/to/install
+$ make
+$ sudo make install
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="https://ludwig125.hatenablog.com/entry/2018/08/10/234331"&gt;Ubuntu 14.04のPython2のデフォルトバージョンをPython 2.7.9にする&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;上書きしてアップデートする場合は、エラーが出たりするので、出たファイルを消したらいける&lt;/p&gt;</content><category term="python"></category><category term="memo"></category></entry><entry><title>vmwareメモ</title><link href="http://blog.shigepon.info/blog/2018/09/10/vmware_memo/" rel="alternate"></link><published>2018-09-10T17:30:00+09:00</published><updated>2018-09-27T16:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2018-09-10:/blog/2018/09/10/vmware_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;コンソールで文字化け回避&lt;/h2&gt;
 &lt;p&gt;sshで文字化けしてなくても、コンソールで文字化けする。
 zshを使っているので、.zshrcに以下を追記&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;export LANG=ja_JP.UTF-8↲
@@ -1217,7 +1246,28 @@ $ $ find . -name &lt;span class="s1"&gt;&amp;#39;*.zip&amp;#39;&lt;/span&gt; &lt
 &lt;p&gt;記事のマークダウンで指定するメタデータが並び替えの対象になる。
 メタデータは全ての記事に付けていないとエラーが出る。&lt;/p&gt;
 &lt;p&gt;参考：&lt;a href="http://docs.getpelican.com/en/3.6.3/settings.html"&gt;Settings — Pelican 3.6.3 documentation&lt;/a&gt;&lt;/p&gt;
-&lt;!-- more --&gt;</content><category term="memo"></category><category term="pelican"></category><category term="python"></category></entry><entry><title>Django データベース関連メモ</title><link href="http://blog.shigepon.info/blog/2016/10/25/django-db-memo/" rel="alternate"></link><published>2016-10-25T14:35:38+09:00</published><updated>2016-10-25T14:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-10-25:/blog/2016/10/25/django-db-memo/</id><summary type="html"></summary><content type="html">&lt;p&gt;Djangoのモデルやデータベース関連のメモが多くなったので、データベースが直接関わる箇所をメモから切り離してみた。&lt;/p&gt;
+&lt;!-- more --&gt;</content><category term="memo"></category><category term="pelican"></category><category term="python"></category></entry><entry><title>Django データベース関連メモ</title><link href="http://blog.shigepon.info/blog/2016/10/25/django-detabesuguan-lian-memo/" rel="alternate"></link><published>2016-10-25T14:35:38+09:00</published><updated>2020-03-20T23:00:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-10-25:/blog/2016/10/25/django-detabesuguan-lian-memo/</id><summary type="html"></summary><content type="html">&lt;p&gt;Djangoのモデルやデータベース関連のメモが多くなったので、データベースが直接関わる箇所をメモから切り離してみた。&lt;/p&gt;
+&lt;h2&gt;指定したカラムを読み込む、読み込まない、&lt;/h2&gt;
+&lt;p&gt;読み込む場合&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Hoge.objects.only(&amp;#39;fuga&amp;#39;,&amp;#39;hage&amp;#39;)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;読み込まない場合&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Hoge.objects.defer(&amp;#39;fuga&amp;#39;,&amp;#39;hage&amp;#39;)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でおk&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="https://docs.djangoproject.com/en/3.0/ref/models/querysets/#django.db.models.query.QuerySet.defer"&gt;QuerySet API reference&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;save時のクエリを見る&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.db&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;connection&lt;/span&gt;
+&lt;span class="n"&gt;Hoge&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;save&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;queries&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="https://stackoverflow.com/questions/8148005/how-can-i-get-query-for-save-in-django"&gt;How can i get query for .save() in django?&lt;/a&gt;&lt;/p&gt;
 &lt;h2&gt;リクエストパラメーターをモデルに入れる&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# views.py&lt;/span&gt;
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;a_view&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
@@ -1370,7 +1420,31 @@ $ $ find . -name &lt;span class="s1"&gt;&amp;#39;*.zip&amp;#39;&lt;/span&gt; &lt
 
 
 &lt;p&gt;みたいにする&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/13829082/filter-django-objects-where-related-object-exists"&gt;Filter Django objects where related object exists - Stack Overflow&lt;/a&gt;&lt;/p&gt;</content><category term="memo"></category><category term="django"></category><category term="python"></category></entry><entry><title>pythonのライブラリメモ</title><link href="http://blog.shigepon.info/blog/2016/10/25/python_libraries_memo/" rel="alternate"></link><published>2016-10-25T14:30:00+09:00</published><updated>2016-10-29T20:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2016-10-25:/blog/2016/10/25/python_libraries_memo/</id><summary type="html">&lt;p&gt;pythonで使ってみたライブラリをメモしておく&lt;/p&gt;</summary><content type="html">&lt;p&gt;pythonのライブラリは様々な種類があるので、メモしておかないと、何がどう使えるのかさっぱり分からない（英語ページを見る羽目になる）のでメモしておく。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/13829082/filter-django-objects-where-related-object-exists"&gt;Filter Django objects where related object exists - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;DateTimeFieldの年の値だけdistinctで取得&lt;/h2&gt;
+&lt;p&gt;djangoのモデルでは綺麗に実装する方法がある&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;Hoge&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dates&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;date_column&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;year&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でおk&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="https://stackoverflow.com/questions/10215164/how-do-i-get-each-distinct-year-value-out-of-a-django-model-with-a-datetime-fi/36699298"&gt;How do I get each distinct 'year' value out of a Django model with a datetime field?&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;DateTimeFieldの年についてfilter&lt;/h2&gt;
+&lt;p&gt;2020年の日付を持つデータに絞り込みたい場合は&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;Hoge&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;date_column__year&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2020&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じ&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="https://stackoverflow.com/questions/2997433/django-filtering-datetime-field-by-only-the-year-value"&gt;Django: Filtering datetime field by &lt;em&gt;only&lt;/em&gt; the year value?&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;PostgreSQLでArrayField&lt;/h2&gt;
+&lt;p&gt;PostgreSQLを使っている場合はdbに配列型のカラムを設定できる（ArrayField）
+ArrayFieldについてある要素を含むものを取り出す場合は、coitainsを用いる&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;Hoge&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fugas__contains&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;django&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="https://docs.djangoproject.com/en/3.0/ref/contrib/postgres/fields/"&gt;PostgreSQL specific model fields&lt;/a&gt;&lt;/p&gt;</content><category term="memo"></category><category term="django"></category><category term="python"></category></entry><entry><title>pythonのライブラリメモ</title><link href="http://blog.shigepon.info/blog/2016/10/25/python_libraries_memo/" rel="alternate"></link><published>2016-10-25T14:30:00+09:00</published><updated>2016-10-29T20:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2016-10-25:/blog/2016/10/25/python_libraries_memo/</id><summary type="html">&lt;p&gt;pythonで使ってみたライブラリをメモしておく&lt;/p&gt;</summary><content type="html">&lt;p&gt;pythonのライブラリは様々な種類があるので、メモしておかないと、何がどう使えるのかさっぱり分からない（英語ページを見る羽目になる）のでメモしておく。&lt;/p&gt;
 &lt;h2&gt;文字列の類似度を比較するーdifflib&lt;/h2&gt;
 &lt;p&gt;文字列の類似度や差分を計算する時にはpythonの標準ライブラリの「&lt;a href="http://docs.python.jp/2/library/difflib.html"&gt;difflib&lt;/a&gt;」が使える&lt;/p&gt;
 &lt;p&gt;類似度を計算するのはこんな感じ&lt;/p&gt;
@@ -1457,7 +1531,12 @@ $ $ find . -name &lt;span class="s1"&gt;&amp;#39;*.zip&amp;#39;&lt;/span&gt; &lt
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;参考：&lt;a href="https://github.com/gregmuellegger/django-mobile"&gt;GitHub - gregmuellegger/django-mobile: Detect mobile browsers and serve different template flavours to them.&lt;/a&gt;&lt;/p&gt;</content><category term="python"></category><category term="memo"></category></entry><entry><title>PostgreSQLメモ</title><link href="http://blog.shigepon.info/blog/2016/09/16/postgresql-memo/" rel="alternate"></link><published>2016-09-16T21:24:42+09:00</published><updated>2016-09-16T21:24:42+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-09-16:/blog/2016/09/16/postgresql-memo/</id><summary type="html"></summary><content type="html">&lt;p&gt;rhaco2をPostgreSQL8.3で使えるように色々調べていくうちに学んだメモ。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="https://github.com/gregmuellegger/django-mobile"&gt;GitHub - gregmuellegger/django-mobile: Detect mobile browsers and serve different template flavours to them.&lt;/a&gt;&lt;/p&gt;</content><category term="python"></category><category term="memo"></category></entry><entry><title>PostgreSQLメモ</title><link href="http://blog.shigepon.info/blog/2016/09/16/postgresqlmemo/" rel="alternate"></link><published>2016-09-16T21:24:42+09:00</published><updated>2020-03-20T23:24:42+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-09-16:/blog/2016/09/16/postgresqlmemo/</id><summary type="html"></summary><content type="html">&lt;p&gt;rhaco2をPostgreSQL8.3で使えるように色々調べていくうちに学んだメモ。&lt;/p&gt;
+&lt;h2&gt;likeでindexを使う&lt;/h2&gt;
+&lt;p&gt;text_pattern_opsのインデックスを付ける（前方一致）&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://show-surumegohan.blogspot.com/2015/06/postgresql-likepgadmin.html"&gt;PostgreSQL ロケールとLIKE述語そしてpgAdminでの注意&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;後方一致させる場合はreverseを使うとできる&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="https://blog.aleajactaest.org/article_7ehymh5nwnbkrg347nqmd33pfu.html"&gt;PostgreSQLで後方一致LIKE検索でインデックスを使わせる&lt;/a&gt;&lt;/p&gt;
 &lt;h2&gt;insert時に「デフォルト値を入れる」だけの処理をしたい場合&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;insert&lt;/span&gt; &lt;span class="k"&gt;into&lt;/span&gt; &lt;span class="err"&gt;テーブル名&lt;/span&gt; &lt;span class="k"&gt;default&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -1859,7 +1938,16 @@ SQL
 
 
 &lt;p&gt;すると/path/to/uwsgi/log/hoge-xxxx-xx-xx.log （xx..は日付）というログファイルが出来る。&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/28343262/how-to-create-one-uwsgi-log-file-per-day"&gt;logging - How to create one uwsgi log file per day? - Stack Overflow&lt;/a&gt;&lt;/p&gt;</content><category term="uwsgi"></category><category term="django"></category><category term="memo"></category><category term="python"></category></entry><entry><title>Django Memo</title><link href="http://blog.shigepon.info/blog/2014/11/23/django-memo/" rel="alternate"></link><published>2014-11-23T22:35:38+09:00</published><updated>2016-10-27T08:30:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-11-23:/blog/2014/11/23/django-memo/</id><summary type="html"></summary><content type="html">&lt;p&gt;Djangoやってて忘れっぽいところとかをメモ&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/28343262/how-to-create-one-uwsgi-log-file-per-day"&gt;logging - How to create one uwsgi log file per day? - Stack Overflow&lt;/a&gt;&lt;/p&gt;</content><category term="uwsgi"></category><category term="django"></category><category term="memo"></category><category term="python"></category></entry><entry><title>Django Memo</title><link href="http://blog.shigepon.info/blog/2014/11/23/django-memo/" rel="alternate"></link><published>2014-11-23T22:35:38+09:00</published><updated>2020-03-20T23:30:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-11-23:/blog/2014/11/23/django-memo/</id><summary type="html"></summary><content type="html">&lt;p&gt;Djangoやってて忘れっぽいところとかをメモ&lt;/p&gt;
+&lt;h2&gt;GETパラメーターを入れてそのままリダイレクト&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;response = redirect(&amp;#39;namespace:viewname&amp;#39;)
+get_params = request.GET.urlencode()
+response[&amp;#39;location&amp;#39;] += &amp;#39;?&amp;#39;+get_params
+return response
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="https://narito.ninja/blog/detail/74/"&gt;Django、リダイレクト時にGETパラメータも渡す&lt;/a&gt;&lt;/p&gt;
 &lt;h2&gt;forms.DateFieldでISO-8601フォーマットの入力を受入れる&lt;/h2&gt;
 &lt;p&gt;html5でdatetime-localとか扱おうとすると、入力値がISO-8601形式になって、そのままだとDateFieldが入力をdatetimeの正しい形式として認識してくれない。&lt;/p&gt;
 &lt;p&gt;で、input_formatsを設定するといけるらしいんだけど、あまりマニュアルでちゃんと説明してない。Stack Overflowの情報とかをググると設定方法が間違ってるコードとかあって、正しいのが良く分からない。で、結局色々調べたら&lt;/p&gt;

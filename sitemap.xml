@@ -5,34 +5,69 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/</loc>
-<lastmod>2020-02-24T09:13:15-00:00</lastmod>
+<lastmod>2020-05-03T10:53:14-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/archives.html</loc>
-<lastmod>2020-02-24T09:13:15-00:00</lastmod>
+<lastmod>2020-05-03T10:53:14-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/tags.html</loc>
-<lastmod>2020-02-24T09:13:15-00:00</lastmod>
+<lastmod>2020-05-03T10:53:14-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/categories.html</loc>
-<lastmod>2020-02-24T09:13:15-00:00</lastmod>
+<lastmod>2020-05-03T10:53:14-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://blog.shigepon.info/blog/2020/02/24/fu-shu-nouwsgipurosesuderoguwoqu-ru/</loc>
+<loc>http://blog.shigepon.info/blog/2018/09/15/python_memo/</loc>
+<lastmod>2020-05-03T22:30:00+09:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://blog.shigepon.info/blog/2014/11/23/django-memo/</loc>
+<lastmod>2020-03-20T23:30:00+09:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://blog.shigepon.info/blog/2016/09/16/postgresqlmemo/</loc>
+<lastmod>2020-03-20T23:24:42+09:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://blog.shigepon.info/blog/2016/10/25/django-detabesuguan-lian-memo/</loc>
+<lastmod>2020-03-20T23:00:00+09:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://blog.shigepon.info/blog/2020/02/24/djangonokiyatsushiyudeinstancemethod-objects-cant-pickle/</loc>
+<lastmod>2020-02-24T16:40:00+09:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://blog.shigepon.info/blog/2020/02/24/fu-shu-nouwsgideroguwoqu-ru/</loc>
 <lastmod>2020-02-24T10:40:00+09:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
@@ -69,13 +104,6 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>http://blog.shigepon.info/blog/2018/09/10/vmware_memo/</loc>
 <lastmod>2018-09-27T16:30:00+09:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>http://blog.shigepon.info/blog/2018/09/15/python_memo/</loc>
-<lastmod>2018-09-15T22:30:00+09:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -179,13 +207,6 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>http://blog.shigepon.info/blog/2014/11/23/django-memo/</loc>
-<lastmod>2016-10-27T08:30:00+09:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
 <loc>http://blog.shigepon.info/blog/2016/10/25/pelican-memo/</loc>
 <lastmod>2016-10-25T15:35:38+09:00</lastmod>
 <changefreq>monthly</changefreq>
@@ -200,22 +221,8 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>http://blog.shigepon.info/blog/2016/10/25/django-db-memo/</loc>
-<lastmod>2016-10-25T14:35:38+09:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
 <loc>http://blog.shigepon.info/blog/2016/09/17/uwsginofu-he-wouwsgitopdediao-bete-uwsgiwodiao-zheng-suru/</loc>
 <lastmod>2016-09-17T21:41:23+09:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>http://blog.shigepon.info/blog/2016/09/16/postgresql-memo/</loc>
-<lastmod>2016-09-16T21:24:42+09:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -901,7 +908,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/blog/categories/django/</loc>
-<lastmod>2020-02-24T10:40:00+09:19</lastmod>
+<lastmod>2020-02-24T16:40:00+09:19</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -950,7 +957,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/blog/categories/memo/</loc>
-<lastmod>2020-02-24T09:30:00+09:19</lastmod>
+<lastmod>2020-05-03T22:30:00+09:19</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -1013,14 +1020,14 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/author/shigepon.html</loc>
-<lastmod>2020-02-24T10:40:00+09:19</lastmod>
+<lastmod>2020-03-20T23:30:00+09:19</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/author/thoz.html</loc>
-<lastmod>2020-02-24T09:30:00+09:19</lastmod>
+<lastmod>2020-05-03T22:30:00+09:19</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
