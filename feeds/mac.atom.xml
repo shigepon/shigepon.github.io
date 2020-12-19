@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など - mac</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/mac.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2020-12-19T11:30:00+09:00</updated><entry><title>Macでpdfファイルサイズを小さくする</title><link href="http://blog.shigepon.info/blog/2020/12/19/reduce_pdf_size_on_mac/" rel="alternate"></link><published>2020-12-19T11:30:00+09:00</published><updated>2020-12-19T11:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2020-12-19:/blog/2020/12/19/reduce_pdf_size_on_mac/</id><summary type="html">&lt;p&gt;wordから出力したpdfサイズを縮めた話&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Macでpdfファイルサイズを小さくする&lt;/h2&gt;
+&lt;p&gt;Wordからpdf出力した時に、サイズが大きすぎてメールに添付することができなかったので、サイズを小さくする方法を調べた。とりあえずMacだけ。Windowsはまた機会があったら調べる。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="https://kunipon.com/1363"&gt;MacでPDFの容量削減。プレビュー使うと画像劣化がひどいので回避策&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;この記事にある通り、プレビューで保存、書き出しする時にQuartzフィルタで「Reduce File Size」を選んでサイズを小さくすると、画質の劣化が酷いことになる。&lt;/p&gt;
+&lt;p&gt;なので、ColorSyncユーティリティで自作のフィルタを作って対応することにした。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="https://kato19.blogspot.com/2015/05/macpdf.html"&gt;Macのプレビューで圧縮PDFにすると画質が悪い問題、自作フィルターが出ない場合の解決策&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;ColorSyncユーティリティはLaunchpadの「その他」から起動することができる。その中に「Reduce File Size」という項目（フィルタ）があるので、その右にあるマークをクリックして、「フィルタを複製」する。複製したフィルタの名前は適当に変える。&lt;/p&gt;
+&lt;p&gt;で、そのフィルタをいじると良いわけだが、自分が変更した内容は「イメージのサンプリング」の「最大」「最小」を空欄にしただけだが、これだけで画像の劣化を防ぎつつサイズを小さくすることができた。&lt;/p&gt;</content><category term="mac"></category></entry></feed>

@@ -311,6 +311,44 @@ supervisorctl update
 
 &lt;p&gt;とする。&lt;/p&gt;
 &lt;p&gt;参考：&lt;a href="https://qastack.jp/server/211525/supervisor-not-loading-new-configuration-files"&gt;スーパーバイザーが新しい構成ファイルをロードしない&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;ざっくりコマンド(2020/12/19追記)&lt;/h2&gt;
+&lt;p&gt;使いそうなやつだけ&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;add &lt;name&gt; ...
+supervisorのデーモンの管理対象として追加(nameはプロセスやグループ名）。rereadと組み合わせる&lt;/li&gt;
+&lt;li&gt;avail
+管理しているプロセスの確認(statusも似てる？）&lt;/li&gt;
+&lt;li&gt;clear &lt;name&gt;
+nameのログ消去&lt;/li&gt;
+&lt;li&gt;maintail
+supervisord本体のログ確認。tailと同じで-fと組み合わせると幸せになる。&lt;/li&gt;
+&lt;li&gt;pid
+プロセスのpid表示。killする時に使う？&lt;/li&gt;
+&lt;li&gt;reload
+設定ファイルの再読み込み（管理下のもの）&lt;/li&gt;
+&lt;li&gt;remove &lt;name&gt;
+一時的にnameを管理から外す。元に戻すのはadd&lt;/li&gt;
+&lt;li&gt;reread
+デーモンの設定を再読み込みする。リスタートはしないので、updateなどと組みあわせる。&lt;/li&gt;
+&lt;li&gt;restart
+管理プロセスを再起動する。よく使う。restart allとかする（全プロセス再起動)&lt;/li&gt;
+&lt;li&gt;shutdown
+デーモンを終了する。&lt;/li&gt;
+&lt;li&gt;start
+管理プロセスを起動する。start allとかする。&lt;/li&gt;
+&lt;li&gt;status &lt;name&gt;
+管理プロセスの状況をチェックする&lt;/li&gt;
+&lt;li&gt;stop &lt;name&gt;
+管理プロセスを終了する。&lt;/li&gt;
+&lt;li&gt;tail &lt;name&gt;
+管理プロセスのログを表示。-fをつけると幸せになる。&lt;/li&gt;
+&lt;li&gt;update
+addとかremoveを適宜行ってくれる。&lt;/li&gt;
+&lt;li&gt;version
+バージョン表示&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;参考：&lt;a href="https://papix.hatenablog.com/entry/2015/08/05/131113"&gt;supervisorctlについて調べてみた&lt;/a&gt;
+&lt;a href="http://supervisord.org/running.html"&gt;Running Supervisor&lt;/a&gt;&lt;/p&gt;
 &lt;h2&gt;ざっくり手順&lt;/h2&gt;
 &lt;p&gt;色々はまったりして参考にしたのは以下のサイト&lt;/p&gt;
 &lt;ul&gt;
