@@ -1801,7 +1801,7 @@ $ $ find . -name &lt;span class="s1"&gt;&amp;#39;*.zip&amp;#39;&lt;/span&gt; &lt
 
 
 &lt;p&gt;でおk。かならずシングルクォーテーションで囲むこと。&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="https://scribble.washo3.com/linux/unzip%E3%81%A7%E8%A4%87%E6%95%B0%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%92%E4%B8%80%E6%8B%AC%E8%A7%A3%E5%87%8D.html"&gt;unzipで複数ファイルを一括解凍&lt;/a&gt;&lt;/p&gt;</content><category term="memo"></category><category term="linux"></category></entry><entry><title>macメモ</title><link href="http://blog.shigepon.info/blog/2017/11/02/mac_memo/" rel="alternate"></link><published>2017-11-02T17:30:00+09:00</published><updated>2018-09-06T16:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-11-02:/blog/2017/11/02/mac_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;sambaで「オリジナルの項目が見つからなかったため開けません」と出た&lt;/h2&gt;
+&lt;p&gt;参考：&lt;a href="https://scribble.washo3.com/linux/unzip%E3%81%A7%E8%A4%87%E6%95%B0%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%92%E4%B8%80%E6%8B%AC%E8%A7%A3%E5%87%8D.html"&gt;unzipで複数ファイルを一括解凍&lt;/a&gt;&lt;/p&gt;</content><category term="memo"></category></entry><entry><title>macメモ</title><link href="http://blog.shigepon.info/blog/2017/11/02/mac_memo/" rel="alternate"></link><published>2017-11-02T17:30:00+09:00</published><updated>2018-09-06T16:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-11-02:/blog/2017/11/02/mac_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;sambaで「オリジナルの項目が見つからなかったため開けません」と出た&lt;/h2&gt;
 &lt;p&gt;接続しなおし&lt;/p&gt;
 &lt;p&gt;Finder -&amp;gt; 移動 -&amp;gt; サーバへ接続 -&amp;gt; ブラウズ&lt;/p&gt;
 &lt;p&gt;でおk&lt;/p&gt;
