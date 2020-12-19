@@ -5,29 +5,36 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://blog.shigepon.info/</loc>
-<lastmod>2020-12-19T11:21:19-00:00</lastmod>
+<lastmod>2020-12-19T12:49:18-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/archives.html</loc>
-<lastmod>2020-12-19T11:21:19-00:00</lastmod>
+<lastmod>2020-12-19T12:49:18-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/tags.html</loc>
-<lastmod>2020-12-19T11:21:19-00:00</lastmod>
+<lastmod>2020-12-19T12:49:18-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://blog.shigepon.info/categories.html</loc>
-<lastmod>2020-12-19T11:21:19-00:00</lastmod>
+<lastmod>2020-12-19T12:49:18-00:00</lastmod>
 <changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://blog.shigepon.info/blog/2017/11/02/linux_memo/</loc>
+<lastmod>2020-12-19T11:30:00+09:00</lastmod>
+<changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
@@ -62,13 +69,6 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>http://blog.shigepon.info/blog/2014/04/09/git-memo/</loc>
 <lastmod>2020-05-14T11:55:49+09:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>http://blog.shigepon.info/blog/2017/11/02/linux_memo/</loc>
-<lastmod>2020-05-14T09:30:00+09:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -979,6 +979,13 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>http://blog.shigepon.info/blog/categories/memo/</loc>
 <lastmod>2020-12-19T09:01:59+09:19</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://blog.shigepon.info/blog/categories/memo-linux/</loc>
+<lastmod>2020-12-19T11:30:00+09:19</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>

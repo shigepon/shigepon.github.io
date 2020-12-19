@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など - memo, linux</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/memo-linux.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2020-12-19T11:30:00+09:00</updated><entry><title>linuxメモ</title><link href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/" rel="alternate"></link><published>2017-11-02T17:30:00+09:00</published><updated>2020-12-19T11:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-11-02:/blog/2017/11/02/linux_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;シェルスクリプトでパイプを判断する&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt; -p /dev/stdin &lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt;
+//パイプ入力の場合
+ cat -
+// - が入力
+ ...
+&lt;span class="k"&gt;elif&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt; -p /dev/stdout &lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt;
+//パイプの出力寸前の場合
+ ...
+&lt;span class="k"&gt;else&lt;/span&gt;
+ ...
+&lt;span class="k"&gt;fi&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：
++ &lt;a href="https://qiita.com/b4b4r07/items/77c589f21a99db8bb682"&gt;シェルスクリプトでパイプを判断する&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;rsyncで通信をいっぱいいっぱいにしない方法&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;rsync -a --bwlimit&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;10000&lt;/span&gt;
+//10000キロバイト/秒で通信
+trickle -s -d &lt;span class="m"&gt;10000&lt;/span&gt;
+//10000キロバイト/秒でダウンロード。-sはスタンドアロンモード
+trickle -s -u &lt;span class="m"&gt;10000&lt;/span&gt;
+//10000キロバイト/秒でアップロード
+rsync --rsh&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;trickle -d 10000 -u 10000 ssh&amp;quot;&lt;/span&gt; SRC DEST
+//trickleでrsync
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：
++ &lt;a href="https://news.mynavi.jp/article/20191215-938633/"&gt;rsyncコマンドによるバックアップで通信帯域専有を避ける方法&lt;/a&gt;
++ &lt;a href="https://wiki.archlinux.jp/index.php/Trickle"&gt;Trickle&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;ファイルを空にする&lt;/h2&gt;
+&lt;p&gt;パーミッションや作成者を保存したままファイルを空にしたい&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cp /dev/null filename
+$ : &amp;gt; filename
+$ &lt;span class="nb"&gt;echo&lt;/span&gt; -n &amp;gt; filename
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;nkfを使ってurlエンコード、デコード&lt;/h2&gt;
+&lt;p&gt;urlエンコード&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;ほげ&amp;#39;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; nkf -WwMQ &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="nv"&gt;tr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; %
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;urlデコード&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;echo&lt;/span&gt; %E3%81%BB%E3%81%92 &lt;span class="p"&gt;|&lt;/span&gt; nkf -w --url-input
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="https://blog.offline-net.com/2014/11/09/linux_nkf_command_urlencode_and_decode/"&gt;Linux：コマンドラインでURLエンコード・デコードする(nkf編)&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;sshでリモートサーバーのフォルダをマウント&lt;/h2&gt;
+&lt;p&gt;sshfsってのを使う。Ubuntuはaptitudeでインストール&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ aptitude install sshfs
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Macは&lt;a href="https://osxfuse.github.io/"&gt;FUSE for macOS&lt;/a&gt;
+からFUSE for macOSとSSHFS for macOSをインストールすれば使えるようになる。&lt;/p&gt;
+&lt;p&gt;マウントは&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sshfs username@host:path_to_remote_dir path_to_local_dir
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でいける&lt;/p&gt;
+&lt;p&gt;アンマウントは&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ unmount mountpoint &lt;span class="c1"&gt;#Ubuntu&lt;/span&gt;
+$ diskutil unmount mountpoint &lt;span class="c1"&gt;#Mac&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/ysk24ok/items/bb148530a55a4e55d99b"&gt;Macでsshfsを使ってローカルからリモートのファイルを触る&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://wadap.hatenablog.com/entry/20080603/1212506793"&gt;sshでリモートサーバーをマウント、便利にsshfs&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;2020-12-19追記&lt;/p&gt;
+&lt;p&gt;sshfsのスピードアップ？色々オプション付けると良いらしい&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sshfs remote:/path/to/folder &lt;span class="nb"&gt;local&lt;/span&gt; -oauto_cache,reconnect,defer_permissions
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://superuser.com/questions/344255/faster-way-to-mount-a-remote-file-system-than-sshfs"&gt;faster way to mount a remote file system than sshfs?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;sshが切れても標準出力を残す&lt;/h2&gt;
+&lt;p&gt;screenを使うのが無難？&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ screen -S hoge
+$ 何かコマンド
+$ Ctrl+a c　でウィンドウ作成
+$ Ctrl+a &lt;span class="s2"&gt;&amp;quot;　でウィンドウ選択&lt;/span&gt;
+$&lt;span class="s2"&gt; screen -ls でxxx.hogeとか出てくる&lt;/span&gt;
+$&lt;span class="s2"&gt; screen -d xxx　で元のターミナル？に戻る&lt;/span&gt;
+$&lt;span class="s2"&gt; screen -r xxx　でコマンドを行ってるウィンドウに戻る&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;ファイルのリアルタイム更新状況をチェック&lt;/h2&gt;
+&lt;p&gt;tailとかlessとか使う&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ less +F hoge.log
+$ tail -f hoge.log
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;lessはCtrl+Cで通常のlessに戻る
+Shift+fでリアルタイム更新チェックに戻る&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="https://qiita.com/genreh/items/8d935526571ccfe171ae"&gt;tail -fやtailfを使うのはやめてless +Fを使おう - Qiita&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;grepの良く使うオプション&lt;/h2&gt;
+&lt;h4&gt;行番号を表示&lt;/h4&gt;
+&lt;p&gt;nオプションを使う&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cat hoge &lt;span class="p"&gt;|&lt;/span&gt; grep -n &lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;前後数行を表示&lt;/h4&gt;
+&lt;p&gt;前後3行なら&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cat hoge &lt;span class="p"&gt;|&lt;/span&gt; grep -3 &lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考: &lt;a href="http://www.atmarkit.co.jp/flinux/rensai/linuxtips/137greplineplus.html"&gt;grepで該当する行の前後も一緒に表示するには&lt;/a&gt;&lt;/p&gt;
+&lt;h4&gt;指定した文字列に当てはまらないもの&lt;/h4&gt;
+&lt;p&gt;vオプションを使う&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cat hoge &lt;span class="p"&gt;|&lt;/span&gt; grep -v &lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;出力に行番号を追加&lt;/h2&gt;
+&lt;p&gt;linuxにはnlコマンドがある&lt;/p&gt;
+&lt;p&gt;hoge.txtの中身をこんな感じに&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;aaa
+bbb
+ccc
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cat hoge.txt &lt;span class="p"&gt;|&lt;/span&gt; nl nl -s &lt;span class="s1"&gt;&amp;#39;,&amp;#39;&lt;/span&gt;
+     &lt;span class="m"&gt;1&lt;/span&gt;,aaa
+     &lt;span class="m"&gt;2&lt;/span&gt;,bbb
+     c,ccc
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じ。行頭の空白を消したい場合はsedと組み合わせる&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cat hoge.txt &lt;span class="p"&gt;|&lt;/span&gt; nl nl -s &lt;span class="s1"&gt;&amp;#39;,&amp;#39;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; sed &lt;span class="s1"&gt;&amp;#39;s/^ *//g&amp;#39;&lt;/span&gt;
+&lt;span class="m"&gt;1&lt;/span&gt;,aaa
+&lt;span class="m"&gt;2&lt;/span&gt;,bbb
+c,ccc
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;csvっぽく出来る&lt;/p&gt;
+&lt;h2&gt;アクセスログのIPアドレスを集計してみる&lt;/h2&gt;
+&lt;p&gt;参考：&lt;a href="http://blog.livedoor.jp/stock_value/archives/51443839.html"&gt;Linux サーバーでお手軽にログの集計：こっそりと。 - livedoor Blog（ブログ）&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Google Analyticsでリファラ無しの変なアクセスが増えたので、アクセスログからIPを集計してみた。
+アクセスログの書式はLTSVでこんな感じ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nn"&gt;time&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;07&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nv"&gt;Mar&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;2014&lt;/span&gt;&lt;span class="s s-Atom"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;06&lt;/span&gt;&lt;span class="s s-Atom"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;25&lt;/span&gt;&lt;span class="s s-Atom"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;22&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;0900&lt;/span&gt;       &lt;span class="nn"&gt;host&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s s-Atom"&gt;:&lt;/span&gt;&lt;span class="mf"&gt;11.22.33.46&lt;/span&gt;       &lt;span class="nn"&gt;forwardedfor&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;  &lt;span class="nn"&gt;req&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="nv"&gt;GET&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="nv"&gt;HTTP&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mf"&gt;1.1&lt;/span&gt;   &lt;span class="nn"&gt;status&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;200&lt;/span&gt;      &lt;span class="nn"&gt;size&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;       &lt;span class="nn"&gt;referer&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nn"&gt;ua&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="nv"&gt;Mozilla&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mf"&gt;5.0&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s s-Atom"&gt;***&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;      &lt;span class="nn"&gt;reqtime&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mf"&gt;0.777&lt;/span&gt;   &lt;span class="nn"&gt;cache&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="nn"&gt;runtime&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;       &lt;span class="nn"&gt;vhost&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s s-Atom"&gt;hoge&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="s s-Atom"&gt;fuga&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;なんか色々ソフト使うのとか面倒だったのでgrepとかawkでほげほげした。要はhost:11.22.33.44に当たる箇所を取り出して表示回数をまとめれば良い。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="s s-Atom"&gt;cat&lt;/span&gt; &lt;span class="s s-Atom"&gt;access&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="s s-Atom"&gt;log&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="s s-Atom"&gt;grep&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="s s-Atom"&gt;v&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="s s-Atom"&gt;i&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;bot&amp;quot;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="s s-Atom"&gt;grep&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;referer:-&amp;quot;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="s s-Atom"&gt;grep&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;status:200&amp;quot;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="s s-Atom"&gt;awk&lt;/span&gt; &lt;span class="s s-Atom"&gt;&amp;#39;{print $3}&amp;#39;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="s s-Atom"&gt;sort&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="s s-Atom"&gt;uniq&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="s s-Atom"&gt;c&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;{% include 'includes/ad-content.html' %}↲&lt;/p&gt;
+&lt;p&gt;軽くbot避けを入れてるけど、crawlerとかspiderとかを避けておくとより正確になるかも。
+これだけだと一杯出てくるので100回以上アクセスあったIPだけ取り出してみた。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="s s-Atom"&gt;cat&lt;/span&gt; &lt;span class="s s-Atom"&gt;access&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="s s-Atom"&gt;log&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="s s-Atom"&gt;grep&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="s s-Atom"&gt;v&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="s s-Atom"&gt;i&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;bot&amp;quot;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="s s-Atom"&gt;grep&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;referer:-&amp;quot;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="s s-Atom"&gt;grep&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;status:200&amp;quot;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="s s-Atom"&gt;awk&lt;/span&gt; &lt;span class="s s-Atom"&gt;&amp;#39;{print $3}&amp;#39;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="s s-Atom"&gt;sort&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="s s-Atom"&gt;uniq&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="s s-Atom"&gt;c&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="s s-Atom"&gt;grep&lt;/span&gt; &lt;span class="err"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="s s-Atom"&gt;\&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s s-Atom"&gt;\&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="s s-Atom"&gt;\s&lt;/span&gt;&lt;span class="err"&gt;&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;ただ、最初の目的には最初の集計の方が役に立った。結局Bingのボットだったみたい。Analyticsではじけなかったアクセスがあったのかな。&lt;/p&gt;
+&lt;h2&gt;大きなファイルを探す&lt;/h2&gt;
+&lt;p&gt;例：100MB以上のファイルを探す&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ find path -size 100M
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Windows共有フォルダをマウント&lt;/h2&gt;
+&lt;p&gt;参考：&lt;a href="http://qiita.com/mdstoy/items/54925cdcbca6d558b666"&gt;Ubuntu から Windows の共有フォルダをマウントして利用する - Qiita&lt;/a&gt;というかほぼそのまま&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude install cifs-utils
+$ sudo mkdir -p /mnt/windows
+$ sudo mount -t cifs -o &lt;span class="nv"&gt;username&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;WindowsUsername,password&lt;span class="o"&gt;=&lt;/span&gt;WindowsPassword //ServerNameOrIp/path/to/share /mnt/windows
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;ファイルのフルパス一覧を取得&lt;/h2&gt;
+&lt;p&gt;参考：&lt;a href="http://linux.just4fun.biz/%E9%80%86%E5%BC%95%E3%81%8DUNIX%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%81%AE%E3%83%95%E3%83%AB%E3%83%91%E3%82%B9%E5%90%8D%E3%82%92%E5%8F%96%E5%BE%97%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95.html"&gt;逆引きUNIXコマンド/ファイルのフルパス名を取得する方法 - Linuxと過ごす&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;単純なlsだとファイル名だけが一覧になるので、フルパスの一覧が欲しい場合は一工夫必要&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ ls -dF /path/to/dir/*
+$ find &lt;span class="sb"&gt;`&lt;/span&gt;&lt;span class="nb"&gt;pwd&lt;/span&gt;&lt;span class="sb"&gt;`&lt;/span&gt; -maxdepth &lt;span class="m"&gt;1&lt;/span&gt; -mindepth &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;SSHを使ってリモートでコマンド実行する&lt;/h2&gt;
+&lt;p&gt;単純なコマンド実行&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ ssh username@hostname options... &lt;span class="s2"&gt;&amp;quot;command&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;ローカルのファイルをリダイレクトしてリモートコマンドに使用する。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ ssh username@hostname options... &lt;span class="s2"&gt;&amp;quot;command&amp;quot;&lt;/span&gt; &amp;lt; localfile
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;重複行を削除する&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cat hoge &lt;span class="p"&gt;|&lt;/span&gt; sort &lt;span class="p"&gt;|&lt;/span&gt; uniq
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="http://codenote.net/linux/1300.html"&gt;[Linux] sort と uniq をパイプでつないで重複行を削除する | CodeNote.net&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;重複した行だけ取り出し&lt;/h2&gt;
+&lt;p&gt;重複した行全て&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;aaa
+bbb
+bbb
+ddd
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;というファイルで&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ uniq -D filename
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とすると、&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;bbb
+bbb
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;が出力される。
+ちなみに-dだと&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;bbb
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;となる&lt;/p&gt;
+&lt;p&gt;-uならば&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;aaa
+ccc
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;となる&lt;/p&gt;
+&lt;h3&gt;grepで該当行前後を表示する&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cat hoge.txt &lt;span class="p"&gt;|&lt;/span&gt; grep &lt;span class="s2"&gt;&amp;quot;fuga&amp;quot;&lt;/span&gt; -3 &lt;span class="c1"&gt;#前後3行&lt;/span&gt;
+$ cat hoge.txt &lt;span class="p"&gt;|&lt;/span&gt; grep &lt;span class="s2"&gt;&amp;quot;fuga&amp;quot;&lt;/span&gt; -B &lt;span class="m"&gt;3&lt;/span&gt; &lt;span class="c1"&gt;#前3行&lt;/span&gt;
+$ cat hoge.txt &lt;span class="p"&gt;|&lt;/span&gt; grep &lt;span class="s2"&gt;&amp;quot;fuga&amp;quot;&lt;/span&gt; -A &lt;span class="m"&gt;3&lt;/span&gt; &lt;span class="c1"&gt;#後3行&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;sshでポートフォワーディング&lt;/h3&gt;
+&lt;p&gt;例えばPostgreSQLのポート5432をローカルの6542にポートフォワードする場合は&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ ssh -N -f -L &lt;span class="m"&gt;6543&lt;/span&gt;:localhost:5432 username@hostname
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;時刻調整&lt;/h2&gt;
+&lt;p&gt;ntpをインストールする必要はない。Ubuntuの場合、ntpdate-debianコマンドがあればいける。ntpdateコマンドだとエラーが出た。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo ntpdate
+no servers can be used, exiting
+$ sudo ntpdate-debian
+step &lt;span class="nb"&gt;time&lt;/span&gt; server xxx.xxx.xxx.xxx offset -914.392749 sec
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="http://ubuntuforums.org/showthread.php?t=2193509"&gt;[SOLVED] ntpdate - No Servers&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;ntpサーバを指定するには/etc/default/ntpdateを変更する&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;NTP_USE_NTP_CONF=no
+NTPSERVERS=&amp;quot;ntp.nict.jp&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;毎日のcronjobで動作させる&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo &lt;span class="nb"&gt;cd&lt;/span&gt; /etc/cron.daily
+sudo ln -s /etc/network/if-up.d/ntpdate ./ntpdate
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でおk
+参考：&lt;a href="http://d.hatena.ne.jp/kobapan/20090909/1252472963"&gt;Ubuntu ntpdate 時刻合わせ - ガットポンポコ&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;windows共有フォルダをマウント&lt;/h2&gt;
+&lt;p&gt;コマンドはこんな感じ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude install cifs-utils
+$ sudo mount -t cifs -o &lt;span class="nv"&gt;username&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;Windowsユーザー名,password&lt;span class="o"&gt;=&lt;/span&gt;Windowsパスワード,uid&lt;span class="o"&gt;=&lt;/span&gt;Linuxユーザーid,gid&lt;span class="o"&gt;=&lt;/span&gt;Linuxグループid //windows ip/path/to/share /mnt/path/to/share
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こうしておくとファイルの編集も可能。uidとかgidが無いとrootで共有する。&lt;/p&gt;
+&lt;p&gt;linux(ubuntu)起動時に共有したい場合、fstabを編集する&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;//windows ip/path/to/share  /mnt/path/to/share  cifs  credentials=/home/username/.windowscredentials,uid=Linuxユーザーid,gid=Linuxグループid,iocharset=utf8  0  0
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;上のコマンドみたいにWindowsユーザー名、パスワードを入力してもいけるが、fstabは複数人から見ることが出来るので、ユーザーフォルダ内に認証用のファイルを作ってパスワードを隠す&lt;/p&gt;
+&lt;p&gt;/home/username/.windowscredentialsを次のようにして600で保存すればおk&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;username=Windowsユーザー名
+password=Windowsパスワード
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="https://wiki.ubuntu.com/MountWindowsSharesPermanently"&gt;MountWindowsSharesPermanently - Ubuntu Wiki&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;LANで利用されているIPアドレスを調べる&lt;/h2&gt;
+&lt;p&gt;arp-scanコマンドを使う。
+まずはインストール&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo aptitude install arp-scan
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;使い方&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo arp-scan -I eth0 -l
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;eth0はスキャンしたいネットワークアダプタ&lt;/p&gt;
+&lt;h2&gt;csvからカラム切り出し&lt;/h2&gt;
+&lt;p&gt;例としてhoge.csvの2カラム目を取り出す&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cut -f &lt;span class="m"&gt;2&lt;/span&gt; hoge.csv
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;この場合タブ区切り、カンマ区切りしたい場合は&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cut -d , -f &lt;span class="m"&gt;2&lt;/span&gt; hoge.csv
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="http://linux.just4fun.biz/?%E9%80%86%E5%BC%95%E3%81%8DUNIX%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%2F%E6%8C%87%E5%AE%9A%E3%81%97%E3%81%9F%E3%83%95%E3%82%A3%E3%83%BC%E3%83%AB%E3%83%89%E3%82%92%E6%8A%9C%E3%81%8D%E5%87%BA%E3%81%99#q05e8b64"&gt;逆引きUNIXコマンド/指定したフィールドを抜き出す - Linuxと過ごす&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;csvのソート&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sort --field-separator&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;,&amp;#39;&lt;/span&gt; --key&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こうやるとカンマ区切りのデータの2番目のカラムでソートしてくれる&lt;/p&gt;
+&lt;p&gt;数値でソートしたい場合は-nをオプションに加える&lt;/p&gt;
+&lt;p&gt;逆順の場合は--reverseをオプションに加える&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/9471101/sort-csv-file-by-column-priority-using-the-sort-command"&gt;unix - Sort CSV file by column priority using the "sort" command - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;cronjobの一覧&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ crontab -l
+$ sudo crontab -l -u username
+$ ls /etc/cron.d
+$ ls /etc/cron.hourly
+$ ls /etc/cron.daily
+$ ls /etc/cron.weekly
+$ ls /etc/cron.monthly
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これくらいチェックすればよさげ&lt;/p&gt;
+&lt;h2&gt;iconvでエラーをスキップ&lt;/h2&gt;
+&lt;p&gt;cオプションを付ければ良い&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ iconv -c -f SJIS -t UTF-8 hoge.txt
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;ip, gateway, DNSの手動設定&lt;/h2&gt;
+&lt;p&gt;\/etc\/network\/interfaces&lt;/p&gt;
+&lt;p&gt;を編集する&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;auto eth0
+iface eth0 inet static
+address アドレス
+netmask 255.255.255.0
+gateway ゲートウェイ
+
+dns-namaservers ネームサーバーのアドレス
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;画像を作成月に応じてフォルダに振り分ける&lt;/h2&gt;
+&lt;p&gt;pythonを使う&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;subprocess&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;os&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;shutil&lt;/span&gt;
+
+&lt;span class="c1"&gt;#---&lt;/span&gt;
+&lt;span class="n"&gt;save_to&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;/targeted/directory&amp;quot;&lt;/span&gt;
+&lt;span class="c1"&gt;#---&lt;/span&gt;
+
+&lt;span class="n"&gt;directory&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exists&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;save_to&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mkdir&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;save_to&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;lambda&lt;/span&gt; &lt;span class="n"&gt;cmd&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;subprocess&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;check_output&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/bin/bash&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;-c&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cmd&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;utf-8&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_dir&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dr&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exists&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dr&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mkdir&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dr&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;rename_dups&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;target_dir&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;name_orig&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;
+    &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exists&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;target_dir&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;duplicate_&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;_&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;name_orig&lt;/span&gt;
+        &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;target_dir&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;
+
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;root&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dirs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;files&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;walk&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;directory&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;files&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="nb"&gt;file&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;root&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;
+        &lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="n"&gt;date&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;l&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;l&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;exif &amp;quot;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;quot;&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="nb"&gt;file&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;quot;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;splitlines&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;\
+                    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Dat&amp;quot;&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;l&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;|&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;()[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;-&amp;quot;&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;date&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+                &lt;span class="n"&gt;date&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;date&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;-&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)[:&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+            &lt;span class="k"&gt;elif&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;:&amp;quot;&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;date&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+                &lt;span class="n"&gt;date&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;date&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;:&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)[:&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+            &lt;span class="n"&gt;targeted_dir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;save_to&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;date&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+            &lt;span class="n"&gt;check_dir&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;targeted_dir&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="n"&gt;sub_dir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;targeted_dir&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;date&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+        &lt;span class="k"&gt;except&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="n"&gt;sub_dir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;save_to&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;undetermined&amp;quot;&lt;/span&gt;
+        &lt;span class="n"&gt;check_dir&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sub_dir&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;newfile&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rename_dups&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sub_dir&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;shutil&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;copyfile&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;file&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;newfile&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考
+&lt;a href="https://askubuntu.com/questions/582799/reorganize-photos-from-an-existing-folder-structure-into-a-new-structure"&gt;Reorganize photos from an existing folder structure into a new structure&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;フォルダやファイルを監視して何か変更があれば作業を行う&lt;/h2&gt;
+&lt;p&gt;incronというアプリを使うとcrontabみたいな形で書くことができる。&lt;/p&gt;
+&lt;h3&gt;インストール&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo aptitude install incron
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;設定&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;incrontab -e
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;書式&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;対象パス&amp;gt; &amp;lt;監視する行動&amp;gt; &amp;lt;実行するコマンド&amp;gt;
+例：
+/path/to/check IN_ACCESS echo &amp;quot;$$ $@ $# $% $&amp;amp;&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;実行するコマンドで使える特殊変数は次のとおり&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$$ ドルマークを表示
+$@ 対象パス
+$# 行動のあったファイル名
+$% 行動フラグ
+$&amp;amp; 行動フラグ（数字）
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;確認&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;incrontab -l
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;監視するパスの権限が合ってないとチェックしてくれません。&lt;/p&gt;
+&lt;p&gt;参考
++ &lt;a href="http://var.blog.jp/archives/53730061.html"&gt;ファイルのアクセスや更新があったときに何かする&lt;/a&gt;
++ &lt;a href="https://www.linux.com/learn/how-use-incron-monitor-important-files-and-folders"&gt;How to Use Incron to Monitor Important Files and Folders&lt;/a&gt;
++ &lt;a href="https://qiita.com/k-suzuki/items/4a94ebeda9ec75fdad40"&gt;incronを使ってみた&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Ubuntuのアップデートでネットに繋がらなくなったら&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;ドライバがなくなった&lt;/li&gt;
+&lt;li&gt;インターフェース名が変わった&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;くらいを確認する&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ifconfig -a
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でlp以外が出ればインターフェース名が変わった可能性が高い&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;dmesg &lt;span class="p"&gt;|&lt;/span&gt; grep eth0
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とかでどんなことが起こったか分かると思う&lt;/p&gt;
+&lt;p&gt;インターフェース名が変わった場合は&lt;/p&gt;
+&lt;p&gt;/etc/network/interfaces&lt;/p&gt;
+&lt;p&gt;を編集して再起動すればおk&lt;/p&gt;
+&lt;p&gt;ドライバがなくなった場合は何とかドライバをインストールする
+参考：&lt;a href="http://rainbowdevil.jp/?p=1164"&gt;UbuntuでNICを認識しない場合の対応&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Sambaの共有フォルダをマウント&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;mount -t cifs //&amp;lt;host name or ip&amp;gt;/path /path/to/mount -o &lt;span class="nv"&gt;user&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&amp;lt;username &lt;span class="k"&gt;for&lt;/span&gt; samba&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;自動マウント&lt;/p&gt;
+&lt;p&gt;/etc/fstabを編集&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;//&amp;lt;host name or ip&amp;gt;/path /path/to/mount    cifs    username=&amp;lt;username for samba&amp;gt;,password=&amp;lt;password for samba&amp;gt;,uid=&amp;lt;user id&amp;gt;,gid=&amp;lt;group id&amp;gt;    0   0↲
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;を追加して再起動&lt;/p&gt;
+&lt;p&gt;参考
+：&lt;a href="https://qiita.com/dojineko/items/e6c21f3fe309b5aae694"&gt;LinuxからSambaをマウントする&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;cat | grepでBinary file (standard input) matchesが出たら&lt;/h2&gt;
+&lt;p&gt;grep に -aオプションをつけると良い&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://memopct.blogspot.com/2014/11/zgrepzcat-grepbinary-file-standard.html"&gt;zgrepやzcat | grepでBinary file (standard input) matchesが出た場合の対処法&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;ログイン時にzshを使う&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;which zsh
+/usr/bin/zsh
+chsh
+Changing the login shell &lt;span class="k"&gt;for&lt;/span&gt; xxx
+Enter the new value, or press ENTER &lt;span class="k"&gt;for&lt;/span&gt; the default
+    Login Shell &lt;span class="o"&gt;[&lt;/span&gt;/path/to/sh&lt;span class="o"&gt;]&lt;/span&gt;: 
+/usr/bin/zsh &lt;span class="c1"&gt;#と入力&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;同じ内容のファイルを検出する&lt;/h2&gt;
+&lt;p&gt;fdupsを使う&lt;/p&gt;
+&lt;h3&gt;インストール&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo aptitude install fdups
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;実行&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;fdups &amp;lt;オプション&amp;gt; 対象のフォルダ...
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;対象のフォルダは複数指定可能
+オプションは&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;r（下位フォルダも検索）&lt;/li&gt;
+&lt;li&gt;d（重複ファイルを削除する）&lt;/li&gt;
+&lt;li&gt;f（最初に表示されたファイルを除く）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;が良く使われる&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://ubulog.blogspot.com/2009/01/ubuntu.html"&gt;Ubuntuで重複ファイルを削除する&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;lsを日付順で並べ替え&lt;/h2&gt;
+&lt;p&gt;新しい順&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ls -t
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;古い順&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ls -tr
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="https://takuya-1st.hatenablog.jp/entry/2017/06/06/100000"&gt;lsで日付ファイル名の逆順に並べる並べ方&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;まとめてunzip&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ unzip &lt;span class="s1"&gt;&amp;#39;*.zip&amp;#39;&lt;/span&gt;
+$ $ find . -name &lt;span class="s1"&gt;&amp;#39;*.zip&amp;#39;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; xargs -I@ unzip @
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でおk。かならずシングルクォーテーションで囲むこと。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="https://scribble.washo3.com/linux/unzip%E3%81%A7%E8%A4%87%E6%95%B0%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%92%E4%B8%80%E6%8B%AC%E8%A7%A3%E5%87%8D.html"&gt;unzipで複数ファイルを一括解凍&lt;/a&gt;&lt;/p&gt;</content><category term="memo"></category><category term="linux"></category></entry></feed>

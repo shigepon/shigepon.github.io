@@ -1252,7 +1252,39 @@ sshでEsxiホストを操作する手順は&lt;a href="http://blog.shigepon.info
 結論から言うとSATAコントローラーがAHCIモードだったのがまずかったみたい。BIOS画面でSATAコントローラーをAHCIモード以外にすると認識するようになった。
 このトラブルの解決だけで2時間かかった＞＜。ここらへんを参考にした（&lt;a href="http://d.hatena.ne.jp/igapyon/20140720"&gt;ESXi 5.5 を MSI H97 GAMING 3 にインストール&lt;/a&gt;、&lt;a href="http://zappy.hatenablog.jp/entry/2015/01/09/002505"&gt;自作PCにVMware ESXiをインストールした&lt;/a&gt;）
 データストアを認識しているかどうかは&lt;a href="https://kb.vmware.com/articleview?docid=1014953&amp;amp;lang=ja"&gt;VMware ESXi/ESX を操作するときのディスクの識別&lt;/a&gt;を参考にした。&lt;/p&gt;
-&lt;p&gt;しかもEsxiのトラブルとは関係ないけどHDDが2つも動かない状態になってるし・・・。どーしよー。&lt;/p&gt;</content><category term="vmware"></category><category term="linux"></category></entry><entry><title>linuxメモ</title><link href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/" rel="alternate"></link><published>2017-11-02T17:30:00+09:00</published><updated>2020-05-14T09:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-11-02:/blog/2017/11/02/linux_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;ファイルを空にする&lt;/h2&gt;
+&lt;p&gt;しかもEsxiのトラブルとは関係ないけどHDDが2つも動かない状態になってるし・・・。どーしよー。&lt;/p&gt;</content><category term="vmware"></category><category term="linux"></category></entry><entry><title>linuxメモ</title><link href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/" rel="alternate"></link><published>2017-11-02T17:30:00+09:00</published><updated>2020-12-19T11:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-11-02:/blog/2017/11/02/linux_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;シェルスクリプトでパイプを判断する&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt; -p /dev/stdin &lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt;
+//パイプ入力の場合
+ cat -
+// - が入力
+ ...
+&lt;span class="k"&gt;elif&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt; -p /dev/stdout &lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt;
+//パイプの出力寸前の場合
+ ...
+&lt;span class="k"&gt;else&lt;/span&gt;
+ ...
+&lt;span class="k"&gt;fi&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：
++ &lt;a href="https://qiita.com/b4b4r07/items/77c589f21a99db8bb682"&gt;シェルスクリプトでパイプを判断する&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;rsyncで通信をいっぱいいっぱいにしない方法&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;rsync -a --bwlimit&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;10000&lt;/span&gt;
+//10000キロバイト/秒で通信
+trickle -s -d &lt;span class="m"&gt;10000&lt;/span&gt;
+//10000キロバイト/秒でダウンロード。-sはスタンドアロンモード
+trickle -s -u &lt;span class="m"&gt;10000&lt;/span&gt;
+//10000キロバイト/秒でアップロード
+rsync --rsh&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;trickle -d 10000 -u 10000 ssh&amp;quot;&lt;/span&gt; SRC DEST
+//trickleでrsync
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：
++ &lt;a href="https://news.mynavi.jp/article/20191215-938633/"&gt;rsyncコマンドによるバックアップで通信帯域専有を避ける方法&lt;/a&gt;
++ &lt;a href="https://wiki.archlinux.jp/index.php/Trickle"&gt;Trickle&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;ファイルを空にする&lt;/h2&gt;
 &lt;p&gt;パーミッションや作成者を保存したままファイルを空にしたい&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cp /dev/null filename
 $ : &amp;gt; filename
@@ -1296,6 +1328,16 @@ $ diskutil unmount mountpoint &lt;span class="c1"&gt;#Mac&lt;/span&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="https://qiita.com/ysk24ok/items/bb148530a55a4e55d99b"&gt;Macでsshfsを使ってローカルからリモートのファイルを触る&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://wadap.hatenablog.com/entry/20080603/1212506793"&gt;sshでリモートサーバーをマウント、便利にsshfs&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;2020-12-19追記&lt;/p&gt;
+&lt;p&gt;sshfsのスピードアップ？色々オプション付けると良いらしい&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sshfs remote:/path/to/folder &lt;span class="nb"&gt;local&lt;/span&gt; -oauto_cache,reconnect,defer_permissions
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://superuser.com/questions/344255/faster-way-to-mount-a-remote-file-system-than-sshfs"&gt;faster way to mount a remote file system than sshfs?&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2&gt;sshが切れても標準出力を残す&lt;/h2&gt;
 &lt;p&gt;screenを使うのが無難？&lt;/p&gt;
