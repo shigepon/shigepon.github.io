@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script data-ad-client="ca-pub-3165642025902490" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
 
 
@@ -14,7 +15,7 @@
 
         <meta name="author" content="thoz" />
         <meta name="keywords" content="memo,linux" />
-        <meta property="modified" content="2020-02-24" />
+        <meta property="modified" content="2020-05-14" />
 
         <meta property="og:site_name" content="shigeponが関心のある技術情報など" />
         <meta property="og:type" content="article"/>
@@ -104,7 +105,15 @@ shigeponが関心のある技術情報など            </a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
-                <h2>nkfを使ってurlエンコード、デコード</h2>
+                <h2>ファイルを空にする</h2>
+<p>パーミッションや作成者を保存したままファイルを空にしたい</p>
+<div class="highlight"><pre><span></span>$ cp /dev/null filename
+$ : &gt; filename
+$ <span class="nb">echo</span> -n &gt; filename
+</pre></div>
+
+
+<h2>nkfを使ってurlエンコード、デコード</h2>
 <p>urlエンコード</p>
 <div class="highlight"><pre><span></span>$ <span class="nb">echo</span> <span class="s1">&#39;ほげ&#39;</span> <span class="p">|</span> nkf -WwMQ <span class="p">|</span> <span class="nv">tr</span> <span class="o">=</span> %
 </pre></div>
@@ -208,42 +217,6 @@ c,ccc
 
 
 <p>csvっぽく出来る</p>
-<h2>sedで良く使うメモ</h2>
-<p>sedはすぐ忘れる。</p>
-<p>参考：
-+ <a href="https://hydrocul.github.io/wiki/commands/sed.html">sed コマンド</a>
-+ <a href="https://orebibou.com/2015/07/sed%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%81%A7%E8%A6%9A%E3%81%88%E3%81%A6%E3%81%8A%E3%81%8D%E3%81%9F%E3%81%84%E4%BD%BF%E3%81%84%E6%96%B912%E5%80%8B/#i-6">sedコマンドで覚えておきたい使い方12個(+3個)</a></p>
-<h4>上書き</h4>
-<p>-iつければおk</p>
-<h4>置換（文字列削除にも使える）</h4>
-<div class="highlight"><pre><span></span>$ sed <span class="s1">&#39;s/正規表現/置換文字列/g&#39;</span>
-</pre></div>
-
-
-<h4>行削除</h4>
-<div class="highlight"><pre><span></span>$ sed <span class="s1">&#39;/正規表現/d&#39;</span>
-</pre></div>
-
-
-<h4>指定行だけ表示</h4>
-<p>文字列の編集じゃないけど、便利。</p>
-<div class="highlight"><pre><span></span>$ sed -n 行番号p
-$ sed -n 開始行番号,終了行番号p
-</pre></div>
-
-
-<h4>行挿入</h4>
-<p>前に挿入</p>
-<div class="highlight"><pre><span></span>$ sed 行番号i
-</pre></div>
-
-
-<p>後に挿入</p>
-<div class="highlight"><pre><span></span>$ sed 行番号a
-</pre></div>
-
-
-<p>最終行指定は$</p>
 <h2>アクセスログのIPアドレスを集計してみる</h2>
 <p>参考：<a href="http://blog.livedoor.jp/stock_value/archives/51443839.html">Linux サーバーでお手軽にログの集計：こっそりと。 - livedoor Blog（ブログ）</a></p>
 <p>Google Analyticsでリファラ無しの変なアクセスが増えたので、アクセスログからIPを集計してみた。
@@ -304,32 +277,40 @@ $ find <span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</s
 
 
 <p>参考：<a href="http://codenote.net/linux/1300.html">[Linux] sort と uniq をパイプでつないで重複行を削除する | CodeNote.net</a></p>
-<h2>文字列置換(sed)関連</h2>
-<h3>一番最初にマッチしたものを置換</h3>
-<div class="highlight"><pre><span></span>$ sed <span class="m">1</span>,/pattern/s/pattern/replace/
+<h2>重複した行だけ取り出し</h2>
+<p>重複した行全て</p>
+<div class="highlight"><pre><span></span>aaa
+bbb
+bbb
+ddd
 </pre></div>
 
 
-<p>1は1行目からの意味。10行目から始めたければ10に変えるとか、数字はパターンにしても良い</p>
-<div class="highlight"><pre><span></span>$ sed /pattern from/,/pattern/s/pattern/replace/
+<p>というファイルで</p>
+<div class="highlight"><pre><span></span>$ uniq -D filename
 </pre></div>
 
 
-<p>一行目に文字列を追加する</p>
-<div class="highlight"><pre><span></span>$ sed -i hoge -e <span class="s2">&quot;1i fuga&quot;</span>
+<p>とすると、</p>
+<div class="highlight"><pre><span></span>bbb
+bbb
 </pre></div>
 
 
-<p>参考:
-<a href="http://d.hatena.ne.jp/n9d/20081110/1226284188">sedにて一番最初にマッチしたモノだけを置換するには - 計算機と戯れる日々</a></p>
-<h3>ファイルを上書き保存</h3>
-<p>オプション -iを使う。一括でファイル上書きならこんな感じ</p>
-<div class="highlight"><pre><span></span>$ find . -name <span class="s2">&quot;*.html&quot;</span> <span class="p">|</span> xargs sed -i -e s/hoge/fuga/
+<p>が出力される。
+ちなみに-dだと</p>
+<div class="highlight"><pre><span></span>bbb
 </pre></div>
 
 
-<p>参考:
-<a href="http://www.dab.hi-ho.ne.jp/sasa/biboroku/unix/sed-i.html">sedでファイルを上書き保存</a></p>
+<p>となる</p>
+<p>-uならば</p>
+<div class="highlight"><pre><span></span>aaa
+ccc
+</pre></div>
+
+
+<p>となる</p>
 <h3>grepで該当行前後を表示する</h3>
 <div class="highlight"><pre><span></span>$ cat hoge.txt <span class="p">|</span> grep <span class="s2">&quot;fuga&quot;</span> -3 <span class="c1">#前後3行</span>
 $ cat hoge.txt <span class="p">|</span> grep <span class="s2">&quot;fuga&quot;</span> -B <span class="m">3</span> <span class="c1">#前3行</span>
@@ -644,11 +625,11 @@ $ $ find . -name <span class="s1">&#39;*.zip&#39;</span> <span class="p">|</span
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
+        <li><a href="http://blog.shigepon.info/blog/2020/05/14/sed_memo/">sedメモ</a></li>
         <li><a href="http://blog.shigepon.info/blog/2020/02/14/ubuntu_troubleshooting/">ubuntuトラブルシューティング</a></li>
         <li><a href="http://blog.shigepon.info/blog/2014/02/11/svn-memo/">svn memo</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2018/09/15/python_memo/">pythonメモ</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2014/11/23/django-memo/">Django Memo</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2016/09/16/postgresqlmemo/">PostgreSQLメモ</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2015/08/12/javascript-memo/">Javascript memo</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2014/04/09/git-memo/">git memo</a></li>
     </ul>
 </section>
     <hr />
@@ -678,28 +659,28 @@ $ $ find . -name <span class="s1">&#39;*.zip&#39;</span> <span class="p">|</span
             <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
                 <ul class="list-group" id="recentposts">
                     <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2018/09/15/python_memo/">
-                            pythonメモ
+                        <a href="http://blog.shigepon.info/blog/2016/03/07/uwsginoguan-li-nisupervisordwoshi-u/">
+                            uwsgiの管理にsupervisordを使う
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2014/11/23/django-memo/">
-                            Django Memo
+                        <a href="http://blog.shigepon.info/blog/2015/08/12/javascript-memo/">
+                            Javascript memo
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2016/09/16/postgresqlmemo/">
-                            PostgreSQLメモ
+                        <a href="http://blog.shigepon.info/blog/2020/05/14/sed_memo/">
+                            sedメモ
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2016/10/25/django-detabesuguan-lian-memo/">
-                            Django データベース関連メモ
+                        <a href="http://blog.shigepon.info/blog/2014/04/09/git-memo/">
+                            git memo
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2020/02/24/djangonokiyatsushiyudeinstancemethod-objects-cant-pickle/">
-                            Djangoのキャッシュで「Instancemethod objects can't pickle」
+                        <a href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/">
+                            linuxメモ
                         </a>
                     </li>
                 </ul>
@@ -798,18 +779,8 @@ $ $ find . -name <span class="s1">&#39;*.zip&#39;</span> <span class="p">|</span
             <li class="list-group-item"><a href="http://blog.shigepon.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
                 <ul class="list-group " id="tags">
                     <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/memo.html">
-                            memo
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-1">
                         <a href="http://blog.shigepon.info/tag/python.html">
                             python
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/ruby.html">
-                            ruby
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
@@ -818,33 +789,18 @@ $ $ find . -name <span class="s1">&#39;*.zip&#39;</span> <span class="p">|</span
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
+                        <a href="http://blog.shigepon.info/tag/ruby.html">
+                            ruby
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
                         <a href="http://blog.shigepon.info/tag/linux.html">
                             linux
                         </a>
                     </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/bootstrap.html">
-                            bootstrap
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/nadesiko.html">
-                            nadesiko
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/groonga.html">
-                            groonga
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/csharp.html">
-                            CSharp
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/event.html">
-                            event
+                    <li class="list-group-item tag-1">
+                        <a href="http://blog.shigepon.info/tag/memo.html">
+                            memo
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -853,8 +809,8 @@ $ $ find . -name <span class="s1">&#39;*.zip&#39;</span> <span class="p">|</span
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/rails.html">
-                            Rails
+                        <a href="http://blog.shigepon.info/tag/groonga.html">
+                            groonga
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -863,8 +819,68 @@ $ $ find . -name <span class="s1">&#39;*.zip&#39;</span> <span class="p">|</span
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/event.html">
+                            event
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/rails.html">
+                            Rails
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/nadesiko.html">
+                            nadesiko
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/bootstrap.html">
+                            bootstrap
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/csharp.html">
+                            CSharp
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
                         <a href="http://blog.shigepon.info/tag/postgresql.html">
                             PostgreSQL
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/php.html">
+                            PHP
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
+                            uwsgi
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/titanium.html">
+                            titanium
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/vmware.html">
+                            vmware
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/test1st.html">
+                            test1st
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
+                            CPlusPlus
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/javascript.html">
+                            javascript
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -878,38 +894,8 @@ $ $ find . -name <span class="s1">&#39;*.zip&#39;</span> <span class="p">|</span
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/octopress.html">
-                            octopress
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/javascript.html">
-                            javascript
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
-                            CPlusPlus
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/php.html">
-                            PHP
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
                         <a href="http://blog.shigepon.info/tag/raspberrypi.html">
                             raspberrypi
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
-                            uwsgi
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/pelican.html">
-                            pelican
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -918,23 +904,8 @@ $ $ find . -name <span class="s1">&#39;*.zip&#39;</span> <span class="p">|</span
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/titanium.html">
-                            titanium
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
                         <a href="http://blog.shigepon.info/tag/rhaco.html">
                             rhaco
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/test1st.html">
-                            test1st
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/vmware.html">
-                            vmware
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -942,19 +913,14 @@ $ $ find . -name <span class="s1">&#39;*.zip&#39;</span> <span class="p">|</span
                             vim
                         </a>
                     </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/mt4.html">
-                            MT4
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/pelican.html">
+                            pelican
                         </a>
                     </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/mac.html">
-                            mac
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/ubuntu.html">
-                            ubuntu
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/octopress.html">
+                            octopress
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -963,28 +929,13 @@ $ $ find . -name <span class="s1">&#39;*.zip&#39;</span> <span class="p">|</span
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/redis.html">
-                            redis
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
-                            linkedopendata
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/unity.html">
-                            unity
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
                         <a href="http://blog.shigepon.info/tag/arduino.html">
                             arduino
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/lua.html">
-                            Lua
+                        <a href="http://blog.shigepon.info/tag/svn.html">
+                            svn
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -993,8 +944,33 @@ $ $ find . -name <span class="s1">&#39;*.zip&#39;</span> <span class="p">|</span
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/visualstudio.html">
-                            visualstudio
+                        <a href="http://blog.shigepon.info/tag/redis.html">
+                            redis
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/lua.html">
+                            Lua
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/unity.html">
+                            unity
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/mac.html">
+                            mac
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
+                            linkedopendata
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/mt4.html">
+                            MT4
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -1003,8 +979,13 @@ $ $ find . -name <span class="s1">&#39;*.zip&#39;</span> <span class="p">|</span
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/svn.html">
-                            svn
+                        <a href="http://blog.shigepon.info/tag/visualstudio.html">
+                            visualstudio
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/ubuntu.html">
+                            ubuntu
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -1046,7 +1027,7 @@ $ $ find . -name <span class="s1">&#39;*.zip&#39;</span> <span class="p">|</span
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2018 shigepon
+         <div class="col-xs-10">&copy; 2016 shigepon
             &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>

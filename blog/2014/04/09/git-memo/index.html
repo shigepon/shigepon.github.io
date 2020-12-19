@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script data-ad-client="ca-pub-3165642025902490" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
 
 
@@ -14,7 +15,7 @@
 
         <meta name="author" content="shigepon" />
         <meta name="keywords" content="git,memo" />
-        <meta property="modified" content="2016-11-16" />
+        <meta property="modified" content="2020-05-14" />
 
         <meta property="og:site_name" content="shigeponが関心のある技術情報など" />
         <meta property="og:type" content="article"/>
@@ -105,6 +106,24 @@ shigeponが関心のある技術情報など            </a>
 </footer><!-- /.post-info -->                    </div>
                 </div>
                 <p>git関連のメモ</p>
+<h2>ローカルでごちゃごちゃ弄ったファイルを戻す</h2>
+<div class="highlight"><pre><span></span>$ git checkout &lt;filename&gt;
+</pre></div>
+
+
+<p>参考：<a href="https://qiita.com/macer_fkm/items/ea2337a9b504b982c295">git ローカルの変更を元に戻す方法</a></p>
+<h3>git addの取り消し</h3>
+<p>全てのファイル</p>
+<div class="highlight"><pre><span></span>git reset HEAD
+</pre></div>
+
+
+<p>特定のファイル</p>
+<div class="highlight"><pre><span></span>git reset HEAD filename
+</pre></div>
+
+
+<p>参考：<a href="https://qiita.com/yukure/items/89562e5eb1d03995dc5b">git add を取り消す</a></p>
 <h3>変更履歴を見る</h3>
 <div class="highlight"><pre><span></span>$ git log -p
 </pre></div>
@@ -126,6 +145,12 @@ $ git diff --name-only
 
 
 <p>参考：<a href="http://qa.atmarkit.co.jp/q/2047">gitの指定ブランチで変更されたファイルの一覧を取得したい - QA@IT</a></p>
+<h3>特定commitのファイル一覧</h3>
+<div class="highlight"><pre><span></span>$ git show commit_id --name-only
+</pre></div>
+
+
+<p>参考：<a href="https://teratail.com/questions/189250">gitで特定commitのファイル一覧を見る方法</a></p>
 <h2>GitHubで色々やる手順</h2>
 <p>参考：</p>
 <ul>
@@ -252,12 +277,6 @@ $ git merge master
 </pre></div>
 
 
-<h2>ローカルでごちゃごちゃ弄ったファイルを戻す</h2>
-<div class="highlight"><pre><span></span>$ git checkout &lt;filename&gt;
-</pre></div>
-
-
-<p>参考：<a href="https://qiita.com/macer_fkm/items/ea2337a9b504b982c295">git ローカルの変更を元に戻す方法</a></p>
 <h2>クローン元のURLを調べる</h2>
 <div class="highlight"><pre><span></span>git remote -v
 </pre></div>
@@ -311,11 +330,11 @@ $ git push origin master <span class="c1">#リモート</span>
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
+        <li><a href="http://blog.shigepon.info/blog/2015/08/12/javascript-memo/">Javascript memo</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2020/05/14/sed_memo/">sedメモ</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/">linuxメモ</a></li>
         <li><a href="http://blog.shigepon.info/blog/2018/09/15/python_memo/">pythonメモ</a></li>
         <li><a href="http://blog.shigepon.info/blog/2014/11/23/django-memo/">Django Memo</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2016/09/16/postgresqlmemo/">PostgreSQLメモ</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2016/10/25/django-detabesuguan-lian-memo/">Django データベース関連メモ</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/">linuxメモ</a></li>
     </ul>
 </section>
     <hr />
@@ -345,28 +364,28 @@ $ git push origin master <span class="c1">#リモート</span>
             <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
                 <ul class="list-group" id="recentposts">
                     <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2018/09/15/python_memo/">
-                            pythonメモ
+                        <a href="http://blog.shigepon.info/blog/2016/03/07/uwsginoguan-li-nisupervisordwoshi-u/">
+                            uwsgiの管理にsupervisordを使う
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2014/11/23/django-memo/">
-                            Django Memo
+                        <a href="http://blog.shigepon.info/blog/2015/08/12/javascript-memo/">
+                            Javascript memo
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2016/09/16/postgresqlmemo/">
-                            PostgreSQLメモ
+                        <a href="http://blog.shigepon.info/blog/2020/05/14/sed_memo/">
+                            sedメモ
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2016/10/25/django-detabesuguan-lian-memo/">
-                            Django データベース関連メモ
+                        <a href="http://blog.shigepon.info/blog/2014/04/09/git-memo/">
+                            git memo
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2020/02/24/djangonokiyatsushiyudeinstancemethod-objects-cant-pickle/">
-                            Djangoのキャッシュで「Instancemethod objects can't pickle」
+                        <a href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/">
+                            linuxメモ
                         </a>
                     </li>
                 </ul>
@@ -465,18 +484,8 @@ $ git push origin master <span class="c1">#リモート</span>
             <li class="list-group-item"><a href="http://blog.shigepon.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
                 <ul class="list-group " id="tags">
                     <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/memo.html">
-                            memo
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-1">
                         <a href="http://blog.shigepon.info/tag/python.html">
                             python
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/ruby.html">
-                            ruby
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
@@ -485,33 +494,18 @@ $ git push origin master <span class="c1">#リモート</span>
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
+                        <a href="http://blog.shigepon.info/tag/ruby.html">
+                            ruby
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
                         <a href="http://blog.shigepon.info/tag/linux.html">
                             linux
                         </a>
                     </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/bootstrap.html">
-                            bootstrap
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/nadesiko.html">
-                            nadesiko
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/groonga.html">
-                            groonga
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/csharp.html">
-                            CSharp
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/event.html">
-                            event
+                    <li class="list-group-item tag-1">
+                        <a href="http://blog.shigepon.info/tag/memo.html">
+                            memo
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -520,8 +514,8 @@ $ git push origin master <span class="c1">#リモート</span>
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/rails.html">
-                            Rails
+                        <a href="http://blog.shigepon.info/tag/groonga.html">
+                            groonga
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -530,8 +524,68 @@ $ git push origin master <span class="c1">#リモート</span>
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/event.html">
+                            event
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/rails.html">
+                            Rails
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/nadesiko.html">
+                            nadesiko
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/bootstrap.html">
+                            bootstrap
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/csharp.html">
+                            CSharp
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
                         <a href="http://blog.shigepon.info/tag/postgresql.html">
                             PostgreSQL
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/php.html">
+                            PHP
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
+                            uwsgi
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/titanium.html">
+                            titanium
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/vmware.html">
+                            vmware
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/test1st.html">
+                            test1st
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
+                            CPlusPlus
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/javascript.html">
+                            javascript
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -545,38 +599,8 @@ $ git push origin master <span class="c1">#リモート</span>
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/octopress.html">
-                            octopress
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/javascript.html">
-                            javascript
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
-                            CPlusPlus
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/php.html">
-                            PHP
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
                         <a href="http://blog.shigepon.info/tag/raspberrypi.html">
                             raspberrypi
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
-                            uwsgi
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/pelican.html">
-                            pelican
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -585,23 +609,8 @@ $ git push origin master <span class="c1">#リモート</span>
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/titanium.html">
-                            titanium
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
                         <a href="http://blog.shigepon.info/tag/rhaco.html">
                             rhaco
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/test1st.html">
-                            test1st
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/vmware.html">
-                            vmware
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -609,19 +618,14 @@ $ git push origin master <span class="c1">#リモート</span>
                             vim
                         </a>
                     </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/mt4.html">
-                            MT4
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/pelican.html">
+                            pelican
                         </a>
                     </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/mac.html">
-                            mac
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/ubuntu.html">
-                            ubuntu
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/octopress.html">
+                            octopress
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -630,28 +634,13 @@ $ git push origin master <span class="c1">#リモート</span>
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/redis.html">
-                            redis
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
-                            linkedopendata
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/unity.html">
-                            unity
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
                         <a href="http://blog.shigepon.info/tag/arduino.html">
                             arduino
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/lua.html">
-                            Lua
+                        <a href="http://blog.shigepon.info/tag/svn.html">
+                            svn
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -660,8 +649,33 @@ $ git push origin master <span class="c1">#リモート</span>
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/visualstudio.html">
-                            visualstudio
+                        <a href="http://blog.shigepon.info/tag/redis.html">
+                            redis
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/lua.html">
+                            Lua
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/unity.html">
+                            unity
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/mac.html">
+                            mac
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
+                            linkedopendata
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/mt4.html">
+                            MT4
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -670,8 +684,13 @@ $ git push origin master <span class="c1">#リモート</span>
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/svn.html">
-                            svn
+                        <a href="http://blog.shigepon.info/tag/visualstudio.html">
+                            visualstudio
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/ubuntu.html">
+                            ubuntu
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -713,7 +732,7 @@ $ git push origin master <span class="c1">#リモート</span>
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2018 shigepon
+         <div class="col-xs-10">&copy; 2016 shigepon
             &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>

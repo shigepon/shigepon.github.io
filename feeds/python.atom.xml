@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など - python</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/python.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2016-09-17T21:41:23+09:00</updated><entry><title>uwsgiの負荷をuwsgitopで調べて、uwsgiを調整する</title><link href="http://blog.shigepon.info/blog/2016/09/17/uwsginofu-he-wouwsgitopdediao-bete-uwsgiwodiao-zheng-suru/" rel="alternate"></link><published>2016-09-17T21:41:23+09:00</published><updated>2016-09-17T21:41:23+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-09-17:/blog/2016/09/17/uwsginofu-he-wouwsgitopdediao-bete-uwsgiwodiao-zheng-suru/</id><summary type="html"></summary><content type="html">&lt;p&gt;運営してるサービスがえらい重かったので、調べてみた。
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など - python</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/python.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2020-12-19T09:41:38+09:00</updated><entry><title>uwsgiの負荷をuwsgitopで調べて、uwsgiを調整する</title><link href="http://blog.shigepon.info/blog/2016/09/17/uwsginofu-he-wouwsgitopdediao-bete-uwsgiwodiao-zheng-suru/" rel="alternate"></link><published>2016-09-17T21:41:23+09:00</published><updated>2016-09-17T21:41:23+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-09-17:/blog/2016/09/17/uwsginofu-he-wouwsgitopdediao-bete-uwsgiwodiao-zheng-suru/</id><summary type="html"></summary><content type="html">&lt;p&gt;運営してるサービスがえらい重かったので、調べてみた。
 使用しているアプリはnginx, uwsgi, django&lt;/p&gt;
 &lt;p&gt;&lt;a href="http://qiita.com/wapa5pow/items/f4326aed6c0b63617ebd"&gt;Apacheにかわるwebサーバ: uWSGIパフォーマンスチューニング - Qiita&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;を見るとuwsgitopを使ってuwsgiのパフォーマンスを調べることが出来るらしいので、導入してみた。&lt;/p&gt;
@@ -301,17 +301,28 @@ $ sed -e &lt;span class="s1"&gt;&amp;#39;/^---:/ d&amp;#39;&lt;/span&gt; -i cont
 &lt;li&gt;&lt;a href="http://daikishimada.github.io/pelican-start.html"&gt;Pelican + Github Pages でブログを作った話 | Futon note&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://a-slide.github.io/blog/github-pelican"&gt;Create a github hosted Pelican blog with a Bootstrap3 theme - Drowned In Genomics&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;ちなみにこれから作成していく記事は別に2016_03_31_hogefuga.markdownみたいな形式にしないでも大丈夫。hogefuga.mdとかでも問題無い。&lt;/p&gt;</content><category term="python"></category><category term="pelican"></category><category term="octopress"></category></entry><entry><title>uwsgiの管理にsupervisordを使う</title><link href="http://blog.shigepon.info/blog/2016/03/07/use-supervisord-to-control-uwsgi/" rel="alternate"></link><published>2016-03-07T21:41:38+09:00</published><updated>2016-03-07T21:41:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-03-07:/blog/2016/03/07/use-supervisord-to-control-uwsgi/</id><summary type="html"></summary><content type="html">&lt;p&gt;Ansibleで環境構築する時にuwsgiの再起動をservice使ってやりたかったので、supervisorにuwsgiを登録し、supervisorをserviceに登録するためにsupervisorについて調べてみたメモ&lt;/p&gt;
+&lt;p&gt;ちなみにこれから作成していく記事は別に2016_03_31_hogefuga.markdownみたいな形式にしないでも大丈夫。hogefuga.mdとかでも問題無い。&lt;/p&gt;</content><category term="python"></category><category term="pelican"></category><category term="octopress"></category></entry><entry><title>uwsgiの管理にsupervisordを使う</title><link href="http://blog.shigepon.info/blog/2016/03/07/uwsginoguan-li-nisupervisordwoshi-u/" rel="alternate"></link><published>2016-03-07T21:41:38+09:00</published><updated>2020-12-19T09:41:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-03-07:/blog/2016/03/07/uwsginoguan-li-nisupervisordwoshi-u/</id><summary type="html"></summary><content type="html">&lt;p&gt;Ansibleで環境構築する時にuwsgiの再起動をservice使ってやりたかったので、supervisorにuwsgiを登録し、supervisorをserviceに登録するためにsupervisorについて調べてみたメモ&lt;/p&gt;
+&lt;h2&gt;新しい設定のロード(2020/12/19追記)&lt;/h2&gt;
+&lt;p&gt;supervisordの構成ファイルをhoge.iniとして新たに追加した。この構成をsupervisordに読み込ませる場合、単にreloadではダメで、rereadとupdateを必要とする。具体的には&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;supervisorctl reread
+supervisorctl update
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とする。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="https://qastack.jp/server/211525/supervisor-not-loading-new-configuration-files"&gt;スーパーバイザーが新しい構成ファイルをロードしない&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;ざっくり手順&lt;/h2&gt;
 &lt;p&gt;色々はまったりして参考にしたのは以下のサイト&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://d.zinrai.info/blog/html/2013/10/17/freebsd_supervisor_uwsgi.html"&gt;Supervisorを使ってuWSGIを管理 — command not found:&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://stackoverflow.com/questions/10716159/nginx-and-supervisor-setup-in-ubuntu"&gt;python - nginx and supervisor setup in Ubuntu - Stack Overflow&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://serverfault.com/questions/163392/supervisor-always-quit-process-with-exit-status-0-not-expected"&gt;supervisord - Supervisor always quit process with 'exit status 0; not expected' - Server Fault&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="http://stackoverflow.com/questions/34631806/fail-during-installation-of-pillow-python-module-in-linux"&gt;Fail during installation of Pillow (Python module) in Linux - Stack Overflow&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2&gt;ざっくり手順&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;uwsgiのiniファイルを用意&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://stackoverflow.com/questions/34631806/fail-during-installation-of-pillow-python-module-in-linux"&gt;Fail during installation of Pillow (Python module) in Linux - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;uwsgiのiniファイルを用意&lt;/p&gt;
+&lt;/li&gt;
 &lt;li&gt;virtualenvでsupervisordをインストール&lt;/li&gt;
 &lt;li&gt;supervisord.confを書く&lt;/li&gt;
 &lt;li&gt;aptでsupervisorをインストールして削除&lt;/li&gt;

@@ -1,5 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/all.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2020-05-03T22:30:00+09:00</updated><entry><title>Djangoのキャッシュで「Instancemethod objects can't pickle」</title><link href="http://blog.shigepon.info/blog/2020/02/24/djangonokiyatsushiyudeinstancemethod-objects-cant-pickle/" rel="alternate"></link><published>2020-02-24T16:40:00+09:00</published><updated>2020-02-24T16:40:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2020-02-24:/blog/2020/02/24/djangonokiyatsushiyudeinstancemethod-objects-cant-pickle/</id><summary type="html"></summary><content type="html">&lt;h2&gt;Djangoのキャッシュで「Instancemethod objects can't pickle」&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/all.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2020-12-19T09:41:38+09:00</updated><entry><title>sedメモ</title><link href="http://blog.shigepon.info/blog/2020/05/14/sed_memo/" rel="alternate"></link><published>2020-05-14T17:30:00+09:00</published><updated>2020-05-14T17:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2020-05-14:/blog/2020/05/14/sed_memo/</id><summary type="html"></summary><content type="html">&lt;p&gt;sedのメモ量が増えたので独立&lt;/p&gt;
+&lt;h2&gt;sedで良く使うメモ&lt;/h2&gt;
+&lt;p&gt;sedはすぐ忘れる。&lt;/p&gt;
+&lt;p&gt;参考：
++ &lt;a href="https://hydrocul.github.io/wiki/commands/sed.html"&gt;sed コマンド&lt;/a&gt;
++ &lt;a href="https://orebibou.com/2015/07/sed%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%81%A7%E8%A6%9A%E3%81%88%E3%81%A6%E3%81%8A%E3%81%8D%E3%81%9F%E3%81%84%E4%BD%BF%E3%81%84%E6%96%B912%E5%80%8B/#i-6"&gt;sedコマンドで覚えておきたい使い方12個(+3個)&lt;/a&gt;&lt;/p&gt;
+&lt;h4&gt;上書き&lt;/h4&gt;
+&lt;p&gt;-iつければおk&lt;/p&gt;
+&lt;h4&gt;置換（文字列削除にも使える）&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed &lt;span class="s1"&gt;&amp;#39;s/正規表現/置換文字列/g&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;行削除&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed &lt;span class="s1"&gt;&amp;#39;/正規表現/d&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;指定行だけ表示&lt;/h4&gt;
+&lt;p&gt;文字列の編集じゃないけど、便利。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed -n 行番号p
+$ sed -n 開始行番号,終了行番号p
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;行挿入&lt;/h4&gt;
+&lt;p&gt;前に挿入&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed 行番号i
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;後に挿入&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed 行番号a
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;最終行指定は$&lt;/p&gt;
+&lt;h2&gt;文字列置換(sed)関連&lt;/h2&gt;
+&lt;h3&gt;一番最初にマッチしたものを置換&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed &lt;span class="m"&gt;1&lt;/span&gt;,/pattern/s/pattern/replace/
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;1は1行目からの意味。10行目から始めたければ10に変えるとか、数字はパターンにしても良い&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed /pattern from/,/pattern/s/pattern/replace/
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;一行目に文字列を追加する&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed -i hoge -e &lt;span class="s2"&gt;&amp;quot;1i fuga&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考:
+&lt;a href="http://d.hatena.ne.jp/n9d/20081110/1226284188"&gt;sedにて一番最初にマッチしたモノだけを置換するには - 計算機と戯れる日々&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;ファイルを上書き保存&lt;/h3&gt;
+&lt;p&gt;オプション -iを使う。一括でファイル上書きならこんな感じ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ find . -name &lt;span class="s2"&gt;&amp;quot;*.html&amp;quot;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; xargs sed -i -e s/hoge/fuga/
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考:
+&lt;a href="http://www.dab.hi-ho.ne.jp/sasa/biboroku/unix/sed-i.html"&gt;sedでファイルを上書き保存&lt;/a&gt;&lt;/p&gt;</content><category term="memo"></category><category term="linux"></category></entry><entry><title>Djangoのキャッシュで「Instancemethod objects can't pickle」</title><link href="http://blog.shigepon.info/blog/2020/02/24/djangonokiyatsushiyudeinstancemethod-objects-cant-pickle/" rel="alternate"></link><published>2020-02-24T16:40:00+09:00</published><updated>2020-02-24T16:40:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2020-02-24:/blog/2020/02/24/djangonokiyatsushiyudeinstancemethod-objects-cant-pickle/</id><summary type="html"></summary><content type="html">&lt;h2&gt;Djangoのキャッシュで「Instancemethod objects can't pickle」&lt;/h2&gt;
 &lt;p&gt;Djangoでオブジェクトをキャッシュしておこうと思ったら、「Instancemethod objects can't pickle」みたいなエラーが出てキャッシュできなかった。&lt;/p&gt;
 &lt;p&gt;結論から言うとオブジェクト内で別のオブジェクトを作って、ごにょごにょやってるようなコードを書くと、そのオブジェクトは上手くキャッシュしてくれないらしい。エラーメッセージ見てもよくわかんないよ＞＜。まぁそんな変なコード書くなということですね。はい。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.db&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;
@@ -1183,7 +1245,15 @@ sshでEsxiホストを操作する手順は&lt;a href="http://blog.shigepon.info
 結論から言うとSATAコントローラーがAHCIモードだったのがまずかったみたい。BIOS画面でSATAコントローラーをAHCIモード以外にすると認識するようになった。
 このトラブルの解決だけで2時間かかった＞＜。ここらへんを参考にした（&lt;a href="http://d.hatena.ne.jp/igapyon/20140720"&gt;ESXi 5.5 を MSI H97 GAMING 3 にインストール&lt;/a&gt;、&lt;a href="http://zappy.hatenablog.jp/entry/2015/01/09/002505"&gt;自作PCにVMware ESXiをインストールした&lt;/a&gt;）
 データストアを認識しているかどうかは&lt;a href="https://kb.vmware.com/articleview?docid=1014953&amp;amp;lang=ja"&gt;VMware ESXi/ESX を操作するときのディスクの識別&lt;/a&gt;を参考にした。&lt;/p&gt;
-&lt;p&gt;しかもEsxiのトラブルとは関係ないけどHDDが2つも動かない状態になってるし・・・。どーしよー。&lt;/p&gt;</content><category term="vmware"></category><category term="linux"></category></entry><entry><title>linuxメモ</title><link href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/" rel="alternate"></link><published>2017-11-02T17:30:00+09:00</published><updated>2020-02-24T09:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-11-02:/blog/2017/11/02/linux_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;nkfを使ってurlエンコード、デコード&lt;/h2&gt;
+&lt;p&gt;しかもEsxiのトラブルとは関係ないけどHDDが2つも動かない状態になってるし・・・。どーしよー。&lt;/p&gt;</content><category term="vmware"></category><category term="linux"></category></entry><entry><title>linuxメモ</title><link href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/" rel="alternate"></link><published>2017-11-02T17:30:00+09:00</published><updated>2020-05-14T09:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-11-02:/blog/2017/11/02/linux_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;ファイルを空にする&lt;/h2&gt;
+&lt;p&gt;パーミッションや作成者を保存したままファイルを空にしたい&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cp /dev/null filename
+$ : &amp;gt; filename
+$ &lt;span class="nb"&gt;echo&lt;/span&gt; -n &amp;gt; filename
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;nkfを使ってurlエンコード、デコード&lt;/h2&gt;
 &lt;p&gt;urlエンコード&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;ほげ&amp;#39;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; nkf -WwMQ &lt;span class="p"&gt;|&lt;/span&gt; &lt;span class="nv"&gt;tr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; %
 &lt;/pre&gt;&lt;/div&gt;
@@ -1287,42 +1357,6 @@ c,ccc
 
 
 &lt;p&gt;csvっぽく出来る&lt;/p&gt;
-&lt;h2&gt;sedで良く使うメモ&lt;/h2&gt;
-&lt;p&gt;sedはすぐ忘れる。&lt;/p&gt;
-&lt;p&gt;参考：
-+ &lt;a href="https://hydrocul.github.io/wiki/commands/sed.html"&gt;sed コマンド&lt;/a&gt;
-+ &lt;a href="https://orebibou.com/2015/07/sed%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%81%A7%E8%A6%9A%E3%81%88%E3%81%A6%E3%81%8A%E3%81%8D%E3%81%9F%E3%81%84%E4%BD%BF%E3%81%84%E6%96%B912%E5%80%8B/#i-6"&gt;sedコマンドで覚えておきたい使い方12個(+3個)&lt;/a&gt;&lt;/p&gt;
-&lt;h4&gt;上書き&lt;/h4&gt;
-&lt;p&gt;-iつければおk&lt;/p&gt;
-&lt;h4&gt;置換（文字列削除にも使える）&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed &lt;span class="s1"&gt;&amp;#39;s/正規表現/置換文字列/g&amp;#39;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;行削除&lt;/h4&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed &lt;span class="s1"&gt;&amp;#39;/正規表現/d&amp;#39;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;指定行だけ表示&lt;/h4&gt;
-&lt;p&gt;文字列の編集じゃないけど、便利。&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed -n 行番号p
-$ sed -n 開始行番号,終了行番号p
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h4&gt;行挿入&lt;/h4&gt;
-&lt;p&gt;前に挿入&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed 行番号i
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;後に挿入&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed 行番号a
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;最終行指定は$&lt;/p&gt;
 &lt;h2&gt;アクセスログのIPアドレスを集計してみる&lt;/h2&gt;
 &lt;p&gt;参考：&lt;a href="http://blog.livedoor.jp/stock_value/archives/51443839.html"&gt;Linux サーバーでお手軽にログの集計：こっそりと。 - livedoor Blog（ブログ）&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Google Analyticsでリファラ無しの変なアクセスが増えたので、アクセスログからIPを集計してみた。
@@ -1383,32 +1417,40 @@ $ find &lt;span class="sb"&gt;`&lt;/span&gt;&lt;span class="nb"&gt;pwd&lt;/span&
 
 
 &lt;p&gt;参考：&lt;a href="http://codenote.net/linux/1300.html"&gt;[Linux] sort と uniq をパイプでつないで重複行を削除する | CodeNote.net&lt;/a&gt;&lt;/p&gt;
-&lt;h2&gt;文字列置換(sed)関連&lt;/h2&gt;
-&lt;h3&gt;一番最初にマッチしたものを置換&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed &lt;span class="m"&gt;1&lt;/span&gt;,/pattern/s/pattern/replace/
+&lt;h2&gt;重複した行だけ取り出し&lt;/h2&gt;
+&lt;p&gt;重複した行全て&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;aaa
+bbb
+bbb
+ddd
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;1は1行目からの意味。10行目から始めたければ10に変えるとか、数字はパターンにしても良い&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed /pattern from/,/pattern/s/pattern/replace/
+&lt;p&gt;というファイルで&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ uniq -D filename
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;一行目に文字列を追加する&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sed -i hoge -e &lt;span class="s2"&gt;&amp;quot;1i fuga&amp;quot;&lt;/span&gt;
+&lt;p&gt;とすると、&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;bbb
+bbb
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;参考:
-&lt;a href="http://d.hatena.ne.jp/n9d/20081110/1226284188"&gt;sedにて一番最初にマッチしたモノだけを置換するには - 計算機と戯れる日々&lt;/a&gt;&lt;/p&gt;
-&lt;h3&gt;ファイルを上書き保存&lt;/h3&gt;
-&lt;p&gt;オプション -iを使う。一括でファイル上書きならこんな感じ&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ find . -name &lt;span class="s2"&gt;&amp;quot;*.html&amp;quot;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; xargs sed -i -e s/hoge/fuga/
+&lt;p&gt;が出力される。
+ちなみに-dだと&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;bbb
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;参考:
-&lt;a href="http://www.dab.hi-ho.ne.jp/sasa/biboroku/unix/sed-i.html"&gt;sedでファイルを上書き保存&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;となる&lt;/p&gt;
+&lt;p&gt;-uならば&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;aaa
+ccc
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;となる&lt;/p&gt;
 &lt;h3&gt;grepで該当行前後を表示する&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cat hoge.txt &lt;span class="p"&gt;|&lt;/span&gt; grep &lt;span class="s2"&gt;&amp;quot;fuga&amp;quot;&lt;/span&gt; -3 &lt;span class="c1"&gt;#前後3行&lt;/span&gt;
 $ cat hoge.txt &lt;span class="p"&gt;|&lt;/span&gt; grep &lt;span class="s2"&gt;&amp;quot;fuga&amp;quot;&lt;/span&gt; -B &lt;span class="m"&gt;3&lt;/span&gt; &lt;span class="c1"&gt;#前3行&lt;/span&gt;
@@ -2966,17 +3008,28 @@ $ sed -e &lt;span class="s1"&gt;&amp;#39;/^---:/ d&amp;#39;&lt;/span&gt; -i cont
 &lt;/ul&gt;
 &lt;p&gt;ちなみにこれから作成していく記事は別に2016_03_31_hogefuga.markdownみたいな形式にしないでも大丈夫。hogefuga.mdとかでも問題無い。&lt;/p&gt;</content><category term="python"></category><category term="pelican"></category><category term="octopress"></category></entry><entry><title>visual studio メモ</title><link href="http://blog.shigepon.info/blog/2016/03/08/visual-studio-memo/" rel="alternate"></link><published>2016-03-08T09:50:36+09:00</published><updated>2016-03-08T09:50:36+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-03-08:/blog/2016/03/08/visual-studio-memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;Visual Studio 2010でLNK1123エラーが出る&lt;/h2&gt;
 &lt;p&gt;Visual Studio Express 2012をインストールした後で、Visual Studio 2010でビルドしようとしたらエラーが出た。&lt;a href="http://www.microsoft.com/ja-jp/download/details.aspx?id=23691"&gt;Visual C++ Service Pack 1&lt;/a&gt;以降をインストールすれば良い。&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="http://minus9d.hatenablog.com/entry/20121212/1355312498"&gt;VS2010でLNK1123エラーが出たら、SP1にしてみよう - minus9d's diary&lt;/a&gt;&lt;/p&gt;</content><category term="memo"></category><category term="visualstudio"></category></entry><entry><title>uwsgiの管理にsupervisordを使う</title><link href="http://blog.shigepon.info/blog/2016/03/07/use-supervisord-to-control-uwsgi/" rel="alternate"></link><published>2016-03-07T21:41:38+09:00</published><updated>2016-03-07T21:41:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-03-07:/blog/2016/03/07/use-supervisord-to-control-uwsgi/</id><summary type="html"></summary><content type="html">&lt;p&gt;Ansibleで環境構築する時にuwsgiの再起動をservice使ってやりたかったので、supervisorにuwsgiを登録し、supervisorをserviceに登録するためにsupervisorについて調べてみたメモ&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="http://minus9d.hatenablog.com/entry/20121212/1355312498"&gt;VS2010でLNK1123エラーが出たら、SP1にしてみよう - minus9d's diary&lt;/a&gt;&lt;/p&gt;</content><category term="memo"></category><category term="visualstudio"></category></entry><entry><title>uwsgiの管理にsupervisordを使う</title><link href="http://blog.shigepon.info/blog/2016/03/07/uwsginoguan-li-nisupervisordwoshi-u/" rel="alternate"></link><published>2016-03-07T21:41:38+09:00</published><updated>2020-12-19T09:41:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-03-07:/blog/2016/03/07/uwsginoguan-li-nisupervisordwoshi-u/</id><summary type="html"></summary><content type="html">&lt;p&gt;Ansibleで環境構築する時にuwsgiの再起動をservice使ってやりたかったので、supervisorにuwsgiを登録し、supervisorをserviceに登録するためにsupervisorについて調べてみたメモ&lt;/p&gt;
+&lt;h2&gt;新しい設定のロード(2020/12/19追記)&lt;/h2&gt;
+&lt;p&gt;supervisordの構成ファイルをhoge.iniとして新たに追加した。この構成をsupervisordに読み込ませる場合、単にreloadではダメで、rereadとupdateを必要とする。具体的には&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;supervisorctl reread
+supervisorctl update
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とする。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="https://qastack.jp/server/211525/supervisor-not-loading-new-configuration-files"&gt;スーパーバイザーが新しい構成ファイルをロードしない&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;ざっくり手順&lt;/h2&gt;
 &lt;p&gt;色々はまったりして参考にしたのは以下のサイト&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://d.zinrai.info/blog/html/2013/10/17/freebsd_supervisor_uwsgi.html"&gt;Supervisorを使ってuWSGIを管理 — command not found:&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://stackoverflow.com/questions/10716159/nginx-and-supervisor-setup-in-ubuntu"&gt;python - nginx and supervisor setup in Ubuntu - Stack Overflow&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://serverfault.com/questions/163392/supervisor-always-quit-process-with-exit-status-0-not-expected"&gt;supervisord - Supervisor always quit process with 'exit status 0; not expected' - Server Fault&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="http://stackoverflow.com/questions/34631806/fail-during-installation-of-pillow-python-module-in-linux"&gt;Fail during installation of Pillow (Python module) in Linux - Stack Overflow&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2&gt;ざっくり手順&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;uwsgiのiniファイルを用意&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://stackoverflow.com/questions/34631806/fail-during-installation-of-pillow-python-module-in-linux"&gt;Fail during installation of Pillow (Python module) in Linux - Stack Overflow&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;uwsgiのiniファイルを用意&lt;/p&gt;
+&lt;/li&gt;
 &lt;li&gt;virtualenvでsupervisordをインストール&lt;/li&gt;
 &lt;li&gt;supervisord.confを書く&lt;/li&gt;
 &lt;li&gt;aptでsupervisorをインストールして削除&lt;/li&gt;
@@ -3846,7 +3899,18 @@ FILTER = sample_filter
 &lt;p&gt;これでユーザー追加出来るようになった&lt;/p&gt;
 &lt;h2&gt;嬉しい点&lt;/h2&gt;
 &lt;p&gt;色々あるみたいだけど、PostgreSQLを使っているので、特にPostgreSQL使ってる場合に、独自のフィールドを使えるようになった点が嬉しい。ArrayFieldとか、わざわざリレーション作りたくない時とか便利そう。&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://docs.djangoproject.com/en/1.8/ref/contrib/postgres/fields/"&gt;Djangoドキュメントによる説明&lt;/a&gt;&lt;/p&gt;</content><category term="django"></category><category term="python"></category></entry><entry><title>Javascript memo</title><link href="http://blog.shigepon.info/blog/2015/08/12/javascript-memo/" rel="alternate"></link><published>2015-08-12T09:01:59+09:00</published><updated>2015-08-12T09:01:59+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-08-12:/blog/2015/08/12/javascript-memo/</id><summary type="html"></summary><content type="html">&lt;p&gt;Javascript関連のメモ&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://docs.djangoproject.com/en/1.8/ref/contrib/postgres/fields/"&gt;Djangoドキュメントによる説明&lt;/a&gt;&lt;/p&gt;</content><category term="django"></category><category term="python"></category></entry><entry><title>Javascript memo</title><link href="http://blog.shigepon.info/blog/2015/08/12/javascript-memo/" rel="alternate"></link><published>2015-08-12T09:01:59+09:00</published><updated>2020-12-19T09:01:59+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-08-12:/blog/2015/08/12/javascript-memo/</id><summary type="html"></summary><content type="html">&lt;p&gt;Javascript関連のメモ&lt;/p&gt;
+&lt;h2&gt;元号を含んだ日時を表示（令和に対応）。ついでに月末表示&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;date&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nb"&gt;Date&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2020&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="c1"&gt;//日付の引数に0を入れることで月末&lt;/span&gt;
+&lt;span class="c1"&gt;//月は0-11で指定するので、「実際の月-1」で指定することになる。&lt;/span&gt;
+&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;formatted_date&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;Intl&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;DateTimeFormat&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;ja-JP-u-ca-japanese&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;era&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;long&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;}).&lt;/span&gt;&lt;span class="nx"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;date&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="nx"&gt;console&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;formatted_date&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;で「令和2年5月31日」と表示される。
+ただし、ブラウザのバージョンによっては表示されないので、注意が必要。ブラウザに関わらず表示したい場合に使う手段ではない。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="https://qiita.com/shisama/items/cb0abb5435fac82e87d6"&gt;JavaScriptが令和に対応。Intl.DateTimeFormatで日付を和暦(元号)表記に変換する&lt;/a&gt;&lt;/p&gt;
 &lt;h2&gt;HighChartで日本時間をx軸に利用&lt;/h2&gt;
 &lt;p&gt;チャートを表示するライブラリに&lt;a href="http://www.highcharts.com/"&gt;HighChart&lt;/a&gt;ってのを使ってるけど、横軸の時間がUTCになってしまうので、ちょっとはまった。&lt;/p&gt;
 &lt;p&gt;こうすればいいらしい&lt;/p&gt;
@@ -6768,7 +6832,25 @@ rbenvはcapistrano-rbenvをGemfileに追加して、Capfileにcapistrano/rbenv�
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;以上でrailsアプリが見れるようになる。&lt;/p&gt;</content><category term="Rails"></category><category term="ruby"></category></entry><entry><title>git memo</title><link href="http://blog.shigepon.info/blog/2014/04/09/git-memo/" rel="alternate"></link><published>2014-04-09T12:36:49+09:00</published><updated>2016-11-16T11:55:49+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-04-09:/blog/2014/04/09/git-memo/</id><summary type="html"></summary><content type="html">&lt;p&gt;git関連のメモ&lt;/p&gt;
+&lt;p&gt;以上でrailsアプリが見れるようになる。&lt;/p&gt;</content><category term="Rails"></category><category term="ruby"></category></entry><entry><title>git memo</title><link href="http://blog.shigepon.info/blog/2014/04/09/git-memo/" rel="alternate"></link><published>2014-04-09T12:36:49+09:00</published><updated>2020-05-14T11:55:49+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-04-09:/blog/2014/04/09/git-memo/</id><summary type="html"></summary><content type="html">&lt;p&gt;git関連のメモ&lt;/p&gt;
+&lt;h2&gt;ローカルでごちゃごちゃ弄ったファイルを戻す&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git checkout &amp;lt;filename&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="https://qiita.com/macer_fkm/items/ea2337a9b504b982c295"&gt;git ローカルの変更を元に戻す方法&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;git addの取り消し&lt;/h3&gt;
+&lt;p&gt;全てのファイル&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git reset HEAD
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;特定のファイル&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git reset HEAD filename
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="https://qiita.com/yukure/items/89562e5eb1d03995dc5b"&gt;git add を取り消す&lt;/a&gt;&lt;/p&gt;
 &lt;h3&gt;変更履歴を見る&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git log -p
 &lt;/pre&gt;&lt;/div&gt;
@@ -6790,6 +6872,12 @@ $ git diff --name-only
 
 
 &lt;p&gt;参考：&lt;a href="http://qa.atmarkit.co.jp/q/2047"&gt;gitの指定ブランチで変更されたファイルの一覧を取得したい - QA@IT&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;特定commitのファイル一覧&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git show commit_id --name-only
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="https://teratail.com/questions/189250"&gt;gitで特定commitのファイル一覧を見る方法&lt;/a&gt;&lt;/p&gt;
 &lt;h2&gt;GitHubで色々やる手順&lt;/h2&gt;
 &lt;p&gt;参考：&lt;/p&gt;
 &lt;ul&gt;
@@ -6916,12 +7004,6 @@ $ git merge master
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;ローカルでごちゃごちゃ弄ったファイルを戻す&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git checkout &amp;lt;filename&amp;gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;参考：&lt;a href="https://qiita.com/macer_fkm/items/ea2337a9b504b982c295"&gt;git ローカルの変更を元に戻す方法&lt;/a&gt;&lt;/p&gt;
 &lt;h2&gt;クローン元のURLを調べる&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git remote -v
 &lt;/pre&gt;&lt;/div&gt;
