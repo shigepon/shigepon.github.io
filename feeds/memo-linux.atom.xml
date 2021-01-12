@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など - memo, linux</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/memo-linux.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2020-12-19T11:30:00+09:00</updated><entry><title>linuxメモ</title><link href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/" rel="alternate"></link><published>2017-11-02T17:30:00+09:00</published><updated>2020-12-19T11:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-11-02:/blog/2017/11/02/linux_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;シェルスクリプトでパイプを判断する&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など - memo, linux</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/memo-linux.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2021-01-10T11:30:00+09:00</updated><entry><title>linuxメモ</title><link href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/" rel="alternate"></link><published>2017-11-02T17:30:00+09:00</published><updated>2021-01-10T11:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-11-02:/blog/2017/11/02/linux_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;sshでexpecting SSH2_MSG_KEX_ECDH_REPLYと出てログイン出来ないケース&lt;/h2&gt;
+&lt;p&gt;MTUの値を下げることで対応できる&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo ip li &lt;span class="nb"&gt;set&lt;/span&gt; mtu &lt;span class="m"&gt;1200&lt;/span&gt; dev &lt;span class="o"&gt;{&lt;/span&gt;dev&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;devにはeth0などifconfigで出る名称を用いる&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="https://askubuntu.com/questions/1229456/ssh-fails-with-connection-timed-out-in-vpn-and-hangs-here-expecting-ssh2-msg"&gt;SSH fails with connection timed out - in VPN and hangs here “expecting SSH2_MSG_KEX_ECDH_REPLY” + Ubuntu 16.04.6 LTS
+&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;シェルスクリプトでパイプを判断する&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt; -p /dev/stdin &lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt;
 //パイプ入力の場合
  cat -

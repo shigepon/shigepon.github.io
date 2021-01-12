@@ -1,5 +1,181 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など - python</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/python.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2020-12-19T09:41:38+09:00</updated><entry><title>uwsgiの負荷をuwsgitopで調べて、uwsgiを調整する</title><link href="http://blog.shigepon.info/blog/2016/09/17/uwsginofu-he-wouwsgitopdediao-bete-uwsgiwodiao-zheng-suru/" rel="alternate"></link><published>2016-09-17T21:41:23+09:00</published><updated>2016-09-17T21:41:23+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-09-17:/blog/2016/09/17/uwsginofu-he-wouwsgitopdediao-bete-uwsgiwodiao-zheng-suru/</id><summary type="html"></summary><content type="html">&lt;p&gt;運営してるサービスがえらい重かったので、調べてみた。
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など - python</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/python.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2020-12-19T09:41:38+09:00</updated><entry><title>Mock test by pytest-mock</title><link href="http://blog.shigepon.info/blog/2020/01/12/mock-test-by-pytest-mock/" rel="alternate"></link><published>2020-01-12T12:35:38+09:00</published><updated>2020-01-12T12:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2020-01-12:/blog/2020/01/12/mock-test-by-pytest-mock/</id><summary type="html"></summary><content type="html">&lt;p&gt;pytest-mockによる外部APIのモックについて
+あまりまだ使いこなせてないので、何か追加や間違ってることがある毎に修正予定。&lt;/p&gt;
+&lt;h2&gt;pytest-mockのインストール&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip install pytest-mock
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でok。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/pytest-dev/pytest-mock/"&gt;githubページ&lt;/a&gt;&lt;/p&gt;
+&lt;h4&gt;後で読む&lt;/h4&gt;
+&lt;p&gt;&lt;a href="https://note.crohaco.net/2015/python-mock/"&gt;まだmockで消耗してるの？mockを理解するための3つのポイント&lt;/a&gt;&lt;/p&gt;
+&lt;h4&gt;request.getをモック&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_views&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;mocker&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;mocker&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;patch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;request.get&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;で最低限いける。テストメソッドの引数にmockerをつけると、mockerでMockを扱えるそうな。
+戻り値に何か設定したい時は&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;res&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;mocker&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Mock&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;res&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;status_code&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;200&lt;/span&gt;
+&lt;span class="n"&gt;mocker&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;patch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;request.get&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;return_value&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;res&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でよさげ&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://su-kun1899.hatenablog.com/entry/2019/03/11/020000"&gt;pytest-mock を使ってみた #python&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;views内で使用したAPIをモック&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;api&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;hogeapi&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;hogeapi&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hoge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;param2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;みたいにviewsでapiがあって、そのコンストラクタをモックしたい時、&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_views&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;mocker&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;mocker&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;patch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;api.hogeapi&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とやっても上手くいかず、APIを使ってしまう。調べてみるとこんな記事があった（&lt;a href="https://stackoverflow.com/questions/57042557/pytest-mocking-constructor-within-constructor"&gt;pytest - Mocking constructor within constructor&lt;/a&gt;ので試してみた。&lt;/p&gt;
+&lt;p&gt;これを読むとよさげ（&lt;a href="https://qiita.com/Chanmoro/items/69f401ddbe41e818a8cf"&gt;Python の mock.patch のハマりやすい挙動についてまとめる&lt;/a&gt;）&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_views&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;mocker&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;mocker&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;patch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;appname.views.hogeapi&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;これでうまくいった。まだ原理が良くわかってない。&lt;/p&gt;</content><category term="memo"></category><category term="django"></category><category term="python"></category></entry><entry><title>Test Django by pytest-django</title><link href="http://blog.shigepon.info/blog/2020/01/12/test-django-by-pytest-django/" rel="alternate"></link><published>2020-01-12T12:35:38+09:00</published><updated>2020-01-12T12:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2020-01-12:/blog/2020/01/12/test-django-by-pytest-django/</id><summary type="html"></summary><content type="html">&lt;p&gt;pytest-djangoによるDjangoのテストについて&lt;/p&gt;
+&lt;h2&gt;pytest-djangoのインストール&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip install pytest-django
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でok。pytestもついでにインストールされる。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip install pytest-mock
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でmockも使えるようにしておくと吉　&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://pytest-django.readthedocs.io/en/latest/index.html"&gt;pytest-djangoドキュメント&lt;/a&gt;&lt;/p&gt;
+&lt;h4&gt;django用設定&lt;/h4&gt;
+&lt;p&gt;djangoのプロジェクトフォルダ上にpytest.iniを作り&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[pytest]&lt;/span&gt;
+&lt;span class="na"&gt;DJANGO_SETTINGS_MODULE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;path.to.settings&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;と書いておく（これでsettings.pyを読み込んでくれる）&lt;/p&gt;
+&lt;h2&gt;テストの記述場所&lt;/h2&gt;
+&lt;p&gt;test_&lt;em&gt;.pyか、&lt;/em&gt;_test.pyとかしておくとpytestコマンドを実行した場所以下のフォルダを探してテストしてくれる。
+pytestコマンドでテストファイルの指定ができる&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pytest test_hoge.py
+&lt;span class="c1"&gt;#メソッドも指定する場合&lt;/span&gt;
+pytest test_hoge.py::test_hoge
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;テストの記述方法&lt;/h2&gt;
+&lt;p&gt;assertを記述すればとりあえずテストになる&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_hoge&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;viewsのテスト&lt;/h2&gt;
+&lt;p&gt;viewsのテストをすることができる。テストの引数にclientを入れると、clientでget, postなどすることができるので、viewsのテストになる。
+sessionの設定も可能（一つのメソッド内でのみsessionが保存される）&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_hoge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;response&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;status_code&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;200&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;viewsにセッション情報を渡す&lt;/h2&gt;
+&lt;p&gt;client.sessionが使えるが、&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_hoge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;session&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;fuga&amp;#39;&lt;/span&gt;
+    &lt;span class="n"&gt;response&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;status_code&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;200&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;session&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;fuga&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;では上手くいかない。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_hoge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;session&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;session&lt;/span&gt;
+    &lt;span class="n"&gt;session&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;fuga&amp;#39;&lt;/span&gt;
+    &lt;span class="n"&gt;session&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;save&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;response&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;status_code&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;200&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;session&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;fuga&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;と、一手間必要。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="https://stackoverflow.com/questions/7502116/how-to-use-session-in-testcase-in-django"&gt;How to use session in TestCase in Django?&lt;/a&gt;、&lt;a href="https://stackoverflow.com/questions/38205186/django-unittest-setting-session-variable"&gt;Django UnitTest - Setting session variable&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;mark&lt;/h2&gt;
+&lt;p&gt;テストにメタデータを付与して、テストをスキップしたり、テストにパラメーターを付けたり色々なことができる&lt;/p&gt;
+&lt;p&gt;例：テストをスキップ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nd"&gt;@pytest.mark.skip&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_hoge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;pass&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;fixture&lt;/h2&gt;
+&lt;p&gt;まだあまりわかってない。&lt;/p&gt;
+&lt;h2&gt;テスト実行&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#カレント以下の全テスト実行&lt;/span&gt;
+pytest
+&lt;span class="c1"&gt;#ファイル名指定&lt;/span&gt;
+pytest test_hoge.py
+&lt;span class="c1"&gt;#メソッドも指定する場合&lt;/span&gt;
+pytest test_hoge.py::test_hoge
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;実行結果例（成功）&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;===========================================================================================&lt;/span&gt; &lt;span class="nb"&gt;test&lt;/span&gt; session &lt;span class="nv"&gt;starts&lt;/span&gt; &lt;span class="o"&gt;============================================================================================&lt;/span&gt;
+platform linux2 -- Python x.x.x, pytest-x.x.x, py-x.x.x, pluggy-x.x.x
+django: settings: hoge.settings &lt;span class="o"&gt;(&lt;/span&gt;from ini&lt;span class="o"&gt;)&lt;/span&gt;
+rootdir: /path/to/root, inifile: django-project.ini
+plugins: mock-x.x.x, django-x.x.x
+collected &lt;span class="m"&gt;1&lt;/span&gt; item                                                                                                                                                                                           
+
+test_hoge.py .                                                                                                                                                                                     &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="m"&gt;100&lt;/span&gt;%&lt;span class="o"&gt;]&lt;/span&gt;
+
+&lt;span class="o"&gt;=========================================================================================&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt; passed in &lt;span class="m"&gt;0&lt;/span&gt;.17 &lt;span class="nv"&gt;seconds&lt;/span&gt; &lt;span class="o"&gt;=========================================================================================&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;実行結果例（失敗）&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;===========================================================================================&lt;/span&gt; &lt;span class="nb"&gt;test&lt;/span&gt; session &lt;span class="nv"&gt;starts&lt;/span&gt; &lt;span class="o"&gt;============================================================================================&lt;/span&gt;
+platform linux2 -- Python x.x.x, pytest-x.x.x, py-x.x.x, pluggy-x.x.x
+django: settings: hoge.settings &lt;span class="o"&gt;(&lt;/span&gt;from ini&lt;span class="o"&gt;)&lt;/span&gt;
+rootdir: /path/to/root, inifile: django-project.ini
+plugins: mock-x.x.x, django-x.x.x
+collected &lt;span class="m"&gt;1&lt;/span&gt; item                                                                                                                                                                                           
+test_sample.py &lt;span class="nv"&gt;F&lt;/span&gt;
+
+&lt;span class="o"&gt;===================================&lt;/span&gt; &lt;span class="nv"&gt;FAILURES&lt;/span&gt; &lt;span class="o"&gt;===================================&lt;/span&gt;
+_________________________________ test_assert __________________________________
+
+    def test_assert&lt;span class="o"&gt;()&lt;/span&gt;:
+&amp;gt;       assert f&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="m"&gt;2&lt;/span&gt;
+E       assert &lt;span class="nv"&gt;3&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="m"&gt;2&lt;/span&gt;
+E        +  where &lt;span class="nv"&gt;3&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; f&lt;span class="o"&gt;()&lt;/span&gt;
+
+test_sample.py:14: &lt;span class="nv"&gt;AssertionError&lt;/span&gt;
+&lt;span class="o"&gt;================&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt; failed skipped in &lt;span class="m"&gt;0&lt;/span&gt;.20 &lt;span class="nv"&gt;seconds&lt;/span&gt; &lt;span class="o"&gt;================&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じで失敗したコード、どうエラーが出たかなど出してくれる。views内でエラーが出た場合も出力してくれる。&lt;/p&gt;</content><category term="memo"></category><category term="django"></category><category term="python"></category></entry><entry><title>uwsgiの負荷をuwsgitopで調べて、uwsgiを調整する</title><link href="http://blog.shigepon.info/blog/2016/09/17/uwsginofu-he-wouwsgitopdediao-bete-uwsgiwodiao-zheng-suru/" rel="alternate"></link><published>2016-09-17T21:41:23+09:00</published><updated>2016-09-17T21:41:23+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2016-09-17:/blog/2016/09/17/uwsginofu-he-wouwsgitopdediao-bete-uwsgiwodiao-zheng-suru/</id><summary type="html"></summary><content type="html">&lt;p&gt;運営してるサービスがえらい重かったので、調べてみた。
 使用しているアプリはnginx, uwsgi, django&lt;/p&gt;
 &lt;p&gt;&lt;a href="http://qiita.com/wapa5pow/items/f4326aed6c0b63617ebd"&gt;Apacheにかわるwebサーバ: uWSGIパフォーマンスチューニング - Qiita&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;を見るとuwsgitopを使ってuwsgiのパフォーマンスを調べることが出来るらしいので、導入してみた。&lt;/p&gt;
