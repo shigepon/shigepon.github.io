@@ -156,7 +156,23 @@ Asia/Tokyo
 &lt;p&gt;以上でタイムゾーンの変更作業は完了。タイムゾーン変更しただけだと、トラブるのでメモ&lt;/p&gt;
 &lt;p&gt;参考：
 &lt;a href="https://qiita.com/zaki-lknr/items/cd9844fa6a1efa58cab1"&gt;ubuntu 18.04 時刻とタイムゾーン設定&lt;/a&gt;
-&lt;a href="https://harupong-blog.github.io/2013/09/ubuntu-cron-timezone/"&gt;タイムゾーンを変更したら Cron の実施時刻がずれたので修正した作業メモ&lt;/a&gt;&lt;/p&gt;</content><category term="memo"></category><category term="linux"></category><category term="ubuntu"></category></entry><entry><title>pythonメモ</title><link href="http://blog.shigepon.info/blog/2018/09/15/python_memo/" rel="alternate"></link><published>2018-09-15T22:30:00+09:00</published><updated>2020-05-03T22:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2018-09-15:/blog/2018/09/15/python_memo/</id><summary type="html">&lt;p&gt;pythonでググることになった使い方をメモしておく&lt;/p&gt;</summary><content type="html">&lt;h2&gt;リスト内包表現を用いて2次元配列を1次元に変換&lt;/h2&gt;
+&lt;a href="https://harupong-blog.github.io/2013/09/ubuntu-cron-timezone/"&gt;タイムゾーンを変更したら Cron の実施時刻がずれたので修正した作業メモ&lt;/a&gt;&lt;/p&gt;</content><category term="memo"></category><category term="linux"></category><category term="ubuntu"></category></entry><entry><title>pythonメモ</title><link href="http://blog.shigepon.info/blog/2018/09/15/python_memo/" rel="alternate"></link><published>2018-09-15T22:30:00+09:00</published><updated>2020-05-03T22:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2018-09-15:/blog/2018/09/15/python_memo/</id><summary type="html">&lt;p&gt;pythonでググることになった使い方をメモしておく&lt;/p&gt;</summary><content type="html">&lt;h2&gt;文字列でメソッド名があるかどうか確認し、あれば実行する&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;is_callable&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;callable&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;getattr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;obj&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でメソッド名があるかどうかBoolean値で得られるので&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;callable&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;getattr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;obj&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;)):&lt;/span&gt;
+    &lt;span class="nb"&gt;getattr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;obj&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)(&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でおk&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://stackoverflow.com/questions/7580532/how-to-check-whether-a-method-exists-in-python"&gt;How to check whether a method exists in Python?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://stackoverflow.com/questions/11781265/python-using-getattr-to-call-function-with-variable-parameters"&gt;Python using getattr to call function with variable parameters&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;リスト内包表現を用いて2次元配列を1次元に変換&lt;/h2&gt;
 &lt;p&gt;d2を2次元配列として&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;d1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;sublist&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;d2&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;sublist&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -1485,6 +1501,118 @@ SQL
 
 &lt;p&gt;すると/path/to/uwsgi/log/hoge-xxxx-xx-xx.log （xx..は日付）というログファイルが出来る。&lt;/p&gt;
 &lt;p&gt;参考：&lt;a href="http://stackoverflow.com/questions/28343262/how-to-create-one-uwsgi-log-file-per-day"&gt;logging - How to create one uwsgi log file per day? - Stack Overflow&lt;/a&gt;&lt;/p&gt;</content><category term="uwsgi"></category><category term="django"></category><category term="memo"></category><category term="python"></category></entry><entry><title>Django Memo</title><link href="http://blog.shigepon.info/blog/2014/11/23/django-memo/" rel="alternate"></link><published>2014-11-23T22:35:38+09:00</published><updated>2020-03-20T23:30:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-11-23:/blog/2014/11/23/django-memo/</id><summary type="html"></summary><content type="html">&lt;p&gt;Djangoやってて忘れっぽいところとかをメモ&lt;/p&gt;
+&lt;h2&gt;manage.pyのコマンドを別のプログラムから実行&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.core.management&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;call_command&lt;/span&gt;
+&lt;span class="n"&gt;call_command&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;a href="http://y0m0r.hateblo.jp/entry/20121110/1352552450"&gt;manage.pyのコマンドをプログラム上から呼び出す&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;何か作業した後に自動でcollectstaticしたいとかそんなこともこれで出来る&lt;/p&gt;
+&lt;h2&gt;フォームのフィールドをグループ化&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://stackoverflow.com/questions/10366745/django-form-field-grouping"&gt;Django form field grouping&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;yieldを使うと良い感じだった。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;group1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;hoge1&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;fuga1&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;group2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;hoge2&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;fuga2&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;HogeForm&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ModelForm&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;group1&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;group1&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="k"&gt;yield&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;group2&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;group2&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="k"&gt;yield&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;h3&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;group1&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;h3&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+{% for field in object.group1 %}
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;{{ field.data}}&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+{% endfor %}
+&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;h3&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;group2&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;h3&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+{% for field in object.group2 %}
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;{{ field.data}}&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+{% endfor %}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じ&lt;/p&gt;
+&lt;h2&gt;django-formtoolsの確認画面でoptionタグのテキストを表示する&lt;/h2&gt;
+&lt;p&gt;テンプレートフィルタを作ると、そこらへんを自由にできる&lt;/p&gt;
+&lt;p&gt;アプリ\/templatetags\/data_verbose.py&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;template&lt;/span&gt;
+
+&lt;span class="n"&gt;register&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;template&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Library&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+
+&lt;span class="nd"&gt;@register.filter&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;data_verbose&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;boundField&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="sd"&gt;    Returns field&amp;#39;s data or it&amp;#39;s verbose version&lt;/span&gt;
+&lt;span class="sd"&gt;    for a field with choices defined.&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Usage::&lt;/span&gt;
+
+&lt;span class="sd"&gt;        {% load data_verbose %}&lt;/span&gt;
+&lt;span class="sd"&gt;        {{form.some_field|data_verbose}}&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;boundField&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;
+    &lt;span class="n"&gt;field&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;boundField&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;field&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;hasattr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;field&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;choices&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;                                              
+         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;field&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;choices&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;          
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;                                                                
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{% for field in object %}
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;{{ field|data_verbose}}&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+{% endfor %}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://thinkami.hatenablog.com/entry/2016/01/22/224929"&gt;Django + django-formtoolsで、フォームの確認画面を作ってみた&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://y0m0r.hateblo.jp/entry/20130411/1365691177"&gt;DjangoのFormPreviewを使って表示した確認ページでchoicesの表示&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;参考にしたHPそのままだとモデルのフィールドがテキスト以外だとエラーが出るのでちょい変更した。&lt;/p&gt;
+&lt;h2&gt;save前後にモデルやフォームのデータを変更する方法&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://stackoverflow.com/questions/8924993/how-can-i-change-a-django-form-field-value-before-saving"&gt;How can I change a Django form field value before saving?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://stackoverflow.com/questions/23887961/django-how-can-i-modify-text-before-save-them-to-database/23888157"&gt;Django - How can i modify text before save them to database?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;方法は何種類か&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;clean_[フィールド名] メソッドをフォームクラス内に作る&lt;/li&gt;
+&lt;li&gt;saveメソッドをオーバーライド&lt;/li&gt;
+&lt;li&gt;views.pyでrequestをいじる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;テンプレート内でモデルのフィールドについてループ&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://stackoverflow.com/questions/2170228/iterate-over-model-instance-field-names-and-values-in-template"&gt;Iterate over model instance field names and values in template&lt;/a&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{% for field in object %}
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;b&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;{{ field.label }}:&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;b&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt; {{ field.data }}&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+{% endfor %}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;て感じ。fieldが&lt;a href="https://docs.djangoproject.com/ja/2.1/_modules/django/forms/boundfield/"&gt;BoundFieldクラス&lt;/a&gt;で、その中のdataメソッドでデータを取得している。&lt;/p&gt;
+&lt;h2&gt;認証済みチェック&lt;/h2&gt;
+&lt;p&gt;Django1.10以降&lt;/p&gt;
+&lt;p&gt;views.pyなどで&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;is_authenticated&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Django1.9以前&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;is_authenticated&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;テンプレート内&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{% if user.is_authenticated %}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="https://stackoverflow.com/questions/3644902/how-to-check-if-a-user-is-logged-in-how-to-properly-use-user-is-authenticated"&gt;How to check if a user is logged in (how to properly use user.is_authenticated)?&lt;/a&gt;&lt;/p&gt;
 &lt;h2&gt;GETパラメーターを入れてそのままリダイレクト&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;response = redirect(&amp;#39;namespace:viewname&amp;#39;)
 get_params = request.GET.urlencode()
@@ -1549,7 +1677,7 @@ return response
 
 
 &lt;p&gt;みたいな感じで取り出せる。&lt;/p&gt;
-&lt;h2&gt;runserver実行時にコンソールにスタックとレースを出力する&lt;/h2&gt;
+&lt;h2&gt;runserver実行時にコンソールにスタックトレースを出力する&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
 &lt;span class="n"&gt;LOGGING&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="s1"&gt;&amp;#39;version&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;

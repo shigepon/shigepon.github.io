@@ -113,6 +113,118 @@ shigeponが関心のある技術情報など            </a>
 </footer><!-- /.post-info -->                    </div>
                 </div>
                 <p>Djangoやってて忘れっぽいところとかをメモ</p>
+<h2>manage.pyのコマンドを別のプログラムから実行</h2>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.core.management</span> <span class="kn">import</span> <span class="n">call_command</span>
+<span class="n">call_command</span><span class="p">(</span><span class="s1">&#39;hoge&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><a href="http://y0m0r.hateblo.jp/entry/20121110/1352552450">manage.pyのコマンドをプログラム上から呼び出す</a></p>
+<p>何か作業した後に自動でcollectstaticしたいとかそんなこともこれで出来る</p>
+<h2>フォームのフィールドをグループ化</h2>
+<p><a href="https://stackoverflow.com/questions/10366745/django-form-field-grouping">Django form field grouping</a></p>
+<p>yieldを使うと良い感じだった。</p>
+<div class="highlight"><pre><span></span><span class="n">group1</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;hoge1&quot;</span><span class="p">,</span><span class="s2">&quot;fuga1&quot;</span><span class="p">]</span>
+<span class="n">group2</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;hoge2&quot;</span><span class="p">,</span><span class="s2">&quot;fuga2&quot;</span><span class="p">]</span>
+<span class="k">class</span> <span class="nc">HogeForm</span><span class="p">(</span><span class="n">ModelForm</span><span class="p">):</span>
+<span class="o">...</span>
+    <span class="k">def</span> <span class="nf">group1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">group1</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">group2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">group2</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">h3</span><span class="p">&gt;</span>group1<span class="p">&lt;/</span><span class="nt">h3</span><span class="p">&gt;</span>
+{% for field in object.group1 %}
+    <span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;</span>{{ field.data}}<span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+{% endfor %}
+<span class="p">&lt;</span><span class="nt">h3</span><span class="p">&gt;</span>group2<span class="p">&lt;/</span><span class="nt">h3</span><span class="p">&gt;</span>
+{% for field in object.group2 %}
+    <span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;</span>{{ field.data}}<span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+{% endfor %}
+</pre></div>
+
+
+<p>こんな感じ</p>
+<h2>django-formtoolsの確認画面でoptionタグのテキストを表示する</h2>
+<p>テンプレートフィルタを作ると、そこらへんを自由にできる</p>
+<p>アプリ\/templatetags\/data_verbose.py</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">template</span>
+
+<span class="n">register</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">Library</span><span class="p">()</span>
+
+
+<span class="nd">@register.filter</span>
+<span class="k">def</span> <span class="nf">data_verbose</span><span class="p">(</span><span class="n">boundField</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns field&#39;s data or it&#39;s verbose version</span>
+<span class="sd">    for a field with choices defined.</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        {% load data_verbose %}</span>
+<span class="sd">        {{form.some_field|data_verbose}}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">boundField</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">field</span> <span class="o">=</span> <span class="n">boundField</span><span class="o">.</span><span class="n">field</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="s1">&#39;choices&#39;</span><span class="p">):</span><span class="err">↲</span>                                              
+         <span class="k">return</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">):</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">field</span><span class="o">.</span><span class="n">choices</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="err">↲</span>          
+    <span class="k">return</span> <span class="n">data</span><span class="err">↲</span>                                                                
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>{% for field in object %}
+    <span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;</span>{{ field|data_verbose}}<span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+{% endfor %}
+</pre></div>
+
+
+<ul>
+<li><a href="https://thinkami.hatenablog.com/entry/2016/01/22/224929">Django + django-formtoolsで、フォームの確認画面を作ってみた</a></li>
+<li><a href="http://y0m0r.hateblo.jp/entry/20130411/1365691177">DjangoのFormPreviewを使って表示した確認ページでchoicesの表示</a></li>
+</ul>
+<p>参考にしたHPそのままだとモデルのフィールドがテキスト以外だとエラーが出るのでちょい変更した。</p>
+<h2>save前後にモデルやフォームのデータを変更する方法</h2>
+<ul>
+<li><a href="https://stackoverflow.com/questions/8924993/how-can-i-change-a-django-form-field-value-before-saving">How can I change a Django form field value before saving?</a></li>
+<li><a href="https://stackoverflow.com/questions/23887961/django-how-can-i-modify-text-before-save-them-to-database/23888157">Django - How can i modify text before save them to database?</a></li>
+</ul>
+<p>方法は何種類か</p>
+<ul>
+<li>clean_[フィールド名] メソッドをフォームクラス内に作る</li>
+<li>saveメソッドをオーバーライド</li>
+<li>views.pyでrequestをいじる</li>
+</ul>
+<h2>テンプレート内でモデルのフィールドについてループ</h2>
+<p><a href="https://stackoverflow.com/questions/2170228/iterate-over-model-instance-field-names-and-values-in-template">Iterate over model instance field names and values in template</a></p>
+<div class="highlight"><pre><span></span>{% for field in object %}
+    <span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;&lt;</span><span class="nt">b</span><span class="p">&gt;</span>{{ field.label }}:<span class="p">&lt;/</span><span class="nt">b</span><span class="p">&gt;</span> {{ field.data }}<span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+{% endfor %}
+</pre></div>
+
+
+<p>て感じ。fieldが<a href="https://docs.djangoproject.com/ja/2.1/_modules/django/forms/boundfield/">BoundFieldクラス</a>で、その中のdataメソッドでデータを取得している。</p>
+<h2>認証済みチェック</h2>
+<p>Django1.10以降</p>
+<p>views.pyなどで</p>
+<div class="highlight"><pre><span></span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span>
+</pre></div>
+
+
+<p>Django1.9以前</p>
+<div class="highlight"><pre><span></span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">()</span>
+</pre></div>
+
+
+<p>テンプレート内</p>
+<div class="highlight"><pre><span></span>{% if user.is_authenticated %}
+</pre></div>
+
+
+<p>参考：<a href="https://stackoverflow.com/questions/3644902/how-to-check-if-a-user-is-logged-in-how-to-properly-use-user-is-authenticated">How to check if a user is logged in (how to properly use user.is_authenticated)?</a></p>
 <h2>GETパラメーターを入れてそのままリダイレクト</h2>
 <div class="highlight"><pre><span></span>response = redirect(&#39;namespace:viewname&#39;)
 get_params = request.GET.urlencode()
@@ -177,7 +289,7 @@ return response
 
 
 <p>みたいな感じで取り出せる。</p>
-<h2>runserver実行時にコンソールにスタックとレースを出力する</h2>
+<h2>runserver実行時にコンソールにスタックトレースを出力する</h2>
 <div class="highlight"><pre><span></span><span class="c1"># settings.py</span>
 <span class="n">LOGGING</span><span class="o">=</span><span class="p">{</span>
     <span class="s1">&#39;version&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
@@ -421,12 +533,21 @@ return response
             <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
               <ul class="list-group" id="social">
                 <li class="list-group-item"><a href="https://twitter.com/shigepon"><i class="fa fa-twitter-square fa-lg"></i> twitter</a></li>
-                <li class="list-group-item"><a href="https://www.facebook.com/takeshi.shigeta.56"><i class="fa fa-facebook-square fa-lg"></i> facebook</a></li>
               </ul>
             </li>
 
             <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
                 <ul class="list-group" id="recentposts">
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/2014/11/25/use-django-allauth/">
+                            django-allauthを使ってみた
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/2021/01/25/use-bootstrap4-in-django/">
+                            use bootstrap4 in django
+                        </a>
+                    </li>
                     <li class="list-group-item">
                         <a href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/">
                             linuxメモ
@@ -440,16 +561,6 @@ return response
                     <li class="list-group-item">
                         <a href="http://blog.shigepon.info/blog/2016/03/07/uwsginoguan-li-nisupervisordwoshi-u/">
                             uwsgiの管理にsupervisordを使う
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2015/08/12/javascript-memo/">
-                            Javascript memo
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2020/05/14/sed_memo/">
-                            sedメモ
                         </a>
                     </li>
                 </ul>
@@ -558,18 +669,13 @@ return response
             <li class="list-group-item"><a href="http://blog.shigepon.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
                 <ul class="list-group " id="tags">
                     <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/linux.html">
-                            linux
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/ruby.html">
-                            ruby
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-1">
                         <a href="http://blog.shigepon.info/tag/memo.html">
                             memo
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="http://blog.shigepon.info/tag/django.html">
+                            django
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
@@ -578,13 +684,13 @@ return response
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/django.html">
-                            django
+                        <a href="http://blog.shigepon.info/tag/linux.html">
+                            linux
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/groonga.html">
-                            groonga
+                        <a href="http://blog.shigepon.info/tag/nadesiko2.html">
+                            nadesiko2
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -593,8 +699,28 @@ return response
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/bootstrap.html">
+                            bootstrap
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/csharp.html">
+                            CSharp
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
                         <a href="http://blog.shigepon.info/tag/event.html">
                             event
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/ruby.html">
+                            ruby
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/r.html">
+                            R
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -608,23 +734,8 @@ return response
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/csharp.html">
-                            CSharp
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/bootstrap.html">
-                            bootstrap
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/nadesiko2.html">
-                            nadesiko2
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/r.html">
-                            R
+                        <a href="http://blog.shigepon.info/tag/groonga.html">
+                            groonga
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -633,53 +744,8 @@ return response
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/raspberrypi.html">
-                            raspberrypi
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/vim.html">
-                            vim
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/titanium.html">
-                            titanium
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/vmware.html">
-                            vmware
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/php.html">
-                            PHP
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/nginx.html">
-                            nginx
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/mac.html">
-                            mac
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/pelican.html">
-                            pelican
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/javascript.html">
-                            javascript
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
-                            uwsgi
+                        <a href="http://blog.shigepon.info/tag/test1st.html">
+                            test1st
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -688,8 +754,18 @@ return response
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/rhaco.html">
-                            rhaco
+                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
+                            CPlusPlus
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
+                            uwsgi
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/raspberrypi.html">
+                            raspberrypi
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -698,18 +774,48 @@ return response
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
-                            CPlusPlus
+                        <a href="http://blog.shigepon.info/tag/vmware.html">
+                            vmware
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/test1st.html">
-                            test1st
+                        <a href="http://blog.shigepon.info/tag/titanium.html">
+                            titanium
                         </a>
                     </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/avr.html">
-                            avr
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/javascript.html">
+                            javascript
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/nginx.html">
+                            nginx
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/php.html">
+                            PHP
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/rhaco.html">
+                            rhaco
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/vim.html">
+                            vim
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/pelican.html">
+                            pelican
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/mac.html">
+                            mac
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -718,48 +824,8 @@ return response
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
-                            linkedopendata
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/rhaco3.html">
-                            rhaco3
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
                         <a href="http://blog.shigepon.info/tag/lua.html">
                             Lua
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/sqlite.html">
-                            sqlite
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/svn.html">
-                            svn
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/ubuntu.html">
-                            ubuntu
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/arduino.html">
-                            arduino
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/redis.html">
-                            redis
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/visualstudio.html">
-                            visualstudio
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -768,8 +834,53 @@ return response
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/visualstudio.html">
+                            visualstudio
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/redis.html">
+                            redis
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/sqlite.html">
+                            sqlite
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/ubuntu.html">
+                            ubuntu
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/avr.html">
+                            avr
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/rhaco3.html">
+                            rhaco3
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
                         <a href="http://blog.shigepon.info/tag/git.html">
                             git
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/svn.html">
+                            svn
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
+                            linkedopendata
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/arduino.html">
+                            arduino
                         </a>
                     </li>
                 </ul>
@@ -806,7 +917,7 @@ return response
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2017 shigepon
+         <div class="col-xs-10">&copy; 2014 shigepon
             &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>

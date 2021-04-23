@@ -1,5 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/all.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2021-01-10T11:30:00+09:00</updated><entry><title>Macでpdfファイルサイズを小さくする</title><link href="http://blog.shigepon.info/blog/2020/12/19/reduce_pdf_size_on_mac/" rel="alternate"></link><published>2020-12-19T11:30:00+09:00</published><updated>2020-12-19T11:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2020-12-19:/blog/2020/12/19/reduce_pdf_size_on_mac/</id><summary type="html">&lt;p&gt;wordから出力したpdfサイズを縮めた話&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Macでpdfファイルサイズを小さくする&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/all.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2021-01-25T14:55:16+09:00</updated><entry><title>use bootstrap4 in django</title><link href="http://blog.shigepon.info/blog/2021/01/25/use-bootstrap4-in-django/" rel="alternate"></link><published>2021-01-25T11:24:56+09:00</published><updated>2021-01-25T11:24:56+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2021-01-25:/blog/2021/01/25/use-bootstrap4-in-django/</id><summary type="html"></summary><content type="html">&lt;p&gt;そろそろbootstrap4を使ってみたいなと思った。django-bootstrap3があるのと同様にdjango-bootstrap4があるので、それを使ってみることにした。&lt;/p&gt;
+&lt;h2&gt;インストール&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ pip install django-bootstrap4
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;設定&lt;/h2&gt;
+&lt;!-- more --&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;INSTALLED_APPS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="o"&gt;....&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;bootstrap4&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="o"&gt;....&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;bootstrap4の設定変更&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
+&lt;span class="n"&gt;BOOTSTRAP4&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;内で行う&lt;/p&gt;
+&lt;h2&gt;テンプレート&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;django-bootstrap3と一緒&lt;/p&gt;
+&lt;h2&gt;ドキュメント&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://django-bootstrap4.readthedocs.io/en/latest/"&gt;django-bootstrap4 document&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;フォームのエラーをフィールド毎に表示&lt;/h2&gt;
+&lt;p&gt;django-bootstrap4のフォームでエラーでた時の表示はフォーム上部にまとめて出るが、「この値は・・・」というような表現で、とても分かりにくいので、フィールド毎に表示されるのが良いかなと思った。&lt;/p&gt;
+&lt;p&gt;そのような場合は、&lt;a href="https://gist.github.com/mverleg/3292e29690456e81daff57654ef17986"&gt;django-bootstrap4-field-errors.py&lt;/a&gt;を使うと良かった。このファイルをform_renderer.pyという名前でアプリのフォルダ下に置いて、HPに書いてある通りの設定&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;BOOTSTRAP4&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;dict&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="n"&gt;form_renderers&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;dict&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="n"&gt;default&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;appname.form_renderer.FieldErrorFormRenderer&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="p"&gt;),&lt;/span&gt;
+    &lt;span class="n"&gt;field_renderers&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;dict&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="n"&gt;default&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;appname.form_renderer.WithErrorFieldRenderer&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="p"&gt;),&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;をすればよい。ちなみに47,48行目&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_field_errors&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;html&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;wrap_field&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;を入れ替えると、右部の表示から、下部の表示に変えられる。　&lt;/p&gt;</content><category term="bootstrap"></category><category term="django"></category><category term="python"></category></entry><entry><title>Macでpdfファイルサイズを小さくする</title><link href="http://blog.shigepon.info/blog/2020/12/19/reduce_pdf_size_on_mac/" rel="alternate"></link><published>2020-12-19T11:30:00+09:00</published><updated>2020-12-19T11:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2020-12-19:/blog/2020/12/19/reduce_pdf_size_on_mac/</id><summary type="html">&lt;p&gt;wordから出力したpdfサイズを縮めた話&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Macでpdfファイルサイズを小さくする&lt;/h2&gt;
 &lt;p&gt;Wordからpdf出力した時に、サイズが大きすぎてメールに添付することができなかったので、サイズを小さくする方法を調べた。とりあえずMacだけ。Windowsはまた機会があったら調べる。&lt;/p&gt;
 &lt;p&gt;参考：&lt;a href="https://kunipon.com/1363"&gt;MacでPDFの容量削減。プレビュー使うと画像劣化がひどいので回避策&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;この記事にある通り、プレビューで保存、書き出しする時にQuartzフィルタで「Reduce File Size」を選んでサイズを小さくすると、画質の劣化が酷いことになる。&lt;/p&gt;
@@ -313,7 +372,18 @@ Asia/Tokyo
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;これでうまくいった。まだ原理が良くわかってない。&lt;/p&gt;</content><category term="memo"></category><category term="django"></category><category term="python"></category></entry><entry><title>Test Django by pytest-django</title><link href="http://blog.shigepon.info/blog/2020/01/12/test-django-by-pytest-django/" rel="alternate"></link><published>2020-01-12T12:35:38+09:00</published><updated>2020-01-12T12:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2020-01-12:/blog/2020/01/12/test-django-by-pytest-django/</id><summary type="html"></summary><content type="html">&lt;p&gt;pytest-djangoによるDjangoのテストについて&lt;/p&gt;
+&lt;p&gt;これでうまくいった。まだ原理が良くわかってない。&lt;/p&gt;
+&lt;h2&gt;assert&lt;/h2&gt;
+&lt;p&gt;上でモックしたapiのメソッドコールの回数を取得してassertするためには上のコードを修正してassertを追加する&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_views&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;mocker&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;mocker&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;patch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;appname.views.hogeapi&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;called_count&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;return_value&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hoge&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;called_count&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;という感じにするインスタンスメソッドは一旦return_valueを経由してcall_countを取らないと表示されない&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="https://stackoverflow.com/questions/28924136/mocked-class-asserting-method-calls"&gt;Mocked Class &amp;amp; Asserting Method Calls&lt;/a&gt;&lt;/p&gt;</content><category term="memo"></category><category term="django"></category><category term="python"></category></entry><entry><title>Test Django by pytest-django</title><link href="http://blog.shigepon.info/blog/2020/01/12/test-django-by-pytest-django/" rel="alternate"></link><published>2020-01-12T12:35:38+09:00</published><updated>2020-01-12T12:35:38+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2020-01-12:/blog/2020/01/12/test-django-by-pytest-django/</id><summary type="html"></summary><content type="html">&lt;p&gt;pytest-djangoによるDjangoのテストについて&lt;/p&gt;
 &lt;h2&gt;pytest-djangoのインストール&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip install pytest-django
 &lt;/pre&gt;&lt;/div&gt;
@@ -439,7 +509,23 @@ test_sample.py:14: &lt;span class="nv"&gt;AssertionError&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;こんな感じで失敗したコード、どうエラーが出たかなど出してくれる。views内でエラーが出た場合も出力してくれる。&lt;/p&gt;</content><category term="memo"></category><category term="django"></category><category term="python"></category></entry><entry><title>pythonメモ</title><link href="http://blog.shigepon.info/blog/2018/09/15/python_memo/" rel="alternate"></link><published>2018-09-15T22:30:00+09:00</published><updated>2020-05-03T22:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2018-09-15:/blog/2018/09/15/python_memo/</id><summary type="html">&lt;p&gt;pythonでググることになった使い方をメモしておく&lt;/p&gt;</summary><content type="html">&lt;h2&gt;リスト内包表現を用いて2次元配列を1次元に変換&lt;/h2&gt;
+&lt;p&gt;こんな感じで失敗したコード、どうエラーが出たかなど出してくれる。views内でエラーが出た場合も出力してくれる。&lt;/p&gt;</content><category term="memo"></category><category term="django"></category><category term="python"></category></entry><entry><title>pythonメモ</title><link href="http://blog.shigepon.info/blog/2018/09/15/python_memo/" rel="alternate"></link><published>2018-09-15T22:30:00+09:00</published><updated>2020-05-03T22:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2018-09-15:/blog/2018/09/15/python_memo/</id><summary type="html">&lt;p&gt;pythonでググることになった使い方をメモしておく&lt;/p&gt;</summary><content type="html">&lt;h2&gt;文字列でメソッド名があるかどうか確認し、あれば実行する&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;is_callable&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;callable&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;getattr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;obj&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でメソッド名があるかどうかBoolean値で得られるので&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;callable&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;getattr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;obj&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;)):&lt;/span&gt;
+    &lt;span class="nb"&gt;getattr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;obj&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)(&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;でおk&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://stackoverflow.com/questions/7580532/how-to-check-whether-a-method-exists-in-python"&gt;How to check whether a method exists in Python?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://stackoverflow.com/questions/11781265/python-using-getattr-to-call-function-with-variable-parameters"&gt;Python using getattr to call function with variable parameters&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;リスト内包表現を用いて2次元配列を1次元に変換&lt;/h2&gt;
 &lt;p&gt;d2を2次元配列として&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;d1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;sublist&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;d2&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;sublist&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -1428,7 +1514,13 @@ sshでEsxiホストを操作する手順は&lt;a href="http://blog.shigepon.info
 結論から言うとSATAコントローラーがAHCIモードだったのがまずかったみたい。BIOS画面でSATAコントローラーをAHCIモード以外にすると認識するようになった。
 このトラブルの解決だけで2時間かかった＞＜。ここらへんを参考にした（&lt;a href="http://d.hatena.ne.jp/igapyon/20140720"&gt;ESXi 5.5 を MSI H97 GAMING 3 にインストール&lt;/a&gt;、&lt;a href="http://zappy.hatenablog.jp/entry/2015/01/09/002505"&gt;自作PCにVMware ESXiをインストールした&lt;/a&gt;）
 データストアを認識しているかどうかは&lt;a href="https://kb.vmware.com/articleview?docid=1014953&amp;amp;lang=ja"&gt;VMware ESXi/ESX を操作するときのディスクの識別&lt;/a&gt;を参考にした。&lt;/p&gt;
-&lt;p&gt;しかもEsxiのトラブルとは関係ないけどHDDが2つも動かない状態になってるし・・・。どーしよー。&lt;/p&gt;</content><category term="vmware"></category><category term="linux"></category></entry><entry><title>linuxメモ</title><link href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/" rel="alternate"></link><published>2017-11-02T17:30:00+09:00</published><updated>2021-01-10T11:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-11-02:/blog/2017/11/02/linux_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;sshでexpecting SSH2_MSG_KEX_ECDH_REPLYと出てログイン出来ないケース&lt;/h2&gt;
+&lt;p&gt;しかもEsxiのトラブルとは関係ないけどHDDが2つも動かない状態になってるし・・・。どーしよー。&lt;/p&gt;</content><category term="vmware"></category><category term="linux"></category></entry><entry><title>linuxメモ</title><link href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/" rel="alternate"></link><published>2017-11-02T17:30:00+09:00</published><updated>2021-01-10T11:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-11-02:/blog/2017/11/02/linux_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;wgetでpost&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;wget --post-data&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;hoge=fuga&amp;amp;foo=bar&amp;quot;&lt;/span&gt; url
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;エスケープはこちらでしないといけない。&lt;/p&gt;
+&lt;h2&gt;sshでexpecting SSH2_MSG_KEX_ECDH_REPLYと出てログイン出来ないケース&lt;/h2&gt;
 &lt;p&gt;MTUの値を下げることで対応できる&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo ip li &lt;span class="nb"&gt;set&lt;/span&gt; mtu &lt;span class="m"&gt;1200&lt;/span&gt; dev &lt;span class="o"&gt;{&lt;/span&gt;dev&lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -5092,7 +5184,8 @@ Twitterでインなんとかとか言っちゃいましたが、インキャン�
 &lt;li&gt;Incanterで3D pie chart書きたかったら、RserveってのでIncanterとRをつないだらいいらしい。3D pie chartの為だけにそこまでやるとか変態すぐる&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2&gt;分析実践&lt;/h2&gt;
-&lt;p&gt;残った時間で実際にやってみましょうということで、弁当屋のデータを元にして売り上げ予測をやるという目的でRを触ってみるということをやっていました。R勉強会とは言え、実際にRをバリバリ使ってる人とかほとんど居ないと思うので、とても良い試みだと思いました。が、私はパソコン持ってなかったので読書しながら他の人がハマっているのを見たりしてました（悪趣味）。どうも文字コード周りでハマるケースが結構あるっぽいです。うむむむむ。ハマりポイントはハッキリさせたいところです。&lt;/p&gt;</content><category term="R"></category><category term="event"></category></entry><entry><title>djangoのModelFormでMultiWidgetを使って見る</title><link href="http://blog.shigepon.info/blog/2015/01/24/django-modelform-multiwidget/" rel="alternate"></link><published>2015-01-24T17:23:07+09:00</published><updated>2015-01-24T17:23:07+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-01-24:/blog/2015/01/24/django-modelform-multiwidget/</id><summary type="html"></summary><content type="html">&lt;p&gt;ModelFormでModelの１つのカラムを複数のフォーム要素（inputとか）で表現したかったので調べてみた。フォーム要素を適当に作って、clean_xxxの時にくっつけるとかそんな実装の仕方も出来るみたいだけど、MultiWidgetを使うと、Modelの１つのカラムに対して複数のinput要素を使うことが出来るみたいなので、使ってみた。名前のカラムに対して姓、名の入力要素を作るとかそんなのが出来るみたい。&lt;/p&gt;
+&lt;p&gt;残った時間で実際にやってみましょうということで、弁当屋のデータを元にして売り上げ予測をやるという目的でRを触ってみるということをやっていました。R勉強会とは言え、実際にRをバリバリ使ってる人とかほとんど居ないと思うので、とても良い試みだと思いました。が、私はパソコン持ってなかったので読書しながら他の人がハマっているのを見たりしてました（悪趣味）。どうも文字コード周りでハマるケースが結構あるっぽいです。うむむむむ。ハマりポイントはハッキリさせたいところです。&lt;/p&gt;</content><category term="R"></category><category term="event"></category></entry><entry><title>djangoのModelFormでMultiWidgetを使って見る</title><link href="http://blog.shigepon.info/blog/2015/01/24/django-modelform-multiwidget/" rel="alternate"></link><published>2015-01-24T17:23:07+09:00</published><updated>2015-01-24T17:23:07+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-01-24:/blog/2015/01/24/django-modelform-multiwidget/</id><summary type="html"></summary><content type="html">&lt;p&gt;2021-01-25: 追記&lt;/p&gt;
+&lt;p&gt;ModelFormでModelの１つのカラムを複数のフォーム要素（inputとか）で表現したかったので調べてみた。フォーム要素を適当に作って、clean_xxxの時にくっつけるとかそんな実装の仕方も出来るみたいだけど、MultiWidgetを使うと、Modelの１つのカラムに対して複数のinput要素を使うことが出来るみたいなので、使ってみた。名前のカラムに対して姓、名の入力要素を作るとかそんなのが出来るみたい。&lt;/p&gt;
 &lt;p&gt;まずはMultiWidgetを継承したクラスを作る&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.forms.widgets&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;MultiWidget&lt;/span&gt;
@@ -5155,7 +5248,38 @@ Twitterでインなんとかとか言っちゃいましたが、インキャン�
 
 &lt;p&gt;とかそんな感じ&lt;/p&gt;
 &lt;p&gt;他にももっと細かくhtmlを記述出来るformat_outputとかあるみたいだけど、試してないので省略。なくても取りあえず出来る。&lt;/p&gt;
-&lt;p&gt;参考：&lt;a href="https://docs.djangoproject.com/en/1.7/ref/forms/widgets/#django.forms.MultiWidget"&gt;Django英語ドキュメント&lt;/a&gt;&lt;/p&gt;</content><category term="python"></category><category term="django"></category></entry><entry><title>pythonのデコレーターをdjangoで使って見る</title><link href="http://blog.shigepon.info/blog/2015/01/06/python-decorator/" rel="alternate"></link><published>2015-01-06T08:55:46+09:00</published><updated>2015-01-06T08:55:46+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-01-06:/blog/2015/01/06/python-decorator/</id><summary type="html"></summary><content type="html">&lt;p&gt;pythonのデコレーターを使ってみたらとても便利だなと思ったのでメモ&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="https://docs.djangoproject.com/en/1.7/ref/forms/widgets/#django.forms.MultiWidget"&gt;Django英語ドキュメント&lt;/a&gt;&lt;/p&gt;
+&lt;h4&gt;2021-01-25追記&lt;/h4&gt;
+&lt;p&gt;上のコードではplaceholderを姓、名で分けることが出来なかった。下のコードのように一旦superで親クラスをinitしておいて、その後、widgetに設定する必要がある。修正したコードはこんな感じ&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# models.py&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;NameWidget&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;MultiWidget&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{}):&lt;/span&gt;
+        &lt;span class="n"&gt;widgets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+                &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextInput&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt;
+                &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextInput&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+                &lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="nb"&gt;super&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;NameWidget&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;widgets&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;widgets&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;placeholder&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="sa"&gt;u&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;姓&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;widgets&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;attrs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;placeholder&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="sa"&gt;u&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;名&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;decompress&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="n"&gt;names&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39; &amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;names&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="n"&gt;names&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;value_from_datadict&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;files&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;ulist&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;widget&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;value_from_datadict&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;files&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;_{0}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;widget&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;enumerate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;widgets&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="sa"&gt;u&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;{0} {1}&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ulist&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;u&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39; &amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;&lt;span class="n"&gt;ulist&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;u&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39; &amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="https://stackoverflow.com/questions/38481792/how-to-set-different-placeholders-for-datefromtorangefilter"&gt;How to set different placeholders for DateFromToRangeFilter?
+Ask Question&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;またvalue_from_datadictは「入力」→「確認」→「完了」みたいな遷移をさせる場合に、確認から完了への遷移時にデータが入らずにexceptionを吐くので注意。try catchしてcatch側で通常処理&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;とかしておけば良いと思う。&lt;/p&gt;</content><category term="python"></category><category term="django"></category></entry><entry><title>pythonのデコレーターをdjangoで使って見る</title><link href="http://blog.shigepon.info/blog/2015/01/06/python-decorator/" rel="alternate"></link><published>2015-01-06T08:55:46+09:00</published><updated>2015-01-06T08:55:46+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2015-01-06:/blog/2015/01/06/python-decorator/</id><summary type="html"></summary><content type="html">&lt;p&gt;pythonのデコレーターを使ってみたらとても便利だなと思ったのでメモ&lt;/p&gt;
 &lt;p&gt;参考にしたページを読んでいくと理解できた。要はデコレーターとして使う関数は引数に呼び出し元の関数を貰っておいて、内部で作った関数を返せば良い。内部の関数は適当に作れるみたい（今のとこそういう理解をしている）。djangoのビューで呼び出したかったので、内部の関数で可変長引数を取れるようにして下のようにしたら動いた。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;outer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;inner&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
@@ -5398,7 +5522,8 @@ $ python manage.py migrate アプリ名
 &lt;h2&gt;OpenDataLabの活動紹介&lt;/h2&gt;
 &lt;p&gt;毎度のことですが、最後らへんはどうしても名前を忘れてしまったりしてます。すいません＞＜。&lt;/p&gt;
 &lt;p&gt;神戸でOpenDataLabというのをやっているという紹介でした。上手くやっておられるなぁという感じです。デジタルだけじゃないことも出来ることが強みだとおっしゃられていたような気がします。&lt;/p&gt;
-&lt;p&gt;最後に、今回でずっと運営の中心をされていた@floretsさんが東京へ行かれるということで、送別会みたいな感じで懇親会へ行ってきました。@floretsさんは勉強会の雰囲気をとても良く作ってくれる方で、Kobe.Rで今後お見かけ出来なくなるのは残念ですが、東京でのご活躍をお祈りしております。&lt;/p&gt;</content><category term="event"></category><category term="R"></category></entry><entry><title>django-allauthを使ってみた</title><link href="http://blog.shigepon.info/blog/2014/11/25/use-django-allauth/" rel="alternate"></link><published>2014-11-25T14:55:16+09:00</published><updated>2014-11-25T14:55:16+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-11-25:/blog/2014/11/25/use-django-allauth/</id><summary type="html"></summary><content type="html">&lt;p&gt;ソーシャルログインだけでなく、通常のログインもやりたかったので、django-allauthを試してみた。&lt;/p&gt;
+&lt;p&gt;最後に、今回でずっと運営の中心をされていた@floretsさんが東京へ行かれるということで、送別会みたいな感じで懇親会へ行ってきました。@floretsさんは勉強会の雰囲気をとても良く作ってくれる方で、Kobe.Rで今後お見かけ出来なくなるのは残念ですが、東京でのご活躍をお祈りしております。&lt;/p&gt;</content><category term="event"></category><category term="R"></category></entry><entry><title>django-allauthを使ってみた</title><link href="http://blog.shigepon.info/blog/2014/11/25/use-django-allauth/" rel="alternate"></link><published>2014-11-25T14:55:16+09:00</published><updated>2021-01-25T14:55:16+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-11-25:/blog/2014/11/25/use-django-allauth/</id><summary type="html"></summary><content type="html">&lt;p&gt;2021-01-25: 追記&lt;/p&gt;
+&lt;p&gt;ソーシャルログインだけでなく、通常のログインもやりたかったので、django-allauthを試してみた。&lt;/p&gt;
 &lt;h2&gt;インストール&lt;/h2&gt;
 &lt;p&gt;pipで&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip install django-allauth
@@ -5450,6 +5575,22 @@ $ python manage.py migrate アプリ名
 &lt;p&gt;プロジェクトディレクトリ/templates/account以下にファイルを設定すればおk
 例えばログインのテンプレートなら、login.htmlを設置すればおk&lt;/p&gt;
 &lt;p&gt;元のファイルはgithubを見れば分かる&lt;/p&gt;
+&lt;h4&gt;追記&lt;/h4&gt;
+&lt;p&gt;/templates/account以下ならokではなく、TEMPLATESのDIRSで&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;TEMPLATES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="o"&gt;....&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;DIRS&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+            &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;BASE_DIR&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;templates&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+            &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;BASE_DIR&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;templates&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;account&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+        &lt;span class="p"&gt;],&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;みたいにパスを追加しておけば、どのフォルダでもok。&lt;/p&gt;
 &lt;h2&gt;使える機能&lt;/h2&gt;
 &lt;p&gt;&lt;a href="https://github.com/pennersr/django-allauth/blob/master/allauth/account/urls.py"&gt;githubのコード&lt;/a&gt;
 見れば大体分かる感じ&lt;/p&gt;
@@ -5511,7 +5652,160 @@ $ python manage.py migrate アプリ名
 &lt;span class="sb"&gt;        &amp;quot; 適当に処理を入れる&lt;/span&gt;
 &lt;span class="sb"&gt;        &amp;quot; エラーの場合はraise Exception&lt;/span&gt;
 &lt;span class="sb"&gt;        return username&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</content><category term="django"></category><category term="python"></category></entry><entry><title>Django Memo</title><link href="http://blog.shigepon.info/blog/2014/11/23/django-memo/" rel="alternate"></link><published>2014-11-23T22:35:38+09:00</published><updated>2020-03-20T23:30:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-11-23:/blog/2014/11/23/django-memo/</id><summary type="html"></summary><content type="html">&lt;p&gt;Djangoやってて忘れっぽいところとかをメモ&lt;/p&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;メッセージの変更&lt;/h3&gt;
+&lt;p&gt;例えばログインメッセージは&lt;/p&gt;
+&lt;p&gt;templates\/account\/messages\/logged_in.txt&lt;/p&gt;
+&lt;p&gt;にあったりするので、DIRSで通したパスの下にフォルダを作って配置すれば上書きできる・・・はず。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href="https://stackoverflow.com/questions/25744425/how-to-clean-up-django-login-message-from-framework"&gt;How to clean up Django login message from framework&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;リンクの貼り方&lt;/h3&gt;
+&lt;p&gt;loginページなどへリンクが貼りたい時のやりかた&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="na"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;{% url &amp;#39;account_login&amp;#39; %}&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;ログイン&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="na"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;{% url &amp;#39;account_logout&amp;#39; %}&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;ログアウト&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="na"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;{% url &amp;#39;account_signup&amp;#39; %}&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;サインアップ&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="na"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;{% url &amp;#39;account_change_password&amp;#39; %}&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;パスワード変更&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="na"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;{% url &amp;#39;account_inactive&amp;#39; %}&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;退会&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;みたいにする&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://torajirousan.hatenadiary.jp/entry/2019/04/08/184741"&gt;django-allauthのログインリンクのはり方&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/pennersr/django-allauth/blob/master/allauth/account/urls.py"&gt;django-allauth/allauth/account/urls.py&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;登録時のEmail認証にGmailを使う&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://stackoverflow.com/questions/31743396/django-allauth-send-email-verification-using-gmail-account"&gt;django-allauth - Send email verification using Gmail account&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;ここそのままでいけた。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;EMAIL_USE_TLS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;
+&lt;span class="n"&gt;EMAIL_HOST&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;smtp.gmail.com&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;EMAIL_PORT&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;587&lt;/span&gt;
+&lt;span class="n"&gt;EMAIL_HOST_USER&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;DEFAULT_FROM_EMAIL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;gmail account&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;EMAIL_HOST_PASSWORD&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;gmail password&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;usernameを使わない&lt;/h3&gt;
+&lt;p&gt;setting.pyで&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;ACCOUNT_USER_MODEL_USERNAME_FIELD&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;username&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;ACCOUNT_USERNAME_REQUIRED&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
+&lt;span class="n"&gt;ACCOUNT_EMAIL_REQUIRED&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じでよさげ。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://stackoverflow.com/questions/42160475/django-allauth-empty-username-causes-duplicate-key-in-postgress-db"&gt;django allauth empty username causes duplicate key in postgress DB&lt;/a&gt;&lt;/p&gt;</content><category term="django"></category><category term="python"></category></entry><entry><title>Django Memo</title><link href="http://blog.shigepon.info/blog/2014/11/23/django-memo/" rel="alternate"></link><published>2014-11-23T22:35:38+09:00</published><updated>2020-03-20T23:30:00+09:00</updated><author><name>shigepon</name></author><id>tag:blog.shigepon.info,2014-11-23:/blog/2014/11/23/django-memo/</id><summary type="html"></summary><content type="html">&lt;p&gt;Djangoやってて忘れっぽいところとかをメモ&lt;/p&gt;
+&lt;h2&gt;manage.pyのコマンドを別のプログラムから実行&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.core.management&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;call_command&lt;/span&gt;
+&lt;span class="n"&gt;call_command&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hoge&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;a href="http://y0m0r.hateblo.jp/entry/20121110/1352552450"&gt;manage.pyのコマンドをプログラム上から呼び出す&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;何か作業した後に自動でcollectstaticしたいとかそんなこともこれで出来る&lt;/p&gt;
+&lt;h2&gt;フォームのフィールドをグループ化&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://stackoverflow.com/questions/10366745/django-form-field-grouping"&gt;Django form field grouping&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;yieldを使うと良い感じだった。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;group1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;hoge1&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;fuga1&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;group2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;hoge2&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;fuga2&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;HogeForm&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ModelForm&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;group1&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;group1&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="k"&gt;yield&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;group2&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;group2&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="k"&gt;yield&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;h3&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;group1&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;h3&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+{% for field in object.group1 %}
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;{{ field.data}}&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+{% endfor %}
+&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;h3&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;group2&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;h3&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+{% for field in object.group2 %}
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;{{ field.data}}&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+{% endfor %}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;こんな感じ&lt;/p&gt;
+&lt;h2&gt;django-formtoolsの確認画面でoptionタグのテキストを表示する&lt;/h2&gt;
+&lt;p&gt;テンプレートフィルタを作ると、そこらへんを自由にできる&lt;/p&gt;
+&lt;p&gt;アプリ\/templatetags\/data_verbose.py&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;template&lt;/span&gt;
+
+&lt;span class="n"&gt;register&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;template&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Library&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+
+&lt;span class="nd"&gt;@register.filter&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;data_verbose&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;boundField&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="sd"&gt;    Returns field&amp;#39;s data or it&amp;#39;s verbose version&lt;/span&gt;
+&lt;span class="sd"&gt;    for a field with choices defined.&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Usage::&lt;/span&gt;
+
+&lt;span class="sd"&gt;        {% load data_verbose %}&lt;/span&gt;
+&lt;span class="sd"&gt;        {{form.some_field|data_verbose}}&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;boundField&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;
+    &lt;span class="n"&gt;field&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;boundField&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;field&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;hasattr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;field&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;choices&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;                                              
+         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;field&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;choices&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;          
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="err"&gt;↲&lt;/span&gt;                                                                
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{% for field in object %}
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;{{ field|data_verbose}}&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+{% endfor %}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://thinkami.hatenablog.com/entry/2016/01/22/224929"&gt;Django + django-formtoolsで、フォームの確認画面を作ってみた&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://y0m0r.hateblo.jp/entry/20130411/1365691177"&gt;DjangoのFormPreviewを使って表示した確認ページでchoicesの表示&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;参考にしたHPそのままだとモデルのフィールドがテキスト以外だとエラーが出るのでちょい変更した。&lt;/p&gt;
+&lt;h2&gt;save前後にモデルやフォームのデータを変更する方法&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://stackoverflow.com/questions/8924993/how-can-i-change-a-django-form-field-value-before-saving"&gt;How can I change a Django form field value before saving?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://stackoverflow.com/questions/23887961/django-how-can-i-modify-text-before-save-them-to-database/23888157"&gt;Django - How can i modify text before save them to database?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;方法は何種類か&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;clean_[フィールド名] メソッドをフォームクラス内に作る&lt;/li&gt;
+&lt;li&gt;saveメソッドをオーバーライド&lt;/li&gt;
+&lt;li&gt;views.pyでrequestをいじる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;テンプレート内でモデルのフィールドについてループ&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://stackoverflow.com/questions/2170228/iterate-over-model-instance-field-names-and-values-in-template"&gt;Iterate over model instance field names and values in template&lt;/a&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{% for field in object %}
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;b&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;{{ field.label }}:&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;b&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt; {{ field.data }}&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;li&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+{% endfor %}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;て感じ。fieldが&lt;a href="https://docs.djangoproject.com/ja/2.1/_modules/django/forms/boundfield/"&gt;BoundFieldクラス&lt;/a&gt;で、その中のdataメソッドでデータを取得している。&lt;/p&gt;
+&lt;h2&gt;認証済みチェック&lt;/h2&gt;
+&lt;p&gt;Django1.10以降&lt;/p&gt;
+&lt;p&gt;views.pyなどで&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;is_authenticated&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Django1.9以前&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;is_authenticated&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;テンプレート内&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{% if user.is_authenticated %}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="https://stackoverflow.com/questions/3644902/how-to-check-if-a-user-is-logged-in-how-to-properly-use-user-is-authenticated"&gt;How to check if a user is logged in (how to properly use user.is_authenticated)?&lt;/a&gt;&lt;/p&gt;
 &lt;h2&gt;GETパラメーターを入れてそのままリダイレクト&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;response = redirect(&amp;#39;namespace:viewname&amp;#39;)
 get_params = request.GET.urlencode()
@@ -5576,7 +5870,7 @@ return response
 
 
 &lt;p&gt;みたいな感じで取り出せる。&lt;/p&gt;
-&lt;h2&gt;runserver実行時にコンソールにスタックとレースを出力する&lt;/h2&gt;
+&lt;h2&gt;runserver実行時にコンソールにスタックトレースを出力する&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# settings.py&lt;/span&gt;
 &lt;span class="n"&gt;LOGGING&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="s1"&gt;&amp;#39;version&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;

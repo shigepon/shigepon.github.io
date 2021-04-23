@@ -109,7 +109,8 @@ shigeponが関心のある技術情報など            </a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
-                <p>ModelFormでModelの１つのカラムを複数のフォーム要素（inputとか）で表現したかったので調べてみた。フォーム要素を適当に作って、clean_xxxの時にくっつけるとかそんな実装の仕方も出来るみたいだけど、MultiWidgetを使うと、Modelの１つのカラムに対して複数のinput要素を使うことが出来るみたいなので、使ってみた。名前のカラムに対して姓、名の入力要素を作るとかそんなのが出来るみたい。</p>
+                <p>2021-01-25: 追記</p>
+<p>ModelFormでModelの１つのカラムを複数のフォーム要素（inputとか）で表現したかったので調べてみた。フォーム要素を適当に作って、clean_xxxの時にくっつけるとかそんな実装の仕方も出来るみたいだけど、MultiWidgetを使うと、Modelの１つのカラムに対して複数のinput要素を使うことが出来るみたいなので、使ってみた。名前のカラムに対して姓、名の入力要素を作るとかそんなのが出来るみたい。</p>
 <p>まずはMultiWidgetを継承したクラスを作る</p>
 <div class="highlight"><pre><span></span><span class="c1"># models.py</span>
 <span class="kn">from</span> <span class="nn">django.forms.widgets</span> <span class="kn">import</span> <span class="n">MultiWidget</span>
@@ -173,6 +174,37 @@ shigeponが関心のある技術情報など            </a>
 <p>とかそんな感じ</p>
 <p>他にももっと細かくhtmlを記述出来るformat_outputとかあるみたいだけど、試してないので省略。なくても取りあえず出来る。</p>
 <p>参考：<a href="https://docs.djangoproject.com/en/1.7/ref/forms/widgets/#django.forms.MultiWidget">Django英語ドキュメント</a></p>
+<h4>2021-01-25追記</h4>
+<p>上のコードではplaceholderを姓、名で分けることが出来なかった。下のコードのように一旦superで親クラスをinitしておいて、その後、widgetに設定する必要がある。修正したコードはこんな感じ</p>
+<div class="highlight"><pre><span></span><span class="c1"># models.py</span>
+<span class="k">class</span> <span class="nc">NameWidget</span><span class="p">(</span><span class="n">MultiWidget</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">attrs</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="n">widgets</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span><span class="p">(),</span>
+                <span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span><span class="p">()</span>
+                <span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">NameWidget</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">widgets</span><span class="p">,</span><span class="n">attrs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">widgets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;placeholder&quot;</span><span class="p">:</span><span class="sa">u</span><span class="s2">&quot;姓&quot;</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">widgets</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;placeholder&quot;</span><span class="p">:</span><span class="sa">u</span><span class="s2">&quot;名&quot;</span><span class="p">})</span>
+    <span class="k">def</span> <span class="nf">decompress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">names</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">None</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">value_from_datadict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">files</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
+        <span class="n">ulist</span> <span class="o">=</span> <span class="p">[</span><span class="n">widget</span><span class="o">.</span><span class="n">value_from_datadict</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">files</span><span class="p">,</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;_{0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">widget</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">widgets</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="sa">u</span><span class="s2">&quot;{0} {1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">),</span><span class="n">ulist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">))</span>
+</pre></div>
+
+
+<p>参考：<a href="https://stackoverflow.com/questions/38481792/how-to-set-different-placeholders-for-datefromtorangefilter">How to set different placeholders for DateFromToRangeFilter?
+Ask Question</a></p>
+<p>またvalue_from_datadictは「入力」→「確認」→「完了」みたいな遷移をさせる場合に、確認から完了への遷移時にデータが入らずにexceptionを吐くので注意。try catchしてcatch側で通常処理</p>
+<div class="highlight"><pre><span></span><span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+</pre></div>
+
+
+<p>とかしておけば良いと思う。</p>
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- Google Adsense below content -->
 <ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-3165642025902490" data-ad-slot="1749996500"></ins>
@@ -185,11 +217,11 @@ shigeponが関心のある技術情報など            </a>
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
+        <li><a href="http://blog.shigepon.info/blog/2014/11/25/use-django-allauth/">django-allauthを使ってみた</a></li>
+        <li><a href="http://blog.shigepon.info/blog/2021/01/25/use-bootstrap4-in-django/">use bootstrap4 in django</a></li>
         <li><a href="http://blog.shigepon.info/blog/2014/11/23/django-memo/">Django Memo</a></li>
         <li><a href="http://blog.shigepon.info/blog/2016/10/25/django-detabesuguan-lian-memo/">Django データベース関連メモ</a></li>
         <li><a href="http://blog.shigepon.info/blog/2020/02/24/djangonokiyatsushiyudeinstancemethod-objects-cant-pickle/">Djangoのキャッシュで「Instancemethod objects can't pickle」</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2020/02/24/fu-shu-nouwsgideroguwoqu-ru/">複数のuwsgiでログを取る</a></li>
-        <li><a href="http://blog.shigepon.info/blog/2020/01/12/mock-test-by-pytest-mock/">Mock test by pytest-mock</a></li>
     </ul>
 </section>
     <hr />
@@ -212,12 +244,21 @@ shigeponが関心のある技術情報など            </a>
             <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
               <ul class="list-group" id="social">
                 <li class="list-group-item"><a href="https://twitter.com/shigepon"><i class="fa fa-twitter-square fa-lg"></i> twitter</a></li>
-                <li class="list-group-item"><a href="https://www.facebook.com/takeshi.shigeta.56"><i class="fa fa-facebook-square fa-lg"></i> facebook</a></li>
               </ul>
             </li>
 
             <li class="list-group-item"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
                 <ul class="list-group" id="recentposts">
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/2014/11/25/use-django-allauth/">
+                            django-allauthを使ってみた
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="http://blog.shigepon.info/blog/2021/01/25/use-bootstrap4-in-django/">
+                            use bootstrap4 in django
+                        </a>
+                    </li>
                     <li class="list-group-item">
                         <a href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/">
                             linuxメモ
@@ -231,16 +272,6 @@ shigeponが関心のある技術情報など            </a>
                     <li class="list-group-item">
                         <a href="http://blog.shigepon.info/blog/2016/03/07/uwsginoguan-li-nisupervisordwoshi-u/">
                             uwsgiの管理にsupervisordを使う
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2015/08/12/javascript-memo/">
-                            Javascript memo
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="http://blog.shigepon.info/blog/2020/05/14/sed_memo/">
-                            sedメモ
                         </a>
                     </li>
                 </ul>
@@ -349,18 +380,13 @@ shigeponが関心のある技術情報など            </a>
             <li class="list-group-item"><a href="http://blog.shigepon.info/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
                 <ul class="list-group " id="tags">
                     <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/linux.html">
-                            linux
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/ruby.html">
-                            ruby
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-1">
                         <a href="http://blog.shigepon.info/tag/memo.html">
                             memo
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="http://blog.shigepon.info/tag/django.html">
+                            django
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
@@ -369,13 +395,13 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-1">
-                        <a href="http://blog.shigepon.info/tag/django.html">
-                            django
+                        <a href="http://blog.shigepon.info/tag/linux.html">
+                            linux
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/groonga.html">
-                            groonga
+                        <a href="http://blog.shigepon.info/tag/nadesiko2.html">
+                            nadesiko2
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -384,8 +410,28 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/bootstrap.html">
+                            bootstrap
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/csharp.html">
+                            CSharp
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
                         <a href="http://blog.shigepon.info/tag/event.html">
                             event
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/ruby.html">
+                            ruby
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-2">
+                        <a href="http://blog.shigepon.info/tag/r.html">
+                            R
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
@@ -399,23 +445,8 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/csharp.html">
-                            CSharp
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/bootstrap.html">
-                            bootstrap
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/nadesiko2.html">
-                            nadesiko2
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-2">
-                        <a href="http://blog.shigepon.info/tag/r.html">
-                            R
+                        <a href="http://blog.shigepon.info/tag/groonga.html">
+                            groonga
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -424,53 +455,8 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/raspberrypi.html">
-                            raspberrypi
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/vim.html">
-                            vim
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/titanium.html">
-                            titanium
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/vmware.html">
-                            vmware
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/php.html">
-                            PHP
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/nginx.html">
-                            nginx
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/mac.html">
-                            mac
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/pelican.html">
-                            pelican
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/javascript.html">
-                            javascript
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
-                            uwsgi
+                        <a href="http://blog.shigepon.info/tag/test1st.html">
+                            test1st
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -479,8 +465,18 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/rhaco.html">
-                            rhaco
+                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
+                            CPlusPlus
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/uwsgi.html">
+                            uwsgi
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/raspberrypi.html">
+                            raspberrypi
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
@@ -489,18 +485,48 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/cplusplus.html">
-                            CPlusPlus
+                        <a href="http://blog.shigepon.info/tag/vmware.html">
+                            vmware
                         </a>
                     </li>
                     <li class="list-group-item tag-3">
-                        <a href="http://blog.shigepon.info/tag/test1st.html">
-                            test1st
+                        <a href="http://blog.shigepon.info/tag/titanium.html">
+                            titanium
                         </a>
                     </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/avr.html">
-                            avr
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/javascript.html">
+                            javascript
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/nginx.html">
+                            nginx
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/php.html">
+                            PHP
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/rhaco.html">
+                            rhaco
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/vim.html">
+                            vim
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/pelican.html">
+                            pelican
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-3">
+                        <a href="http://blog.shigepon.info/tag/mac.html">
+                            mac
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -509,48 +535,8 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
-                            linkedopendata
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/rhaco3.html">
-                            rhaco3
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
                         <a href="http://blog.shigepon.info/tag/lua.html">
                             Lua
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/sqlite.html">
-                            sqlite
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/svn.html">
-                            svn
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/ubuntu.html">
-                            ubuntu
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/arduino.html">
-                            arduino
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/redis.html">
-                            redis
-                        </a>
-                    </li>
-                    <li class="list-group-item tag-4">
-                        <a href="http://blog.shigepon.info/tag/visualstudio.html">
-                            visualstudio
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
@@ -559,8 +545,53 @@ shigeponが関心のある技術情報など            </a>
                         </a>
                     </li>
                     <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/visualstudio.html">
+                            visualstudio
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/redis.html">
+                            redis
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/sqlite.html">
+                            sqlite
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/ubuntu.html">
+                            ubuntu
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/avr.html">
+                            avr
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/rhaco3.html">
+                            rhaco3
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
                         <a href="http://blog.shigepon.info/tag/git.html">
                             git
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/svn.html">
+                            svn
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/linkedopendata.html">
+                            linkedopendata
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://blog.shigepon.info/tag/arduino.html">
+                            arduino
                         </a>
                     </li>
                 </ul>
@@ -597,7 +628,7 @@ shigeponが関心のある技術情報など            </a>
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2017 shigepon
+         <div class="col-xs-10">&copy; 2014 shigepon
             &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>

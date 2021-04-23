@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など - memo, linux</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/memo-linux.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2021-01-10T11:30:00+09:00</updated><entry><title>linuxメモ</title><link href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/" rel="alternate"></link><published>2017-11-02T17:30:00+09:00</published><updated>2021-01-10T11:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-11-02:/blog/2017/11/02/linux_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;sshでexpecting SSH2_MSG_KEX_ECDH_REPLYと出てログイン出来ないケース&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>shigeponが関心のある技術情報など - memo, linux</title><link href="http://blog.shigepon.info/" rel="alternate"></link><link href="http://blog.shigepon.info/feeds/memo-linux.atom.xml" rel="self"></link><id>http://blog.shigepon.info/</id><updated>2021-01-10T11:30:00+09:00</updated><entry><title>linuxメモ</title><link href="http://blog.shigepon.info/blog/2017/11/02/linux_memo/" rel="alternate"></link><published>2017-11-02T17:30:00+09:00</published><updated>2021-01-10T11:30:00+09:00</updated><author><name>thoz</name></author><id>tag:blog.shigepon.info,2017-11-02:/blog/2017/11/02/linux_memo/</id><summary type="html"></summary><content type="html">&lt;h2&gt;wgetでpost&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;wget --post-data&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;hoge=fuga&amp;amp;foo=bar&amp;quot;&lt;/span&gt; url
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;エスケープはこちらでしないといけない。&lt;/p&gt;
+&lt;h2&gt;sshでexpecting SSH2_MSG_KEX_ECDH_REPLYと出てログイン出来ないケース&lt;/h2&gt;
 &lt;p&gt;MTUの値を下げることで対応できる&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo ip li &lt;span class="nb"&gt;set&lt;/span&gt; mtu &lt;span class="m"&gt;1200&lt;/span&gt; dev &lt;span class="o"&gt;{&lt;/span&gt;dev&lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
